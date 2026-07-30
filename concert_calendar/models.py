@@ -1,5 +1,8 @@
 from dataclasses import dataclass
-from typing import Optional@dataclass
+from typing import Optional
+
+
+@dataclass
 class ConcertEvent:
     date: str
     headliner: str
