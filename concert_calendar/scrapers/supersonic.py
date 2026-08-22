@@ -72,11 +72,38 @@ def load_events():
 
         print(f"Downloading {page_url}...")
 
-        response = requests.get(
-            page_url,
-            timeout=REQUEST_TIMEOUT,
-        )
-        response.raise_for_status()
+        response = None
+
+        for attempt in range(1, 4):
+            try:
+                response = requests.get(
+                    page_url,
+                    timeout=REQUEST_TIMEOUT,
+                    headers={
+                        "User-Agent": (
+                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                            "AppleWebKit/537.36 Safari/537.36"
+                        )
+                    },
+                )
+                response.raise_for_status()
+                break
+
+            except requests.RequestException as error:
+                print(
+                    f"Supersonic request failed "
+                    f"(attempt {attempt}/3): {error}"
+                )
+
+                if attempt == 3:
+                    print(
+                        f"Skipping Supersonic page after 3 failed attempts: "
+                        f"{page_url}"
+                    )
+                    response = None
+
+        if response is None:
+            break
 
         soup = BeautifulSoup(response.text, "html.parser")
         event_rows = soup.select(
