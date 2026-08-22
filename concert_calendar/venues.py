@@ -48,6 +48,7 @@ VENUE_ALIASES = {
     "mennecy metal fest": "Mennecy Metal Fest",
     "plenitude arena": "Plénitude Arena",
     "petit bain": "Petit Bain",
+    "point ephemere": "Point Éphémère",
     "salle pleyel": "Salle Pleyel",
     "stade de france": "Stade de France",
     "supersonic": "Supersonic",
