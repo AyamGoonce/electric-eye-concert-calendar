@@ -18,6 +18,12 @@ def load_events():
     response = requests.get(
         GDP_EVENTS_URL,
         timeout=REQUEST_TIMEOUT,
+        headers={
+            "User-Agent": (
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                "AppleWebKit/537.36 Safari/537.36"
+            )
+        },
     )
     response.raise_for_status()
 
