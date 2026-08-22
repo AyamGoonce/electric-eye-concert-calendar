@@ -37,6 +37,7 @@ VENUE_ALIASES = {
     "la seine musicale": "La Seine Musicale",
     "seine musicale": "La Seine Musicale",
     "le grand rex": "Le Grand Rex",
+    "le hasard ludique": "Le Hasard Ludique",
     "le palais des congres de paris": "Le Palais des Congrès de Paris",
     "palais des congres de paris": "Le Palais des Congrès de Paris",
     "le pop up du label": "Le Pop-Up du Label",
