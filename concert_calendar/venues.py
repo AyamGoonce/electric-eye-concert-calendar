@@ -17,6 +17,7 @@ VENUE_ALIASES = {
     "central chapelle": "Central Chapelle",
     "elysee montmartre": "Élysée Montmartre",
     "fete de l huma": "Fête de l'Humanité",
+    "file7": "File7",
     "lalhambra": "L'Alhambra",
     "alhambra": "L'Alhambra",
     "l archipel": "L'Archipel",
