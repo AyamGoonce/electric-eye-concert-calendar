@@ -47,6 +47,7 @@ VENUE_ALIASES = {
     "etoiles": "Les Étoiles",
     "mennecy metal fest": "Mennecy Metal Fest",
     "plenitude arena": "Plénitude Arena",
+    "petit bain": "Petit Bain",
     "salle pleyel": "Salle Pleyel",
     "stade de france": "Stade de France",
     "supersonic": "Supersonic",
