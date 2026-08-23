@@ -119,6 +119,24 @@ class ProductionDataTests(unittest.TestCase):
 
         self.assertIsNone(prepared["t"])
 
+    def test_festival_status_first_seen_and_sold_out_are_exported(self):
+        event = make_event(
+            "2026-09-01", "Festival Headliner",
+            festival_name="Festival", sold_out=True,
+            first_seen="2026-08-23T10:00:00Z",
+        )
+        prepared = prepare_upcoming_events([event], today=date(2026, 8, 31))[0]
+        self.assertTrue(prepared["f"])
+        self.assertTrue(prepared["so"])
+        self.assertEqual("2026-08-23T10:00:00Z", prepared["fs"])
+
+    def test_missing_ticket_does_not_imply_sold_out(self):
+        prepared = prepare_upcoming_events(
+            [make_event("2026-09-01", "Available status unknown", ticket_url=None)],
+            today=date(2026, 8, 31),
+        )[0]
+        self.assertFalse(prepared["so"])
+
     def test_genre_categories_are_broad_and_meaningful(self):
         self.assertEqual(
             [],
@@ -224,8 +242,19 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn('=== "paris" ? event.v : event.v + " (" + event.c + ")"', html)
         self.assertIn('target = "_blank"', html)
         self.assertIn('rel = "noopener noreferrer"', html)
-        self.assertIn('event.x.join(", ")', html)
+        self.assertIn('event.x[0]', html)
         self.assertNotIn('addText(metadata, "ee-calendar-promoter"', html)
+        self.assertIn("ee-calendar-lineup-toggle", html)
+        self.assertIn('setAttribute("aria-expanded"', html)
+        self.assertIn("event.s.includes(query)", html)
+        self.assertIn("URLSearchParams", html)
+        self.assertIn('window.addEventListener("popstate"', html)
+        self.assertIn('timeZone: "Europe/Paris"', html)
+        self.assertIn("ee-calendar-day-separator", html)
+        self.assertIn("ee-calendar-sold-out", html)
+        self.assertIn("ee-calendar-new-badge", html)
+        self.assertIn("event.o.slice(0, visibleCount)", html)
+        self.assertIn("Math.min(5, event.o.length)", html)
 
     def test_renderer_genre_filter_uses_exact_public_vocabulary(self):
         renderer = read_renderer()
@@ -300,6 +329,9 @@ class IntegrationAssetTests(unittest.TestCase):
         self.assertIn("var venueLabels = new Map()", renderer)
         self.assertIn(".ee-calendar-event-list > li::marker", styles)
         self.assertIn("list-style: none", styles)
+        self.assertIn("position: sticky", styles)
+        self.assertIn("position: static", styles)
+        self.assertIn("ee-calendar-text-button", styles)
 
     def test_integration_export_writes_a_complete_local_bundle(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -17,3 +17,5 @@ class ConcertEvent:
     ticket_url: Optional[str] = None
     festival_name: Optional[str] = None
     authoritative_billing: bool = False
+    sold_out: bool = False
+    first_seen: Optional[str] = None

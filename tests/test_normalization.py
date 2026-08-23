@@ -12,6 +12,7 @@ from concert_calendar.scrapers.maroquinerie import parse_card
 from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.sources import is_supported_event
 from concert_calendar.venues import normalize_event_venue
+from concert_calendar.scrapers.olympia import parse_item as parse_olympia_item
 
 
 def make_event(headliner, venue="La Boule Noire"):
@@ -211,6 +212,20 @@ class BillingReconciliationTests(unittest.TestCase):
 
 
 class VenueNormalizationTests(unittest.TestCase):
+    def test_final_clear_venue_aliases_normalize(self):
+        examples = {
+            "La Marberie": "La Marbrerie",
+            "La Marbrerie": "La Marbrerie",
+            "Backstage": "Backstage By The Mill",
+            "Backstage by the Mill": "Backstage By The Mill",
+            "Backstage By The Mill": "Backstage By The Mill",
+            "Le Backstage by the Mill": "Backstage By The Mill",
+        }
+        for source, expected in examples.items():
+            item = ConcertEvent("2026-09-01", "Artist", source, "Paris", "75")
+            normalize_event_venue(item)
+            self.assertEqual(expected, item.venue)
+
     def test_article_variant_normalizes_to_point_ephemere(self):
         event = normalize_event_venue(
             make_event("MERYL STREEK", "LE POINT ÉPHÉMÈRE")
@@ -347,6 +362,21 @@ class SourcePriorityTests(unittest.TestCase):
 
 
 class SourceQualityTests(unittest.TestCase):
+    def test_olympia_explicit_complet_status_is_sold_out(self):
+        item = {
+            "post_title": "Sold Out Artist",
+            "permalink": "https://www.olympiahall.com/agenda/sold-out-artist/",
+            "terms": {"genre": [{"name": "Rock"}]},
+            "meta": {
+                "begin_date_ymd": "2027-01-02",
+                "end_date_ymd": "2027-01-02",
+                "infos_text_status": "Complet",
+            },
+        }
+        parsed = parse_olympia_item(item)
+        self.assertEqual(1, len(parsed))
+        self.assertTrue(parsed[0].sold_out)
+
     def test_dice_release_party_has_no_invented_promoter_or_openers(self):
         event = parse_dice_event(
             {

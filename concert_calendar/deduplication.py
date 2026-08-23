@@ -128,6 +128,7 @@ def merge_events(
     existing.authoritative_billing = (
         existing.authoritative_billing or incoming.authoritative_billing
     )
+    existing.sold_out = existing.sold_out or incoming.sold_out
 
     return existing
 

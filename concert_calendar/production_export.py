@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime, timezone
 import hashlib
 import json
 from pathlib import Path
@@ -160,6 +160,9 @@ def event_to_data(event: ConcertEvent) -> dict:
         "x": genre_categories(event.genre),
         "p": event.promoters or [],
         "t": safe_ticket_url(event.ticket_url),
+        "f": bool(event.festival_name),
+        "so": bool(event.sold_out),
+        "fs": event.first_seen or "1970-01-01T00:00:00Z",
     }
 
 
@@ -214,13 +217,21 @@ def read_styles() -> str:
     return STYLES_PATH.read_text(encoding="utf-8")
 
 
-def build_data_asset(events: list[dict]) -> tuple[str, str, str]:
+def build_data_asset(
+    events: list[dict],
+    published_at: str | None = None,
+) -> tuple[str, str, str]:
     """Return deterministic filename, SHA-256 digest, and executable data asset."""
 
     serialized = serialize_data(events)
+    published_at = published_at or datetime.now(timezone.utc).replace(
+        microsecond=0
+    ).isoformat().replace("+00:00", "Z")
+    metadata = serialize_data({"publishedAt": published_at})
     asset = (
         "(function(){\n"
         '  "use strict";\n'
+        f"  window.ElectricEyeConcertMeta = Object.freeze({metadata});\n"
         f"  window.ElectricEyeConcertData = Object.freeze({serialized});\n"
         "  document.dispatchEvent(new CustomEvent(\"ee:concert-data-ready\", "
         f"{{detail:{{count:{len(events)}}}}}));\n"
@@ -231,12 +242,22 @@ def build_data_asset(events: list[dict]) -> tuple[str, str, str]:
     return f"calendar-data.{digest[:16]}.js", digest, asset
 
 
-def build_current_pointer(data_filename: str, digest: str, count: int) -> str:
+def build_current_pointer(
+    data_filename: str,
+    digest: str,
+    count: int,
+    *,
+    published_at: str | None = None,
+    state_sha256: str | None = None,
+) -> str:
     manifest = serialize_data(
         {
             "data": data_filename,
             "sha256": digest,
             "count": count,
+            "publishedAt": published_at or "",
+            "state": "calendar-state.json" if state_sha256 else "",
+            "stateSha256": state_sha256 or "",
         }
     )
 
@@ -330,17 +351,25 @@ def export_integration_prototype(
     events: list[ConcertEvent],
     output_dir: str = DEFAULT_INTEGRATION_DIR,
     today: date | None = None,
+    published_at: str | None = None,
+    state_sha256: str | None = None,
 ) -> dict[str, Path | str | int]:
     upcoming = prepare_upcoming_events(events, today=today)
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
-    filename, digest, data_asset = build_data_asset(upcoming)
+    filename, digest, data_asset = build_data_asset(upcoming, published_at)
 
     shutil.copyfile(RENDERER_PATH, destination / RENDERER_PATH.name)
     shutil.copyfile(STYLES_PATH, destination / STYLES_PATH.name)
     (destination / filename).write_text(data_asset, encoding="utf-8")
     (destination / "calendar-current.js").write_text(
-        build_current_pointer(filename, digest, len(upcoming)),
+        build_current_pointer(
+            filename,
+            digest,
+            len(upcoming),
+            published_at=published_at,
+            state_sha256=state_sha256,
+        ),
         encoding="utf-8",
     )
     (destination / "blogger-fixture.html").write_text(

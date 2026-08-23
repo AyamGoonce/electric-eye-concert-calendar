@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict
-from datetime import date
+from datetime import date, datetime, timezone
 import hashlib
 import json
 import os
@@ -19,6 +19,13 @@ from concert_calendar.production_export import (
     export_integration_prototype,
     prepare_upcoming_events,
     safe_ticket_url,
+)
+from concert_calendar.event_state import (
+    EventStateError,
+    STATE_FILENAME,
+    load_state,
+    reconcile_state,
+    write_state,
 )
 from concert_calendar.sources import load_events_with_report
 
@@ -38,11 +45,10 @@ CORE_SOURCES = {
     "Vedettes",
     "VeryShow",
 }
-REQUIRED_EVENT_KEYS = {"d", "h", "o", "v", "c", "g", "x", "p", "t"}
-POINTER_PATTERN = re.compile(
-    r'var manifest = Object\.freeze\((\{"data":"(?P<data>[^"]+)",'
-    r'"sha256":"(?P<sha256>[0-9a-f]{64})","count":(?P<count>\d+)\})\);'
-)
+REQUIRED_EVENT_KEYS = {
+    "d", "h", "o", "v", "c", "g", "x", "p", "t", "f", "so", "fs"
+}
+POINTER_PATTERN = re.compile(r"var manifest = Object\.freeze\((\{.*?\})\);")
 
 
 class ProductionValidationError(RuntimeError):
@@ -53,12 +59,17 @@ def read_pointer(path: Path) -> dict:
     match = POINTER_PATTERN.search(path.read_text(encoding="utf-8"))
     if not match:
         raise ProductionValidationError(f"Malformed calendar pointer: {path}")
-
-    return {
-        "data": match.group("data"),
-        "sha256": match.group("sha256"),
-        "count": int(match.group("count")),
-    }
+    try:
+        manifest = json.loads(match.group(1))
+    except json.JSONDecodeError as error:
+        raise ProductionValidationError(f"Malformed calendar pointer: {path}") from error
+    if (
+        not isinstance(manifest.get("data"), str)
+        or not re.fullmatch(r"[0-9a-f]{64}", manifest.get("sha256", ""))
+        or not isinstance(manifest.get("count"), int)
+    ):
+        raise ProductionValidationError(f"Malformed calendar pointer: {path}")
+    return manifest
 
 
 def validate_events(events: list[dict]) -> None:
@@ -98,6 +109,14 @@ def validate_events(events: list[dict]) -> None:
             )
         if event["t"] is not None and safe_ticket_url(event["t"]) is None:
             raise ProductionValidationError(f"Event {index} has an unsafe ticket URL")
+        if not isinstance(event["f"], bool) or not isinstance(event["so"], bool):
+            raise ProductionValidationError(f"Event {index} has malformed status fields")
+        try:
+            datetime.fromisoformat(event["fs"].replace("Z", "+00:00"))
+        except (AttributeError, ValueError) as error:
+            raise ProductionValidationError(
+                f"Event {index} has malformed first_seen"
+            ) from error
 
         fingerprint = (
             event["d"],
@@ -159,6 +178,12 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
         raise ProductionValidationError("Generated data hash does not match pointer")
     if pointer["count"] != result["event_count"]:
         raise ProductionValidationError("Generated count does not match pointer")
+    state_path = output_dir / STATE_FILENAME
+    if not state_path.exists():
+        raise ProductionValidationError("Generated event state is missing")
+    state_digest = hashlib.sha256(state_path.read_bytes()).hexdigest()
+    if pointer.get("state") != STATE_FILENAME or pointer.get("stateSha256") != state_digest:
+        raise ProductionValidationError("Generated event state hash does not match pointer")
 
     renderer = (output_dir / "calendar-renderer.js").read_text(encoding="utf-8")
     styles = (output_dir / "calendar.css").read_text(encoding="utf-8")
@@ -180,9 +205,24 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
 def build(args) -> int:
     events, pipeline_report = load_events_with_report()
     validate_source_report(pipeline_report)
-
-    result = export_integration_prototype(events, output_dir=args.output_dir)
     output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    try:
+        previous_state = load_state(
+            Path(args.published_state) if args.published_state else None
+        )
+        candidate_state = reconcile_state(events, previous_state, now=now)
+        state_digest = write_state(output_dir / STATE_FILENAME, candidate_state)
+    except EventStateError as error:
+        raise ProductionValidationError(f"Persistent event state is invalid: {error}") from error
+    published_at = candidate_state["updated_at"]
+    result = export_integration_prototype(
+        events,
+        output_dir=args.output_dir,
+        published_at=published_at,
+        state_sha256=state_digest,
+    )
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
     pointer = validate_assets(output_dir, result)
@@ -202,6 +242,10 @@ def build(args) -> int:
         "data_filename": pointer["data"],
         "sha256": pointer["sha256"],
         "event_count": pointer["count"],
+        "state_event_count": len(candidate_state["events"]),
+        "state_sha256": state_digest,
+        "published_at": published_at,
+        "state_bootstrapped": previous_state is None,
     }
     report_path = output_dir / "automation-report.json"
     report_path.write_text(
@@ -250,8 +294,16 @@ def publish(args) -> int:
     new_data = generated / new_pointer["data"]
     if hashlib.sha256(new_data.read_bytes()).hexdigest() != new_pointer["sha256"]:
         raise ProductionValidationError("Refusing to publish invalid generated hash")
+    new_state = generated / new_pointer.get("state", "")
+    if (
+        not new_state.is_file()
+        or hashlib.sha256(new_state.read_bytes()).hexdigest()
+        != new_pointer.get("stateSha256")
+    ):
+        raise ProductionValidationError("Refusing to publish invalid event state")
 
     shutil.copyfile(new_data, proof / new_data.name)
+    shutil.copyfile(new_state, proof / STATE_FILENAME)
     for stable_name in ("calendar-renderer.js", "calendar.css"):
         source = generated / stable_name
         target = proof / stable_name
@@ -286,14 +338,26 @@ def verify_hosted(args) -> int:
         try:
             pointer_body, pointer_type = fetch(pointer_url + f"?verify={args.sha256[:16]}")
             match = POINTER_PATTERN.search(pointer_body.decode("utf-8"))
-            if not match or match.group("sha256") != args.sha256:
+            if not match:
+                raise ProductionValidationError("Hosted pointer is malformed")
+            manifest = json.loads(match.group(1))
+            if manifest.get("sha256") != args.sha256:
                 raise ProductionValidationError("Hosted pointer has not propagated")
-            data_url = args.base_url.rstrip("/") + "/" + match.group("data")
+            data_url = args.base_url.rstrip("/") + "/" + manifest["data"]
             data_body, data_type = fetch(data_url + f"?verify={args.sha256[:16]}")
             if hashlib.sha256(data_body).hexdigest() != args.sha256:
                 raise ProductionValidationError("Hosted data hash mismatch")
             if "javascript" not in pointer_type or "javascript" not in data_type:
                 raise ProductionValidationError("Hosted JavaScript content type is invalid")
+            state_body, state_type = fetch(
+                args.base_url.rstrip("/") + "/" + manifest["state"]
+                + f"?verify={args.sha256[:16]}"
+            )
+            if (
+                hashlib.sha256(state_body).hexdigest() != manifest["stateSha256"]
+                or "json" not in state_type
+            ):
+                raise ProductionValidationError("Hosted event state is invalid")
             for stable in ("calendar-renderer.js", "calendar.css"):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"
@@ -303,7 +367,7 @@ def verify_hosted(args) -> int:
                 ):
                     raise ProductionValidationError(f"Hosted {stable} is invalid")
             print(
-                f"Hosted publication verified: {match.group('count')} events, "
+                f"Hosted publication verified: {manifest['count']} events, "
                 f"SHA-256 {args.sha256}"
             )
             return 0
@@ -331,6 +395,7 @@ def make_parser() -> argparse.ArgumentParser:
     build_parser = commands.add_parser("build")
     build_parser.add_argument("--output-dir", required=True)
     build_parser.add_argument("--published-pointer")
+    build_parser.add_argument("--published-state")
     build_parser.add_argument("--allow-large-count-change", action="store_true")
     build_parser.add_argument("--simulate-validation-failure", action="store_true")
     build_parser.set_defaults(handler=build)

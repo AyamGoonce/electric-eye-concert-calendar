@@ -31,4 +31,17 @@
   publication updates the content-addressed data file and
   `calendar-current.js`, changing stable assets only when their source changes.
 - Retain the current and two prior hashed data assets on Pages for rollback.
+- Festival-day records retain complete authoritative lineups internally. The
+  renderer may initially show five non-headliners, but search and expansion
+  must use the complete lineup.
+- Preserve `first_seen` in `proof/calendar-state.json`; derive NEW only within
+  72 hours. Never publish candidate state after failed validation.
+- Calendar dates and freshness use `Europe/Paris`. Quick weeks are Monday to
+  Sunday; weekend means Friday through Sunday of the current/upcoming weekend.
+- Preserve human-readable URL state for search, venue, genre, month, quick
+  date, Newly added, and sorting.
+- Sold out requires explicit structured source evidence. Missing tickets or
+  source disappearance never imply sold out, cancellation, or postponement.
+- Before Blogger go-live, configure an AdSense exact-URL exclusion for the
+  calendar Page. Never hide served Auto Ads with CSS.
 - Never commit GitHub credentials, personal access tokens, or other secrets.

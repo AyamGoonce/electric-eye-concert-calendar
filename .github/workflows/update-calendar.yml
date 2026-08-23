@@ -61,6 +61,7 @@ jobs:
           arguments=(
             --output-dir output/automation
             --published-pointer pages/proof/calendar-current.js
+            --published-state pages/proof/calendar-state.json
           )
           if [[ "$ALLOW_LARGE_CHANGE" == "true" ]]; then
             arguments+=(--allow-large-count-change)

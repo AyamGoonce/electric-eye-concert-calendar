@@ -143,6 +143,7 @@ def parse_item(item):
             genre=genre,
             facebook_event_url=None,
             ticket_url=ticket_url,
+            sold_out="complet" in status,
         )
         for event_date in dates
     ]

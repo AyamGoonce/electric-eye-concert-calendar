@@ -168,6 +168,7 @@ def parse_document(document):
         genre=relation_title(attributes.get("genre")) or None,
         facebook_event_url=None,
         ticket_url=ticket_url or AGENDA_URL,
+        sold_out=("complet" in status_uid or "sold-out" in status_uid),
     )
 
 
