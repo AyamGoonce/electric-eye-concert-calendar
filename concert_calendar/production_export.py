@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from datetime import date
+import hashlib
 import json
 from pathlib import Path
 import re
+import shutil
 import unicodedata
 from urllib.parse import urlparse
 
@@ -11,11 +13,12 @@ from concert_calendar.models import ConcertEvent
 
 
 DEFAULT_OUTPUT_PATH = "output/production_calendar.html"
+DEFAULT_INTEGRATION_DIR = "output/blogger_prototype"
+STATIC_DIR = Path(__file__).with_name("static")
+RENDERER_PATH = STATIC_DIR / "calendar-renderer.js"
+STYLES_PATH = STATIC_DIR / "calendar.css"
 
-ARTIST_SORT_OVERRIDES = {
-    "a perfect circle": "Perfect Circle",
-}
-
+ARTIST_SORT_OVERRIDES = {"a perfect circle": "Perfect Circle"}
 VENUE_SORT_OVERRIDES: dict[str, str] = {}
 
 GENRE_RULES = (
@@ -41,9 +44,8 @@ def normalize_text(value: str) -> str:
         for character in normalized
         if not unicodedata.combining(character)
     )
-    normalized = normalized.casefold()
 
-    return re.sub(r"\s+", " ", normalized).strip()
+    return re.sub(r"\s+", " ", normalized.casefold()).strip()
 
 
 def alphabetical_sort_key(
@@ -111,9 +113,7 @@ def prepare_upcoming_events(
     events: list[ConcertEvent],
     today: date | None = None,
 ) -> list[dict]:
-    """
-    Keep current/future events and sort by date, headliner, venue, then city.
-    """
+    """Keep current/future events and sort them deterministically."""
 
     cutoff = today or date.today()
     upcoming = []
@@ -138,9 +138,9 @@ def prepare_upcoming_events(
     return [event_to_data(event) for _, event in upcoming]
 
 
-def serialize_data(events: object) -> str:
+def serialize_data(value: object) -> str:
     serialized = json.dumps(
-        events,
+        value,
         ensure_ascii=False,
         separators=(",", ":"),
     )
@@ -152,10 +152,102 @@ def serialize_data(events: object) -> str:
     )
 
 
+def read_renderer() -> str:
+    return RENDERER_PATH.read_text(encoding="utf-8")
+
+
+def read_styles() -> str:
+    return STYLES_PATH.read_text(encoding="utf-8")
+
+
+def build_data_asset(events: list[dict]) -> tuple[str, str, str]:
+    """Return deterministic filename, SHA-256 digest, and executable data asset."""
+
+    serialized = serialize_data(events)
+    asset = (
+        "(function(){\n"
+        '  "use strict";\n'
+        f"  window.ElectricEyeConcertData = Object.freeze({serialized});\n"
+        "  document.dispatchEvent(new CustomEvent(\"ee:concert-data-ready\", "
+        f"{{detail:{{count:{len(events)}}}}}));\n"
+        "}());\n"
+    )
+    digest = hashlib.sha256(asset.encode("utf-8")).hexdigest()
+
+    return f"calendar-data.{digest[:16]}.js", digest, asset
+
+
+def build_current_pointer(data_filename: str, digest: str, count: int) -> str:
+    manifest = serialize_data(
+        {
+            "data": data_filename,
+            "sha256": digest,
+            "count": count,
+        }
+    )
+
+    return f"""(function(){{
+  "use strict";
+  var manifest = Object.freeze({manifest});
+  var currentSource = document.currentScript && document.currentScript.src;
+  window.ElectricEyeConcertManifest = manifest;
+  document.dispatchEvent(new CustomEvent("ee:concert-manifest-ready", {{detail:manifest}}));
+  var script = document.createElement("script");
+  script.src = new URL(manifest.data, currentSource || window.location.href).href;
+  script.onerror = function(){{
+    document.dispatchEvent(new CustomEvent("ee:concert-data-error", {{detail:{{reason:"data asset unavailable"}}}}));
+  }};
+  document.head.appendChild(script);
+}}());
+"""
+
+
+def build_fixture_html(load_order: str = "renderer-first") -> str:
+    if load_order not in {"renderer-first", "data-first"}:
+        raise ValueError(f"Unsupported fixture load order: {load_order}")
+
+    scripts = (
+        '<script src="calendar-renderer.js"></script>\n  <script src="calendar-current.js"></script>'
+        if load_order == "renderer-first"
+        else '<script src="calendar-current.js"></script>\n  <script src="calendar-renderer.js"></script>'
+    )
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electric Eye Calendar Integration Fixture</title>
+  <style>
+    :root {{ --ee-bg:#edf1f5; --ee-surface:#fff; --ee-dark:#101010; --ee-text:#171717; --ee-text-soft:#454b53; --ee-muted:#6f7782; --ee-border:#d5dbe2; --ee-accent:#d82323; --ee-accent-hover:#b51d1d; --ee-on-dark:#faf8f4; --ee-wide:1680px; }}
+    * {{ box-sizing:border-box; }}
+    body {{ margin:0; background:var(--ee-bg); color:var(--ee-text-soft); font-family:"Instrument Sans",Arial,sans-serif; }}
+    .ee-fixture-masthead {{ min-height:90px; display:grid; place-items:center; background:var(--ee-dark); color:var(--ee-on-dark); font-weight:700; letter-spacing:.08em; }}
+    .ee-fixture-nav {{ min-height:54px; display:grid; place-items:center; background:var(--ee-dark); color:var(--ee-on-dark); border-top:1px solid #333; }}
+    #content-wrapper {{ padding:48px 0 72px; }}
+    #content-wrapper > .container {{ width:min(calc(100% - 48px),var(--ee-wide)); margin:0 auto; }}
+    #main-wrapper, .item-post, #post-body {{ width:100%; max-width:none; }}
+    .item-post {{ background:transparent; border:0; padding:0; }}
+    @media (max-width:680px) {{ #content-wrapper {{ padding:34px 0 54px; }} #content-wrapper > .container {{ width:min(calc(100% - 30px),var(--ee-wide)); }} }}
+  </style>
+  <link rel="stylesheet" href="calendar.css">
+</head>
+<body class="is-page ee-calendar-page ee-full-width-page" data-fixture-order="{load_order}">
+  <header class="ee-fixture-masthead">ELECTRIC EYE</header>
+  <nav class="ee-fixture-nav" aria-label="Fixture navigation">Theme-owned navigation</nav>
+  <div id="content-wrapper"><div class="container"><main id="main-wrapper"><article class="item-post">
+    <div class="post-body entry-content" id="post-body">
+      <div id="ee-concert-calendar"><noscript>The concert calendar requires JavaScript.</noscript></div>
+    </div>
+  </article></main></div></div>
+  {scripts}
+</body>
+</html>
+"""
+
+
 def build_production_html(events: list[dict]) -> str:
-    event_data = serialize_data(events)
-    artist_sort_overrides = serialize_data(ARTIST_SORT_OVERRIDES)
-    venue_sort_overrides = serialize_data(VENUE_SORT_OVERRIDES)
+    _, _, data_asset = build_data_asset(events)
 
     return f"""<!doctype html>
 <html lang="en">
@@ -164,231 +256,87 @@ def build_production_html(events: list[dict]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Île-de-France Concert Calendar</title>
   <style>
-    :root {{
-      color-scheme: light;
-      --ee-bg: #edf1f5;
-      --ee-surface: #ffffff;
-      --ee-dark: #101010;
-      --ee-text: #171717;
-      --ee-text-soft: #454b53;
-      --ee-muted: #6f7782;
-      --ee-border: #d5dbe2;
-      --ee-accent: #d82323;
-      --ee-accent-hover: #b51d1d;
-      --ee-on-dark: #faf8f4;
-      --ee-wide: 1500px;
-      font-family: "Instrument Sans", Arial, sans-serif;
-    }}
-    * {{ box-sizing: border-box; }}
-    body {{ margin: 0; background: var(--ee-bg); color: var(--ee-text-soft); font-size: 16px; line-height: 1.5; }}
-    main {{ width: min(calc(100% - 48px), var(--ee-wide)); margin: 0 auto 72px; }}
-    header {{ margin: 0 -24px 30px; padding: 40px 24px 36px; background: var(--ee-dark); color: var(--ee-on-dark); border-bottom: 4px solid var(--ee-accent); }}
-    h1 {{ margin: 0; color: var(--ee-on-dark); font-size: clamp(2.25rem, 4.2vw, 3.65rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; }}
-    .intro {{ color: #c7c1b9; margin: 10px 0 0; font-size: 1.05rem; }}
-    .filters {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(130px, 1fr)) auto; gap: 14px; padding: 18px; background: var(--ee-surface); border: 1px solid var(--ee-border); }}
-    label {{ display: grid; gap: 6px; color: var(--ee-text-soft); font-size: .75rem; font-weight: 700; letter-spacing: .055em; text-transform: uppercase; }}
-    input, select, button {{ min-width: 0; min-height: 44px; border: 1px solid #aeb6c0; border-radius: 0; background: var(--ee-surface); color: var(--ee-text); font: inherit; padding: 9px 11px; transition: border-color .17s ease, background-color .17s ease, color .17s ease; }}
-    input:hover, select:hover {{ border-color: var(--ee-text-soft); }}
-    button {{ align-self: end; cursor: pointer; background: var(--ee-dark); border-color: var(--ee-dark); color: var(--ee-on-dark); font-weight: 700; }}
-    button:hover {{ background: var(--ee-accent); border-color: var(--ee-accent); }}
-    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {{ outline: 3px solid var(--ee-accent); outline-offset: 2px; }}
-    .summary {{ display: flex; justify-content: space-between; gap: 16px; margin: 24px 0 9px; color: var(--ee-muted); font-size: .875rem; }}
-    #result-count {{ font-weight: 700; color: var(--ee-text); letter-spacing: .015em; }}
-    .event-list {{ list-style: none; margin: 0; padding: 0; background: var(--ee-surface); border: 1px solid var(--ee-border); overflow: hidden; }}
-    .event-row {{ display: grid; grid-template-columns: 145px minmax(220px, 1.6fr) minmax(210px, 1fr) minmax(120px, .8fr) 92px; gap: 18px; align-items: start; padding: 14px 18px; border-bottom: 1px solid var(--ee-border); transition: background-color .15s ease; }}
-    .event-row:hover {{ background: #f8fafb; }}
-    .event-list li:last-child .event-row {{ border-bottom: 0; }}
-    .event-date {{ color: var(--ee-text); font-size: .875rem; font-weight: 700; letter-spacing: .01em; white-space: nowrap; }}
-    .event-artist {{ min-width: 0; }}
-    .event-artist h2 {{ overflow-wrap: anywhere; margin: 0; color: var(--ee-text); font-size: 1.025rem; font-weight: 700; letter-spacing: -.015em; line-height: 1.3; }}
-    .openers {{ overflow-wrap: anywhere; margin: 4px 0 0; color: var(--ee-muted); font-size: .86rem; }}
-    .venue {{ color: var(--ee-text); overflow-wrap: anywhere; font-weight: 600; }}
-    .metadata {{ min-width: 0; color: var(--ee-muted); font-size: .8rem; overflow-wrap: anywhere; }}
-    .metadata span {{ display: block; }}
-    .promoter {{ margin-top: 3px; }}
-    .ticket {{ display: inline-flex; justify-content: center; align-items: center; min-height: 38px; background: var(--ee-accent); color: var(--ee-on-dark); font-size: .82rem; font-weight: 700; letter-spacing: .025em; text-decoration: none; padding: 8px 12px; transition: background-color .17s ease; }}
-    .ticket:hover {{ background: var(--ee-accent-hover); color: var(--ee-on-dark); }}
-    .ticket-space {{ min-height: 1px; }}
-    .no-results {{ margin: 0; padding: 38px 18px; background: var(--ee-surface); border: 1px solid var(--ee-border); text-align: center; color: var(--ee-muted); }}
-    [hidden] {{ display: none !important; }}
-    @media (max-width: 980px) {{
-      .filters {{ grid-template-columns: 1fr 1fr; }}
-      .search-control {{ grid-column: 1 / -1; }}
-      .event-row {{ grid-template-columns: 125px minmax(180px, 1.5fr) minmax(170px, 1fr) 88px; }}
-      .metadata {{ grid-column: 2 / 4; }}
-    }}
-    @media (max-width: 680px) {{
-      main {{ width: min(calc(100% - 30px), var(--ee-wide)); margin-bottom: 54px; }}
-      header {{ margin: 0 -15px 24px; padding: 30px 15px 27px; border-bottom-width: 3px; }}
-      h1 {{ font-size: clamp(2rem, 10vw, 2.8rem); }}
-      .intro {{ font-size: .95rem; }}
-      .filters {{ grid-template-columns: 1fr; padding: 14px; }}
-      .search-control {{ grid-column: auto; }}
-      .summary {{ margin-top: 16px; }}
-      .event-list {{ background: transparent; border: 0; overflow: visible; }}
-      .event-list li {{ margin-bottom: 10px; }}
-      .event-row {{ display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; padding: 15px; background: var(--ee-surface); border: 1px solid var(--ee-border); border-left: 3px solid var(--ee-accent); }}
-      .event-date, .event-artist, .venue, .metadata {{ grid-column: 1 / -1; }}
-      .metadata {{ display: flex; flex-wrap: wrap; gap: 4px 12px; }}
-      .promoter {{ margin-top: 0; }}
-      .ticket {{ grid-column: 2; grid-row: 1; min-height: 42px; }}
-      .ticket-space {{ display: none; }}
-    }}
-    @media (prefers-reduced-motion: reduce) {{
-      input, select, button, .event-row, .ticket {{ transition: none; }}
-    }}
+    :root {{ --ee-bg:#edf1f5; --ee-surface:#fff; --ee-dark:#101010; --ee-text:#171717; --ee-text-soft:#454b53; --ee-muted:#6f7782; --ee-border:#d5dbe2; --ee-accent:#d82323; --ee-accent-hover:#b51d1d; --ee-on-dark:#faf8f4; }}
+    body {{ margin:0; padding:0 24px 72px; background:var(--ee-bg); }}
+    #ee-concert-calendar {{ width:min(100%,1500px); margin:0 auto; }}
+    @media (max-width:680px) {{ body {{ padding:0 15px 54px; }} }}
+{read_styles()}
   </style>
 </head>
-<body>
-  <main>
-    <header>
-      <h1>Île-de-France Concert Calendar</h1>
-      <p class="intro">Upcoming concerts across Paris and Île-de-France.</p>
-    </header>
-    <section class="filters" aria-label="Concert filters">
-      <label class="search-control" for="search">Search
-        <input id="search" type="search" placeholder="Artist, opener, venue or town" autocomplete="off">
-      </label>
-      <label for="month-filter">Date
-        <select id="month-filter"><option value="">All dates</option></select>
-      </label>
-      <label for="venue-filter">Venue
-        <select id="venue-filter"><option value="">All venues</option></select>
-      </label>
-      <label for="genre-filter">Genre
-        <select id="genre-filter"><option value="">All genres</option></select>
-      </label>
-      <label for="sort-order">Sort
-        <select id="sort-order">
-          <option value="date-asc">Date — soonest first</option>
-          <option value="date-desc">Date — latest first</option>
-          <option value="artist-asc">Artist — A–Z</option>
-          <option value="venue-asc">Venue — A–Z</option>
-        </select>
-      </label>
-      <button id="clear-filters" type="button">Clear</button>
-    </section>
-    <div class="summary">
-      <span id="result-count" aria-live="polite"></span>
-    </div>
-    <ol id="event-list" class="event-list"></ol>
-    <p id="no-results" class="no-results" hidden>No concerts match your current filters.</p>
-    <noscript><p class="no-results">JavaScript is required to search and filter this calendar.</p></noscript>
-  </main>
-  <script id="calendar-data" type="application/json">{event_data}</script>
-  <script>
-    (function () {{
-      "use strict";
-      const events = JSON.parse(document.getElementById("calendar-data").textContent);
-      const search = document.getElementById("search");
-      const monthFilter = document.getElementById("month-filter");
-      const venueFilter = document.getElementById("venue-filter");
-      const genreFilter = document.getElementById("genre-filter");
-      const sortOrder = document.getElementById("sort-order");
-      const clearButton = document.getElementById("clear-filters");
-      const list = document.getElementById("event-list");
-      const count = document.getElementById("result-count");
-      const noResults = document.getElementById("no-results");
-      const dateFormatter = new Intl.DateTimeFormat("en-GB", {{ weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }});
-      const monthFormatter = new Intl.DateTimeFormat("en-GB", {{ month: "long", year: "numeric", timeZone: "UTC" }});
-      const normalize = value => (value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
-      const dateFromISO = value => {{ const parts = value.split("-").map(Number); return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2])); }};
-      const option = (value, label) => {{ const element = document.createElement("option"); element.value = value; element.textContent = label; return element; }};
-      const artistSortOverrides = {artist_sort_overrides};
-      const venueSortOverrides = {venue_sort_overrides};
-      const articleAwareKey = (value, overrides) => overrides[normalize(value)] || normalize(value).replace(/^(?:(?:the|le|la|les)\\s+|l['’]\\s*)/i, "");
-      const compareText = (left, right) => left.localeCompare(right, "fr", {{ sensitivity: "base" }});
-      const compareDateAscending = (left, right) => compareText(left.d, right.d);
-      const compareArtist = (left, right) => compareText(left.a, right.a) || compareDateAscending(left, right) || compareText(left.w, right.w) || left.i - right.i;
-      const compareVenue = (left, right) => compareText(left.w, right.w) || compareDateAscending(left, right) || compareText(left.a, right.a) || left.i - right.i;
-      const compareDate = (left, right, direction) => direction * compareDateAscending(left, right) || compareText(left.a, right.a) || compareText(left.w, right.w) || left.i - right.i;
-
-      events.forEach((event, index) => {{
-        event.i = index;
-        event.a = articleAwareKey(event.h, artistSortOverrides);
-        event.w = articleAwareKey(event.v, venueSortOverrides);
-        event.s = normalize([event.h, ...event.o, event.v, event.c].join(" "));
-      }});
-
-      [...new Set(events.map(event => event.d.slice(0, 7)))].forEach(month => {{
-        monthFilter.append(option(month, monthFormatter.format(dateFromISO(month + "-01"))));
-      }});
-      [...new Set(events.map(event => event.v))].sort((a, b) => a.localeCompare(b, "fr", {{ sensitivity: "base" }})).forEach(venue => {{
-        venueFilter.append(option(venue, venue));
-      }});
-      [...new Set(events.flatMap(event => event.x))].sort().forEach(genre => {{
-        genreFilter.append(option(genre, genre));
-      }});
-
-      function addText(parent, className, text, tagName) {{
-        const element = document.createElement(tagName || "div");
-        element.className = className;
-        element.textContent = text;
-        parent.append(element);
-        return element;
-      }}
-
-      function createRow(event) {{
-        const item = document.createElement("li");
-        const article = document.createElement("article");
-        article.className = "event-row";
-        const eventDate = addText(article, "event-date", dateFormatter.format(dateFromISO(event.d)), "time");
-        eventDate.dateTime = event.d;
-        const artist = document.createElement("div");
-        artist.className = "event-artist";
-        addText(artist, "", event.h, "h2");
-        if (event.o.length) addText(artist, "openers", "with " + event.o.join(", "), "p");
-        article.append(artist);
-        addText(article, "venue", event.c.toLocaleLowerCase() === "paris" ? event.v : event.v + " (" + event.c + ")");
-        const metadata = document.createElement("div");
-        metadata.className = "metadata";
-        if (event.g) addText(metadata, "genre", event.g, "span");
-        if (event.p.length) addText(metadata, "promoter", event.p.join(", "), "span");
-        article.append(metadata);
-        if (event.t) {{
-          const ticket = addText(article, "ticket", "Tickets", "a");
-          ticket.href = event.t;
-          ticket.target = "_blank";
-          ticket.rel = "noopener noreferrer";
-          ticket.setAttribute("aria-label", "Tickets for " + event.h);
-        }} else {{
-          addText(article, "ticket-space", "");
-        }}
-        item.append(article);
-        return item;
-      }}
-
-      function render() {{
-        const query = normalize(search.value.trim());
-        const month = monthFilter.value;
-        const venue = venueFilter.value;
-        const genre = genreFilter.value;
-        const order = sortOrder.value;
-        const filtered = events.filter(event => (!query || event.s.includes(query)) && (!month || event.d.startsWith(month)) && (!venue || event.v === venue) && (!genre || event.x.includes(genre)));
-        filtered.sort(order === "date-desc" ? (left, right) => compareDate(left, right, -1) : order === "artist-asc" ? compareArtist : order === "venue-asc" ? compareVenue : (left, right) => compareDate(left, right, 1));
-        const fragment = document.createDocumentFragment();
-        filtered.forEach(event => fragment.append(createRow(event)));
-        list.replaceChildren(fragment);
-        count.textContent = filtered.length.toLocaleString("en-GB") + (filtered.length === 1 ? " concert" : " concerts");
-        list.hidden = filtered.length === 0;
-        noResults.hidden = filtered.length !== 0;
-      }}
-
-      let scheduled = false;
-      function scheduleRender() {{
-        if (scheduled) return;
-        scheduled = true;
-        requestAnimationFrame(() => {{ scheduled = false; render(); }});
-      }}
-      search.addEventListener("input", scheduleRender);
-      [monthFilter, venueFilter, genreFilter, sortOrder].forEach(control => control.addEventListener("change", scheduleRender));
-      clearButton.addEventListener("click", () => {{ search.value = ""; monthFilter.value = ""; venueFilter.value = ""; genreFilter.value = ""; render(); search.focus(); }});
-      render();
-    }})();
-  </script>
+<body class="ee-calendar-page">
+  <main id="ee-concert-calendar"><noscript>The concert calendar requires JavaScript.</noscript></main>
+  <script>{data_asset}</script>
+  <script>{read_renderer()}</script>
 </body>
 </html>
 """
+
+
+def export_integration_prototype(
+    events: list[ConcertEvent],
+    output_dir: str = DEFAULT_INTEGRATION_DIR,
+    today: date | None = None,
+) -> dict[str, Path | str | int]:
+    upcoming = prepare_upcoming_events(events, today=today)
+    destination = Path(output_dir)
+    destination.mkdir(parents=True, exist_ok=True)
+    filename, digest, data_asset = build_data_asset(upcoming)
+
+    shutil.copyfile(RENDERER_PATH, destination / RENDERER_PATH.name)
+    shutil.copyfile(STYLES_PATH, destination / STYLES_PATH.name)
+    (destination / filename).write_text(data_asset, encoding="utf-8")
+    (destination / "calendar-current.js").write_text(
+        build_current_pointer(filename, digest, len(upcoming)),
+        encoding="utf-8",
+    )
+    (destination / "blogger-fixture.html").write_text(
+        build_fixture_html("renderer-first"),
+        encoding="utf-8",
+    )
+    (destination / "blogger-fixture-data-first.html").write_text(
+        build_fixture_html("data-first"),
+        encoding="utf-8",
+    )
+    (destination / "calendar-current-missing.js").write_text(
+        build_current_pointer("missing-calendar-data.js", "0" * 64, 0),
+        encoding="utf-8",
+    )
+    (destination / "blogger-fixture-missing.html").write_text(
+        build_fixture_html("renderer-first").replace(
+            "calendar-current.js",
+            "calendar-current-missing.js",
+        ),
+        encoding="utf-8",
+    )
+    (destination / "calendar-malformed.js").write_text(
+        'window.ElectricEyeConcertData = {invalid:true};\n'
+        'document.dispatchEvent(new CustomEvent("ee:concert-data-ready"));\n',
+        encoding="utf-8",
+    )
+    (destination / "blogger-fixture-malformed.html").write_text(
+        build_fixture_html("data-first").replace(
+            "calendar-current.js",
+            "calendar-malformed.js",
+        ),
+        encoding="utf-8",
+    )
+
+    print(f"Created Blogger integration prototype with {len(upcoming)} upcoming concerts")
+
+    return {
+        "directory": destination,
+        "renderer": destination / RENDERER_PATH.name,
+        "styles": destination / STYLES_PATH.name,
+        "data": destination / filename,
+        "pointer": destination / "calendar-current.js",
+        "fixture": destination / "blogger-fixture.html",
+        "data_first_fixture": destination / "blogger-fixture-data-first.html",
+        "missing_fixture": destination / "blogger-fixture-missing.html",
+        "malformed_fixture": destination / "blogger-fixture-malformed.html",
+        "data_filename": filename,
+        "sha256": digest,
+        "event_count": len(upcoming),
+    }
 
 
 def export_production_calendar(

@@ -10,9 +10,15 @@ from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import (
     ARTIST_SORT_OVERRIDES,
     alphabetical_sort_key,
+    build_current_pointer,
+    build_data_asset,
+    build_fixture_html,
     export_production_calendar,
+    export_integration_prototype,
     genre_categories,
     prepare_upcoming_events,
+    read_renderer,
+    read_styles,
 )
 
 
@@ -131,26 +137,16 @@ class ProductionHTMLTests(unittest.TestCase):
                 output_path=str(Path(directory) / "calendar.html"),
                 today=date(2026, 8, 31),
             )
-            soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
+            html = path.read_text(encoding="utf-8")
+            soup = BeautifulSoup(html, "html.parser")
 
-        for element_id in (
-            "search",
-            "month-filter",
-            "venue-filter",
-            "genre-filter",
-            "sort-order",
-            "result-count",
-            "event-list",
-            "no-results",
-        ):
-            self.assertIsNotNone(soup.select_one(f"#{element_id}"))
-
+        self.assertIsNotNone(soup.select_one("body.ee-calendar-page"))
+        self.assertIsNotNone(soup.select_one("#ee-concert-calendar"))
         self.assertIn("@media (max-width: 680px)", soup.style.string)
-        self.assertIn("No concerts match your current filters.", soup.get_text(" "))
-        self.assertEqual(
-            ["date-asc", "date-desc", "artist-asc", "venue-asc"],
-            [option.get("value") for option in soup.select("#sort-order option")],
-        )
+        self.assertIn("Date — soonest first", html)
+        self.assertIn("Date — latest first", html)
+        self.assertIn("Artist — A–Z", html)
+        self.assertIn("Venue — A–Z", html)
 
     def test_embedded_json_is_compact_complete_and_safe(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -159,8 +155,11 @@ class ProductionHTMLTests(unittest.TestCase):
                 output_path=str(Path(directory) / "calendar.html"),
                 today=date(2026, 8, 31),
             )
-            soup = BeautifulSoup(path.read_text(encoding="utf-8"), "html.parser")
-            data = json.loads(soup.select_one("#calendar-data").string)
+            html = path.read_text(encoding="utf-8")
+
+        marker = "window.ElectricEyeConcertData = Object.freeze("
+        serialized = html.split(marker, 1)[1].split(");", 1)[0]
+        data = json.loads(serialized)
 
         self.assertEqual(3, len(data))
         self.assertEqual("Vauréal", data[1]["c"])
@@ -179,17 +178,96 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("event.d.startsWith(month)", html)
         self.assertIn("event.v === venue", html)
         self.assertIn("event.x.includes(genre)", html)
-        self.assertIn('const order = sortOrder.value;', html)
+        self.assertIn("var order = controls.sortOrder.value;", html)
         self.assertIn('order === "date-desc"', html)
         self.assertIn('order === "artist-asc"', html)
         self.assertIn('order === "venue-asc"', html)
-        self.assertIn('"a perfect circle":"Perfect Circle"', html)
+        self.assertIn('"a perfect circle": "Perfect Circle"', html)
         self.assertIn("articleAwareKey(event.h, artistSortOverrides)", html)
         self.assertIn("articleAwareKey(event.v, venueSortOverrides)", html)
-        self.assertNotIn('sortOrder.value = ""', html)
+        self.assertNotIn('controls.sortOrder.value = ""', html)
         self.assertIn('=== "paris" ? event.v : event.v + " (" + event.c + ")"', html)
         self.assertIn('target = "_blank"', html)
         self.assertIn('rel = "noopener noreferrer"', html)
+
+
+class IntegrationAssetTests(unittest.TestCase):
+    def setUp(self):
+        self.events = [
+            make_event("2026-09-01", "The Black Keys", ticket_url="https://tickets.example/black-keys"),
+            make_event("2026-09-02", "A Perfect Circle", venue="Le Forum", city="Vauréal", genre="Rock"),
+        ]
+        self.prepared = prepare_upcoming_events(self.events, today=date(2026, 8, 31))
+
+    def test_data_asset_hash_and_filename_are_deterministic(self):
+        first = build_data_asset(self.prepared)
+        second = build_data_asset(self.prepared)
+
+        self.assertEqual(first, second)
+        self.assertRegex(first[0], r"^calendar-data\.[0-9a-f]{16}\.js$")
+        self.assertEqual(64, len(first[1]))
+
+    def test_data_asset_contains_only_compact_valid_event_data(self):
+        filename, digest, asset = build_data_asset(self.prepared)
+
+        self.assertIn("window.ElectricEyeConcertData", asset)
+        self.assertIn('"ee:concert-data-ready"', asset)
+        self.assertIn('"h":"The Black Keys"', asset)
+        self.assertNotIn("calendar-renderer", asset)
+        self.assertNotIn("ee-calendar-filters", asset)
+        self.assertTrue(filename.startswith(f"calendar-data.{digest[:16]}"))
+
+    def test_pointer_references_hashed_asset_and_has_error_event(self):
+        filename, digest, _ = build_data_asset(self.prepared)
+        pointer = build_current_pointer(filename, digest, len(self.prepared))
+
+        self.assertIn(filename, pointer)
+        self.assertIn(digest, pointer)
+        self.assertIn('"ee:concert-data-error"', pointer)
+        self.assertIn('"data asset unavailable"', pointer)
+
+    def test_fixture_models_blogger_mount_and_both_load_orders(self):
+        renderer_first = build_fixture_html("renderer-first")
+        data_first = build_fixture_html("data-first")
+
+        for fixture in (renderer_first, data_first):
+            soup = BeautifulSoup(fixture, "html.parser")
+            self.assertIsNotNone(soup.select_one("body.ee-calendar-page.ee-full-width-page"))
+            self.assertIsNotNone(soup.select_one("#content-wrapper > .container"))
+            self.assertIsNotNone(soup.select_one("#post-body > #ee-concert-calendar"))
+
+        self.assertLess(renderer_first.index("calendar-renderer.js"), renderer_first.index("calendar-current.js"))
+        self.assertLess(data_first.index("calendar-current.js"), data_first.index("calendar-renderer.js"))
+
+    def test_assets_are_scoped_and_renderer_handles_failure_states(self):
+        styles = read_styles()
+        renderer = read_renderer()
+
+        self.assertIn(".ee-calendar-page #ee-concert-calendar", styles)
+        self.assertIn("malformed or empty event dataset", renderer)
+        self.assertIn("timed out waiting for event data", renderer)
+        self.assertIn('document.getElementById(MOUNT_ID)', renderer)
+
+    def test_integration_export_writes_a_complete_local_bundle(self):
+        with tempfile.TemporaryDirectory() as directory:
+            result = export_integration_prototype(
+                self.events,
+                output_dir=directory,
+                today=date(2026, 8, 31),
+            )
+
+            for key in (
+                "renderer",
+                "styles",
+                "data",
+                "pointer",
+                "fixture",
+                "data_first_fixture",
+                "missing_fixture",
+                "malformed_fixture",
+            ):
+                self.assertTrue(Path(result[key]).is_file())
+            self.assertEqual(2, result["event_count"])
 
 
 if __name__ == "__main__":
