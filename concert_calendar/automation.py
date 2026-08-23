@@ -51,6 +51,16 @@ REQUIRED_EVENT_KEYS = {
     "d", "h", "o", "v", "c", "x", "p", "t", "f", "so", "fs",
     "i", "ts", "st",
 }
+
+OPTIONAL_EVENT_KEYS = {
+    "an",
+    "ch",
+    "et",
+    "sn",
+    "im",
+    "is",
+    "ee",
+}
 POINTER_PATTERN = re.compile(r"var manifest = Object\.freeze\((\{.*?\})\);")
 
 
