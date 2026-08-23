@@ -12,6 +12,12 @@ from concert_calendar.models import ConcertEvent
 
 DEFAULT_OUTPUT_PATH = "output/production_calendar.html"
 
+ARTIST_SORT_OVERRIDES = {
+    "a perfect circle": "Perfect Circle",
+}
+
+VENUE_SORT_OVERRIDES: dict[str, str] = {}
+
 GENRE_RULES = (
     ("Rock / Indie / Punk", ("rock", "indie", "punk", "shoegaze", "grunge", "psych", "new wave", "newwave")),
     ("Metal / Hard Rock", ("metal", "hard rock", "hardrock", "newcore")),
@@ -38,6 +44,21 @@ def normalize_text(value: str) -> str:
     normalized = normalized.casefold()
 
     return re.sub(r"\s+", " ", normalized).strip()
+
+
+def alphabetical_sort_key(
+    value: str,
+    overrides: dict[str, str] | None = None,
+) -> str:
+    """Return a conservative, article-aware key without changing display text."""
+
+    normalized = normalize_text(value)
+    override = (overrides or {}).get(normalized)
+
+    if override is not None:
+        return normalize_text(override)
+
+    return re.sub(r"^(?:(?:the|le|la|les)\s+|l['’]\s*)", "", normalized)
 
 
 def parse_event_date(value: str) -> date | None:
@@ -117,7 +138,7 @@ def prepare_upcoming_events(
     return [event_to_data(event) for _, event in upcoming]
 
 
-def serialize_data(events: list[dict]) -> str:
+def serialize_data(events: object) -> str:
     serialized = json.dumps(
         events,
         ensure_ascii=False,
@@ -133,6 +154,8 @@ def serialize_data(events: list[dict]) -> str:
 
 def build_production_html(events: list[dict]) -> str:
     event_data = serialize_data(events)
+    artist_sort_overrides = serialize_data(ARTIST_SORT_OVERRIDES)
+    venue_sort_overrides = serialize_data(VENUE_SORT_OVERRIDES)
 
     return f"""<!doctype html>
 <html lang="en">
@@ -162,7 +185,7 @@ def build_production_html(events: list[dict]) -> str:
     header {{ margin: 0 -24px 30px; padding: 40px 24px 36px; background: var(--ee-dark); color: var(--ee-on-dark); border-bottom: 4px solid var(--ee-accent); }}
     h1 {{ margin: 0; color: var(--ee-on-dark); font-size: clamp(2.25rem, 4.2vw, 3.65rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; }}
     .intro {{ color: #c7c1b9; margin: 10px 0 0; font-size: 1.05rem; }}
-    .filters {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(140px, 1fr)) auto; gap: 14px; padding: 18px; background: var(--ee-surface); border: 1px solid var(--ee-border); }}
+    .filters {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(4, minmax(130px, 1fr)) auto; gap: 14px; padding: 18px; background: var(--ee-surface); border: 1px solid var(--ee-border); }}
     label {{ display: grid; gap: 6px; color: var(--ee-text-soft); font-size: .75rem; font-weight: 700; letter-spacing: .055em; text-transform: uppercase; }}
     input, select, button {{ min-width: 0; min-height: 44px; border: 1px solid #aeb6c0; border-radius: 0; background: var(--ee-surface); color: var(--ee-text); font: inherit; padding: 9px 11px; transition: border-color .17s ease, background-color .17s ease, color .17s ease; }}
     input:hover, select:hover {{ border-color: var(--ee-text-soft); }}
@@ -235,6 +258,14 @@ def build_production_html(events: list[dict]) -> str:
       <label for="genre-filter">Genre
         <select id="genre-filter"><option value="">All genres</option></select>
       </label>
+      <label for="sort-order">Sort
+        <select id="sort-order">
+          <option value="date-asc">Date — soonest first</option>
+          <option value="date-desc">Date — latest first</option>
+          <option value="artist-asc">Artist — A–Z</option>
+          <option value="venue-asc">Venue — A–Z</option>
+        </select>
+      </label>
       <button id="clear-filters" type="button">Clear</button>
     </section>
     <div class="summary">
@@ -253,6 +284,7 @@ def build_production_html(events: list[dict]) -> str:
       const monthFilter = document.getElementById("month-filter");
       const venueFilter = document.getElementById("venue-filter");
       const genreFilter = document.getElementById("genre-filter");
+      const sortOrder = document.getElementById("sort-order");
       const clearButton = document.getElementById("clear-filters");
       const list = document.getElementById("event-list");
       const count = document.getElementById("result-count");
@@ -262,8 +294,19 @@ def build_production_html(events: list[dict]) -> str:
       const normalize = value => (value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
       const dateFromISO = value => {{ const parts = value.split("-").map(Number); return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2])); }};
       const option = (value, label) => {{ const element = document.createElement("option"); element.value = value; element.textContent = label; return element; }};
+      const artistSortOverrides = {artist_sort_overrides};
+      const venueSortOverrides = {venue_sort_overrides};
+      const articleAwareKey = (value, overrides) => overrides[normalize(value)] || normalize(value).replace(/^(?:(?:the|le|la|les)\\s+|l['’]\\s*)/i, "");
+      const compareText = (left, right) => left.localeCompare(right, "fr", {{ sensitivity: "base" }});
+      const compareDateAscending = (left, right) => compareText(left.d, right.d);
+      const compareArtist = (left, right) => compareText(left.a, right.a) || compareDateAscending(left, right) || compareText(left.w, right.w) || left.i - right.i;
+      const compareVenue = (left, right) => compareText(left.w, right.w) || compareDateAscending(left, right) || compareText(left.a, right.a) || left.i - right.i;
+      const compareDate = (left, right, direction) => direction * compareDateAscending(left, right) || compareText(left.a, right.a) || compareText(left.w, right.w) || left.i - right.i;
 
-      events.forEach(event => {{
+      events.forEach((event, index) => {{
+        event.i = index;
+        event.a = articleAwareKey(event.h, artistSortOverrides);
+        event.w = articleAwareKey(event.v, venueSortOverrides);
         event.s = normalize([event.h, ...event.o, event.v, event.c].join(" "));
       }});
 
@@ -320,7 +363,9 @@ def build_production_html(events: list[dict]) -> str:
         const month = monthFilter.value;
         const venue = venueFilter.value;
         const genre = genreFilter.value;
+        const order = sortOrder.value;
         const filtered = events.filter(event => (!query || event.s.includes(query)) && (!month || event.d.startsWith(month)) && (!venue || event.v === venue) && (!genre || event.x.includes(genre)));
+        filtered.sort(order === "date-desc" ? (left, right) => compareDate(left, right, -1) : order === "artist-asc" ? compareArtist : order === "venue-asc" ? compareVenue : (left, right) => compareDate(left, right, 1));
         const fragment = document.createDocumentFragment();
         filtered.forEach(event => fragment.append(createRow(event)));
         list.replaceChildren(fragment);
@@ -336,7 +381,7 @@ def build_production_html(events: list[dict]) -> str:
         requestAnimationFrame(() => {{ scheduled = false; render(); }});
       }}
       search.addEventListener("input", scheduleRender);
-      [monthFilter, venueFilter, genreFilter].forEach(control => control.addEventListener("change", scheduleRender));
+      [monthFilter, venueFilter, genreFilter, sortOrder].forEach(control => control.addEventListener("change", scheduleRender));
       clearButton.addEventListener("click", () => {{ search.value = ""; monthFilter.value = ""; venueFilter.value = ""; genreFilter.value = ""; render(); search.focus(); }});
       render();
     }})();

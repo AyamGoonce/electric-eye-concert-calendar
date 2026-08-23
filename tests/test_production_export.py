@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import (
+    ARTIST_SORT_OVERRIDES,
+    alphabetical_sort_key,
     export_production_calendar,
     genre_categories,
     prepare_upcoming_events,
@@ -32,6 +34,30 @@ def make_event(
 
 
 class ProductionDataTests(unittest.TestCase):
+    def test_article_aware_sort_keys_are_conservative(self):
+        examples = {
+            "The Black Keys": "black keys",
+            "La Maroquinerie": "maroquinerie",
+            "Le Trianon": "trianon",
+            "Les Femmes s'en Mêlent": "femmes s'en melent",
+            "L'Olympia": "olympia",
+            "L’Olympia": "olympia",
+            "Alice Cooper": "alice cooper",
+            "Sammy Hagar": "sammy hagar",
+            "An Pierlé": "an pierle",
+        }
+
+        for displayed_name, expected_key in examples.items():
+            with self.subTest(displayed_name=displayed_name):
+                self.assertEqual(expected_key, alphabetical_sort_key(displayed_name))
+
+    def test_explicit_artist_sort_override_is_separate_and_conservative(self):
+        self.assertEqual(
+            "perfect circle",
+            alphabetical_sort_key("A Perfect Circle", ARTIST_SORT_OVERRIDES),
+        )
+        self.assertEqual("a perfect circle", alphabetical_sort_key("A Perfect Circle"))
+
     def test_upcoming_only_and_deterministic_sorting(self):
         events = [
             make_event("2026-08-31", "Zulu"),
@@ -61,6 +87,8 @@ class ProductionDataTests(unittest.TestCase):
         self.assertEqual("Vauréal", prepared["c"])
         self.assertEqual(["Première Partie"], prepared["o"])
         self.assertEqual(["Rock / Indie / Punk"], prepared["x"])
+        self.assertEqual("Long Artist + Another Artist", prepared["h"])
+        self.assertEqual("Le Forum", prepared["v"])
 
     def test_invalid_ticket_url_is_omitted(self):
         event = make_event(
@@ -110,6 +138,7 @@ class ProductionHTMLTests(unittest.TestCase):
             "month-filter",
             "venue-filter",
             "genre-filter",
+            "sort-order",
             "result-count",
             "event-list",
             "no-results",
@@ -118,6 +147,10 @@ class ProductionHTMLTests(unittest.TestCase):
 
         self.assertIn("@media (max-width: 680px)", soup.style.string)
         self.assertIn("No concerts match your current filters.", soup.get_text(" "))
+        self.assertEqual(
+            ["date-asc", "date-desc", "artist-asc", "venue-asc"],
+            [option.get("value") for option in soup.select("#sort-order option")],
+        )
 
     def test_embedded_json_is_compact_complete_and_safe(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -146,6 +179,14 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("event.d.startsWith(month)", html)
         self.assertIn("event.v === venue", html)
         self.assertIn("event.x.includes(genre)", html)
+        self.assertIn('const order = sortOrder.value;', html)
+        self.assertIn('order === "date-desc"', html)
+        self.assertIn('order === "artist-asc"', html)
+        self.assertIn('order === "venue-asc"', html)
+        self.assertIn('"a perfect circle":"Perfect Circle"', html)
+        self.assertIn("articleAwareKey(event.h, artistSortOverrides)", html)
+        self.assertIn("articleAwareKey(event.v, venueSortOverrides)", html)
+        self.assertNotIn('sortOrder.value = ""', html)
         self.assertIn('=== "paris" ? event.v : event.v + " (" + event.c + ")"', html)
         self.assertIn('target = "_blank"', html)
         self.assertIn('rel = "noopener noreferrer"', html)
