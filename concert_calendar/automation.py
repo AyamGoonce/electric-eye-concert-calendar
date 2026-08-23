@@ -96,9 +96,17 @@ def validate_events(events: list[dict]) -> None:
     public_ids = set()
 
     for index, event in enumerate(events):
-        if set(event) != REQUIRED_EVENT_KEYS:
+        event_keys = set(event)
+        if (
+            not REQUIRED_EVENT_KEYS.issubset(event_keys)
+            or not event_keys.issubset(REQUIRED_EVENT_KEYS | OPTIONAL_EVENT_KEYS)
+        ):
+            missing = sorted(REQUIRED_EVENT_KEYS - event_keys)
+            unexpected = sorted(event_keys - (REQUIRED_EVENT_KEYS | OPTIONAL_EVENT_KEYS))
             raise ProductionValidationError(
-                f"Event {index} has an invalid renderer contract"
+                f"Event {index} has an invalid renderer contract; "
+                f"missing={missing}, unexpected={unexpected}, "
+                f"keys={sorted(event_keys)}"
             )
         try:
             date.fromisoformat(event["d"])
