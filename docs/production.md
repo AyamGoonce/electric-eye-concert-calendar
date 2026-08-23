@@ -171,6 +171,24 @@ public genre. Festival-day rows never inherit a headliner genre. Production
 fails on vocabulary leakage and on a catastrophic drop below 10% coverage,
 while ordinary coverage drift is allowed.
 
+External genre research is deliberately absent from the production workflow.
+It is performed as a controlled maintenance audit, in descending blank-row
+impact, using authoritative event sources first, official artist biographies,
+then reviewed MusicBrainz/Wikidata structured metadata and corroborated
+editorial sources. `scripts/research_blank_genres.py` is an optional one-time
+audit helper, not an imported production component. Its output is reviewed
+before records are copied into the persistent dictionary.
+
+Each dictionary record requires a canonical artist, approved public genre,
+evidence source and type, review date, evidence URL when available, and notes.
+Exact normalized casing/punctuation matches are allowed; fuzzy artist matching
+is not. Reliable event-specific genre always beats an artist default. A narrow
+editorial override may resolve conflicting evidence only when explicitly
+reviewed; otherwise conflicts and genuinely multi-bucket artists remain blank.
+The build diagnostic includes every raw value and source, mapped target,
+mapping provenance, conflict, and unresolved canonical artist ordered by
+affected rows. See `docs/genre-research.md` for the current manual-review queue.
+
 ## Archive and image policy
 
 Electric Eye archive links must eventually be generated from one build-time

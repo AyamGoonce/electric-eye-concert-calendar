@@ -87,7 +87,6 @@ def event_to_data(event: ConcertEvent) -> dict:
         "o": event.openers or [],
         "v": event.venue,
         "c": event.city,
-        "g": event.genre or "",
         "x": (
             [event.genre_public] if event.genre_public else
             ([] if event.genre_evidence is not None or event.festival_name else genre_categories(event.genre))

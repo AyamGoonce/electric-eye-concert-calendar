@@ -1,42 +1,1248 @@
 {
   "version": 1,
   "artists": [
-    {"artist": "2L", "genre": "Hip-hop / Rap", "evidence": "Reviewed from consistent production source genre evidence, 2026-08-23"},
-    {"artist": "Albin de la Simone", "genre": "French chanson", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Bénabar", "genre": "French chanson", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Billy Corgan", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Blondshell", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Cat Power", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Charlie Winston", "genre": "Folk / Country", "evidence": "Reviewed stable singer-songwriter classification, 2026-08-23"},
-    {"artist": "Colours In The Street", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "DEFTONES", "genre": "Metal / Hard Rock", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Elephanz", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "FELDUP", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Gracie Abrams", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "HOLLYSIZ", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Ino Casablanca", "genre": "Hip-hop / Rap", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Kodaline", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Laura Cox", "genre": "Metal / Hard Rock", "evidence": "Reviewed stable hard-rock classification, 2026-08-23"},
-    {"artist": "Loreena McKennitt", "genre": "Folk / Country", "evidence": "Reviewed stable folk classification, 2026-08-23"},
-    {"artist": "Lorde", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Mentissa", "genre": "Pop", "evidence": "Reviewed from consistent production source genre evidence, 2026-08-23"},
-    {"artist": "Mosimann", "genre": "Electronic", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Nick Cave and The Bad Seeds", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Olivia Rodrigo", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "PSYKUP", "genre": "Metal / Hard Rock", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Sebastien Tellier", "genre": "Electronic", "evidence": "Reviewed stable electronic artist classification, 2026-08-23"},
-    {"artist": "Sienna Spiro", "genre": "Pop", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "SLOPE", "genre": "Metal / Hard Rock", "evidence": "Reviewed stable hardcore classification, 2026-08-23"},
-    {"artist": "TÉTÉ", "genre": "Folk / Country", "evidence": "Reviewed from consistent production source genre evidence, 2026-08-23"},
-    {"artist": "The Afghan Whigs", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "The Cure", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Thomas Fersen", "genre": "French chanson", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "TOKIO HOTEL", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable rock classification, 2026-08-23"},
-    {"artist": "Tyler, The Creator", "genre": "Hip-hop / Rap", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "Vianney", "genre": "French chanson", "evidence": "Reviewed stable French singer-songwriter classification, 2026-08-23"},
-    {"artist": "Vincent Delerm", "genre": "French chanson", "evidence": "Reviewed from consistent production source genre evidence, 2026-08-23"},
-    {"artist": "Widowspeak", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable artist classification, 2026-08-23"},
-    {"artist": "ZEBRAHEAD", "genre": "Rock / Indie / Punk", "evidence": "Reviewed stable punk-rock classification, 2026-08-23"}
+    {
+      "artist": "2L",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Reviewed from consistent production source genre evidence, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "7 WEEKS",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q18331461",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: stoner rock."
+    },
+    {
+      "artist": "Aaron Parks",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q302467",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Abd al Malik",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q2420980",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: alternative hip-hop, rapping."
+    },
+    {
+      "artist": "Abigail Lapell",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q43383985",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: neofolk."
+    },
+    {
+      "artist": "Albin de la Simone",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Allegaeon",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1649086",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: melodic death metal."
+    },
+    {
+      "artist": "Allie X",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q16150821",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: synth-pop."
+    },
+    {
+      "artist": "Apparat",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q620679",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: glitch."
+    },
+    {
+      "artist": "Art Garfunkel",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q4039",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "Artemas",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q125176874",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: alternative pop."
+    },
+    {
+      "artist": "Bayonne",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q23542737",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: electronic music."
+    },
+    {
+      "artist": "Bénabar",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Big Special",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q136403295",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: punk rock."
+    },
+    {
+      "artist": "Bill Callahan",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q862005",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: alternative country, lo-fi music."
+    },
+    {
+      "artist": "Billy Corgan",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Bloc Party",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q205838",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock, indie rock."
+    },
+    {
+      "artist": "Blondshell",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Brigitte Calls Me Baby",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q134770134",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock."
+    },
+    {
+      "artist": "Cassia",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q123148190",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie pop."
+    },
+    {
+      "artist": "Cat Power",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Charlie Winston",
+      "genre": "Folk / Country",
+      "evidence_source": "Reviewed stable singer-songwriter classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Chrissy Chlapecka",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q113613523",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: hyperpop."
+    },
+    {
+      "artist": "Colours In The Street",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Courtney Barnett",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q16390683",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock, indie rock, psychedelic rock."
+    },
+    {
+      "artist": "David Walters",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q99609625",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: electronic music."
+    },
+    {
+      "artist": "De Kift",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1180049",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: punk rock."
+    },
+    {
+      "artist": "DEFTONES",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Dent May",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q5259375",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "Digitalism",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q702332",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: electronic music."
+    },
+    {
+      "artist": "Dub Pistols",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q731624",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: big beat."
+    },
+    {
+      "artist": "Elephant Stone",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q5359370",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Elephanz",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Ella Eyre",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q15279395",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "Fat Freddy's Drop",
+      "genre": "Reggae / Dub / Ska",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1246729",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: dub music."
+    },
+    {
+      "artist": "Father of Peace",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q133464183",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock, indie rock."
+    },
+    {
+      "artist": "FELDUP",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Flamin' Groovies",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1571476",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "Flower Face",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q137088593",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: folk music."
+    },
+    {
+      "artist": "Frankie and the Witch Fingers",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q115822284",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "Freya Skye",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q115161448",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "Gaëtan Roussel",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1496734",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "Galliano",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q286110",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Gang of Youths",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q22080817",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Gracie Abrams",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "greek",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q128794198",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie pop."
+    },
+    {
+      "artist": "Holly Humberstone",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q96217225",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie pop."
+    },
+    {
+      "artist": "HOLLYSIZ",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "I Love You Honey Bunny",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q28044477",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Iceage",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q4041247",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: punk rock."
+    },
+    {
+      "artist": "Ino Casablanca",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Isaiah Collier",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q106935967",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "J. Cole",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q204018",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: East Coast hip-hop, Southern hip-hop, conscious hip-hop, hip-hop, pop rap."
+    },
+    {
+      "artist": "Jack & Jack",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q18352842",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: hip-hop, pop rap."
+    },
+    {
+      "artist": "Jacob Alon",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q138027918",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie folk."
+    },
+    {
+      "artist": "Jazzy Bazz",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q24578985",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: French hip-hop."
+    },
+    {
+      "artist": "Jeremy Jay",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q3177318",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie pop."
+    },
+    {
+      "artist": "Jesca Hoop",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q12404804",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: traditional folk music."
+    },
+    {
+      "artist": "John Craigie",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q6227483",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: traditional folk music."
+    },
+    {
+      "artist": "Joyce Moreno",
+      "genre": "World / Latin",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q3084419",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: bossa nova, música popular brasileira."
+    },
+    {
+      "artist": "Khalid",
+      "genre": "R&B / Soul / Funk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q28816483",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: contemporary R&B."
+    },
+    {
+      "artist": "Kodaline",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Konradsen",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q87125689",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie pop."
+    },
+    {
+      "artist": "Kurt Rosenwinkel",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q552849",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz, jazz fusion."
+    },
+    {
+      "artist": "La Coka Nostra",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q55809",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: hardcore hip-hop, hip-hop."
+    },
+    {
+      "artist": "Lakecia Benjamin",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q47003769",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Lane 8",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q20311234",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: deep house."
+    },
+    {
+      "artist": "Laura Cox",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed stable hard-rock classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Le Sserafim",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q111381707",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: K-pop, dance-pop."
+    },
+    {
+      "artist": "Leïla Olivesi",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q60869273",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Lime Garden",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q117219415",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Little Barrie",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q750616",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Lol Tolhurst",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q2296195",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: new wave."
+    },
+    {
+      "artist": "Lorde",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Loreena McKennitt",
+      "genre": "Folk / Country",
+      "evidence_source": "Reviewed stable folk classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Macha Gharibian",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q58217999",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Madra Salach",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q138542395",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: folk music, traditional folk music."
+    },
+    {
+      "artist": "Makthaverskan",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q18015335",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: post-punk."
+    },
+    {
+      "artist": "Mark Guiliana",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q3294095",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz, jazz fusion."
+    },
+    {
+      "artist": "Megan Moroney",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q116786312",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: country music, folk music."
+    },
+    {
+      "artist": "Mentissa",
+      "genre": "Pop",
+      "evidence_source": "Reviewed from consistent production source genre evidence, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Mercury Rev",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q583344",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock."
+    },
+    {
+      "artist": "Metric",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q650486",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "MNEK",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q6716905",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "Monty Alexander",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1352497",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Mosimann",
+      "genre": "Electronic",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Mykki Blanco",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q16201334",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: alternative hip-hop."
+    },
+    {
+      "artist": "Myles Sanko",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q31017823",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Nathan Fake",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1966560",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: electronic music, progressive house."
+    },
+    {
+      "artist": "Nick Cave and The Bad Seeds",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "No Te Va Gustar",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q16365",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "Oh Hiroshima",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q29468813",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: post-rock."
+    },
+    {
+      "artist": "Olivia Rodrigo",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Oumou Sangaré",
+      "genre": "World / Latin",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q467094",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: Wassoulou music, music of Africa, world music."
+    },
+    {
+      "artist": "Piche",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q121913241",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: LGBT hip hop."
+    },
+    {
+      "artist": "Pisse",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q27973385",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: punk rock."
+    },
+    {
+      "artist": "Poliça",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q977253",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Protomartyr",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q16967840",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: punk rock."
+    },
+    {
+      "artist": "PSYKUP",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Rhiannon Giddens",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q7320514",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: folk music, old-time music, puirt à beul."
+    },
+    {
+      "artist": "Ryan Beatty",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q7383866",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "Sam Tompkins",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q112155955",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "Sarah Julia",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q138314120",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: folk music."
+    },
+    {
+      "artist": "Sebastien Tellier",
+      "genre": "Electronic",
+      "evidence_source": "Reviewed stable electronic artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Shalosh",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q48700491",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz fusion."
+    },
+    {
+      "artist": "Sienna Spiro",
+      "genre": "Pop",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Skeler",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q58823902",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: hardwave, wave."
+    },
+    {
+      "artist": "Slayyyter",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q61732169",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: pop music."
+    },
+    {
+      "artist": "SLOPE",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed stable hardcore classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Slow Pulp",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q104882659",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "Songhoy Blues",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q23541226",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: desert blues."
+    },
+    {
+      "artist": "Syd Matters",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q3506786",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie pop."
+    },
+    {
+      "artist": "Takuya Kuroda",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1257691",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: jazz."
+    },
+    {
+      "artist": "Teenage Fanclub",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q1515611",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock."
+    },
+    {
+      "artist": "Temples",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q14832136",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: psychedelic rock."
+    },
+    {
+      "artist": "TÉTÉ",
+      "genre": "Folk / Country",
+      "evidence_source": "Reviewed from consistent production source genre evidence, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "The Afghan Whigs",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "The Cure",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "The Lemon Twigs",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q27858268",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: art rock."
+    },
+    {
+      "artist": "The Limiñanas",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q48758477",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "The Orielles",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q60752219",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "The Reytons",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q116730323",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "The Strokes",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q211583",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: garage rock, indie rock, new wave, post-punk revival, rock music."
+    },
+    {
+      "artist": "The Wedding Present",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q4372",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: indie rock."
+    },
+    {
+      "artist": "The Whitest Boy Alive",
+      "genre": "Pop",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q639424",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: dream pop."
+    },
+    {
+      "artist": "Thomas Fersen",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "TOKIO HOTEL",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable rock classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Tori Kelly",
+      "genre": "R&B / Soul / Funk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q7825754",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; subgenres map to one defensible public bucket: soul."
+    },
+    {
+      "artist": "Trixie Whitley",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q2318158",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock, rock music."
+    },
+    {
+      "artist": "Tyler, The Creator",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "U.D.O.",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q277352",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: heavy metal music."
+    },
+    {
+      "artist": "Ulrika Spacek",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q23018832",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: alternative rock, indie rock, post-rock, psychedelic rock, shoegaze."
+    },
+    {
+      "artist": "Vianney",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Vincent Delerm",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed from consistent production source genre evidence, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Waxx",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q65032250",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: rock music."
+    },
+    {
+      "artist": "Widowspeak",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable artist classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Wolfgang Voigt",
+      "genre": "Electronic",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q85367",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: ambient music."
+    },
+    {
+      "artist": "Yaelokre",
+      "genre": "Folk / Country",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q133883345",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: contemporary folk music."
+    },
+    {
+      "artist": "ZEBRAHEAD",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed stable punk-rock classification, 2026-08-23",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-23",
+      "notes": "Reviewed before structured-provenance migration."
+    },
+    {
+      "artist": "Zed Yun Pavarotti",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Wikidata genre statements (P136)",
+      "evidence_url": "https://www.wikidata.org/wiki/Q67214930",
+      "evidence_type": "wikidata_structured_genre",
+      "review_date": "2026-08-23",
+      "notes": "Exact-label identity reviewed; Wikidata genres: cloud rap."
+    },
+    {
+      "artist": "ALICE ON THE ROOF",
+      "genre": "Pop",
+      "evidence_source": "NRJ artist biography",
+      "evidence_url": "https://www.nrj.fr/artistes/alice-on-the-roof/biographie",
+      "evidence_type": "reputable_editorial_biography",
+      "review_date": "2026-08-23",
+      "notes": "Biography explicitly identifies the artist and public-facing genre as Pop."
+    },
+    {
+      "artist": "Ysé",
+      "genre": "Pop",
+      "evidence_source": "Official Ysé artist biography",
+      "evidence_url": "https://yse-musique.com/a-propos/",
+      "evidence_type": "official_artist_biography",
+      "review_date": "2026-08-23",
+      "notes": "Official biography explicitly describes her current sound as pop."
+    }
   ],
   "overrides": []
 }

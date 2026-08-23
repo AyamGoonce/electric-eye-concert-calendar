@@ -138,9 +138,12 @@ def load_reviewed_mappings(path: Path | None = None) -> dict:
     for section in result:
         for record in value.get(section, []):
             genre = record.get("genre")
-            evidence = record.get("evidence")
             artist = record.get("artist")
-            if genre not in PUBLIC_GENRES or not artist or not evidence:
+            required_provenance = (
+                record.get("evidence_source"), record.get("evidence_type"),
+                record.get("review_date"),
+            )
+            if genre not in PUBLIC_GENRES or not artist or not all(required_provenance):
                 raise ValueError("Malformed reviewed genre mapping")
             identity = normalize_artist_component(artist)
             if identity in result[section]:
@@ -156,6 +159,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
     raw_sources = defaultdict(set)
     unresolved_raw = Counter()
     conflicts = []
+    unresolved_artists = {}
 
     for event in events:
         event.genre_public = None
@@ -178,29 +182,43 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
 
         if event.festival_name:
             stats["blank_festival"] += 1
-        elif override:
-            event.genre_public = override["genre"]
-            event.genre_method = "manual_override"
-            event.genre_source = override["evidence"]
-            stats["override"] += 1
-        elif len(mapped) > 1:
-            conflicts.append({"event": event.headliner, "date": event.date, "genres": sorted(mapped)})
-            stats["conflict"] += 1
         elif len(mapped) == 1:
             event.genre_public = next(iter(mapped))
             exact_public = any(normalize_raw(item.get("raw", "")) == normalize_raw(event.genre_public) for item in evidence)
             event.genre_method = "source_explicit" if exact_public else "source_mapping"
             stats[event.genre_method] += 1
+        elif override:
+            event.genre_public = override["genre"]
+            event.genre_method = "manual_override"
+            event.genre_source = override["evidence_source"]
+            stats["override"] += 1
+        elif len(mapped) > 1:
+            conflicts.append({"event": event.headliner, "date": event.date, "genres": sorted(mapped)})
+            stats["conflict"] += 1
         elif artist:
             event.genre_public = artist["genre"]
             event.genre_method = "artist_mapping"
-            event.genre_source = artist["evidence"]
+            event.genre_source = artist["evidence_source"]
             stats["artist_mapping"] += 1
         else:
             stats["blank_no_raw" if not evidence else "blank_unresolved_raw"] += 1
             for item in evidence:
                 if item.get("raw"):
                     unresolved_raw[item["raw"]] += 1
+
+        if not event.genre_public:
+            identity = normalize_artist_component(event.headliner)
+            item = unresolved_artists.setdefault(identity, {
+                "artist": event.headliner, "affected_events": 0,
+                "raw_genres": set(), "sources": set(),
+                "reason": "festival" if event.festival_name else (
+                    "conflicting_evidence" if len(mapped) > 1 else
+                    ("unresolved_raw" if evidence else "no_raw_evidence")
+                ),
+            })
+            item["affected_events"] += 1
+            item["raw_genres"].update(x.get("raw") for x in evidence if x.get("raw"))
+            item["sources"].update(x.get("source") for x in evidence if x.get("source"))
 
     populated = sum(bool(event.genre_public) for event in events)
     return {
@@ -212,5 +230,18 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         "blank_festival": stats["blank_festival"], "conflict_count": stats["conflict"],
         "conflicts": conflicts, "raw_inventory": dict(raw_inventory.most_common()),
         "raw_sources": {raw: sorted(sources) for raw, sources in sorted(raw_sources.items())},
+        "raw_genres": [
+            {"raw": raw, "frequency": frequency, "mapped_target": map_raw_genre(raw),
+             "sources": sorted(raw_sources[raw])}
+            for raw, frequency in raw_inventory.most_common()
+        ],
+        "artist_mappings": [
+            {**record, "method": "manual_override" if section == "overrides" else "artist_mapping"}
+            for section, records in mappings.items() for record in records.values()
+        ],
+        "unresolved_artists": sorted((
+            {**item, "raw_genres": sorted(item["raw_genres"]), "sources": sorted(item["sources"])}
+            for item in unresolved_artists.values()
+        ), key=lambda item: (-item["affected_events"], normalize_raw(item["artist"]))),
         "unresolved_raw": dict(unresolved_raw.most_common()), "vocabulary_violations": 0,
     }

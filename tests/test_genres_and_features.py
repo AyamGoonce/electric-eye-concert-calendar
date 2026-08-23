@@ -71,12 +71,18 @@ class GenreEnrichmentTests(unittest.TestCase):
         for section in mappings.values():
             for record in section.values():
                 self.assertIn(record["genre"], PUBLIC_GENRES)
-                self.assertTrue(record["evidence"])
+                self.assertTrue(record["evidence_source"])
+                self.assertTrue(record["evidence_type"])
+                self.assertRegex(record["review_date"], r"^\d{4}-\d{2}-\d{2}$")
 
     def test_reviewed_override_has_priority_and_provenance(self):
         value = {
             "version": 1, "artists": [],
-            "overrides": [{"artist": "Conflict", "genre": "Pop", "evidence": "Reviewed test evidence"}],
+            "overrides": [{
+                "artist": "Conflict", "genre": "Pop",
+                "evidence_source": "Reviewed test evidence",
+                "evidence_type": "editorial_review", "review_date": "2026-08-23",
+            }],
         }
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "genres.json"
@@ -91,12 +97,44 @@ class GenreEnrichmentTests(unittest.TestCase):
         self.assertEqual("Reviewed test evidence", conflict.genre_source)
         self.assertEqual(1, report["override"])
 
+    def test_conflicting_duplicate_mapping_cannot_silently_overwrite(self):
+        provenance = {
+            "evidence_source": "Reviewed test", "evidence_type": "editorial_review",
+            "review_date": "2026-08-23",
+        }
+        value = {"version": 1, "artists": [
+            {"artist": "Same Artist", "genre": "Pop", **provenance},
+            {"artist": "SAME ARTIST", "genre": "Jazz / Blues", **provenance},
+        ], "overrides": []}
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "genres.json"
+            path.write_text(json.dumps(value), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Duplicate reviewed genre identity"):
+                load_reviewed_mappings(path)
+
+    def test_event_specific_genre_beats_artist_default(self):
+        item = event(headliner="The Afghan Whigs", genre_evidence=[
+            {"raw": "Jazz", "source": "Authoritative event source"},
+        ])
+        enrich_event_genres([item])
+        self.assertEqual("Jazz / Blues", item.genre_public)
+        self.assertEqual("source_mapping", item.genre_method)
+
     def test_completeness_report_includes_raw_frequency_and_sources(self):
         item = event(headliner="Unmapped", genre_evidence=[{"raw": "Other", "source": "Official"}])
         report = enrich_event_genres([item])
         self.assertEqual(1, report["blank"])
         self.assertEqual({"Other": 1}, report["raw_inventory"])
         self.assertEqual(["Official"], report["raw_sources"]["Other"])
+        self.assertTrue(report["unresolved_artists"])
+        self.assertTrue(report["artist_mappings"])
+
+    def test_public_payload_does_not_leak_raw_genre_or_provenance(self):
+        item = event(genre="Other", genre_source="Internal source", genre_method="artist_mapping")
+        payload = event_to_data(item)
+        self.assertNotIn("g", payload)
+        self.assertNotIn("genre_source", payload)
+        self.assertNotIn("genre_method", payload)
 
     def test_safe_and_ambiguous_raw_examples(self):
         self.assertEqual("R&B / Soul / Funk", map_raw_genre("#neosoul"))

@@ -35,7 +35,6 @@ def valid_event(index=0):
         "o": [],
         "v": "La CLEF",
         "c": "Saint-Germain-en-Laye",
-        "g": "Rap, Hip-Hop",
         "x": ["Hip-hop / Rap"],
         "p": ["Example promoter"],
         "t": "https://example.com/tickets",

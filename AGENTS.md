@@ -45,9 +45,18 @@
 - Public genre is presentation-only and must be one of the 12 labels in
   `genres.PUBLIC_GENRES` or blank. Preserve source evidence, use reviewed exact
   mappings, report conflicts, and prefer a correct blank to an inference.
+- Genre research is a controlled, human-reviewed maintenance task, never a
+  six-hour build dependency. Prefer existing authoritative event evidence,
+  official artist biographies, MusicBrainz/Wikidata structured data, then
+  corroborated reputable editorial sources. Reject identity collisions,
+  multi-bucket evidence, and unsupported tag clouds.
 - Keep reviewed artist genres in `genre_mappings.json` with evidence. Artist
   matching is canonical and exact, never fuzzy; festival days do not inherit a
   headliner's genre.
+- Every reviewed mapping records evidence source/type, review date, source URL
+  where available, and notes. Event-specific evidence beats editorial override,
+  which beats artist fallback. Conflicting research remains in the review queue
+  and must never silently replace an existing mapping.
 - Stable public event IDs derive only from canonical date, headliner, and venue.
   Metadata improvements must not break direct links or reset event state.
 - Ticket states are only `tickets`, `sold_out`, `free`, `not_on_sale`, or blank,

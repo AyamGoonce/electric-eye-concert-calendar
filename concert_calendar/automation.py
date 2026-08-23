@@ -48,7 +48,7 @@ CORE_SOURCES = {
     "VeryShow",
 }
 REQUIRED_EVENT_KEYS = {
-    "d", "h", "o", "v", "c", "g", "x", "p", "t", "f", "so", "fs",
+    "d", "h", "o", "v", "c", "x", "p", "t", "f", "so", "fs",
     "i", "ts", "st",
 }
 POINTER_PATTERN = re.compile(r"var manifest = Object\.freeze\((\{.*?\})\);")
