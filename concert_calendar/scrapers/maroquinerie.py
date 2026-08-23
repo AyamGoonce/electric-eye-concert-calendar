@@ -116,7 +116,21 @@ def parse_card(card, year):
     if ticket_link and clean_text(ticket_link.get("href")) in {"", "/"}:
         ticket_link = None
 
-    available_link = ticket_link or detail_link
+    ticket_href = (
+        clean_text(ticket_link.get("href"))
+        if ticket_link
+        else ""
+    )
+    facebook_event_url = (
+        ticket_href
+        if "facebook.com" in ticket_href.casefold()
+        else None
+    )
+    available_link = (
+        detail_link
+        if facebook_event_url
+        else ticket_link or detail_link
+    )
 
     return ConcertEvent(
         date=event_date,
@@ -127,7 +141,7 @@ def parse_card(card, year):
         openers=None,
         promoters=None,
         genre=None,
-        facebook_event_url=None,
+        facebook_event_url=facebook_event_url,
         ticket_url=(
             urljoin(SITE_URL, clean_text(available_link.get("href")))
             if available_link

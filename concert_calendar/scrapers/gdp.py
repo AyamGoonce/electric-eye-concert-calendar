@@ -12,6 +12,10 @@ GDP_EVENTS_URL = "https://www.gdp.fr/fr/agenda"
 REQUEST_TIMEOUT = 30
 
 
+def normalize_date(value):
+    return (value or "").split("T", 1)[0].strip()
+
+
 def load_events():
     print(f"Downloading {GDP_EVENTS_URL}...")
 
@@ -52,7 +56,7 @@ def load_events():
             else None
         )
 
-        date = (
+        date = normalize_date(
             date_element.get("datetime", "").strip()
             if date_element
             else ""

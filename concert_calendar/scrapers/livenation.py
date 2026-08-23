@@ -70,9 +70,6 @@ def get_genre(document):
     return ", ".join(genre_names) or None
 
 
-from urllib.parse import urljoin
-
-
 def get_ticket_url(document):
     tickets = document.get("tickets") or []
 
@@ -112,7 +109,7 @@ def get_event_url(document):
             url = (localization.get("url") or "").strip()
 
             if url:
-                return url
+                return urljoin(BASE_URL, url)
 
     url = (document.get("url") or "").strip()
 
@@ -135,6 +132,9 @@ def document_to_event(document):
         or document.get("eventDateUtc")
         or ""
     ).strip()
+
+    if "T" in date:
+        date = date.split("T", 1)[0]
 
     venue = (venue_data.get("name") or "").strip()
     city = (venue_data.get("city") or "").strip()

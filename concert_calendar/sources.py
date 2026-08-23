@@ -34,6 +34,14 @@ def is_non_supported_event(title):
 
     normalized_title = normalize_text_for_matching(title)
 
+    party_is_concert_billing = bool(
+        re.search(r"\brelease party\b", normalized_title)
+        or re.match(
+            r"^bloc party(?:\s*\+|$)",
+            normalized_title,
+        )
+    )
+
     excluded_patterns = [
         # VIP and commercial package listings
         r"\bpackage\b",
@@ -48,7 +56,6 @@ def is_non_supported_event(title):
         r"\bkaraoke\b",
         r"\bdancefloor\b",
         r"\bdance floor\b",
-        r"\bparty\b",
         r"\bsoiree\b",
         r"\bdisco\b",
 
@@ -67,6 +74,12 @@ def is_non_supported_event(title):
         r"\bamerican idiot\b",
         r"\btrilogie du samedi\b",
     ]
+
+    if (
+        re.search(r"\bparty\b", normalized_title)
+        and not party_is_concert_billing
+    ):
+        return True
 
     return any(
         re.search(pattern, normalized_title)

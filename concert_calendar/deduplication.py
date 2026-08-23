@@ -6,9 +6,16 @@ from concert_calendar.models import ConcertEvent
 
 
 ARTIST_ALIASES = {
+    "alison’s halo": "alison's halo",
     "day we ran": "dayweran",
+    "f.f.f.": "fff",
     "gaëlle joly": "gaelle joly",
+    "gregoire jokic": "grégoire jokic",
+    "howlin’ jaws": "howlin' jaws",
     "la p’tité fumée": "la p’tite fumée",
+    "la securite": "la sécurité",
+    "noe preszow": "noé preszow",
+    "sebastien tellier": "sébastien tellier",
     "zoh amba (les femmes s’en mêlent)": (
         "zoh amba (les femmes s'en mêlent)"
     ),
