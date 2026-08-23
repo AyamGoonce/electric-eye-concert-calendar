@@ -5,6 +5,16 @@ import re
 from concert_calendar.models import ConcertEvent
 
 
+ARTIST_ALIASES = {
+    "day we ran": "dayweran",
+    "gaëlle joly": "gaelle joly",
+    "la p’tité fumée": "la p’tite fumée",
+    "zoh amba (les femmes s’en mêlent)": (
+        "zoh amba (les femmes s'en mêlent)"
+    ),
+}
+
+
 def normalize_headliner(name: str) -> str:
     """
     Normalize an artist name for deduplication.
@@ -16,7 +26,7 @@ def normalize_headliner(name: str) -> str:
     name = name.lower().strip()
     name = re.sub(r"\s+", " ", name)
 
-    return name
+    return ARTIST_ALIASES.get(name, name)
 
 
 def build_event_key(event: ConcertEvent) -> tuple:
