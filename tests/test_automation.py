@@ -11,6 +11,7 @@ from concert_calendar.automation import (
     publish,
     read_pointer,
     validate_count_regression,
+    validate_genre_coverage,
     validate_events,
 )
 from concert_calendar.production_export import build_current_pointer, build_data_asset
@@ -41,10 +42,18 @@ def valid_event(index=0):
         "f": False,
         "so": False,
         "fs": "2026-08-20T00:00:00Z",
+        "i": f"{index:016x}",
+        "ts": "tickets",
+        "st": None,
     }
 
 
 class AutomationValidationTests(unittest.TestCase):
+    def test_genre_coverage_guard_rejects_catastrophic_collapse(self):
+        with self.assertRaises(ProductionValidationError):
+            validate_genre_coverage({"total": 1000, "populated": 99})
+        validate_genre_coverage({"total": 1000, "populated": 100})
+
     def test_source_loader_retries_zero_result_with_a_bound(self):
         scraper = type(
             "Scraper",

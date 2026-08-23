@@ -17,3 +17,19 @@ The hosted calendar supports bookmarkable views such as
 [`?venue=Bataclan`](https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/?venue=Bataclan),
 and
 [`?genre=Metal / Hard Rock`](https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/?genre=Metal%20%2F%20Hard%20Rock).
+
+Genre may be repeated to select several categories; the selections are ORed
+with each other and ANDed with search, venue, and date filters. Every event also
+has a stable `#event-…` link, Copy/Share actions, and an `.ics` download. Public
+genres come only from reviewed source or exact artist evidence and otherwise
+remain blank.
+
+For a manual cloud refresh on macOS, compile the portable helper with:
+
+```sh
+osacompile -l JavaScript -o "$HOME/Desktop/Update Concert Calendar.app" \
+  "scripts/Update Concert Calendar.js"
+```
+
+The app uses the already authenticated GitHub CLI to request the existing
+workflow; it does not run scrapers locally or store credentials.

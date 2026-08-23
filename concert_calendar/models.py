@@ -19,3 +19,9 @@ class ConcertEvent:
     authoritative_billing: bool = False
     sold_out: bool = False
     first_seen: Optional[str] = None
+    genre_public: Optional[str] = None
+    genre_source: Optional[str] = None
+    genre_method: Optional[str] = None
+    genre_evidence: Optional[list[dict]] = None
+    ticket_status: Optional[str] = None
+    start_time: Optional[str] = None

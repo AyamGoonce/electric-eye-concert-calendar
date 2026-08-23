@@ -114,8 +114,12 @@ For a failed run:
 4. Fix the underlying source or validation issue on the source branch.
 5. Trigger a normal manual run; do not bypass non-count validation.
 
-The run summary records raw, IDF, and final counts, the published SHA-256, the
-runner platform, and whether Pages changed.
+The run summary records raw, IDF, and final counts, genre completeness and
+conflicts, new/disappeared events, support additions, genre enrichments,
+ticket-status changes, the published SHA-256, runner platform, and whether
+Pages changed. Disappearance is informational only and never implies
+cancellation. A future NEW SUPPORT badge can use support additions without
+changing the existing NEW identity semantics.
 
 The public proof is:
 
@@ -133,7 +137,7 @@ current weekend on Friday–Sunday, otherwise the upcoming weekend. Selecting a
 quick date clears Month, selecting Month clears the quick date, and All Dates
 clears both date restrictions.
 
-URL parameters are `q`, `venue`, `genre`, `month`, `when`, `new`, and `sort`.
+URL parameters are `q`, `venue`, repeatable `genre`, `month`, `when`, `new`, and `sort`.
 State restores on reload and popstate. Examples:
 
 - `?q=Afghan%20Whigs`
@@ -143,8 +147,55 @@ State restores on reload and popstate. Examples:
 
 Artist text populates Search; venue text activates the canonical Venue filter.
 Explicit structured sold-out evidence produces SOLD OUT and suppresses the
-Tickets action. A missing URL never implies sold out. Last updated comes from
+Tickets action. The same evidence-only rule applies to FREE and NOT ON SALE
+YET; a missing URL never implies any status. Stable event anchors are derived
+from canonical date, headliner, and venue, so metadata improvements preserve
+Copy link/Share URLs. Add to calendar emits an all-day ICS unless a reliable
+source time exists; festival rows remain one calendar event with their full
+authoritative lineup. Last updated comes from
 the successfully published pointer timestamp and renders in Paris local time.
+
+The Genre control permits several broad categories. Genre selections use OR;
+search, venue, date, month, and Newly added remain AND constraints. URL state
+has precedence over the locally remembered sort preference. Storage failures
+or malformed values are ignored safely.
+
+## Genre provenance and reviewed mappings
+
+The closed public vocabulary lives in `concert_calendar/genres.py`. Source raw
+values and source names remain build-side as evidence. Exact safe raw mappings
+are applied before the reviewed canonical artist dictionary in
+`concert_calendar/genre_mappings.json`; narrow reviewed overrides have highest
+priority. Conflicting mapped source evidence produces a diagnostic and a blank
+public genre. Festival-day rows never inherit a headliner genre. Production
+fails on vocabulary leakage and on a catastrophic drop below 10% coverage,
+while ordinary coverage drift is allowed.
+
+## Archive and image policy
+
+Electric Eye archive links must eventually be generated from one build-time
+index of canonical artist identities to public Blogger URLs. Production must
+not query Blogger per row, and ambiguous identities must not link. The small
+archive action should appear only where an exact match exists.
+
+No public imagery is currently shipped. Future image data must be explicitly
+associated with the event by an official or otherwise reviewed source, retain
+provenance, and never use image search, generated imagery, or unrelated stock.
+Compact remains the default and must make zero image requests. Any Images mode
+must lazy-load dimensioned thumbnails near the viewport, preserve the text-only
+fallback, prefer festival artwork for festival rows, and resolve reuse and
+caching rights before copying third-party assets to Pages.
+
+## One-click Mac update
+
+`scripts/Update Concert Calendar.js` is portable JXA app source and
+`scripts/update-concert-calendar.sh` is its terminal equivalent. Compile the
+app with the command in the README and place it wherever convenient (normally
+the Desktop). Clicking it authenticates through the existing `gh` keychain
+session, dispatches `Update Electric Eye Concert Calendar` on
+`supersonic-scraper`, then says only that the update *started on GitHub*.
+“Open Update Status” opens the Actions page. Authentication, network, and
+workflow errors produce an error dialog; no token or machine path is embedded.
 
 Filters are sticky above 680px with the scoped
 `--ee-calendar-sticky-top` custom property available for the eventual Blogger

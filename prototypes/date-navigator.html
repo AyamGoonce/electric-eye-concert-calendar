@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Compact date navigator evaluation</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:32px;background:#edf1f5;color:#171717;font:15px Arial,sans-serif}.prototype{max-width:980px;margin:auto}.dates{display:flex;gap:6px;overflow-x:auto;padding:8px 0 12px;scrollbar-width:thin}.date{flex:0 0 54px;border:1px solid #cdd3da;border-radius:3px;background:#fff;padding:8px 4px;text-align:center;color:inherit;cursor:pointer}.date span{display:block;font-size:11px;text-transform:uppercase;color:#6f7782}.date strong{display:block;margin-top:3px;font-size:17px}.date[aria-pressed=true]{border-color:#d82323;background:#d82323;color:#fff}.date[aria-pressed=true] span{color:#fff}.note{color:#555;line-height:1.5}@media(max-width:480px){body{padding:20px 15px}.dates{max-width:100%}}
+  </style>
+</head>
+<body>
+  <main class="prototype">
+    <h1>Near-term date navigator prototype</h1>
+    <div class="dates" role="group" aria-label="Choose a concert date"></div>
+    <p class="note">Evaluation-only prototype. The strip scrolls internally on mobile and does not create document overflow.</p>
+  </main>
+  <script>
+    const root=document.querySelector('.dates'),start=new Date('2026-08-23T12:00:00');
+    for(let offset=0;offset<18;offset+=1){const day=new Date(start);day.setDate(day.getDate()+offset);const button=document.createElement('button');button.className='date';button.type='button';button.setAttribute('aria-pressed','false');button.innerHTML=`<span>${day.toLocaleDateString('en-GB',{month:'short'})}</span><strong>${day.getDate()}</strong><span>${day.toLocaleDateString('en-GB',{weekday:'short'})}</span>`;button.addEventListener('click',()=>{root.querySelectorAll('button').forEach(item=>item.setAttribute('aria-pressed','false'));button.setAttribute('aria-pressed','true')});root.append(button)}
+  </script>
+</body>
+</html>

@@ -23,6 +23,7 @@ from concert_calendar.production_export import (
 from concert_calendar.event_state import (
     EventStateError,
     STATE_FILENAME,
+    build_change_report,
     load_state,
     reconcile_state,
     write_state,
@@ -33,6 +34,7 @@ from concert_calendar.sources import load_events_with_report
 MINIMUM_EVENT_COUNT = 100
 MINIMUM_PUBLISHED_RATIO = 0.60
 MAXIMUM_PUBLISHED_RATIO = 2.50
+MINIMUM_GENRE_COVERAGE = 0.10
 CORE_SOURCES = {
     "AEG Presents France",
     "Alias Production",
@@ -46,7 +48,8 @@ CORE_SOURCES = {
     "VeryShow",
 }
 REQUIRED_EVENT_KEYS = {
-    "d", "h", "o", "v", "c", "g", "x", "p", "t", "f", "so", "fs"
+    "d", "h", "o", "v", "c", "g", "x", "p", "t", "f", "so", "fs",
+    "i", "ts", "st",
 }
 POINTER_PATTERN = re.compile(r"var manifest = Object\.freeze\((\{.*?\})\);")
 
@@ -80,6 +83,7 @@ def validate_events(events: list[dict]) -> None:
 
     allowed_genres = set(PUBLIC_GENRES)
     fingerprints = set()
+    public_ids = set()
 
     for index, event in enumerate(events):
         if set(event) != REQUIRED_EVENT_KEYS:
@@ -117,6 +121,13 @@ def validate_events(events: list[dict]) -> None:
             raise ProductionValidationError(
                 f"Event {index} has malformed first_seen"
             ) from error
+        if not re.fullmatch(r"[0-9a-f]{16}", event["i"] or "") or event["i"] in public_ids:
+            raise ProductionValidationError(f"Event {index} has an invalid or duplicate public ID")
+        public_ids.add(event["i"])
+        if event["ts"] not in {None, "tickets", "sold_out", "free", "not_on_sale"}:
+            raise ProductionValidationError(f"Event {index} has an invalid ticket status")
+        if event["st"] is not None and not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", event["st"]):
+            raise ProductionValidationError(f"Event {index} has an invalid start time")
 
         fingerprint = (
             event["d"],
@@ -167,6 +178,18 @@ def validate_count_regression(
         )
 
 
+def validate_genre_coverage(report: dict) -> None:
+    """Catch parser-wide genre loss while allowing normal inventory drift."""
+
+    total = report.get("total", 0)
+    populated = report.get("populated", 0)
+    if total and populated / total < MINIMUM_GENRE_COVERAGE:
+        raise ProductionValidationError(
+            f"Genre coverage {populated}/{total} is below the catastrophic "
+            f"{MINIMUM_GENRE_COVERAGE:.0%} floor"
+        )
+
+
 def validate_assets(output_dir: Path, result: dict) -> dict:
     pointer = read_pointer(Path(result["pointer"]))
     data_path = Path(result["data"])
@@ -213,6 +236,7 @@ def build(args) -> int:
             Path(args.published_state) if args.published_state else None
         )
         candidate_state = reconcile_state(events, previous_state, now=now)
+        change_report = build_change_report(events, previous_state, candidate_state, now=now)
         state_digest = write_state(output_dir / STATE_FILENAME, candidate_state)
     except EventStateError as error:
         raise ProductionValidationError(f"Persistent event state is invalid: {error}") from error
@@ -225,6 +249,7 @@ def build(args) -> int:
     )
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
+    validate_genre_coverage(pipeline_report.genre_report)
     pointer = validate_assets(output_dir, result)
 
     published_count = None
@@ -246,6 +271,8 @@ def build(args) -> int:
         "state_sha256": state_digest,
         "published_at": published_at,
         "state_bootstrapped": previous_state is None,
+        "genre_report": pipeline_report.genre_report,
+        "change_report": change_report,
     }
     report_path = output_dir / "automation-report.json"
     report_path.write_text(
@@ -266,6 +293,11 @@ def write_github_outputs(report: dict) -> None:
     with Path(output_path).open("a", encoding="utf-8") as output:
         for key in ("event_count", "raw_count", "idf_count", "sha256", "data_filename"):
             output.write(f"{key}={report[key]}\n")
+        for key, value in report["change_report"].items():
+            if key != "details":
+                output.write(f"{key}={value}\n")
+        for key in ("populated", "blank", "coverage_percentage", "conflict_count"):
+            output.write(f"genre_{key}={report['genre_report'][key]}\n")
 
 
 def git_timestamp(repository: Path, relative_path: Path) -> int:

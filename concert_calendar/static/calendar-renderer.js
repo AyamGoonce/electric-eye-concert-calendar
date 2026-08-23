@@ -1,239 +1,42 @@
 (function () {
   "use strict";
-  var MOUNT_ID = "ee-concert-calendar";
-  var DATA_READY_EVENT = "ee:concert-data-ready";
-  var DATA_ERROR_EVENT = "ee:concert-data-error";
-  var FAILURE_DELAY_MS = 4000;
-  var NEW_WINDOW_MS = 72 * 60 * 60 * 1000;
-  var initialized = false;
-  var failureTimer = null;
-  var publicGenres = Object.freeze([
-    "Comedy", "Electronic", "Folk / Country", "French chanson",
-    "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
-    "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk",
-    "World / Latin"
-  ]);
-  var quickDateModes = Object.freeze(["tonight", "week", "weekend"]);
-
-  function normalize(value) {
-    return (value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase();
-  }
-  function articleAwareKey(value, overrides) {
-    var normalized = normalize(value);
-    return overrides[normalized] || normalized.replace(/^(?:(?:the|a|an|le|la|les)\s+|l['’]\s*)/i, "");
-  }
-  function venueIdentity(value) { return normalize(value).replace(/[^a-z0-9]+/g, " ").trim(); }
-  function validText(value) { return typeof value === "string" && value.trim().length > 0; }
-  function validStringArray(value) { return Array.isArray(value) && value.every(function (item) { return typeof item === "string"; }); }
-  function validTicket(value) {
-    if (value === null) return true;
-    if (typeof value !== "string") return false;
-    try { var url = new URL(value); return url.protocol === "http:" || url.protocol === "https:"; }
-    catch (error) { return false; }
-  }
-  function validTimestamp(value) { return typeof value === "string" && !Number.isNaN(Date.parse(value)); }
-  function validEvent(event) {
-    return event && /^\d{4}-\d{2}-\d{2}$/.test(event.d) && validText(event.h) &&
-      validStringArray(event.o) && validText(event.v) && validText(event.c) &&
-      typeof event.g === "string" && validStringArray(event.x) && validStringArray(event.p) &&
-      validTicket(event.t) && typeof event.f === "boolean" && typeof event.so === "boolean" &&
-      validTimestamp(event.fs);
-  }
-  function showFailure(message, diagnostic) {
-    var mount = document.getElementById(MOUNT_ID);
-    if (!mount || initialized) return;
-    window.clearTimeout(failureTimer); mount.replaceChildren();
-    var notice = document.createElement("p");
-    notice.className = "ee-calendar-message ee-calendar-failure"; notice.setAttribute("role", "status");
-    notice.textContent = message || "The concert calendar is temporarily unavailable. Please try again later.";
-    mount.append(notice); console.error("Electric Eye concert calendar:", diagnostic || "event data unavailable");
-  }
-  function addText(parent, className, text, tagName) {
-    var element = document.createElement(tagName || "div"); element.className = className;
-    element.textContent = text; parent.append(element); return element;
-  }
-  function addOption(select, value, label) {
-    var element = document.createElement("option"); element.value = value; element.textContent = label; select.append(element);
-  }
-  function addSelect(filters, labelText, id, initialLabel) {
-    var label = document.createElement("label"); label.htmlFor = id; label.append(document.createTextNode(labelText));
-    var select = document.createElement("select"); select.id = id; addOption(select, "", initialLabel);
-    label.append(select); filters.append(label); return select;
-  }
-  function addQuickButton(parent, value, label) {
-    var button = addText(parent, "ee-calendar-quick-date", label, "button");
-    button.type = "button"; button.dataset.mode = value; button.setAttribute("aria-pressed", "false"); return button;
-  }
-  function buildShell(mount, publishedAt) {
-    mount.replaceChildren();
-    var header = document.createElement("header"); header.className = "ee-calendar-header";
-    addText(header, "ee-calendar-title", "Île-de-France Concert Calendar", "h1");
-    addText(header, "ee-calendar-intro", "Upcoming concerts across Paris and Île-de-France.", "p");
-    addText(header, "ee-calendar-updated", "Last updated: " + new Intl.DateTimeFormat("en-GB", {
-      day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
-      hourCycle: "h23", timeZone: "Europe/Paris"
-    }).format(new Date(publishedAt)), "p");
-    mount.append(header);
-    var filters = document.createElement("section"); filters.className = "ee-calendar-filters";
-    filters.setAttribute("aria-label", "Concert filters");
-    var shortcuts = document.createElement("div"); shortcuts.className = "ee-calendar-shortcuts";
-    shortcuts.setAttribute("aria-label", "Quick date filters");
-    var tonight = addQuickButton(shortcuts, "tonight", "Tonight");
-    var week = addQuickButton(shortcuts, "week", "This Week");
-    var weekend = addQuickButton(shortcuts, "weekend", "This Weekend");
-    var allDates = addQuickButton(shortcuts, "", "All Dates"); allDates.setAttribute("aria-pressed", "true");
-    var newLabel = document.createElement("label"); newLabel.className = "ee-calendar-new-control";
-    var newlyAdded = document.createElement("input"); newlyAdded.type = "checkbox"; newlyAdded.id = "ee-calendar-new";
-    newLabel.append(newlyAdded, document.createTextNode("Newly added")); shortcuts.append(newLabel); filters.append(shortcuts);
-    var searchLabel = document.createElement("label"); searchLabel.className = "ee-calendar-search-control";
-    searchLabel.htmlFor = "ee-calendar-search"; searchLabel.append(document.createTextNode("Search"));
-    var search = document.createElement("input"); search.id = "ee-calendar-search"; search.type = "search";
-    search.placeholder = "Artist, opener, venue or town"; search.autocomplete = "off"; searchLabel.append(search); filters.append(searchLabel);
-    var monthFilter = addSelect(filters, "Month", "ee-calendar-month", "All months");
-    var venueFilter = addSelect(filters, "Venue", "ee-calendar-venue", "All venues");
-    var genreFilter = addSelect(filters, "Genre", "ee-calendar-genre", "All genres");
-    var sortOrder = addSelect(filters, "Sort", "ee-calendar-sort", "Date — soonest first");
-    sortOrder.firstElementChild.value = "date-asc"; addOption(sortOrder, "date-desc", "Date — latest first");
-    addOption(sortOrder, "artist-asc", "Headliner — A–Z"); addOption(sortOrder, "venue-asc", "Venue — A–Z");
-    var clearButton = addText(filters, "ee-calendar-clear", "Clear", "button"); clearButton.type = "button"; mount.append(filters);
-    var summary = document.createElement("div"); summary.className = "ee-calendar-summary";
-    var count = addText(summary, "ee-calendar-result-count", "", "span"); count.setAttribute("aria-live", "polite"); mount.append(summary);
-    var list = document.createElement("ol"); list.className = "ee-calendar-event-list"; mount.append(list);
-    var noResults = addText(mount, "ee-calendar-message ee-calendar-no-results", "No concerts match your current filters.", "p"); noResults.hidden = true;
-    return { search: search, monthFilter: monthFilter, venueFilter: venueFilter, genreFilter: genreFilter,
-      sortOrder: sortOrder, clearButton: clearButton, newlyAdded: newlyAdded,
-      quickButtons: [tonight, week, weekend, allDates], list: list, count: count,
-      noResults: noResults, quickMode: "" };
-  }
-  function parisDateParts(now) {
-    var values = {};
-    new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" })
-      .formatToParts(now).forEach(function (part) { values[part.type] = part.value; });
-    return { year: Number(values.year), month: Number(values.month), day: Number(values.day) };
-  }
-  function isoFromUTCDate(value) { return value.toISOString().slice(0, 10); }
-  function quickDateRange(mode, now) {
-    var parts = parisDateParts(now); var current = new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
-    var day = current.getUTCDay(); var mondayOffset = day === 0 ? -6 : 1 - day;
-    if (mode === "tonight") return [isoFromUTCDate(current), isoFromUTCDate(current)];
-    if (mode === "week") {
-      var monday = new Date(current); monday.setUTCDate(current.getUTCDate() + mondayOffset);
-      var sunday = new Date(monday); sunday.setUTCDate(monday.getUTCDate() + 6);
-      return [isoFromUTCDate(monday), isoFromUTCDate(sunday)];
-    }
-    if (mode === "weekend") {
-      var daysUntilFriday = day === 0 ? -2 : 5 - day;
-      var friday = new Date(current); friday.setUTCDate(current.getUTCDate() + daysUntilFriday);
-      var sundayEnd = new Date(friday); sundayEnd.setUTCDate(friday.getUTCDate() + 2);
-      return [isoFromUTCDate(friday), isoFromUTCDate(sundayEnd)];
-    }
-    return null;
-  }
-  function initialize(rawEvents) {
-    var mount = document.getElementById(MOUNT_ID); var metadata = window.ElectricEyeConcertMeta;
-    if (!mount || initialized) return;
-    if (!Array.isArray(rawEvents) || rawEvents.length === 0 || !rawEvents.every(validEvent) || !metadata || !validTimestamp(metadata.publishedAt)) {
-      showFailure(null, "malformed or empty event dataset"); return;
-    }
-    initialized = true; window.clearTimeout(failureTimer);
-    var now = new Date(); var expanded = new Set();
-    var artistSortOverrides = { "a perfect circle": "Perfect Circle", "an pierle": "An Pierlé" }; var venueSortOverrides = {};
-    var events = rawEvents.map(function (source, index) {
-      var event = Object.assign({}, source); event.i = index;
-      event.a = articleAwareKey(event.h, artistSortOverrides); event.w = articleAwareKey(event.v, venueSortOverrides);
-      event.s = normalize([event.h].concat(event.o, [event.v, event.c]).join(" "));
-      event.n = now.getTime() - Date.parse(event.fs) >= 0 && now.getTime() - Date.parse(event.fs) <= NEW_WINDOW_MS; return event;
-    });
-    var controls = buildShell(mount, metadata.publishedAt);
-    var dateFormatter = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
-    var separatorFormatter = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
-    var monthFormatter = new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
-    var compareText = function (left, right) { return left.localeCompare(right, "fr", { sensitivity: "base" }); };
-    var compareDateAscending = function (left, right) { return compareText(left.d, right.d); };
-    var compareArtist = function (left, right) { return compareText(left.a, right.a) || compareDateAscending(left, right) || compareText(left.w, right.w) || left.i - right.i; };
-    var compareVenue = function (left, right) { return compareText(left.w, right.w) || compareDateAscending(left, right) || compareText(left.a, right.a) || left.i - right.i; };
-    var compareDate = function (left, right, direction) { return direction * compareDateAscending(left, right) || compareText(left.a, right.a) || compareText(left.w, right.w) || left.i - right.i; };
-    var dateFromISO = function (value) { var parts = value.split("-").map(Number); return new Date(Date.UTC(parts[0], parts[1] - 1, parts[2])); };
-    events.forEach(function (event) { var month = event.d.slice(0, 7); if (!controls.monthFilter.querySelector('option[value="' + month + '"]')) addOption(controls.monthFilter, month, monthFormatter.format(dateFromISO(month + "-01"))); });
-    var venueLabels = new Map(); events.forEach(function (event) { var identity = venueIdentity(event.v); if (!venueLabels.has(identity)) venueLabels.set(identity, event.v); });
-    Array.from(venueLabels.values()).sort(function (left, right) { return compareText(articleAwareKey(left, venueSortOverrides), articleAwareKey(right, venueSortOverrides)); })
-      .forEach(function (venue) { addOption(controls.venueFilter, venue, venue); });
-    publicGenres.forEach(function (genre) { addOption(controls.genreFilter, genre, genre); });
-    function updateQuickButtons() { controls.quickButtons.forEach(function (button) { button.setAttribute("aria-pressed", String(button.dataset.mode === controls.quickMode)); }); }
-    function readURLState() {
-      var params = new URLSearchParams(window.location.search); controls.search.value = params.get("q") || "";
-      controls.venueFilter.value = params.get("venue") || "";
-      controls.genreFilter.value = publicGenres.includes(params.get("genre")) ? params.get("genre") : "";
-      controls.sortOrder.value = ["date-asc", "date-desc", "artist-asc", "venue-asc"].includes(params.get("sort")) ? params.get("sort") : "date-asc";
-      controls.quickMode = quickDateModes.includes(params.get("when")) ? params.get("when") : "";
-      controls.monthFilter.value = controls.quickMode ? "" : (params.get("month") || "");
-      controls.newlyAdded.checked = params.get("new") === "1"; updateQuickButtons();
-    }
-    function updateURL(push) {
-      var params = new URLSearchParams(); if (controls.search.value.trim()) params.set("q", controls.search.value.trim());
-      if (controls.venueFilter.value) params.set("venue", controls.venueFilter.value); if (controls.genreFilter.value) params.set("genre", controls.genreFilter.value);
-      if (controls.monthFilter.value) params.set("month", controls.monthFilter.value); if (controls.quickMode) params.set("when", controls.quickMode);
-      if (controls.newlyAdded.checked) params.set("new", "1"); if (controls.sortOrder.value !== "date-asc") params.set("sort", controls.sortOrder.value);
-      var url = window.location.pathname + (params.toString() ? "?" + params.toString() : "") + window.location.hash;
-      window.history[push ? "pushState" : "replaceState"]({}, "", url);
-    }
-    function artistButton(name) {
-      var container = document.createDocumentFragment(); var button = addText(container, "ee-calendar-text-button ee-calendar-artist-button", name, "button");
-      button.type = "button"; button.addEventListener("click", function () { controls.search.value = name; updateURL(true); render(); controls.search.focus(); }); return button;
-    }
-    function createRow(event) {
-      var item = document.createElement("li"); var article = document.createElement("article"); article.className = "ee-calendar-event-row";
-      var eventDate = addText(article, "ee-calendar-event-date", dateFormatter.format(dateFromISO(event.d)), "time"); eventDate.dateTime = event.d;
-      var artist = document.createElement("div"); artist.className = "ee-calendar-event-artist"; var heading = document.createElement("h2");
-      heading.append(artistButton(event.h)); if (event.n) addText(heading, "ee-calendar-new-badge", "NEW", "span"); artist.append(heading);
-      if (event.o.length) {
-        var openers = document.createElement("p"); openers.className = "ee-calendar-openers"; openers.append(document.createTextNode("with "));
-        var visibleCount = event.f && !expanded.has(event.i) ? Math.min(5, event.o.length) : event.o.length;
-        event.o.slice(0, visibleCount).forEach(function (name, index) { if (index) openers.append(document.createTextNode(", ")); openers.append(artistButton(name)); });
-        artist.append(openers);
-        if (event.f && event.o.length > 5) {
-          var more = addText(artist, "ee-calendar-lineup-toggle", expanded.has(event.i) ? "Show fewer" : "+ " + (event.o.length - 5) + " more artists", "button");
-          more.type = "button"; more.setAttribute("aria-expanded", String(expanded.has(event.i)));
-          more.addEventListener("click", function () { if (expanded.has(event.i)) expanded.delete(event.i); else expanded.add(event.i); render(); });
-        }
-      }
-      article.append(artist);
-      var venue = addText(article, "ee-calendar-text-button ee-calendar-venue", event.c.toLocaleLowerCase() === "paris" ? event.v : event.v + " (" + event.c + ")", "button");
-      venue.type = "button"; venue.addEventListener("click", function () { controls.venueFilter.value = event.v; updateURL(true); render(); controls.venueFilter.focus(); });
-      var metadataArea = document.createElement("div"); metadataArea.className = "ee-calendar-metadata";
-      if (event.x.length) addText(metadataArea, "ee-calendar-genre", event.x[0], "span"); article.append(metadataArea);
-      if (event.so) addText(article, "ee-calendar-sold-out", "SOLD OUT", "span");
-      else if (event.t) { var ticket = addText(article, "ee-calendar-ticket", "Tickets", "a"); ticket.href = event.t; ticket.target = "_blank"; ticket.rel = "noopener noreferrer"; ticket.setAttribute("aria-label", "Tickets for " + event.h); }
-      else addText(article, "ee-calendar-ticket-space", ""); item.append(article); return item;
-    }
-    function createSeparator(value) { var item = document.createElement("li"); item.className = "ee-calendar-day-separator"; item.textContent = separatorFormatter.format(dateFromISO(value)); return item; }
-    function render() {
-      var query = normalize(controls.search.value.trim()); var month = controls.monthFilter.value; var venue = controls.venueFilter.value;
-      var genre = controls.genreFilter.value; var order = controls.sortOrder.value; var range = quickDateRange(controls.quickMode, now);
-      var filtered = events.filter(function (event) { return (!query || event.s.includes(query)) && (!month || event.d.startsWith(month)) &&
-        (!range || (event.d >= range[0] && event.d <= range[1])) && (!venue || venueIdentity(event.v) === venueIdentity(venue)) &&
-        (!genre || event.x.includes(genre)) && (!controls.newlyAdded.checked || event.n); });
-      filtered.sort(order === "date-desc" ? function (left, right) { return compareDate(left, right, -1); } : order === "artist-asc" ? compareArtist :
-        order === "venue-asc" ? compareVenue : function (left, right) { return compareDate(left, right, 1); });
-      var fragment = document.createDocumentFragment(); var previousDate = null;
-      filtered.forEach(function (event) { if ((order === "date-asc" || order === "date-desc") && event.d !== previousDate) fragment.append(createSeparator(event.d)); fragment.append(createRow(event)); previousDate = event.d; });
-      controls.list.replaceChildren(fragment); controls.count.textContent = filtered.length.toLocaleString("en-GB") + (filtered.length === 1 ? " concert" : " concerts");
-      controls.list.hidden = filtered.length === 0; controls.noResults.hidden = filtered.length !== 0;
-    }
-    var scheduled = false;
-    function scheduleRender() { if (scheduled) return; scheduled = true; window.requestAnimationFrame(function () { scheduled = false; updateURL(false); render(); }); }
-    controls.search.addEventListener("input", scheduleRender);
-    [controls.venueFilter, controls.genreFilter, controls.sortOrder, controls.newlyAdded].forEach(function (control) { control.addEventListener("change", function () { updateURL(true); render(); }); });
-    controls.monthFilter.addEventListener("change", function () { if (controls.monthFilter.value) controls.quickMode = ""; updateQuickButtons(); updateURL(true); render(); });
-    controls.quickButtons.forEach(function (button) { button.addEventListener("click", function () { controls.quickMode = button.dataset.mode; controls.monthFilter.value = ""; updateQuickButtons(); updateURL(true); render(); }); });
-    controls.clearButton.addEventListener("click", function () { controls.search.value = ""; controls.monthFilter.value = ""; controls.venueFilter.value = ""; controls.genreFilter.value = ""; controls.sortOrder.value = "date-asc"; controls.newlyAdded.checked = false; controls.quickMode = ""; updateQuickButtons(); updateURL(true); render(); controls.search.focus(); });
-    window.addEventListener("popstate", function () { readURLState(); render(); }); readURLState(); render();
-    window.ElectricEyeConcertCalendar = Object.freeze({ eventCount: events.length, version: "2.0.0" });
-    document.dispatchEvent(new CustomEvent("ee:concert-calendar-ready", { detail: window.ElectricEyeConcertCalendar }));
-  }
-  function attemptInitialize() { if (!document.getElementById(MOUNT_ID) || initialized) return; if (window.ElectricEyeConcertData !== undefined) initialize(window.ElectricEyeConcertData); }
-  function start() { if (!document.getElementById(MOUNT_ID)) return; attemptInitialize(); if (!initialized) failureTimer = window.setTimeout(function () { showFailure(null, "timed out waiting for event data"); }, FAILURE_DELAY_MS); }
-  document.addEventListener(DATA_READY_EVENT, attemptInitialize);
-  document.addEventListener(DATA_ERROR_EVENT, function (event) { showFailure(null, event.detail && event.detail.reason); });
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start, { once: true }); else start();
+  var MOUNT_ID = "ee-concert-calendar", READY = "ee:concert-data-ready", ERROR = "ee:concert-data-error";
+  var NEW_WINDOW_MS = 72 * 60 * 60 * 1000, initialized = false, failureTimer = null;
+  var publicGenres = Object.freeze(["Comedy", "Electronic", "Folk / Country", "French chanson", "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop", "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk", "World / Latin"]);
+  var quickModes = Object.freeze(["tonight", "week", "weekend"]), sorts = Object.freeze(["date-asc", "date-desc", "artist-asc", "venue-asc"]);
+  function normalize(v) { return (v || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase(); }
+  function articleKey(v, overrides) { var n = normalize(v); return overrides[n] || n.replace(/^(?:(?:the|a|an|le|la|les)\s+|l['’]\s*)/i, ""); }
+  function venueId(v) { return normalize(v).replace(/[^a-z0-9]+/g, " ").trim(); }
+  function validArray(v) { return Array.isArray(v) && v.every(function (x) { return typeof x === "string"; }); }
+  function validTicket(v) { if (v === null) return true; try { return typeof v === "string" && ["http:", "https:"].includes(new URL(v).protocol); } catch (e) { return false; } }
+  function validEvent(e) { return e && /^\d{4}-\d{2}-\d{2}$/.test(e.d) && typeof e.h === "string" && e.h.trim() && validArray(e.o) && typeof e.v === "string" && e.v.trim() && typeof e.c === "string" && validArray(e.x) && validArray(e.p) && validTicket(e.t) && typeof e.f === "boolean" && typeof e.so === "boolean" && !Number.isNaN(Date.parse(e.fs)) && /^[0-9a-f]{16}$/.test(e.i) && [null, "tickets", "sold_out", "free", "not_on_sale"].includes(e.ts) && (e.st === null || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(e.st)); }
+  function text(parent, cls, value, tag) { var e = document.createElement(tag || "div"); e.className = cls; e.textContent = value; parent.append(e); return e; }
+  function option(select, value, label) { var e = document.createElement("option"); e.value = value; e.textContent = label; select.append(e); }
+  function select(parent, labelText, id, first) { var label = document.createElement("label"); label.htmlFor = id; label.append(document.createTextNode(labelText)); var e = document.createElement("select"); e.id = id; option(e, "", first); label.append(e); parent.append(label); return e; }
+  function button(parent, cls, label) { var e = text(parent, cls, label, "button"); e.type = "button"; return e; }
+  function showFailure(reason) { var mount = document.getElementById(MOUNT_ID); if (!mount || initialized) return; clearTimeout(failureTimer); mount.replaceChildren(); var p = text(mount, "ee-calendar-message ee-calendar-failure", "The concert calendar is temporarily unavailable. Please try again later.", "p"); p.setAttribute("role", "status"); console.error("Electric Eye concert calendar:", reason); }
+  function parisParts(now) { var p = {}; new Intl.DateTimeFormat("en-CA", {timeZone:"Europe/Paris",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(now).forEach(function (x) { p[x.type] = x.value; }); return p; }
+  function iso(d) { return d.toISOString().slice(0, 10); }
+  function quickRange(mode, now) { var p = parisParts(now), d = new Date(Date.UTC(+p.year, +p.month - 1, +p.day)), day = d.getUTCDay(), mondayOffset = day === 0 ? -6 : 1 - day; if (mode === "tonight") return [iso(d), iso(d)]; if (mode === "week") { var m = new Date(d); m.setUTCDate(d.getUTCDate() + mondayOffset); var s = new Date(m); s.setUTCDate(m.getUTCDate() + 6); return [iso(m), iso(s)]; } if (mode === "weekend") { var f = new Date(d); f.setUTCDate(d.getUTCDate() + (day === 0 ? -2 : 5 - day)); var e = new Date(f); e.setUTCDate(f.getUTCDate() + 2); return [iso(f), iso(e)]; } return null; }
+  function escapeICS(v) { return (v || "").replace(/\\/g, "\\\\").replace(/\r?\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;"); }
+  function buildICS(event) { var start, end, p = event.d.split("-").map(Number), next = new Date(Date.UTC(p[0], p[1] - 1, p[2] + 1)); if (event.st) start = "DTSTART;TZID=Europe/Paris:" + event.d.replace(/-/g, "") + "T" + event.st.replace(":", "") + "00"; else { start = "DTSTART;VALUE=DATE:" + event.d.replace(/-/g, ""); end = "DTEND;VALUE=DATE:" + iso(next).replace(/-/g, ""); } var description = event.o.length ? "With " + event.o.join(", ") : ""; if (event.f) description = "Festival lineup: " + [event.h].concat(event.o).join(", "); if (event.t) description += (description ? "\n" : "") + event.t; return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Electric Eye//Concert Calendar//EN", "CALSCALE:GREGORIAN", "BEGIN:VEVENT", "UID:" + event.i + "@electriceyerock.com", "DTSTAMP:" + new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""), start, end, "SUMMARY:" + escapeICS(event.h), "LOCATION:" + escapeICS(event.v + (event.c.toLocaleLowerCase() === "paris" ? "" : ", " + event.c)), "DESCRIPTION:" + escapeICS(description), "END:VEVENT", "END:VCALENDAR", ""].filter(Boolean).join("\r\n"); }
+  function saveICS(event) { var url = URL.createObjectURL(new Blob([buildICS(event)], {type:"text/calendar;charset=utf-8"})), a = document.createElement("a"); a.href = url; a.download = event.h.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() + ".ics"; document.body.append(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(url); }, 0); }
+  function copyValue(value, control) { var done = function () { var old = control.textContent; control.textContent = "Copied"; setTimeout(function () { control.textContent = old; }, 1600); }; if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(value).then(done); var input = document.createElement("textarea"); input.value = value; input.setAttribute("readonly", ""); input.style.position = "fixed"; input.style.opacity = "0"; document.body.append(input); input.select(); try { if (document.execCommand("copy")) done(); } finally { input.remove(); } }
+  function buildShell(mount, publishedAt) { mount.replaceChildren(); var header = document.createElement("header"); header.className = "ee-calendar-header"; text(header, "ee-calendar-title", "Île-de-France Concert Calendar", "h1"); text(header, "ee-calendar-intro", "Upcoming concerts across Paris and Île-de-France.", "p"); text(header, "ee-calendar-updated", "Last updated: " + new Intl.DateTimeFormat("en-GB", {day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit",hourCycle:"h23",timeZone:"Europe/Paris"}).format(new Date(publishedAt)), "p"); mount.append(header);
+    var filters = document.createElement("section"); filters.className = "ee-calendar-filters"; filters.setAttribute("aria-label", "Concert filters"); var shortcuts = document.createElement("div"); shortcuts.className = "ee-calendar-shortcuts"; shortcuts.setAttribute("aria-label", "Quick date filters"); var quick = [["tonight","Tonight"],["week","This Week"],["weekend","This Weekend"],["","All Dates"]].map(function (x) { var b = button(shortcuts,"ee-calendar-quick-date",x[1]); b.dataset.mode=x[0]; b.setAttribute("aria-pressed",String(!x[0])); return b; }); var newLabel=document.createElement("label"), newly=document.createElement("input"); newLabel.className="ee-calendar-new-control"; newly.type="checkbox"; newly.id="ee-calendar-new"; newLabel.append(newly,document.createTextNode("Newly added")); shortcuts.append(newLabel); filters.append(shortcuts);
+    var searchLabel=document.createElement("label"), search=document.createElement("input"); searchLabel.className="ee-calendar-search-control"; searchLabel.htmlFor="ee-calendar-search"; searchLabel.append(document.createTextNode("Search")); search.id="ee-calendar-search"; search.type="search"; search.placeholder="Artist, opener, venue or town"; search.autocomplete="off"; searchLabel.append(search); filters.append(searchLabel); var month=select(filters,"Month","ee-calendar-month","All months"), venue=select(filters,"Venue","ee-calendar-venue","All venues");
+    var genreBox=document.createElement("details"); genreBox.className="ee-calendar-genre-control"; var genreSummary=document.createElement("summary"); genreSummary.textContent="Genres: All"; genreSummary.setAttribute("aria-label","Choose genres"); genreBox.append(genreSummary); var genreOptions=document.createElement("div"); genreOptions.className="ee-calendar-genre-options"; var genreChecks=publicGenres.map(function (g) { var l=document.createElement("label"), c=document.createElement("input"); c.type="checkbox"; c.value=g; l.append(c,document.createTextNode(g)); genreOptions.append(l); return c; }); var clearGenres=button(genreOptions,"ee-calendar-clear-genres","Clear genres"); genreBox.append(genreOptions); filters.append(genreBox);
+    var sort=select(filters,"Sort","ee-calendar-sort","Date — soonest first"); sort.firstElementChild.value="date-asc"; option(sort,"date-desc","Date — latest first"); option(sort,"artist-asc","Headliner — A–Z"); option(sort,"venue-asc","Venue — A–Z"); var clear=button(filters,"ee-calendar-clear","Clear"); mount.append(filters); var summary=document.createElement("div"); summary.className="ee-calendar-summary"; var count=text(summary,"ee-calendar-result-count","","span"); count.setAttribute("aria-live","polite"); mount.append(summary); var list=document.createElement("ol"); list.className="ee-calendar-event-list"; mount.append(list); var none=document.createElement("section"); none.className="ee-calendar-message ee-calendar-no-results"; none.hidden=true; text(none,"","No concerts match these filters.","p"); var recovery=document.createElement("div"); recovery.className="ee-calendar-recovery"; none.append(recovery); mount.append(none); return {search:search,month:month,venue:venue,genreBox:genreBox,genreSummary:genreSummary,genreChecks:genreChecks,clearGenres:clearGenres,sort:sort,clear:clear,newly:newly,quick:quick,list:list,count:count,none:none,recovery:recovery,quickMode:""}; }
+  function initialize(raw) { var mount=document.getElementById(MOUNT_ID), meta=window.ElectricEyeConcertMeta; if (!mount||initialized) return; if (!Array.isArray(raw)||!raw.length||!raw.every(validEvent)||!meta||Number.isNaN(Date.parse(meta.publishedAt))) { showFailure("malformed or empty event dataset"); return; } initialized=true; clearTimeout(failureTimer); var now=new Date(), expanded=new Set(), highlighted=false, artistOverrides={"a perfect circle":"Perfect Circle","an pierle":"An Pierlé"}, events=raw.map(function (source,index) { var e=Object.assign({},source); e.k=index; e.a=articleKey(e.h,artistOverrides); e.w=articleKey(e.v,{}); e.s=normalize([e.h].concat(e.o,[e.v,e.c]).join(" ")); e.n=now-Date.parse(e.fs)>=0&&now-Date.parse(e.fs)<=NEW_WINDOW_MS; return e; }), controls=buildShell(mount,meta.publishedAt);
+    var dateFmt=new Intl.DateTimeFormat("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric",timeZone:"UTC"}), sepFmt=new Intl.DateTimeFormat("en-GB",{weekday:"long",day:"numeric",month:"long",timeZone:"UTC"}), monthFmt=new Intl.DateTimeFormat("en-GB",{month:"long",year:"numeric",timeZone:"UTC"}); function dateObj(v){var p=v.split("-").map(Number);return new Date(Date.UTC(p[0],p[1]-1,p[2]));} function cmp(a,b){return a.localeCompare(b,"fr",{sensitivity:"base"});} function selectedGenres(){return controls.genreChecks.filter(function(c){return c.checked;}).map(function(c){return c.value;});} function updateGenreSummary(){var g=selectedGenres();controls.genreSummary.textContent=g.length?"Genres: "+g.length+" selected":"Genres: All";}
+    events.forEach(function(e){var m=e.d.slice(0,7);if(!controls.month.querySelector('option[value="'+m+'"]'))option(controls.month,m,monthFmt.format(dateObj(m+"-01")));}); var venueCounts=new Map(),venueLabels=new Map(); events.forEach(function(e){var id=venueId(e.v);venueCounts.set(id,(venueCounts.get(id)||0)+1);if(!venueLabels.has(id))venueLabels.set(id,e.v);}); Array.from(venueLabels.values()).sort(function(a,b){return cmp(articleKey(a,{}),articleKey(b,{}));}).forEach(function(v){option(controls.venue,v,v+" ("+venueCounts.get(venueId(v))+")");});
+    function updateQuick(){controls.quick.forEach(function(b){b.setAttribute("aria-pressed",String(b.dataset.mode===controls.quickMode));});} function readURL(){var p=new URLSearchParams(location.search);controls.search.value=p.get("q")||"";var v=p.get("venue")||"";controls.venue.value=Array.from(controls.venue.options).some(function(o){return o.value===v;})?v:"";var genres=p.getAll("genre").filter(function(g){return publicGenres.includes(g);});controls.genreChecks.forEach(function(c){c.checked=genres.includes(c.value);});controls.sort.value=sorts.includes(p.get("sort"))?p.get("sort"):"date-asc";controls.quickMode=quickModes.includes(p.get("when"))?p.get("when"):"";var m=p.get("month")||"";controls.month.value=!controls.quickMode&&Array.from(controls.month.options).some(function(o){return o.value===m;})?m:"";controls.newly.checked=p.get("new")==="1";updateQuick();updateGenreSummary();if(!p.has("sort")){try{var saved=localStorage.getItem("ee-calendar-sort");if(sorts.includes(saved))controls.sort.value=saved;}catch(e){}}}
+    function updateURL(push){var p=new URLSearchParams(),q=controls.search.value.trim();if(q)p.set("q",q);if(controls.venue.value)p.set("venue",controls.venue.value);selectedGenres().sort().forEach(function(g){p.append("genre",g);});if(controls.month.value)p.set("month",controls.month.value);if(controls.quickMode)p.set("when",controls.quickMode);if(controls.newly.checked)p.set("new","1");if(controls.sort.value!=="date-asc")p.set("sort",controls.sort.value);history[push?"pushState":"replaceState"]({},"",location.pathname+(p.toString()?"?"+p:"")+location.hash);}
+    function artistButton(name){var b=button(document.createDocumentFragment(),"ee-calendar-text-button ee-calendar-artist-button",name);b.addEventListener("click",function(){controls.search.value=name;updateURL(true);render();controls.search.focus();});return b;} function directURL(e){return location.origin+location.pathname+location.search+"#event-"+e.i;} function eventActions(parent,e){var box=document.createElement("div");box.className="ee-calendar-event-actions";var copy=button(box,"ee-calendar-secondary-action","Copy link");copy.addEventListener("click",function(){copyValue(directURL(e),copy);});if(navigator.share){var share=button(box,"ee-calendar-secondary-action","Share");share.addEventListener("click",function(){navigator.share({title:e.h,text:e.h+" at "+e.v,url:directURL(e)}).catch(function(error){if(error.name!=="AbortError")copyValue(directURL(e),share);});});}var cal=button(box,"ee-calendar-secondary-action","Add to calendar");cal.addEventListener("click",function(){saveICS(e);});parent.append(box);}
+    function row(e){var li=document.createElement("li"),a=document.createElement("article");li.id="event-"+e.i;a.className="ee-calendar-event-row";var time=text(a,"ee-calendar-event-date",dateFmt.format(dateObj(e.d)),"time");time.dateTime=e.d;var art=document.createElement("div");art.className="ee-calendar-event-artist";var h=document.createElement("h2");h.append(artistButton(e.h));if(e.n)text(h,"ee-calendar-new-badge","NEW","span");art.append(h);if(e.o.length){var open=document.createElement("p");open.className="ee-calendar-openers";open.append(document.createTextNode("with "));var visible=e.f&&!expanded.has(e.i)?Math.min(5,e.o.length):e.o.length;e.o.slice(0,visible).forEach(function(name,i){if(i)open.append(document.createTextNode(", "));open.append(artistButton(name));});art.append(open);if(e.f&&e.o.length>5){var more=button(art,"ee-calendar-lineup-toggle",expanded.has(e.i)?"Show fewer":"+ "+(e.o.length-5)+" more artists");more.setAttribute("aria-expanded",String(expanded.has(e.i)));more.addEventListener("click",function(){expanded.has(e.i)?expanded.delete(e.i):expanded.add(e.i);render();});}}a.append(art);var venue=button(a,"ee-calendar-text-button ee-calendar-venue",e.c.toLocaleLowerCase()==="paris"?e.v:e.v+" ("+e.c+")");venue.addEventListener("click",function(){controls.venue.value=e.v;updateURL(true);render();controls.venue.focus();});var metadata=document.createElement("div");metadata.className="ee-calendar-metadata";if(e.x.length)text(metadata,"ee-calendar-genre",e.x[0],"span");a.append(metadata);if(e.ts==="sold_out")text(a,"ee-calendar-sold-out","SOLD OUT","span");else if(e.ts==="free")text(a,"ee-calendar-free","FREE","span");else if(e.ts==="not_on_sale")text(a,"ee-calendar-not-on-sale","NOT ON SALE YET","span");else if(e.t){var ticket=text(a,"ee-calendar-ticket","Tickets","a");ticket.href=e.t;ticket.target="_blank";ticket.rel="noopener noreferrer";ticket.setAttribute("aria-label","Tickets for "+e.h);}else text(a,"ee-calendar-ticket-space","");eventActions(a,e);li.append(a);return li;}
+    function separator(d){var li=document.createElement("li");li.className="ee-calendar-day-separator";li.textContent=sepFmt.format(dateObj(d));return li;} function resetAll(){controls.search.value="";controls.month.value="";controls.venue.value="";controls.genreChecks.forEach(function(c){c.checked=false;});controls.sort.value="date-asc";controls.newly.checked=false;controls.quickMode="";updateGenreSummary();updateQuick();updateURL(true);render();}
+    function recovery(){controls.recovery.replaceChildren();function add(label,fn){var b=button(controls.recovery,"ee-calendar-recovery-action",label);b.addEventListener("click",fn);}if(selectedGenres().length)add("Clear genres",function(){controls.genreChecks.forEach(function(c){c.checked=false;});updateGenreSummary();updateURL(true);render();});if(controls.month.value||controls.quickMode)add("Clear date",function(){controls.month.value="";controls.quickMode="";updateQuick();updateURL(true);render();});if(controls.venue.value)add("Clear venue",function(){controls.venue.value="";updateURL(true);render();});add("Show all concerts",resetAll);}
+    function render(){var q=normalize(controls.search.value.trim()),month=controls.month.value,venue=controls.venue.value,genres=selectedGenres(),order=controls.sort.value,range=quickRange(controls.quickMode,now);var filtered=events.filter(function(e){return(!q||e.s.includes(q))&&(!month||e.d.startsWith(month))&&(!range||(e.d>=range[0]&&e.d<=range[1]))&&(!venue||venueId(e.v)===venueId(venue))&&(!genres.length||(e.x.length&&genres.includes(e.x[0])))&&(!controls.newly.checked||e.n);});filtered.sort(order==="date-desc"?function(a,b){return-cmp(a.d,b.d)||cmp(a.a,b.a);}:order==="artist-asc"?function(a,b){return cmp(a.a,b.a)||cmp(a.d,b.d);}:order==="venue-asc"?function(a,b){return cmp(a.w,b.w)||cmp(a.d,b.d);}:function(a,b){return cmp(a.d,b.d)||cmp(a.a,b.a);});var fragment=document.createDocumentFragment(),previous=null;filtered.forEach(function(e){if((order==="date-asc"||order==="date-desc")&&e.d!==previous)fragment.append(separator(e.d));fragment.append(row(e));previous=e.d;});controls.list.replaceChildren(fragment);controls.count.textContent=filtered.length.toLocaleString("en-GB")+(filtered.length===1?" concert":" concerts");controls.list.hidden=!filtered.length;controls.none.hidden=!!filtered.length;if(!filtered.length)recovery();if(!highlighted&&/^#event-[0-9a-f]{16}$/.test(location.hash)){var target=document.getElementById(location.hash.slice(1));if(target){highlighted=true;target.classList.add("ee-calendar-linked-event");target.scrollIntoView({block:"center"});setTimeout(function(){target.classList.remove("ee-calendar-linked-event");},3000);}}}
+    var scheduled=false;function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(function(){scheduled=false;updateURL(false);render();});}controls.search.addEventListener("input",schedule);[controls.venue,controls.newly].forEach(function(c){c.addEventListener("change",function(){updateURL(true);render();});});controls.genreChecks.forEach(function(c){c.addEventListener("change",function(){updateGenreSummary();updateURL(true);render();});});controls.clearGenres.addEventListener("click",function(){controls.genreChecks.forEach(function(c){c.checked=false;});updateGenreSummary();updateURL(true);render();});controls.sort.addEventListener("change",function(){try{localStorage.setItem("ee-calendar-sort",controls.sort.value);}catch(e){}updateURL(true);render();});controls.month.addEventListener("change",function(){if(controls.month.value)controls.quickMode="";updateQuick();updateURL(true);render();});controls.quick.forEach(function(b){b.addEventListener("click",function(){controls.quickMode=b.dataset.mode;controls.month.value="";updateQuick();updateURL(true);render();});});controls.clear.addEventListener("click",resetAll);addEventListener("popstate",function(){readURL();render();});addEventListener("hashchange",function(){highlighted=false;render();});readURL();render();window.ElectricEyeConcertCalendar=Object.freeze({eventCount:events.length,version:"3.0.0",buildICS:buildICS});document.dispatchEvent(new CustomEvent("ee:concert-calendar-ready",{detail:window.ElectricEyeConcertCalendar})); }
+  function attempt(){if(!document.getElementById(MOUNT_ID)||initialized)return;if(window.ElectricEyeConcertData!==undefined)initialize(window.ElectricEyeConcertData);} function start(){if(!document.getElementById(MOUNT_ID))return;attempt();if(!initialized)failureTimer=setTimeout(function(){showFailure("timed out waiting for event data");},4000);} document.addEventListener(READY,attempt);document.addEventListener(ERROR,function(e){showFailure(e.detail&&e.detail.reason);});if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 }());

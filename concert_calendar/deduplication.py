@@ -116,6 +116,15 @@ def merge_events(
     if not existing.genre and incoming.genre:
         existing.genre = incoming.genre
 
+    combined_genre_evidence = []
+    seen_genre_evidence = set()
+    for item in [*(existing.genre_evidence or []), *(incoming.genre_evidence or [])]:
+        identity = ((item.get("raw") or "").casefold(), item.get("source") or "")
+        if identity not in seen_genre_evidence:
+            combined_genre_evidence.append(item)
+            seen_genre_evidence.add(identity)
+    existing.genre_evidence = combined_genre_evidence or None
+
     if not existing.facebook_event_url and incoming.facebook_event_url:
         existing.facebook_event_url = incoming.facebook_event_url
 
@@ -129,6 +138,11 @@ def merge_events(
         existing.authoritative_billing or incoming.authoritative_billing
     )
     existing.sold_out = existing.sold_out or incoming.sold_out
+    status_priority = {None: 0, "tickets": 1, "not_on_sale": 2, "free": 3, "sold_out": 4}
+    if status_priority.get(incoming.ticket_status, 0) > status_priority.get(existing.ticket_status, 0):
+        existing.ticket_status = incoming.ticket_status
+    if not existing.start_time and incoming.start_time:
+        existing.start_time = incoming.start_time
 
     return existing
 

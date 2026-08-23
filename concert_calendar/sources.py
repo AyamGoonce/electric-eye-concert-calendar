@@ -8,6 +8,7 @@ from concert_calendar.geography import (
     is_ile_de_france_event,
     normalize_event_geography,
 )
+from concert_calendar.genres import enrich_event_genres
 from concert_calendar.promoters import normalize_event_promoters
 from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.venues import normalize_event_venue
@@ -26,6 +27,7 @@ class PipelineReport:
     festival_days_aggregated: int
     festival_artist_rows_collapsed: int
     opener_enriched_records: int
+    genre_report: dict
 
 
 def normalize_text_for_matching(text):
@@ -191,6 +193,14 @@ def load_events_with_report(
         if scraper_events is None:
             scraper_events = []
 
+        for event in scraper_events:
+            if event.genre:
+                event.genre_source = scraper.SOURCE_NAME
+                event.genre_evidence = [{
+                    "raw": event.genre,
+                    "source": scraper.SOURCE_NAME,
+                }]
+
         print(f"→ {len(scraper_events)} events loaded")
         print()
 
@@ -238,6 +248,7 @@ def load_events_with_report(
         normalized_events,
         diagnostics=deduplication_diagnostics,
     )
+    genre_report = enrich_event_genres(deduplicated_events)
 
     print()
     print(f"Created {len(raw_events)} raw ConcertEvent records")
@@ -277,6 +288,7 @@ def load_events_with_report(
         opener_enriched_records=deduplication_diagnostics.get(
             "opener_enriched_records", 0
         ),
+        genre_report=genre_report,
     )
 
     return deduplicated_events, report

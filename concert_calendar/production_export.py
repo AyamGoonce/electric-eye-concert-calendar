@@ -10,6 +10,8 @@ import unicodedata
 from urllib.parse import urlparse
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.genres import PUBLIC_GENRES, map_raw_genre
+from concert_calendar.event_state import canonical_event_identity
 
 
 DEFAULT_OUTPUT_PATH = "output/production_calendar.html"
@@ -23,54 +25,6 @@ ARTIST_SORT_OVERRIDES = {
     "an pierle": "An Pierlé",
 }
 VENUE_SORT_OVERRIDES: dict[str, str] = {}
-
-PUBLIC_GENRES = (
-    "Comedy",
-    "Electronic",
-    "Folk / Country",
-    "French chanson",
-    "Hip-hop / Rap",
-    "Jazz / Blues",
-    "Metal / Hard Rock",
-    "Pop",
-    "R&B / Soul / Funk",
-    "Reggae / Dub / Ska",
-    "Rock / Indie / Punk",
-    "World / Latin",
-)
-
-GENRE_RULES = (
-    ("Rock / Indie / Punk", ("rock", "indie", "punk", "shoegaze", "grunge", "psych", "new wave", "newwave")),
-    ("Metal / Hard Rock", ("metal", "hard rock", "hardrock", "newcore")),
-    ("Pop", ("pop",)),
-    ("Hip-hop / Rap", ("hip hop", "hip-hop", "hiphop", "rap", "grime", "drill")),
-    ("Electronic", ("electro", "electronic", "electronica", "synth", "dance", "club")),
-    ("R&B / Soul / Funk", ("rnb", "r'n'b", "soul", "funk", "groove")),
-    ("Jazz / Blues", ("jazz", "blues")),
-    ("Folk / Country", ("folk", "country", "americana")),
-    ("Reggae / Dub / Ska", ("reggae", "ragga", "dub", "ska")),
-    ("World / Latin", ("latin", "latine", "cumbia", "bossa", "afrobeat", "afropop", "zouk", "musique du monde", "musiques traditionnelles")),
-    ("French chanson", ("chanson francaise", "variete francaise")),
-    ("Comedy", ("comedy", "one man show")),
-)
-
-GENRE_EXACT_MAPPINGS = {
-    "rap, hip-hop": "Hip-hop / Rap",
-    "hip hop / rap": "Hip-hop / Rap",
-    "hard / metal": "Metal / Hard Rock",
-    "hard rock et assimiles": "Metal / Hard Rock",
-    "hard rock / metal": "Metal / Hard Rock",
-    "metal / hard rock": "Metal / Hard Rock",
-    "rock / indie / punk": "Rock / Indie / Punk",
-    "afrobeat": "World / Latin",
-    "afrobeats": "World / Latin",
-    "afropop": "World / Latin",
-    "afropop, afrobeats, zouk": "World / Latin",
-    "variete francaise": "French chanson",
-    "chanson francaise": "French chanson",
-    "variete / chanson / pop francaise": "French chanson",
-}
-
 
 def normalize_text(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value or "")
@@ -122,31 +76,8 @@ def safe_ticket_url(value: str | None) -> str | None:
 
 
 def genre_categories(value: str | None) -> list[str]:
-    normalized = normalize_text(value or "")
-
-    if not normalized:
-        return []
-
-    public_by_identity = {
-        normalize_text(label): label
-        for label in PUBLIC_GENRES
-    }
-
-    if normalized in public_by_identity:
-        return [public_by_identity[normalized]]
-
-    exact = GENRE_EXACT_MAPPINGS.get(normalized)
-
-    if exact:
-        return [exact]
-
-    matches = {
-        category
-        for category, keywords in GENRE_RULES
-        if any(keyword in normalized for keyword in keywords)
-    }
-
-    return list(matches) if len(matches) == 1 else []
+    mapped = map_raw_genre(value)
+    return [mapped] if mapped else []
 
 
 def event_to_data(event: ConcertEvent) -> dict:
@@ -157,12 +88,18 @@ def event_to_data(event: ConcertEvent) -> dict:
         "v": event.venue,
         "c": event.city,
         "g": event.genre or "",
-        "x": genre_categories(event.genre),
+        "x": (
+            [event.genre_public] if event.genre_public else
+            ([] if event.genre_evidence is not None or event.festival_name else genre_categories(event.genre))
+        ),
         "p": event.promoters or [],
         "t": safe_ticket_url(event.ticket_url),
         "f": bool(event.festival_name),
         "so": bool(event.sold_out),
         "fs": event.first_seen or "1970-01-01T00:00:00Z",
+        "i": canonical_event_identity(event)[:16],
+        "ts": event.ticket_status or ("sold_out" if event.sold_out else ("tickets" if safe_ticket_url(event.ticket_url) else None)),
+        "st": event.start_time,
     }
 
 

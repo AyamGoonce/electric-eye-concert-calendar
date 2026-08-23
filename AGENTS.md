@@ -42,6 +42,27 @@
   date, Newly added, and sorting.
 - Sold out requires explicit structured source evidence. Missing tickets or
   source disappearance never imply sold out, cancellation, or postponement.
+- Public genre is presentation-only and must be one of the 12 labels in
+  `genres.PUBLIC_GENRES` or blank. Preserve source evidence, use reviewed exact
+  mappings, report conflicts, and prefer a correct blank to an inference.
+- Keep reviewed artist genres in `genre_mappings.json` with evidence. Artist
+  matching is canonical and exact, never fuzzy; festival days do not inherit a
+  headliner's genre.
+- Stable public event IDs derive only from canonical date, headliner, and venue.
+  Metadata improvements must not break direct links or reset event state.
+- Ticket states are only `tickets`, `sold_out`, `free`, `not_on_sale`, or blank,
+  and require source evidence. Calendar files are all-day unless a reliable
+  source time exists.
+- Multi-genre selection is OR within Genre and AND against other filters. URL
+  state overrides local preferences; corrupt browser storage must fail safely.
+- Change reporting is diagnostic. Disappearance does not mean cancellation;
+  support additions may later power NEW SUPPORT but must stay distinct from NEW.
+- Do not query Blogger per event. Any Electric Eye archive link must come from
+  a build-time canonical index and remain blank when identity is ambiguous.
+- Event imagery requires explicit source provenance, stable reuse rights, lazy
+  loading, and a no-image fallback. Compact mode must issue zero image requests.
+- The Mac manual-update helper only dispatches the existing GitHub workflow;
+  it never scrapes locally and contains no credentials.
 - Before Blogger go-live, configure an AdSense exact-URL exclusion for the
   calendar Page. Never hide served Auto Ads with CSS.
 - Never commit GitHub credentials, personal access tokens, or other secrets.
