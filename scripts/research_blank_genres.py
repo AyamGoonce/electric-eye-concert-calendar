@@ -39,15 +39,25 @@ RULES = (
 
 def public_category(genres: list[str]) -> str | None:
     categories = set()
-    unmapped = []
+
     for genre in genres:
         value = genre.casefold()
-        matches = {public for public, terms in RULES if any(term in value for term in terms)}
+        matches = {
+            public
+            for public, terms in RULES
+            if any(term in value for term in terms)
+        }
+
         if len(matches) == 1:
             categories.update(matches)
-        else:
-            unmapped.append(genre)
-    return next(iter(categories)) if len(categories) == 1 and not unmapped else None
+        elif len(matches) > 1:
+            return None
+
+    # Accept only when all recognized genre evidence converges on
+    # exactly one public category. Unrecognized descriptors do not
+    # veto otherwise coherent evidence, but zero recognized evidence
+    # still remains unresolved.
+    return next(iter(categories)) if len(categories) == 1 else None
 
 
 def load_events(path: Path) -> list[dict]:

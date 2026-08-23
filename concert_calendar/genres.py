@@ -99,6 +99,10 @@ EXACT_RAW_MAPPINGS = {
     "variete francaise": "French chanson",
 }
 
+WEAK_RAW_GENRES = {
+    "rock",
+}
+
 SAFE_TOKEN_RULES = (
     ("Rock / Indie / Punk", ("indie rock", "post-punk", "shoegaze", "streetpunk", "math rock", "psych rock")),
     ("Metal / Hard Rock", ("metalcore", "heavy metal")),
@@ -180,8 +184,19 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         override = mappings["overrides"].get(artist_id)
         artist = mappings["artists"].get(artist_id)
 
+        weak_source_evidence = bool(evidence) and all(
+            normalize_raw(item.get("raw", "")) in WEAK_RAW_GENRES
+            for item in evidence
+            if item.get("raw")
+        )
+
         if event.festival_name:
             stats["blank_festival"] += 1
+        elif artist and len(mapped) == 1 and weak_source_evidence:
+            event.genre_public = artist["genre"]
+            event.genre_method = "artist_mapping"
+            event.genre_source = artist["evidence_source"]
+            stats["artist_mapping"] += 1
         elif len(mapped) == 1:
             event.genre_public = next(iter(mapped))
             exact_public = any(normalize_raw(item.get("raw", "")) == normalize_raw(event.genre_public) for item in evidence)

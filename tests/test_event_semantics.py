@@ -123,6 +123,8 @@ class TicketProductTests(unittest.TestCase):
             "Festival weekend pass",
             "Artist VIP package",
             "PACKAGE HOLLYWOOD VAMPIRES",
+            "URIAH HEEP UPGRADE",
+            "THOMAS BERGERSEN LIVE VIP UPGRADE",
             "Artist meet-and-greet package",
             "Artist parking pass",
         ]
@@ -134,6 +136,45 @@ class TicketProductTests(unittest.TestCase):
     def test_artist_name_containing_package_token_is_not_excluded(self):
         self.assertFalse(is_ticket_product_title("The Package"))
         self.assertTrue(is_supported_event(event("The Package", venue="Le Trabendo")))
+
+
+class WeakRawGenrePrecedenceTests(unittest.TestCase):
+
+    def test_reviewed_artist_mapping_overrides_weak_rock_source_genre(self):
+        from concert_calendar.genres import enrich_event_genres
+
+        events = [
+            event("DEEP PURPLE", venue="Adidas Arena"),
+            event("URIAH HEEP", venue="Casino de Paris"),
+        ]
+
+        for item in events:
+            item.genre = "Rock"
+
+        enrich_event_genres(events)
+
+        self.assertEqual(
+            ["Metal / Hard Rock", "Metal / Hard Rock"],
+            [item.genre_public for item in events],
+        )
+        self.assertEqual(
+            ["artist_mapping", "artist_mapping"],
+            [item.genre_method for item in events],
+        )
+
+    def test_unreviewed_artist_still_uses_weak_rock_source_genre(self):
+        from concert_calendar.genres import enrich_event_genres
+
+        item = event(
+            "Definitely Not A Reviewed Artist XYZ",
+            venue="Le Trabendo",
+        )
+        item.genre = "Rock"
+
+        enrich_event_genres([item])
+
+        self.assertEqual("Rock / Indie / Punk", item.genre_public)
+        self.assertEqual("source_mapping", item.genre_method)
 
 
 if __name__ == "__main__":

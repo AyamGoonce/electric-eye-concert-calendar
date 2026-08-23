@@ -117,6 +117,7 @@ def is_ticket_product_title(title):
         r"\bearly[- ]entry(?:\s+(?:product|upgrade|pass))?\b",
         r"\bparking\s+(?:product|ticket|pass|add-on)\b",
         r"\b(?:ticket\s+)?(?:add-on|upgrade|resale|membership|adhesion)\s+product\b",
+        r"\bupgrade\s*$",
         r"\bgeneric\s+bundle\b",
     )
 
