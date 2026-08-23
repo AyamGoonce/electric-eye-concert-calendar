@@ -43,14 +43,21 @@ class ProductionDataTests(unittest.TestCase):
     def test_article_aware_sort_keys_are_conservative(self):
         examples = {
             "The Black Keys": "black keys",
+            "A Certain Ratio": "certain ratio",
+            "An Horse": "horse",
             "La Maroquinerie": "maroquinerie",
+            "La Batterie": "batterie",
+            "La Bellevilloise": "bellevilloise",
+            "La CLEF": "clef",
+            "L'Empreinte": "empreinte",
+            "L'Européen": "europeen",
             "Le Trianon": "trianon",
             "Les Femmes s'en Mêlent": "femmes s'en melent",
             "L'Olympia": "olympia",
             "L’Olympia": "olympia",
             "Alice Cooper": "alice cooper",
             "Sammy Hagar": "sammy hagar",
-            "An Pierlé": "an pierle",
+            "An Pierlé": "pierle",
         }
 
         for displayed_name, expected_key in examples.items():
@@ -62,7 +69,11 @@ class ProductionDataTests(unittest.TestCase):
             "perfect circle",
             alphabetical_sort_key("A Perfect Circle", ARTIST_SORT_OVERRIDES),
         )
-        self.assertEqual("a perfect circle", alphabetical_sort_key("A Perfect Circle"))
+        self.assertEqual("perfect circle", alphabetical_sort_key("A Perfect Circle"))
+        self.assertEqual(
+            "an pierle",
+            alphabetical_sort_key("An Pierlé", ARTIST_SORT_OVERRIDES),
+        )
 
     def test_upcoming_only_and_deterministic_sorting(self):
         events = [
@@ -112,6 +123,15 @@ class ProductionDataTests(unittest.TestCase):
             ["Rock / Indie / Punk", "Pop"],
             genre_categories("Concert - Indie Pop"),
         )
+        self.assertEqual(["Hip-hop / Rap"], genre_categories("Rap, Hip-Hop"))
+        self.assertEqual(
+            ["Metal / Hard Rock"],
+            genre_categories("Hard / Metal"),
+        )
+        self.assertEqual(
+            ["Rock / Indie / Punk"],
+            genre_categories("Rock / Indie / Punk"),
+        )
         self.assertEqual([], genre_categories(None))
 
 
@@ -145,7 +165,8 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("@media (max-width: 680px)", soup.style.string)
         self.assertIn("Date — soonest first", html)
         self.assertIn("Date — latest first", html)
-        self.assertIn("Artist — A–Z", html)
+        self.assertIn("Headliner — A–Z", html)
+        self.assertNotIn("Artist — A–Z", html)
         self.assertIn("Venue — A–Z", html)
 
     def test_embedded_json_is_compact_complete_and_safe(self):
@@ -176,7 +197,10 @@ class ProductionHTMLTests(unittest.TestCase):
 
         self.assertIn("event.s.includes(query)", html)
         self.assertIn("event.d.startsWith(month)", html)
-        self.assertIn("event.v === venue", html)
+        self.assertIn(
+            "venueIdentity(event.v) === venueIdentity(venue)",
+            html,
+        )
         self.assertIn("event.x.includes(genre)", html)
         self.assertIn("var order = controls.sortOrder.value;", html)
         self.assertIn('order === "date-desc"', html)
@@ -189,6 +213,8 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn('=== "paris" ? event.v : event.v + " (" + event.c + ")"', html)
         self.assertIn('target = "_blank"', html)
         self.assertIn('rel = "noopener noreferrer"', html)
+        self.assertIn('event.x.join(", ")', html)
+        self.assertNotIn('addText(metadata, "ee-calendar-promoter"', html)
 
 
 class IntegrationAssetTests(unittest.TestCase):
@@ -247,6 +273,14 @@ class IntegrationAssetTests(unittest.TestCase):
         self.assertIn("malformed or empty event dataset", renderer)
         self.assertIn("timed out waiting for event data", renderer)
         self.assertIn('document.getElementById(MOUNT_ID)', renderer)
+        self.assertIn('"Headliner — A–Z"', renderer)
+        self.assertIn("event.o", renderer)
+        self.assertIn("event.s.includes(query)", renderer)
+        self.assertIn("venueIdentity(event.v) === venueIdentity(venue)", renderer)
+        self.assertIn("articleAwareKey(left, venueSortOverrides)", renderer)
+        self.assertIn("var venueLabels = new Map()", renderer)
+        self.assertIn(".ee-calendar-event-list > li::marker", styles)
+        self.assertIn("list-style: none", styles)
 
     def test_integration_export_writes_a_complete_local_bundle(self):
         with tempfile.TemporaryDirectory() as directory:

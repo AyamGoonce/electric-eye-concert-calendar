@@ -37,6 +37,8 @@ VENUE_ALIASES = {
     "l olympia bruno coquatrix": "L'Olympia Bruno Coquatrix",
     "olympia": "L'Olympia Bruno Coquatrix",
     "la boule noire": "La Boule Noire",
+    "la batterie": "La Batterie",
+    "la clef": "La CLEF",
     "boule noire": "La Boule Noire",
     "la cigale": "La Cigale",
     "cigale": "La Cigale",
@@ -51,6 +53,7 @@ VENUE_ALIASES = {
     "seine musicale grande seine": "La Seine Musicale – Grande Seine",
     "seine musicale": "La Seine Musicale",
     "le grand rex": "Le Grand Rex",
+    "le poc": "Le POC",
     "le cafe de la danse": "Café de la Danse",
     "le hasard ludique": "Le Hasard Ludique",
     "le palais des congres de paris": "Le Palais des Congrès de Paris",
@@ -82,6 +85,7 @@ VENUE_ALIASES = {
     "theatre casino barriere d enghien les bains": (
         "Théâtre du Casino Barrière d'Enghien-les-Bains"
     ),
+    "theatre de rungis": "Théâtre de Rungis",
     "trabendo": "Le Trabendo",
     "le trabendo": "Le Trabendo",
     "zenith paris la villette": "Le Zénith Paris – La Villette",

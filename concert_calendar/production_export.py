@@ -18,7 +18,10 @@ STATIC_DIR = Path(__file__).with_name("static")
 RENDERER_PATH = STATIC_DIR / "calendar-renderer.js"
 STYLES_PATH = STATIC_DIR / "calendar.css"
 
-ARTIST_SORT_OVERRIDES = {"a perfect circle": "Perfect Circle"}
+ARTIST_SORT_OVERRIDES = {
+    "a perfect circle": "Perfect Circle",
+    "an pierle": "An Pierlé",
+}
 VENUE_SORT_OVERRIDES: dict[str, str] = {}
 
 GENRE_RULES = (
@@ -60,7 +63,11 @@ def alphabetical_sort_key(
     if override is not None:
         return normalize_text(override)
 
-    return re.sub(r"^(?:(?:the|le|la|les)\s+|l['’]\s*)", "", normalized)
+    return re.sub(
+        r"^(?:(?:the|a|an|le|la|les)\s+|l['’]\s*)",
+        "",
+        normalized,
+    )
 
 
 def parse_event_date(value: str) -> date | None:

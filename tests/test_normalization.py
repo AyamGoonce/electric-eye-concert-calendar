@@ -112,6 +112,103 @@ class ArtistNormalizationTests(unittest.TestCase):
         self.assertEqual("Rock", merged.genre)
         self.assertEqual("https://example.com/tickets", merged.ticket_url)
 
+    def test_corroborated_mixed_case_spelling_is_used_for_display(self):
+        uppercase = make_event("HOLLYWOOD VAMPIRES")
+        mixed_case = make_event("Hollywood Vampires")
+
+        merged = deduplicate_events([uppercase, mixed_case])
+
+        self.assertEqual("Hollywood Vampires", merged[0].headliner)
+
+    def test_uncorroborated_uppercase_spelling_is_preserved(self):
+        merged = deduplicate_events([make_event("CHVRCHES")])
+
+        self.assertEqual("CHVRCHES", merged[0].headliner)
+
+
+class BillingReconciliationTests(unittest.TestCase):
+    def test_structured_bill_merges_full_bill_and_inherits_ticket(self):
+        structured = make_event("Michael Cera Palin", "Supersonic")
+        structured.date = "2026-08-25"
+        structured.openers = ["Club Bombardier", "Handbrace"]
+        structured.promoters = ["Supersonic"]
+        full_bill = make_event(
+            "Michael Cera Palin + Club Bombardier + Handbrace",
+            "Supersonic",
+        )
+        full_bill.date = "2026-08-25"
+        full_bill.ticket_url = "https://dice.fm/event/michael-cera-palin"
+
+        merged = deduplicate_events([structured, full_bill])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Michael Cera Palin", merged[0].headliner)
+        self.assertEqual(["Club Bombardier", "Handbrace"], merged[0].openers)
+        self.assertEqual(
+            "https://dice.fm/event/michael-cera-palin",
+            merged[0].ticket_url,
+        )
+
+    def test_structured_bill_keeps_official_ticket(self):
+        structured = make_event("Headliner", "Supersonic")
+        structured.openers = ["Support"]
+        structured.ticket_url = "https://official.example/event"
+        full_bill = make_event("Headliner + Support", "Supersonic")
+        full_bill.ticket_url = "https://dice.fm/event/duplicate"
+
+        merged = deduplicate_events([structured, full_bill])
+
+        self.assertEqual("https://official.example/event", merged[0].ticket_url)
+
+    def test_ambiguous_co_headliner_bill_does_not_merge(self):
+        first = make_event("Artist A + Artist B")
+        second = make_event("Artist A")
+
+        self.assertEqual(2, len(deduplicate_events([first, second])))
+
+    def test_unrelated_same_date_and_venue_artist_does_not_merge(self):
+        structured = make_event("Headliner")
+        structured.openers = ["Support"]
+        unrelated = make_event("Different Artist")
+
+        self.assertEqual(2, len(deduplicate_events([structured, unrelated])))
+
+    def test_explicit_support_card_requires_shared_event_evidence(self):
+        parent = make_event("Headliner")
+        parent.openers = ["Support"]
+        support = make_event("Support")
+
+        self.assertEqual(2, len(deduplicate_events([parent, support])))
+
+        parent.promoters = ["Official Promoter"]
+        support.promoters = ["Official Promoter"]
+        merged = deduplicate_events([parent, support])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Headliner", merged[0].headliner)
+        self.assertEqual(["Support"], merged[0].openers)
+
+    def test_hollywood_vampires_verified_support_is_one_concert(self):
+        ticket = (
+            "https://www.gdp.fr/fr/catalogue/"
+            "hollywood-vampires-paris-2026-08-26-1"
+        )
+        headliner = make_event("HOLLYWOOD VAMPIRES", "Adidas Arena")
+        headliner.date = "2026-08-26"
+        headliner.promoters = ["Gérard Drouot Productions"]
+        headliner.ticket_url = ticket
+        support = make_event("THE LAST INTERNATIONALE", "Adidas Arena")
+        support.date = "2026-08-26"
+        support.promoters = ["Gérard Drouot Productions"]
+        support.ticket_url = ticket
+
+        merged = deduplicate_events([headliner, support])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Hollywood Vampires", merged[0].headliner)
+        self.assertEqual(["The Last Internationale"], merged[0].openers)
+        self.assertEqual(ticket, merged[0].ticket_url)
+
 
 class VenueNormalizationTests(unittest.TestCase):
     def test_article_variant_normalizes_to_point_ephemere(self):
@@ -157,6 +254,22 @@ class VenueNormalizationTests(unittest.TestCase):
         )
 
         self.assertEqual("La Seine Musicale – Grande Seine", event.venue)
+
+    def test_clear_venue_capitalization_variants_share_canonical_labels(self):
+        groups = {
+            "La Batterie": ["LA BATTERIE", "La Batterie"],
+            "La CLEF": ["La clef", "La CLEF", "LA CLEF"],
+            "Le POC": ["Le Poc", "Le POC"],
+            "Théâtre de Rungis": ["THEATRE DE RUNGIS", "Théâtre de Rungis"],
+        }
+
+        for expected, variants in groups.items():
+            with self.subTest(expected=expected):
+                normalized = {
+                    normalize_event_venue(make_event("Artist", variant)).venue
+                    for variant in variants
+                }
+                self.assertEqual({expected}, normalized)
 
 
 class EventScopeTests(unittest.TestCase):
