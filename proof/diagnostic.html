@@ -44,5 +44,15 @@
   </article></main></div></div>
   <script src="calendar-renderer.js"></script>
   <script src="calendar-current.js"></script>
+  <output id="ee-proof-diagnostics" hidden>pending</output>
+  <script>
+    window.setTimeout(function () {
+      var output = document.getElementById("ee-proof-diagnostics");
+      output.textContent = JSON.stringify({
+        errors: window.__eeProofDiagnostics,
+        renderedEvents: document.querySelectorAll(".ee-calendar-event-row").length
+      });
+    }, 1000);
+  </script>
 </body>
 </html>
