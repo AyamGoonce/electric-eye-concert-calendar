@@ -17,7 +17,11 @@
 
   function articleAwareKey(value, overrides) {
     var normalized = normalize(value);
-    return overrides[normalized] || normalized.replace(/^(?:(?:the|le|la|les)\s+|l['’]\s*)/i, "");
+    return overrides[normalized] || normalized.replace(/^(?:(?:the|a|an|le|la|les)\s+|l['’]\s*)/i, "");
+  }
+
+  function venueIdentity(value) {
+    return normalize(value).replace(/[^a-z0-9]+/g, " ").trim();
   }
 
   function validText(value) {
@@ -123,7 +127,7 @@
     var sortOrder = addSelect(filters, "Sort", "ee-calendar-sort", "Date — soonest first");
     sortOrder.firstElementChild.value = "date-asc";
     addOption(sortOrder, "date-desc", "Date — latest first");
-    addOption(sortOrder, "artist-asc", "Artist — A–Z");
+    addOption(sortOrder, "artist-asc", "Headliner — A–Z");
     addOption(sortOrder, "venue-asc", "Venue — A–Z");
 
     var clearButton = addText(filters, "ee-calendar-clear", "Clear", "button");
@@ -168,7 +172,10 @@
     initialized = true;
     window.clearTimeout(failureTimer);
 
-    var artistSortOverrides = { "a perfect circle": "Perfect Circle" };
+    var artistSortOverrides = {
+      "a perfect circle": "Perfect Circle",
+      "an pierle": "An Pierlé"
+    };
     var venueSortOverrides = {};
     var events = rawEvents.map(function (source, index) {
       var event = Object.assign({}, source);
@@ -197,8 +204,18 @@
         addOption(controls.monthFilter, month, monthFormatter.format(dateFromISO(month + "-01")));
       }
     });
-    Array.from(new Set(events.map(function (event) { return event.v; })))
-      .sort(function (left, right) { return left.localeCompare(right, "fr", { sensitivity: "base" }); })
+    var venueLabels = new Map();
+    events.forEach(function (event) {
+      var identity = venueIdentity(event.v);
+      if (!venueLabels.has(identity)) venueLabels.set(identity, event.v);
+    });
+    Array.from(venueLabels.values())
+      .sort(function (left, right) {
+        return compareText(
+          articleAwareKey(left, venueSortOverrides),
+          articleAwareKey(right, venueSortOverrides)
+        );
+      })
       .forEach(function (venue) { addOption(controls.venueFilter, venue, venue); });
     Array.from(new Set(events.flatMap(function (event) { return event.x; })))
       .sort()
@@ -218,8 +235,7 @@
       addText(article, "ee-calendar-venue", event.c.toLocaleLowerCase() === "paris" ? event.v : event.v + " (" + event.c + ")");
       var metadata = document.createElement("div");
       metadata.className = "ee-calendar-metadata";
-      if (event.g) addText(metadata, "ee-calendar-genre", event.g, "span");
-      if (event.p.length) addText(metadata, "ee-calendar-promoter", event.p.join(", "), "span");
+      if (event.x.length) addText(metadata, "ee-calendar-genre", event.x.join(", "), "span");
       article.append(metadata);
       if (event.t) {
         var ticket = addText(article, "ee-calendar-ticket", "Tickets", "a");
@@ -243,7 +259,7 @@
       var filtered = events.filter(function (event) {
         return (!query || event.s.includes(query)) &&
           (!month || event.d.startsWith(month)) &&
-          (!venue || event.v === venue) &&
+          (!venue || venueIdentity(event.v) === venueIdentity(venue)) &&
           (!genre || event.x.includes(genre));
       });
       filtered.sort(
