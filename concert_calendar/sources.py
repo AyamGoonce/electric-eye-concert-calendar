@@ -1,5 +1,7 @@
 import re
+import time
 import unicodedata
+from dataclasses import dataclass
 
 from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.geography import (
@@ -9,6 +11,17 @@ from concert_calendar.geography import (
 from concert_calendar.promoters import normalize_event_promoters
 from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.venues import normalize_event_venue
+
+
+@dataclass(frozen=True)
+class PipelineReport:
+    source_counts: dict[str, int]
+    source_failures: dict[str, str]
+    raw_count: int
+    geography_normalized_count: int
+    idf_count: int
+    normalized_count: int
+    final_count: int
 
 
 def normalize_text_for_matching(text):
@@ -115,17 +128,52 @@ def is_supported_event(event):
     )
 
 
-def load_events():
+def load_events_with_report(
+    *,
+    scraper_attempts: int = 3,
+    retry_delay_seconds: float = 2.0,
+):
     raw_events = []
+    source_counts = {}
+    source_failures = {}
 
     for scraper in discover_scrapers():
         print(f"Loading {scraper.SOURCE_NAME}...")
 
-        scraper_events = scraper.load_events()
+        scraper_events = None
+        last_error = None
+
+        for attempt in range(1, scraper_attempts + 1):
+            try:
+                scraper_events = scraper.load_events()
+                if scraper_events or attempt == scraper_attempts:
+                    break
+                print(
+                    f"Attempt {attempt}/{scraper_attempts} returned zero events "
+                    f"for {scraper.SOURCE_NAME}"
+                )
+                if retry_delay_seconds:
+                    time.sleep(retry_delay_seconds * attempt)
+            except Exception as error:  # Individual sources must not hide the run report.
+                last_error = error
+                print(
+                    f"Attempt {attempt}/{scraper_attempts} failed for "
+                    f"{scraper.SOURCE_NAME}: {error}"
+                )
+                if attempt < scraper_attempts and retry_delay_seconds:
+                    time.sleep(retry_delay_seconds * attempt)
+
+        if not scraper_events and last_error is not None:
+            source_failures[scraper.SOURCE_NAME] = (
+                f"{type(last_error).__name__}: {last_error}"
+            )
+        if scraper_events is None:
+            scraper_events = []
 
         print(f"→ {len(scraper_events)} events loaded")
         print()
 
+        source_counts[scraper.SOURCE_NAME] = len(scraper_events)
         raw_events.extend(scraper_events)
 
     geography_normalized_events = []
@@ -182,4 +230,19 @@ def load_events():
         "Île-de-France ConcertEvent records after deduplication"
     )
 
-    return deduplicated_events
+    report = PipelineReport(
+        source_counts=source_counts,
+        source_failures=source_failures,
+        raw_count=len(raw_events),
+        geography_normalized_count=len(geography_normalized_events),
+        idf_count=len(ile_de_france_events),
+        normalized_count=len(normalized_events),
+        final_count=len(deduplicated_events),
+    )
+
+    return deduplicated_events, report
+
+
+def load_events():
+    events, _ = load_events_with_report()
+    return events
