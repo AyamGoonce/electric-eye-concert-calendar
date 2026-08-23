@@ -19,3 +19,16 @@
 - Keep one logical source or product change per commit where practical. Run the
   focused tests and a full live pipeline before major commits.
 - Preserve Git history. Do not reset, rebase, squash, or rewrite existing work.
+- Production refreshes run in GitHub Actions, never through a scheduler on the
+  user's Mac. The workflow runs every six hours and also supports a manual
+  `workflow_dispatch` refresh.
+- A failed scrape, test, production validation, regression guard, or hosted
+  integrity check must fail the workflow without replacing the last-known-good
+  Pages data.
+- GitHub Pages hosts the static calendar assets; Blogger remains the website.
+  Routine data refreshes require no Blogger edits.
+- Treat `calendar-renderer.js` and `calendar.css` as stable assets. Routine
+  publication updates the content-addressed data file and
+  `calendar-current.js`, changing stable assets only when their source changes.
+- Retain the current and two prior hashed data assets on Pages for rollback.
+- Never commit GitHub credentials, personal access tokens, or other secrets.

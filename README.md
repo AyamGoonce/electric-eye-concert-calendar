@@ -4,7 +4,9 @@ An automated concert calendar for the Electric Eye website.
 
 ## Status
 
-Step 2 – Core Framework
+Production calendar acquisition, normalization, validation, and static export
+are implemented. GitHub Actions performs autonomous production refreshes; see
+[Production automation](docs/production.md).
 
 ## Goal
 
