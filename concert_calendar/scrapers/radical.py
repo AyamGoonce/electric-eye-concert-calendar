@@ -87,6 +87,32 @@ def find_ticket_url(card):
     return href or None
 
 
+def find_openers(card):
+    """Extract Radical's explicit first-part billing when present."""
+
+    info = card.select_one(".concert-card__infos")
+
+    if info is None:
+        return None
+
+    text = clean_text(info.get_text(" ", strip=True))
+    match = re.match(
+        r"premi(?:è|e)re\s+partie\s*:\s*(.+)$",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    if not match:
+        return None
+
+    openers = [
+        clean_text(value)
+        for value in re.split(r"\s+(?:\+|•)\s+", match.group(1))
+    ]
+
+    return [value for value in openers if value] or None
+
+
 def parse_card(card):
     date_element = card.select_one(
         ".concert-card__date"
@@ -151,7 +177,7 @@ def parse_card(card):
         venue=venue,
         city=city,
         department="",
-        openers=None,
+        openers=find_openers(card),
         promoters=["Radical Production"],
         genre=None,
         facebook_event_url=None,

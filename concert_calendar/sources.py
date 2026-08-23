@@ -22,6 +22,10 @@ class PipelineReport:
     idf_count: int
     normalized_count: int
     final_count: int
+    package_product_count: int
+    festival_days_aggregated: int
+    festival_artist_rows_collapsed: int
+    opener_enriched_records: int
 
 
 def normalize_text_for_matching(text):
@@ -56,10 +60,6 @@ def is_non_supported_event(title):
     )
 
     excluded_patterns = [
-        # VIP and commercial package listings
-        r"\bpackage\b",
-        r"\bvip\b",
-
         # Club nights, parties and DJ events
         r"\bafterparty\b",
         r"\bafter party\b",
@@ -97,7 +97,28 @@ def is_non_supported_event(title):
     return any(
         re.search(pattern, normalized_title)
         for pattern in excluded_patterns
+    ) or is_ticket_product_title(title)
+
+
+def is_ticket_product_title(title):
+    """Identify explicit ticket products without matching artist-name tokens."""
+
+    normalized = normalize_text_for_matching(title)
+    product_patterns = (
+        r"^(?:package|vip)\s+",
+        r"\bpass\s+(?:1|2|3|4)\s+jours?\b",
+        r"\bpass\s+(?:weekend|week-end|samedi|dimanche)\b",
+        r"\b(?:weekend|week-end|day|multi-day|\d+-day)\s+pass\b",
+        r"\b(?:vip|premium|hospitality)\s+"
+        r"(?:package|upgrade|experience|ticket|pass)\b",
+        r"\bmeet(?:-and-| and )greet(?:\s+package)?\b",
+        r"\bearly[- ]entry(?:\s+(?:product|upgrade|pass))?\b",
+        r"\bparking\s+(?:product|ticket|pass|add-on)\b",
+        r"\b(?:ticket\s+)?(?:add-on|upgrade|resale|membership|adhesion)\s+product\b",
+        r"\bgeneric\s+bundle\b",
     )
+
+    return any(re.search(pattern, normalized) for pattern in product_patterns)
 
 
 def is_supported_event(event):
@@ -183,8 +204,12 @@ def load_events_with_report(
         geography_normalized_events.append(event)
 
     ile_de_france_events = []
+    package_product_count = 0
 
     for event in geography_normalized_events:
+        if is_ticket_product_title(event.headliner):
+            package_product_count += 1
+
         if not is_supported_event(event):
             print(
                 "Excluded unsupported event: "
@@ -208,7 +233,11 @@ def load_events_with_report(
         normalize_event_promoters(event)
         normalized_events.append(event)
 
-    deduplicated_events = deduplicate_events(normalized_events)
+    deduplication_diagnostics = {}
+    deduplicated_events = deduplicate_events(
+        normalized_events,
+        diagnostics=deduplication_diagnostics,
+    )
 
     print()
     print(f"Created {len(raw_events)} raw ConcertEvent records")
@@ -238,6 +267,16 @@ def load_events_with_report(
         idf_count=len(ile_de_france_events),
         normalized_count=len(normalized_events),
         final_count=len(deduplicated_events),
+        package_product_count=package_product_count,
+        festival_days_aggregated=deduplication_diagnostics.get(
+            "festival_days_aggregated", 0
+        ),
+        festival_artist_rows_collapsed=deduplication_diagnostics.get(
+            "festival_artist_rows_collapsed", 0
+        ),
+        opener_enriched_records=deduplication_diagnostics.get(
+            "opener_enriched_records", 0
+        ),
     )
 
     return deduplicated_events, report

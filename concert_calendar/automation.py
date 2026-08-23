@@ -15,7 +15,7 @@ import time
 from urllib.request import Request, urlopen
 
 from concert_calendar.production_export import (
-    GENRE_RULES,
+    PUBLIC_GENRES,
     export_integration_prototype,
     prepare_upcoming_events,
     safe_ticket_url,
@@ -33,6 +33,7 @@ CORE_SOURCES = {
     "Gérard Drouot Productions",
     "Live Nation",
     "Radical Production",
+    "Rock en Seine",
     "Supersonic",
     "Vedettes",
     "VeryShow",
@@ -66,7 +67,7 @@ def validate_events(events: list[dict]) -> None:
             f"Only {len(events)} final events; minimum is {MINIMUM_EVENT_COUNT}"
         )
 
-    allowed_genres = {category for category, _ in GENRE_RULES}
+    allowed_genres = set(PUBLIC_GENRES)
     fingerprints = set()
 
     for index, event in enumerate(events):
@@ -91,6 +92,10 @@ def validate_events(events: list[dict]) -> None:
             raise ProductionValidationError(f"Event {index} has malformed lists")
         if any(genre not in allowed_genres for genre in event["x"]):
             raise ProductionValidationError(f"Event {index} has unknown public genre")
+        if len(event["x"]) > 1:
+            raise ProductionValidationError(
+                f"Event {index} has more than one public genre"
+            )
         if event["t"] is not None and safe_ticket_url(event["t"]) is None:
             raise ProductionValidationError(f"Event {index} has an unsafe ticket URL")
 

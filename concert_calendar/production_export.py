@@ -24,6 +24,21 @@ ARTIST_SORT_OVERRIDES = {
 }
 VENUE_SORT_OVERRIDES: dict[str, str] = {}
 
+PUBLIC_GENRES = (
+    "Comedy",
+    "Electronic",
+    "Folk / Country",
+    "French chanson",
+    "Hip-hop / Rap",
+    "Jazz / Blues",
+    "Metal / Hard Rock",
+    "Pop",
+    "R&B / Soul / Funk",
+    "Reggae / Dub / Ska",
+    "Rock / Indie / Punk",
+    "World / Latin",
+)
+
 GENRE_RULES = (
     ("Rock / Indie / Punk", ("rock", "indie", "punk", "shoegaze", "grunge", "psych", "new wave", "newwave")),
     ("Metal / Hard Rock", ("metal", "hard rock", "hardrock", "newcore")),
@@ -38,6 +53,23 @@ GENRE_RULES = (
     ("French chanson", ("chanson francaise", "variete francaise")),
     ("Comedy", ("comedy", "one man show")),
 )
+
+GENRE_EXACT_MAPPINGS = {
+    "rap, hip-hop": "Hip-hop / Rap",
+    "hip hop / rap": "Hip-hop / Rap",
+    "hard / metal": "Metal / Hard Rock",
+    "hard rock et assimiles": "Metal / Hard Rock",
+    "hard rock / metal": "Metal / Hard Rock",
+    "metal / hard rock": "Metal / Hard Rock",
+    "rock / indie / punk": "Rock / Indie / Punk",
+    "afrobeat": "World / Latin",
+    "afrobeats": "World / Latin",
+    "afropop": "World / Latin",
+    "afropop, afrobeats, zouk": "World / Latin",
+    "variete francaise": "French chanson",
+    "chanson francaise": "French chanson",
+    "variete / chanson / pop francaise": "French chanson",
+}
 
 
 def normalize_text(value: str) -> str:
@@ -95,11 +127,26 @@ def genre_categories(value: str | None) -> list[str]:
     if not normalized:
         return []
 
-    return [
+    public_by_identity = {
+        normalize_text(label): label
+        for label in PUBLIC_GENRES
+    }
+
+    if normalized in public_by_identity:
+        return [public_by_identity[normalized]]
+
+    exact = GENRE_EXACT_MAPPINGS.get(normalized)
+
+    if exact:
+        return [exact]
+
+    matches = {
         category
         for category, keywords in GENRE_RULES
         if any(keyword in normalized for keyword in keywords)
-    ]
+    }
+
+    return list(matches) if len(matches) == 1 else []
 
 
 def event_to_data(event: ConcertEvent) -> dict:

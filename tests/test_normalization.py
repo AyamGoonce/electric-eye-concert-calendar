@@ -320,9 +320,11 @@ class SourcePriorityTests(unittest.TestCase):
             if scraper.SOURCE_NAME == "DICE"
         )
 
+        self.assertEqual(len(scrapers) - 1, dice_index)
         self.assertTrue(
             all(
-                getattr(scraper, "SOURCE_PRIORITY", 0) == 0
+                getattr(scraper, "SOURCE_PRIORITY", 0)
+                < getattr(scrapers[dice_index], "SOURCE_PRIORITY", 0)
                 for scraper in scrapers[:dice_index]
             )
         )

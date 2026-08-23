@@ -17,6 +17,7 @@ ARTIST_ALIASES = {
     "howlin’ jaws": "howlin' jaws",
     "la p’tité fumée": "la p’tite fumée",
     "la securite": "la sécurité",
+    "lewis ofman – festivals": "lewis ofman",
     "noe preszow": "noé preszow",
     "sebastien tellier": "sébastien tellier",
     "zoh amba (les femmes s’en mêlent)": (
@@ -61,6 +62,7 @@ def normalize_artist_component(name: str) -> str:
         if not unicodedata.combining(character)
     )
     normalized = normalized.replace("’", "'")
+    normalized = normalized.replace("&", " and ")
     return re.sub(r"\s+", " ", normalized).strip()
 
 
@@ -117,8 +119,15 @@ def merge_events(
     if not existing.facebook_event_url and incoming.facebook_event_url:
         existing.facebook_event_url = incoming.facebook_event_url
 
-    if not existing.ticket_url and _valid_http_url(incoming.ticket_url):
+    if incoming.authoritative_billing and _valid_http_url(incoming.ticket_url):
         existing.ticket_url = incoming.ticket_url
+    elif not existing.ticket_url and _valid_http_url(incoming.ticket_url):
+        existing.ticket_url = incoming.ticket_url
+
+    existing.festival_name = existing.festival_name or incoming.festival_name
+    existing.authoritative_billing = (
+        existing.authoritative_billing or incoming.authoritative_billing
+    )
 
     return existing
 
@@ -322,13 +331,87 @@ def _collapse_explicit_support_cards(
     return [event for event in events if id(event) not in removed]
 
 
-def deduplicate_events(events: list[ConcertEvent]) -> list[ConcertEvent]:
+def _consolidate_authoritative_festivals(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Replace artist products with one authoritative festival-day bill."""
+
+    grouped = defaultdict(list)
+
+    for event in events:
+        grouped[(event.date, (event.venue or "").casefold().strip())].append(event)
+
+    removed = set()
+    days_aggregated = 0
+
+    for group in grouped.values():
+        authoritative = [
+            event
+            for event in group
+            if event.authoritative_billing and event.festival_name and event.openers
+        ]
+
+        if len(authoritative) != 1:
+            if len(group) > 1 and any(event.festival_name for event in group):
+                print(
+                    "Ambiguous festival-day billing retained: "
+                    f"{group[0].date} — {group[0].venue}"
+                )
+            continue
+
+        parent = authoritative[0]
+        lineup_identities = {
+            normalize_artist_component(name)
+            for name in [parent.headliner, *(parent.openers or [])]
+        }
+        collapsed_here = 0
+
+        for candidate in group:
+            if candidate is parent or id(candidate) in removed:
+                continue
+            if normalize_artist_component(candidate.headliner) not in lineup_identities:
+                continue
+
+            merge_events(parent, candidate)
+            removed.add(id(candidate))
+            collapsed_here += 1
+
+        if collapsed_here:
+            days_aggregated += 1
+
+    if diagnostics is not None:
+        diagnostics["festival_days_aggregated"] = days_aggregated
+        diagnostics["festival_artist_rows_collapsed"] = len(removed)
+
+    return [event for event in events if id(event) not in removed]
+
+
+def deduplicate_events(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
     """Collapse exact and explicitly reconcilable duplicate concerts."""
+
+    initial_opener_state = defaultdict(list)
+
+    for event in events:
+        initial_opener_state[build_event_key(event)].append(bool(event.openers))
 
     display_candidates = _display_candidates(events)
     reconciled = _deduplicate_exact(events)
     _apply_verified_support_relationships(reconciled)
     reconciled = _reconcile_full_bills(reconciled)
+    reconciled = _consolidate_authoritative_festivals(reconciled, diagnostics)
     reconciled = _collapse_explicit_support_cards(reconciled)
     _apply_display_capitalization(reconciled, display_candidates)
+
+    if diagnostics is not None:
+        diagnostics["opener_enriched_records"] = sum(
+            bool(event.openers)
+            and False in initial_opener_state.get(build_event_key(event), [])
+            and True in initial_opener_state.get(build_event_key(event), [])
+            for event in reconciled
+        )
+
     return reconciled

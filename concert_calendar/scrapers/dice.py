@@ -58,6 +58,47 @@ def is_non_concert_listing(title):
     return bool(re.search(r"\bviewing(?:s)? parties\b", normalized))
 
 
+SERIES_PREFIXES = {
+    "le beau dimanche",
+}
+
+
+def parse_explicit_billing(title):
+    """Return reviewed title-embedded billing without guessing arbitrary titles."""
+
+    title = clean_text(title)
+    prefix, separator, remainder = title.partition(":")
+    has_reviewed_structure = False
+
+    if separator and prefix.strip().casefold() in SERIES_PREFIXES:
+        title = remainder.strip()
+        has_reviewed_structure = True
+
+    without_series_suffix, suffix_count = re.subn(
+        r"\s*\[(?:opening\s+des\s+)?afters(?:\s+jazz\s+à\s+la\s+villette)?\s*#\d+\]\s*$",
+        "",
+        title,
+        flags=re.IGNORECASE,
+    )
+
+    if suffix_count:
+        title = without_series_suffix.strip()
+        has_reviewed_structure = True
+
+    if not has_reviewed_structure:
+        return title, None
+
+    components = [
+        clean_text(value)
+        for value in re.split(r"\s+(?:\+|•)\s+", title)
+    ]
+
+    if len(components) < 2:
+        return title, None
+
+    return components[0], components[1:]
+
+
 def extract_events(payload):
     events = []
 
@@ -100,13 +141,15 @@ def parse_event(data):
     except (TypeError, ValueError):
         return None
 
+    headliner, openers = parse_explicit_billing(headliner)
+
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
         venue=venue,
         city=city,
         department="",
-        openers=None,
+        openers=openers,
         promoters=None,
         genre=None,
         facebook_event_url=None,

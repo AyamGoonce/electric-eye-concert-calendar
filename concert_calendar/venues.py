@@ -73,6 +73,7 @@ VENUE_ALIASES = {
     "point ephemere": "Point Éphémère",
     "le point ephemere": "Point Éphémère",
     "rock en seine": "Rock en Seine",
+    "festival rock en seine": "Rock en Seine",
     "salle pleyel": "Salle Pleyel",
     "stade de france": "Stade de France",
     "supersonic": "Supersonic",

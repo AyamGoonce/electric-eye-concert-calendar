@@ -15,3 +15,5 @@ class ConcertEvent:
     genre: Optional[str] = None
     facebook_event_url: Optional[str] = None
     ticket_url: Optional[str] = None
+    festival_name: Optional[str] = None
+    authoritative_billing: bool = False

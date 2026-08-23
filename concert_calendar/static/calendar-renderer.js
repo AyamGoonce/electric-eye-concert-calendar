@@ -7,6 +7,12 @@
   var FAILURE_DELAY_MS = 4000;
   var initialized = false;
   var failureTimer = null;
+  var publicGenres = Object.freeze([
+    "Comedy", "Electronic", "Folk / Country", "French chanson",
+    "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
+    "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk",
+    "World / Latin"
+  ]);
 
   function normalize(value) {
     return (value || "")
@@ -217,9 +223,9 @@
         );
       })
       .forEach(function (venue) { addOption(controls.venueFilter, venue, venue); });
-    Array.from(new Set(events.flatMap(function (event) { return event.x; })))
-      .sort()
-      .forEach(function (genre) { addOption(controls.genreFilter, genre, genre); });
+    publicGenres.forEach(function (genre) {
+      addOption(controls.genreFilter, genre, genre);
+    });
 
     function createRow(event) {
       var item = document.createElement("li");

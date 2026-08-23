@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import (
     ARTIST_SORT_OVERRIDES,
+    PUBLIC_GENRES,
     alphabetical_sort_key,
     build_current_pointer,
     build_data_asset,
@@ -120,7 +121,7 @@ class ProductionDataTests(unittest.TestCase):
 
     def test_genre_categories_are_broad_and_meaningful(self):
         self.assertEqual(
-            ["Rock / Indie / Punk", "Pop"],
+            [],
             genre_categories("Concert - Indie Pop"),
         )
         self.assertEqual(["Hip-hop / Rap"], genre_categories("Rap, Hip-Hop"))
@@ -133,6 +134,16 @@ class ProductionDataTests(unittest.TestCase):
             genre_categories("Rock / Indie / Punk"),
         )
         self.assertEqual([], genre_categories(None))
+
+    def test_ambiguous_genre_does_not_combine_public_categories(self):
+        self.assertEqual([], genre_categories("Pop, Rock"))
+        self.assertEqual([], genre_categories("Jazz / Funk"))
+
+    def test_exact_public_genre_is_preserved_as_one_label(self):
+        self.assertEqual(
+            ["R&B / Soul / Funk"],
+            genre_categories("R&B / Soul / Funk"),
+        )
 
 
 class ProductionHTMLTests(unittest.TestCase):
@@ -215,6 +226,14 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn('rel = "noopener noreferrer"', html)
         self.assertIn('event.x.join(", ")', html)
         self.assertNotIn('addText(metadata, "ee-calendar-promoter"', html)
+
+    def test_renderer_genre_filter_uses_exact_public_vocabulary(self):
+        renderer = read_renderer()
+
+        for genre in PUBLIC_GENRES:
+            self.assertEqual(1, renderer.count(f'"{genre}"'))
+        self.assertIn("publicGenres.forEach", renderer)
+        self.assertNotIn("genreValues.forEach", renderer)
 
 
 class IntegrationAssetTests(unittest.TestCase):
