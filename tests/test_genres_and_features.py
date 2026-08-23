@@ -31,7 +31,7 @@ def event(**changes):
 
 class GenreEnrichmentTests(unittest.TestCase):
     def test_public_vocabulary_is_exactly_closed(self):
-        self.assertEqual(12, len(PUBLIC_GENRES))
+        self.assertEqual(13, len(PUBLIC_GENRES))
         self.assertEqual(len(PUBLIC_GENRES), len(set(PUBLIC_GENRES)))
 
     def test_source_explicit_and_source_mapping_provenance(self):
@@ -64,7 +64,7 @@ class GenreEnrichmentTests(unittest.TestCase):
     def test_festival_does_not_inherit_headliner_mapping(self):
         festival = event(headliner="The Cure", festival_name="Rock en Seine")
         enrich_event_genres([festival])
-        self.assertIsNone(festival.genre_public)
+        self.assertEqual("Festival", festival.genre_public)
 
     def test_reviewed_mapping_has_evidence_and_valid_genres(self):
         mappings = load_reviewed_mappings()

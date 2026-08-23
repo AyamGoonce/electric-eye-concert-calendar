@@ -11,7 +11,7 @@ from concert_calendar.models import ConcertEvent
 
 
 PUBLIC_GENRES = (
-    "Comedy", "Electronic", "Folk / Country", "French chanson",
+    "Comedy", "Electronic", "Festival", "Folk / Country", "French chanson",
     "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
     "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk",
     "World / Latin",
@@ -191,7 +191,10 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         )
 
         if event.festival_name:
-            stats["blank_festival"] += 1
+            event.genre_public = "Festival"
+            event.genre_method = "festival"
+            event.genre_source = "festival_name"
+            stats["festival"] += 1
         elif artist and len(mapped) == 1 and weak_source_evidence:
             event.genre_public = artist["genre"]
             event.genre_method = "artist_mapping"
