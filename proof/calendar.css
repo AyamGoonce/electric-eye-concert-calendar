@@ -415,7 +415,9 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-free,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-not-on-sale {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-not-on-sale,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-cancelled,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-postponed {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -605,7 +607,9 @@
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-free,
-  .ee-calendar-page #ee-concert-calendar .ee-calendar-not-on-sale {
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-not-on-sale,
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-cancelled,
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-postponed {
     grid-column: 2;
     grid-row: 1;
   }
