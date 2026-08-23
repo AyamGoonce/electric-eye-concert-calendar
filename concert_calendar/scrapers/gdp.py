@@ -12,6 +12,24 @@ GDP_EVENTS_URL = "https://www.gdp.fr/fr/agenda"
 REQUEST_TIMEOUT = 30
 MAX_PAGES = 50
 
+REVIEWED_FESTIVAL_DAYS = {
+    ("2026-09-04", "mennecy metal fest"): {
+        "festival_name": "Mennecy Metal Fest",
+        "headliner": "Saxon",
+        "openers": [
+            "Amon Sethis",
+            "Oomph!",
+            "No One Is Innocent",
+            "Prophecy 23",
+            "Titan",
+            "TrollHeart",
+            "USQUAM",
+            "Ghost Anthem",
+        ],
+    },
+}
+
+
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -76,15 +94,27 @@ def parse_card(card):
                 href,
             )
 
+    festival = REVIEWED_FESTIVAL_DAYS.get(
+        (event_date, venue.casefold().strip())
+    )
+
+    if festival:
+        headliner = festival["headliner"]
+
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
         venue=venue,
         city=city,
         department="",
+        openers=(festival["openers"] if festival else None),
         promoters=["GDP"],
         genre=genre,
         ticket_url=ticket_url,
+        festival_name=(
+            festival["festival_name"] if festival else None
+        ),
+        authoritative_billing=bool(festival),
     )
 
 

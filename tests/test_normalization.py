@@ -8,6 +8,7 @@ from concert_calendar.models import ConcertEvent
 from concert_calendar.scrapers.gdp import normalize_date as normalize_gdp_date
 from concert_calendar.scrapers.dice import parse_event as parse_dice_event
 from concert_calendar.scrapers.livenation import document_to_event
+from concert_calendar.scrapers.cigale import parse_detail_metadata
 from concert_calendar.scrapers.maroquinerie import parse_card
 from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.sources import is_supported_event
@@ -361,6 +362,51 @@ class SourcePriorityTests(unittest.TestCase):
         self.assertEqual("https://official.example/event", merged.ticket_url)
 
 
+class MetadataMergeTests(unittest.TestCase):
+
+    def test_merge_preserves_new_optional_metadata(self):
+        from concert_calendar.deduplication import merge_events
+
+        existing = ConcertEvent(
+            date="2026-09-08",
+            headliner="Slow Pilot",
+            venue="La Cigale",
+            city="Paris",
+            department="75",
+        )
+
+        incoming = ConcertEvent(
+            date="2026-09-08",
+            headliner="Slow Pilot",
+            venue="La Cigale",
+            city="Paris",
+            department="75",
+            co_headliners=["Co-Headliner"],
+            event_title="The Songs of Jeff Buckley",
+            series_name="Special Presentation",
+            image_url="https://lacigale.fr/example.jpg",
+            image_source="La Cigale",
+            electric_eye_links=[
+                {
+                    "label": "Review",
+                    "url": "https://www.electriceyerock.com/example",
+                    "kind": "artist",
+                }
+            ],
+        )
+
+        merged = merge_events(existing, incoming)
+
+        self.assertEqual("The Songs of Jeff Buckley", merged.event_title)
+        self.assertEqual("Special Presentation", merged.series_name)
+        self.assertEqual("https://lacigale.fr/example.jpg", merged.image_url)
+        self.assertEqual("La Cigale", merged.image_source)
+        self.assertEqual(
+            "https://www.electriceyerock.com/example",
+            merged.electric_eye_links[0]["url"],
+        )
+
+
 class SourceQualityTests(unittest.TestCase):
     def test_olympia_explicit_complet_status_is_sold_out(self):
         item = {
@@ -394,10 +440,192 @@ class SourceQualityTests(unittest.TestCase):
         self.assertIsNone(event.promoters)
         self.assertIsNone(event.openers)
 
+    def test_dice_named_cobill_uses_co_headliners_not_openers(self):
+        event = parse_dice_event(
+            {
+                "id": "automatic-test",
+                "name": "AUTOMATIC (US) + LEO VINCENT",
+                "status": "sold-out",
+                "images": {
+                    "square": "https://dice-media.imgix.net/automatic.jpg"
+                },
+                "dates": {
+                    "event_start_date": "2026-09-01T19:30:00+02:00"
+                },
+                "venues": [
+                    {"name": "Le Chinois", "city": {"name": "Paris"}}
+                ],
+            }
+        )
+
+        self.assertEqual("AUTOMATIC (US)", event.headliner)
+        self.assertEqual(["LEO VINCENT"], event.co_headliners)
+        self.assertIsNone(event.openers)
+        self.assertEqual(
+            "AUTOMATIC (US) + LEO VINCENT",
+            event.event_title,
+        )
+        self.assertEqual("19:30", event.start_time)
+        self.assertEqual("sold_out", event.ticket_status)
+        self.assertTrue(event.sold_out)
+        self.assertEqual(
+            "https://dice-media.imgix.net/automatic.jpg",
+            event.image_url,
+        )
+        self.assertEqual("DICE", event.image_source)
+
+    def test_dice_placeholder_support_is_not_promoted_to_artist(self):
+        event = parse_dice_event(
+            {
+                "id": "placeholder-test",
+                "name": "JOE YORKE + 1ère partie",
+                "dates": {
+                    "event_start_date": "2026-09-02T20:00:00+02:00"
+                },
+                "venues": [
+                    {"name": "Test Venue", "city": {"name": "Paris"}}
+                ],
+            }
+        )
+
+        self.assertEqual("JOE YORKE + 1ère partie", event.headliner)
+        self.assertIsNone(event.co_headliners)
+        self.assertIsNone(event.openers)
+
+    def test_dice_mardi_jazz_uses_series_and_real_musicians(self):
+        from unittest.mock import patch
+
+        description = """Tous les mardis...
+
+Dmitry Boevsky • Saxophone Alto
+Sandro Zerafa • Guitare
+Tom Guillois • Contrebasse
+Stéphane Chandelier • Batterie
+"""
+
+        with patch(
+            "concert_calendar.scrapers.dice.fetch_dice_detail_description",
+            return_value=description,
+        ):
+            event = parse_dice_event(
+                {
+                    "id": "mardi-jazz-test",
+                    "name": "Mardi Jazz!",
+                    "status": "on-sale",
+                    "images": {
+                        "square": "https://dice-media.imgix.net/mardi-jazz.jpg"
+                    },
+                    "dates": {
+                        "event_start_date": "2026-08-25T20:00:00+02:00"
+                    },
+                    "venues": [
+                        {"name": "POPUP!", "city": {"name": "Paris"}}
+                    ],
+                }
+            )
+
+        self.assertEqual("Dmitry Boevsky", event.headliner)
+        self.assertEqual(
+            ["Sandro Zerafa", "Tom Guillois", "Stéphane Chandelier"],
+            event.openers,
+        )
+        self.assertEqual("Mardi Jazz!", event.series_name)
+        self.assertEqual("Mardi Jazz!", event.event_title)
+
+    def test_cigale_structured_detail_exposes_real_performer_and_metadata(self):
+        class FakeResponse:
+            def __init__(self, text):
+                self.text = text
+
+            def raise_for_status(self):
+                return None
+
+        class FakeSession:
+            def get(self, url, headers=None, timeout=None):
+                return FakeResponse(
+                    """
+                    <html>
+                    <head>
+                    <script type="application/ld+json">
+                    {
+                      "@context": "https://schema.org",
+                      "@type": "Event",
+                      "name": "THE SONGS OF JEFF BUCKLEY",
+                      "performer": [
+                        {
+                          "@type": "MusicGroup",
+                          "name": "SLOW PILOT"
+                        }
+                      ],
+                      "startDate": "2026-09-08T20:00:00+02:00",
+                      "image": "https://lacigale.fr/wp-content/uploads/slow-pilot.png"
+                    }
+                    </script>
+                    </head>
+                    </html>
+                    """
+                )
+
+        result = parse_detail_metadata(
+            FakeSession(),
+            "https://lacigale.fr/evenements/slow-pilot-tribute-jeff-buckley/",
+        )
+
+        self.assertEqual("THE SONGS OF JEFF BUCKLEY", result["event_title"])
+        self.assertEqual(["SLOW PILOT"], result["performers"])
+        self.assertEqual("2026-09-08T20:00:00+02:00", result["start_date"])
+        self.assertEqual(
+            "https://lacigale.fr/wp-content/uploads/slow-pilot.png",
+            result["image_url"],
+        )
+
     def test_gdp_normalizes_datetime_to_calendar_date(self):
         self.assertEqual(
             "2026-10-12",
             normalize_gdp_date("2026-10-12T20:00:00+02:00"),
+        )
+
+    def test_gdp_reviewed_festival_day_keeps_festival_as_venue_and_full_bill(self):
+        from bs4 import BeautifulSoup
+        from concert_calendar.scrapers.gdp import parse_card as parse_gdp_card
+
+        card = BeautifulSoup(
+            """
+            <div class="gdpEvtCardCtnt">
+              <span class="gdpEvtCardGenre">Hard / Metal</span>
+              <h3 class="gdpEvtCardName">
+                <a href="https://mmfestival.mapado.com/event/672126-mennecy-metal-fest">
+                  SAXON
+                </a>
+              </h3>
+              <time class="gdpEvtCardDate" datetime="2026-09-04T20:00:00+02:00"></time>
+              <div class="gdpEvtCardLoc">
+                <span class="gdpEvtCardCity">MENNECY</span>
+                <span class="gdpEvtCardVenue">Mennecy Metal Fest</span>
+              </div>
+            </div>
+            """,
+            "html.parser",
+        )
+
+        event = parse_gdp_card(card)
+
+        self.assertEqual("Saxon", event.headliner)
+        self.assertEqual("Mennecy Metal Fest", event.venue)
+        self.assertEqual("Mennecy Metal Fest", event.festival_name)
+        self.assertTrue(event.authoritative_billing)
+        self.assertEqual(
+            [
+                "Amon Sethis",
+                "Oomph!",
+                "No One Is Innocent",
+                "Prophecy 23",
+                "Titan",
+                "TrollHeart",
+                "USQUAM",
+                "Ghost Anthem",
+            ],
+            event.openers,
         )
 
     def test_livenation_normalizes_date_and_relative_event_url(self):

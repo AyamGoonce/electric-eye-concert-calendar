@@ -14,6 +14,7 @@ from concert_calendar.production_export import (
     build_current_pointer,
     build_data_asset,
     build_fixture_html,
+    event_to_data,
     export_production_calendar,
     export_integration_prototype,
     genre_categories,
@@ -162,6 +163,60 @@ class ProductionDataTests(unittest.TestCase):
             ["R&B / Soul / Funk"],
             genre_categories("R&B / Soul / Funk"),
         )
+
+
+class OptionalEventMetadataTests(unittest.TestCase):
+
+    def test_optional_event_metadata_is_exported_when_present(self):
+        item = ConcertEvent(
+            date="2026-09-01",
+            headliner="Slow Pilot",
+            venue="La Cigale",
+            city="Paris",
+            department="",
+            event_title="The Songs of Jeff Buckley",
+            series_name="Special Presentation",
+            co_headliners=["Co-Headliner"],
+            image_url="https://example.com/slow-pilot.jpg",
+            image_source="La Cigale",
+            electric_eye_links=[
+                {
+                    "label": "Review",
+                    "url": "https://www.electriceyerock.com/example",
+                    "kind": "artist",
+                }
+            ],
+        )
+
+        data = event_to_data(item)
+
+        self.assertEqual("The Songs of Jeff Buckley", data["et"])
+        self.assertEqual("Special Presentation", data["sn"])
+        self.assertEqual(["Co-Headliner"], data["ch"])
+        self.assertEqual("https://example.com/slow-pilot.jpg", data["im"])
+        self.assertEqual("La Cigale", data["is"])
+        self.assertEqual(
+            "https://www.electriceyerock.com/example",
+            data["ee"][0]["url"],
+        )
+
+    def test_optional_event_metadata_is_omitted_when_absent(self):
+        item = ConcertEvent(
+            date="2026-09-01",
+            headliner="Slow Pilot",
+            venue="La Cigale",
+            city="Paris",
+            department="",
+        )
+
+        data = event_to_data(item)
+
+        self.assertNotIn("et", data)
+        self.assertNotIn("sn", data)
+        self.assertNotIn("ch", data)
+        self.assertNotIn("im", data)
+        self.assertNotIn("is", data)
+        self.assertNotIn("ee", data)
 
 
 class ProductionHTMLTests(unittest.TestCase):

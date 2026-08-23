@@ -89,7 +89,7 @@ def validate_state(value: object) -> dict:
                 raise EventStateError("Malformed version-2 event-state record")
             if not isinstance(record["openers"], list) or not all(isinstance(x, str) for x in record["openers"]):
                 raise EventStateError("Malformed event-state openers")
-            if not isinstance(record["genre"], str) or record["ticket_status"] not in {None, "tickets", "sold_out", "free", "not_on_sale"}:
+            if not isinstance(record["genre"], str) or record["ticket_status"] not in {None, "tickets", "sold_out", "free", "not_on_sale", "cancelled", "postponed"}:
                 raise EventStateError("Malformed event-state metadata")
         try:
             date.fromisoformat(record["date"])

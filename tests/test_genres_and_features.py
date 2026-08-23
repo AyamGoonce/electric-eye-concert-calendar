@@ -153,6 +153,8 @@ class StatusIdentityAndICSTests(unittest.TestCase):
         self.assertEqual("sold_out", event_to_data(event(sold_out=True))["ts"])
         self.assertEqual("free", event_to_data(event(ticket_status="free", ticket_url=None))["ts"])
         self.assertEqual("not_on_sale", event_to_data(event(ticket_status="not_on_sale", ticket_url=None))["ts"])
+        self.assertEqual("cancelled", event_to_data(event(ticket_status="cancelled", ticket_url=None))["ts"])
+        self.assertEqual("postponed", event_to_data(event(ticket_status="postponed", ticket_url=None))["ts"])
         self.assertIsNone(event_to_data(event(ticket_url=None))["ts"])
         self.assertEqual("tickets", event_to_data(event())["ts"])
 
@@ -194,6 +196,25 @@ class ChangeReportTests(unittest.TestCase):
         self.assertEqual(1, report["new_support_acts"])
         self.assertEqual(1, report["genre_enrichments"])
         self.assertEqual(1, report["newly_sold_out"])
+
+
+class CoHeadlinerRendererTests(unittest.TestCase):
+
+    def test_renderer_supports_co_headliners_in_display_and_search(self):
+        renderer = read_renderer()
+
+        self.assertIn(
+            'e.s=normalize([e.h].concat(e.ch,e.o,[e.v,e.c]).join(" "))',
+            renderer,
+        )
+        self.assertIn(
+            'e.ch.forEach(function(name){h.append(document.createTextNode(" + "));h.append(artistButton(name));});',
+            renderer,
+        )
+        self.assertIn(
+            '(e.ch === undefined || validArray(e.ch))',
+            renderer,
+        )
 
 
 class RendererFeatureContractTests(unittest.TestCase):

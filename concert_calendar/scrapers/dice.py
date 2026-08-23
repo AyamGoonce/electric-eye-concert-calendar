@@ -99,6 +99,75 @@ def parse_explicit_billing(title):
     return components[0], components[1:]
 
 
+def parse_neutral_cobill(title):
+    """Split explicit equal-billing artist lists without inventing support hierarchy."""
+
+    title = clean_text(title)
+    components = [
+        clean_text(value)
+        for value in re.split(r"\s+(?:\+|•)\s+", title)
+    ]
+
+    if len(components) < 2:
+        return title, None
+
+    non_artist_patterns = (
+        r"^1(?:er|re|ère|e)\s+partie$",
+        r"^(?:guest|guests)$",
+        r"^(?:support|supports)$",
+        r"^(?:special guest|special guests)$",
+        r"^(?:opening act|opening acts)$",
+        r"^(?:tba|to be announced)$",
+    )
+
+    for component in components:
+        if any(
+            re.fullmatch(pattern, component, flags=re.IGNORECASE)
+            for pattern in non_artist_patterns
+        ):
+            return title, None
+
+    return components[0], components[1:]
+
+
+def parse_mardi_jazz_lineup(description):
+    """Extract the reviewed Mardi Jazz! musician bill from its DICE description."""
+
+    performers = []
+
+    for raw_line in (description or "").splitlines():
+        line = clean_text(raw_line)
+
+        if "•" not in line:
+            continue
+
+        name, _, role = line.partition("•")
+        name = clean_text(name)
+        role = clean_text(role)
+
+        if not name or not role:
+            continue
+
+        role_normalized = role.casefold()
+
+        if not any(
+            token in role_normalized
+            for token in (
+                "saxophone",
+                "guitare",
+                "trompette",
+                "piano",
+                "contrebasse",
+                "batterie",
+            )
+        ):
+            continue
+
+        performers.append(name)
+
+    return performers
+
+
 def extract_events(payload):
     events = []
 
@@ -112,6 +181,40 @@ def extract_events(payload):
         events.extend(section.get("events") or [])
 
     return events
+
+
+def fetch_dice_detail_description(event_id):
+    url = f"https://dice.fm/event/{event_id}"
+
+    response = requests.get(
+        url,
+        headers={"User-Agent": HEADERS["User-Agent"]},
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+
+    match = re.search(
+        r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
+        response.text,
+        flags=re.IGNORECASE | re.DOTALL,
+    )
+
+    if not match:
+        return ""
+
+    try:
+        import json
+        payload = json.loads(match.group(1))
+    except (json.JSONDecodeError, TypeError):
+        return ""
+
+    if (
+        isinstance(payload, dict)
+        and clean_text(payload.get("name")).casefold() == "mardi jazz!"
+    ):
+        return payload.get("description") or ""
+
+    return ""
 
 
 def parse_event(data):
@@ -141,7 +244,41 @@ def parse_event(data):
     except (TypeError, ValueError):
         return None
 
+    event_name = headliner
     headliner, openers = parse_explicit_billing(headliner)
+
+    series_name = None
+
+    if event_name.casefold() == "mardi jazz!":
+        try:
+            description = fetch_dice_detail_description(event_id)
+            lineup = parse_mardi_jazz_lineup(description)
+        except requests.RequestException:
+            lineup = []
+
+        if lineup:
+            series_name = event_name
+            headliner = lineup[0]
+            openers = lineup[1:] or None
+
+    co_headliners = None
+    if not openers:
+        headliner, co_headliners = parse_neutral_cobill(headliner)
+
+    images = data.get("images") or {}
+    image_url = clean_text(images.get("square")) or None
+
+    start_time = None
+    if "T" in start_date:
+        start_time = start_date.split("T", 1)[1][:5]
+
+    raw_status = clean_text(data.get("status")).casefold()
+    ticket_status = {
+        "on-sale": "tickets",
+        "sold-out": "sold_out",
+        "cancelled": "cancelled",
+        "postponed": "postponed",
+    }.get(raw_status)
 
     return ConcertEvent(
         date=event_date,
@@ -150,10 +287,18 @@ def parse_event(data):
         city=city,
         department="",
         openers=openers,
+        co_headliners=co_headliners,
         promoters=None,
         genre=None,
         facebook_event_url=None,
         ticket_url=f"https://dice.fm/event/{event_id}",
+        sold_out=(raw_status == "sold-out"),
+        ticket_status=ticket_status,
+        start_time=start_time,
+        image_url=image_url,
+        image_source="DICE" if image_url else None,
+        event_title=event_name if (openers or co_headliners or series_name) else None,
+        series_name=series_name,
     )
 
 

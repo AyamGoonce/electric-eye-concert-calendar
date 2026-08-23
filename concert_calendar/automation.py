@@ -124,7 +124,7 @@ def validate_events(events: list[dict]) -> None:
         if not re.fullmatch(r"[0-9a-f]{16}", event["i"] or "") or event["i"] in public_ids:
             raise ProductionValidationError(f"Event {index} has an invalid or duplicate public ID")
         public_ids.add(event["i"])
-        if event["ts"] not in {None, "tickets", "sold_out", "free", "not_on_sale"}:
+        if event["ts"] not in {None, "tickets", "sold_out", "free", "not_on_sale", "cancelled", "postponed"}:
             raise ProductionValidationError(f"Event {index} has an invalid ticket status")
         if event["st"] is not None and not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", event["st"]):
             raise ProductionValidationError(f"Event {index} has an invalid start time")

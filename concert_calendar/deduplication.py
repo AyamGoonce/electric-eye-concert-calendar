@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from collections import defaultdict
+
+import json
+from pathlib import Path
 import re
 import unicodedata
 from urllib.parse import urlparse
@@ -112,6 +115,9 @@ def merge_events(
     existing.openers = _stable_unique(
         [*(existing.openers or []), *(incoming.openers or [])]
     )
+    existing.co_headliners = _stable_unique(
+        [*(existing.co_headliners or []), *(incoming.co_headliners or [])]
+    ) or None
     existing.promoters = sorted(
         {*(existing.promoters or []), *(incoming.promoters or [])}
     ) or None
@@ -146,6 +152,40 @@ def merge_events(
         existing.ticket_status = incoming.ticket_status
     if not existing.start_time and incoming.start_time:
         existing.start_time = incoming.start_time
+
+    if not existing.event_title and incoming.event_title:
+        existing.event_title = incoming.event_title
+
+    if not existing.series_name and incoming.series_name:
+        existing.series_name = incoming.series_name
+
+    if not existing.image_url and incoming.image_url:
+        existing.image_url = incoming.image_url
+        existing.image_source = incoming.image_source
+    elif (
+        existing.image_url
+        and not existing.image_source
+        and incoming.image_source
+    ):
+        existing.image_source = incoming.image_source
+
+    if incoming.electric_eye_links:
+        combined_links = [
+            *(existing.electric_eye_links or []),
+            *incoming.electric_eye_links,
+        ]
+
+        seen_urls = set()
+        unique_links = []
+
+        for link in combined_links:
+            url = (link or {}).get("url")
+            if not url or url in seen_urls:
+                continue
+            seen_urls.add(url)
+            unique_links.append(link)
+
+        existing.electric_eye_links = unique_links or None
 
     return existing
 
@@ -243,6 +283,18 @@ def _display_candidates(events: list[ConcertEvent]) -> dict[str, str]:
 
             if identity and is_mixed_case and identity not in candidates:
                 candidates[identity] = name
+
+    mapping_path = Path(__file__).with_name("genre_mappings.json")
+    try:
+        mapping_data = json.loads(mapping_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        mapping_data = {}
+
+    for section in ("artists", "overrides"):
+        for record in mapping_data.get(section, []):
+            artist = (record.get("artist") or "").strip()
+            if artist:
+                candidates[normalize_artist_component(artist)] = artist
 
     candidates.update(VERIFIED_ARTIST_DISPLAY_NAMES)
     return candidates
