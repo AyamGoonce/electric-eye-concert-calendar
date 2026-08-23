@@ -34,8 +34,11 @@ VERIFIED_SUPPORT_RELATIONSHIPS = {
 }
 
 VERIFIED_ARTIST_DISPLAY_NAMES = {
+    "deep purple": "Deep Purple",
+    "eagles of death metal": "Eagles of Death Metal",
     "hollywood vampires": "Hollywood Vampires",
     "the last internationale": "The Last Internationale",
+    "uriah heep": "Uriah Heep",
 }
 
 BILL_SEPARATOR_RE = re.compile(r"\s+(?:\+|•)\s+")

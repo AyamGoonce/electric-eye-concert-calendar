@@ -177,5 +177,63 @@ class WeakRawGenrePrecedenceTests(unittest.TestCase):
         self.assertEqual("source_mapping", item.genre_method)
 
 
+class EditorialGenreOverrideTests(unittest.TestCase):
+
+    def test_editorial_override_resolves_cross_bucket_conflict(self):
+        from concert_calendar.genres import enrich_event_genres
+
+        events = [
+            event("Hollywood Vampires", venue="Adidas Arena"),
+            event("EAGLES OF DEATH METAL", venue="Le Trianon"),
+        ]
+
+        events[0].genre_evidence = [
+            {"raw": "Rock", "source": "GDP"},
+            {"raw": "Metal / Hard Rock", "source": "Other"},
+        ]
+        events[1].genre_evidence = [
+            {"raw": "Rock", "source": "Source 1"},
+            {"raw": "Metal / Hard Rock", "source": "Source 2"},
+        ]
+
+        enrich_event_genres(events)
+
+        self.assertEqual(
+            ["Metal / Hard Rock", "Metal / Hard Rock"],
+            [item.genre_public for item in events],
+        )
+        self.assertEqual(
+            ["manual_override", "manual_override"],
+            [item.genre_method for item in events],
+        )
+
+
+class VerifiedDisplayNameTests(unittest.TestCase):
+
+    def test_verified_all_caps_artist_names_are_canonicalized(self):
+        from concert_calendar.deduplication import deduplicate_events
+
+        events = [
+            event("DEEP PURPLE", venue="Adidas Arena"),
+            event("URIAH HEEP", venue="Casino de Paris"),
+            event("HOLLYWOOD VAMPIRES", venue="Adidas Arena"),
+            event("EAGLES OF DEATH METAL", venue="Le Trianon"),
+            event("CHVRCHES", venue="Le Zénith Paris – La Villette"),
+        ]
+
+        result = deduplicate_events(events)
+
+        self.assertEqual(
+            [
+                "Deep Purple",
+                "Uriah Heep",
+                "Hollywood Vampires",
+                "Eagles of Death Metal",
+                "CHVRCHES",
+            ],
+            [item.headliner for item in result],
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

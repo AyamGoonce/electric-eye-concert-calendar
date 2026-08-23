@@ -1677,5 +1677,22 @@
       "notes": "Exact-label identity reviewed; Wikidata genres: cloud rap."
     }
   ],
-  "overrides": []
+  "overrides": [
+    {
+      "artist": "Hollywood Vampires",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Editorial conflict resolution, 2026-08-23",
+      "evidence_type": "editorial_override",
+      "review_date": "2026-08-23",
+      "notes": "Conflicting rock/metal source evidence; Metal / Hard Rock selected as canonical calendar bucket."
+    },
+    {
+      "artist": "EAGLES OF DEATH METAL",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Editorial conflict resolution, 2026-08-23",
+      "evidence_type": "editorial_override",
+      "review_date": "2026-08-23",
+      "notes": "Conflicting rock/metal source evidence; Metal / Hard Rock selected as canonical calendar bucket."
+    }
+  ]
 }
