@@ -37,7 +37,10 @@ def discover_scrapers():
         discovered_scrapers.append(module)
 
     discovered_scrapers.sort(
-        key=lambda module: module.SOURCE_NAME.casefold()
+        key=lambda module: (
+            getattr(module, "SOURCE_PRIORITY", 0),
+            module.SOURCE_NAME.casefold(),
+        )
     )
 
     return discovered_scrapers
