@@ -220,7 +220,9 @@ def fetch_dice_detail_description(event_id):
 def parse_event(data):
     event_id = clean_text(data.get("id"))
     headliner = clean_text(data.get("name"))
-    start_date = (data.get("dates") or {}).get("event_start_date")
+    dates = data.get("dates") or {}
+    start_date = dates.get("event_start_date")
+    announced_at = dates.get("announcement_date")
     venues = data.get("venues") or []
 
     if (

@@ -26,6 +26,7 @@ class ConcertEvent:
     genre_evidence: Optional[list[dict]] = None
     ticket_status: Optional[str] = None
     start_time: Optional[str] = None
+    announced_at: Optional[str] = None
     event_title: Optional[str] = None
     series_name: Optional[str] = None
     image_url: Optional[str] = None

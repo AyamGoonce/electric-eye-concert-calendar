@@ -100,6 +100,7 @@ def event_to_data(event: ConcertEvent) -> dict:
         "i": canonical_event_identity(event)[:16],
         "ts": event.ticket_status or ("sold_out" if event.sold_out else ("tickets" if safe_ticket_url(event.ticket_url) else None)),
         "st": event.start_time,
+        **({"an": event.announced_at} if event.announced_at else {}),
         **({"et": event.event_title} if event.event_title else {}),
         **({"sn": event.series_name} if event.series_name else {}),
         **({"im": event.image_url} if event.image_url else {}),
