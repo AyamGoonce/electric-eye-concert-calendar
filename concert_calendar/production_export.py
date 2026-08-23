@@ -141,54 +141,78 @@ def build_production_html(events: list[dict]) -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Île-de-France Concert Calendar</title>
   <style>
-    :root {{ color-scheme: light; font-family: Arial, Helvetica, sans-serif; }}
+    :root {{
+      color-scheme: light;
+      --ee-bg: #edf1f5;
+      --ee-surface: #ffffff;
+      --ee-dark: #101010;
+      --ee-text: #171717;
+      --ee-text-soft: #454b53;
+      --ee-muted: #6f7782;
+      --ee-border: #d5dbe2;
+      --ee-accent: #d82323;
+      --ee-accent-hover: #b51d1d;
+      --ee-on-dark: #faf8f4;
+      --ee-wide: 1500px;
+      font-family: "Instrument Sans", Arial, sans-serif;
+    }}
     * {{ box-sizing: border-box; }}
-    body {{ margin: 0; background: #f5f5f3; color: #191919; line-height: 1.4; }}
-    main {{ width: min(1180px, calc(100% - 32px)); margin: 28px auto 60px; }}
-    h1 {{ margin: 0; font-size: clamp(1.75rem, 4vw, 2.75rem); line-height: 1.1; }}
-    .intro {{ color: #606060; margin: 8px 0 24px; }}
-    .filters {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(140px, 1fr)) auto; gap: 12px; padding: 16px; background: #fff; border: 1px solid #d9d9d5; border-radius: 8px; }}
-    label {{ display: grid; gap: 5px; color: #444; font-size: .78rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; }}
-    input, select, button {{ min-width: 0; min-height: 42px; border: 1px solid #aaa; border-radius: 5px; background: #fff; color: inherit; font: inherit; padding: 8px 10px; }}
-    button {{ align-self: end; cursor: pointer; font-weight: 700; }}
-    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {{ outline: 3px solid #2463eb; outline-offset: 2px; }}
-    .summary {{ display: flex; justify-content: space-between; gap: 16px; margin: 20px 0 8px; color: #555; }}
-    #result-count {{ font-weight: 700; color: #222; }}
-    .event-list {{ list-style: none; margin: 0; padding: 0; background: #fff; border: 1px solid #d9d9d5; border-radius: 8px; overflow: hidden; }}
-    .event-row {{ display: grid; grid-template-columns: 145px minmax(220px, 1.6fr) minmax(210px, 1fr) minmax(120px, .8fr) 92px; gap: 16px; align-items: start; padding: 13px 16px; border-bottom: 1px solid #e5e5e1; }}
+    body {{ margin: 0; background: var(--ee-bg); color: var(--ee-text-soft); font-size: 16px; line-height: 1.5; }}
+    main {{ width: min(calc(100% - 48px), var(--ee-wide)); margin: 0 auto 72px; }}
+    header {{ margin: 0 -24px 30px; padding: 40px 24px 36px; background: var(--ee-dark); color: var(--ee-on-dark); border-bottom: 4px solid var(--ee-accent); }}
+    h1 {{ margin: 0; color: var(--ee-on-dark); font-size: clamp(2.25rem, 4.2vw, 3.65rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.02; }}
+    .intro {{ color: #c7c1b9; margin: 10px 0 0; font-size: 1.05rem; }}
+    .filters {{ display: grid; grid-template-columns: minmax(220px, 2fr) repeat(3, minmax(140px, 1fr)) auto; gap: 14px; padding: 18px; background: var(--ee-surface); border: 1px solid var(--ee-border); }}
+    label {{ display: grid; gap: 6px; color: var(--ee-text-soft); font-size: .75rem; font-weight: 700; letter-spacing: .055em; text-transform: uppercase; }}
+    input, select, button {{ min-width: 0; min-height: 44px; border: 1px solid #aeb6c0; border-radius: 0; background: var(--ee-surface); color: var(--ee-text); font: inherit; padding: 9px 11px; transition: border-color .17s ease, background-color .17s ease, color .17s ease; }}
+    input:hover, select:hover {{ border-color: var(--ee-text-soft); }}
+    button {{ align-self: end; cursor: pointer; background: var(--ee-dark); border-color: var(--ee-dark); color: var(--ee-on-dark); font-weight: 700; }}
+    button:hover {{ background: var(--ee-accent); border-color: var(--ee-accent); }}
+    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {{ outline: 3px solid var(--ee-accent); outline-offset: 2px; }}
+    .summary {{ display: flex; justify-content: space-between; gap: 16px; margin: 24px 0 9px; color: var(--ee-muted); font-size: .875rem; }}
+    #result-count {{ font-weight: 700; color: var(--ee-text); letter-spacing: .015em; }}
+    .event-list {{ list-style: none; margin: 0; padding: 0; background: var(--ee-surface); border: 1px solid var(--ee-border); overflow: hidden; }}
+    .event-row {{ display: grid; grid-template-columns: 145px minmax(220px, 1.6fr) minmax(210px, 1fr) minmax(120px, .8fr) 92px; gap: 18px; align-items: start; padding: 14px 18px; border-bottom: 1px solid var(--ee-border); transition: background-color .15s ease; }}
+    .event-row:hover {{ background: #f8fafb; }}
     .event-list li:last-child .event-row {{ border-bottom: 0; }}
-    .event-date {{ font-weight: 700; white-space: nowrap; }}
+    .event-date {{ color: var(--ee-text); font-size: .875rem; font-weight: 700; letter-spacing: .01em; white-space: nowrap; }}
     .event-artist {{ min-width: 0; }}
-    .event-artist h2 {{ overflow-wrap: anywhere; margin: 0; font-size: 1rem; line-height: 1.3; }}
-    .openers {{ overflow-wrap: anywhere; margin: 4px 0 0; color: #666; font-size: .86rem; }}
-    .venue {{ overflow-wrap: anywhere; font-weight: 700; }}
-    .metadata {{ min-width: 0; color: #666; font-size: .8rem; overflow-wrap: anywhere; }}
+    .event-artist h2 {{ overflow-wrap: anywhere; margin: 0; color: var(--ee-text); font-size: 1.025rem; font-weight: 700; letter-spacing: -.015em; line-height: 1.3; }}
+    .openers {{ overflow-wrap: anywhere; margin: 4px 0 0; color: var(--ee-muted); font-size: .86rem; }}
+    .venue {{ color: var(--ee-text); overflow-wrap: anywhere; font-weight: 600; }}
+    .metadata {{ min-width: 0; color: var(--ee-muted); font-size: .8rem; overflow-wrap: anywhere; }}
     .metadata span {{ display: block; }}
     .promoter {{ margin-top: 3px; }}
-    .ticket {{ display: inline-flex; justify-content: center; align-items: center; min-height: 38px; border-radius: 5px; background: #222; color: #fff; font-size: .84rem; font-weight: 700; text-decoration: none; padding: 8px 12px; }}
-    .ticket:hover {{ background: #444; }}
+    .ticket {{ display: inline-flex; justify-content: center; align-items: center; min-height: 38px; background: var(--ee-accent); color: var(--ee-on-dark); font-size: .82rem; font-weight: 700; letter-spacing: .025em; text-decoration: none; padding: 8px 12px; transition: background-color .17s ease; }}
+    .ticket:hover {{ background: var(--ee-accent-hover); color: var(--ee-on-dark); }}
     .ticket-space {{ min-height: 1px; }}
-    .no-results {{ margin: 0; padding: 32px 16px; background: #fff; border: 1px solid #d9d9d5; border-radius: 8px; text-align: center; color: #555; }}
+    .no-results {{ margin: 0; padding: 38px 18px; background: var(--ee-surface); border: 1px solid var(--ee-border); text-align: center; color: var(--ee-muted); }}
     [hidden] {{ display: none !important; }}
-    @media (max-width: 850px) {{
+    @media (max-width: 980px) {{
       .filters {{ grid-template-columns: 1fr 1fr; }}
       .search-control {{ grid-column: 1 / -1; }}
       .event-row {{ grid-template-columns: 125px minmax(180px, 1.5fr) minmax(170px, 1fr) 88px; }}
       .metadata {{ grid-column: 2 / 4; }}
     }}
-    @media (max-width: 600px) {{
-      main {{ width: min(100% - 20px, 1180px); margin-top: 18px; }}
-      .filters {{ grid-template-columns: 1fr; padding: 12px; }}
+    @media (max-width: 680px) {{
+      main {{ width: min(calc(100% - 30px), var(--ee-wide)); margin-bottom: 54px; }}
+      header {{ margin: 0 -15px 24px; padding: 30px 15px 27px; border-bottom-width: 3px; }}
+      h1 {{ font-size: clamp(2rem, 10vw, 2.8rem); }}
+      .intro {{ font-size: .95rem; }}
+      .filters {{ grid-template-columns: 1fr; padding: 14px; }}
       .search-control {{ grid-column: auto; }}
       .summary {{ margin-top: 16px; }}
-      .event-list {{ background: transparent; border: 0; border-radius: 0; overflow: visible; }}
+      .event-list {{ background: transparent; border: 0; overflow: visible; }}
       .event-list li {{ margin-bottom: 10px; }}
-      .event-row {{ display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; padding: 14px; background: #fff; border: 1px solid #d9d9d5; border-radius: 7px; }}
+      .event-row {{ display: grid; grid-template-columns: 1fr auto; gap: 7px 12px; padding: 15px; background: var(--ee-surface); border: 1px solid var(--ee-border); border-left: 3px solid var(--ee-accent); }}
       .event-date, .event-artist, .venue, .metadata {{ grid-column: 1 / -1; }}
       .metadata {{ display: flex; flex-wrap: wrap; gap: 4px 12px; }}
       .promoter {{ margin-top: 0; }}
       .ticket {{ grid-column: 2; grid-row: 1; min-height: 42px; }}
       .ticket-space {{ display: none; }}
+    }}
+    @media (prefers-reduced-motion: reduce) {{
+      input, select, button, .event-row, .ticket {{ transition: none; }}
     }}
   </style>
 </head>

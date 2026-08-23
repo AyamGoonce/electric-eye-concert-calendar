@@ -116,7 +116,7 @@ class ProductionHTMLTests(unittest.TestCase):
         ):
             self.assertIsNotNone(soup.select_one(f"#{element_id}"))
 
-        self.assertIn("@media (max-width: 600px)", soup.style.string)
+        self.assertIn("@media (max-width: 680px)", soup.style.string)
         self.assertIn("No concerts match your current filters.", soup.get_text(" "))
 
     def test_embedded_json_is_compact_complete_and_safe(self):
