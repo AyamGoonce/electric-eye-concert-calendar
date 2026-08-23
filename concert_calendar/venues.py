@@ -23,6 +23,8 @@ VENUE_ALIASES = {
     "l archipel": "L'Archipel",
     "archipel": "L'Archipel",
     "lolympia": "L'Olympia Bruno Coquatrix",
+    "l olympia": "L'Olympia Bruno Coquatrix",
+    "l olympia bruno coquatrix": "L'Olympia Bruno Coquatrix",
     "olympia": "L'Olympia Bruno Coquatrix",
     "la boule noire": "La Boule Noire",
     "boule noire": "La Boule Noire",
