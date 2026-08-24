@@ -121,6 +121,9 @@ def merge_events(
     existing.promoters = sorted(
         {*(existing.promoters or []), *(incoming.promoters or [])}
     ) or None
+    existing.source_names = sorted(
+        {*(existing.source_names or []), *(incoming.source_names or [])}
+    ) or None
 
     if not existing.genre and incoming.genre:
         existing.genre = incoming.genre

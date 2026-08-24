@@ -32,3 +32,4 @@ class ConcertEvent:
     image_url: Optional[str] = None
     image_source: Optional[str] = None
     electric_eye_links: Optional[list[dict]] = None
+    source_names: Optional[list[str]] = None

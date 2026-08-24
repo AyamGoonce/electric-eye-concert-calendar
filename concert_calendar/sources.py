@@ -195,6 +195,7 @@ def load_events_with_report(
             scraper_events = []
 
         for event in scraper_events:
+            event.source_names = [scraper.SOURCE_NAME]
             if event.genre:
                 event.genre_source = scraper.SOURCE_NAME
                 event.genre_evidence = [{
