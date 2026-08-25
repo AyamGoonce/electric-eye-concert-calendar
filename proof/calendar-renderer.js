@@ -2,7 +2,7 @@
   "use strict";
   var MOUNT_ID = "ee-concert-calendar", READY = "ee:concert-data-ready", ERROR = "ee:concert-data-error";
   var NEW_WINDOW_MS = 72 * 60 * 60 * 1000, initialized = false, failureTimer = null;
-  var publicGenres = Object.freeze(["Comedy", "Electronic", "Festival", "Folk / Country", "French chanson", "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop", "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk", "World / Latin"]);
+  var publicGenres = Object.freeze(["Comedy", "Electronic", "Folk / Country", "French chanson", "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop", "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk", "World / Latin"]);
   var quickModes = Object.freeze(["tonight", "week", "weekend"]), sorts = Object.freeze(["date-asc", "date-desc", "artist-asc", "venue-asc"]);
   function normalize(v) { return (v || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase(); }
   function articleKey(v, overrides) { var n = normalize(v); return overrides[n] || n.replace(/^(?:(?:the|a|an|le|la|les)\s+|l['’]\s*)/i, ""); }
