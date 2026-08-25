@@ -139,10 +139,7 @@ class ProductionDataTests(unittest.TestCase):
         self.assertFalse(prepared["so"])
 
     def test_genre_categories_are_broad_and_meaningful(self):
-        self.assertEqual(
-            [],
-            genre_categories("Concert - Indie Pop"),
-        )
+        self.assertEqual(["Pop"], genre_categories("Concert - Indie Pop"))
         self.assertEqual(["Hip-hop / Rap"], genre_categories("Rap, Hip-Hop"))
         self.assertEqual(
             ["Metal / Hard Rock"],

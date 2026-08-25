@@ -41,6 +41,13 @@ class ArtistNormalizationTests(unittest.TestCase):
 
         self.assertEqual(1, len(events))
 
+    def test_unlisted_diacritic_variant_merges(self):
+        events = deduplicate_events(
+            [make_event("Etran de l'Aïr"), make_event("Étran de l'Aïr")]
+        )
+
+        self.assertEqual(1, len(events))
+
     def test_known_source_punctuation_variants_merge(self):
         pairs = [
             ("LA P’TITÉ FUMÉE", "LA P’TITE FUMÉE"),
@@ -78,6 +85,33 @@ class ArtistNormalizationTests(unittest.TestCase):
                         )
                     ),
                 )
+
+    def test_reviewed_identity_variants_merge_without_global_fuzziness(self):
+        pairs = [
+            ("Flamin' Groovies", "The Flamin' Groovies"),
+            ("Kiwi JR", "Kiwi Jr."),
+            ("Westside Cowboy", "Westside Cowboys"),
+            ("LA 808E NUIT", "La 808ème Nuit"),
+        ]
+        for left, right in pairs:
+            with self.subTest(left=left, right=right):
+                self.assertEqual(
+                    1, len(deduplicate_events([make_event(left), make_event(right)]))
+                )
+
+    def test_html_entities_decode_before_identity_and_display(self):
+        variants = [
+            "LA P&amp;TITE FUMÉE",
+            "LA P&rsquo;TITE FUMÉE",
+            "LA P'TITE FUMÉE",
+            "LA P’TITÉ FUMÉE",
+        ]
+        ampersand = deduplicate_events([make_event(variants[0])])[0]
+        apostrophes = deduplicate_events([make_event(value) for value in variants[1:]])
+
+        self.assertEqual("LA P&TITE FUMÉE", ampersand.headliner)
+        self.assertEqual(1, len(apostrophes))
+        self.assertNotIn("&rsquo;", apostrophes[0].headliner)
 
     def test_unlisted_spacing_difference_does_not_merge(self):
         events = deduplicate_events(
@@ -129,6 +163,53 @@ class ArtistNormalizationTests(unittest.TestCase):
 
 
 class BillingReconciliationTests(unittest.TestCase):
+    def test_four_reviewed_shared_ticket_bills_are_event_scoped(self):
+        cases = [
+            (
+                "2026-11-16", "Le Zénith Paris – La Villette",
+                "Bloc Party", "Interpol", "Bloc Party", None, ["Interpol"],
+            ),
+            (
+                "2026-12-02", "Paul B – Massy", "Gildaa", "Alma Rechtman",
+                "Alma Rechtman", None, ["Gildaa"],
+            ),
+            (
+                "2026-12-07", "Le Zénith Paris – La Villette",
+                "Electric Pyramid", "The Dire Straits Experience",
+                "The Dire Straits Experience", ["Electric Pyramid"], None,
+            ),
+            (
+                "2027-02-16", "La Maroquinerie", "Escape The Internet", "BERNTH",
+                "Escape The Internet (feat. Bernth)", None, None,
+            ),
+        ]
+        for date, venue, left_name, right_name, headliner, openers, coheads in cases:
+            with self.subTest(headliner=headliner):
+                left, right = make_event(left_name, venue), make_event(right_name, venue)
+                left.date = right.date = date
+                left.ticket_url = right.ticket_url = "https://tickets.example/reviewed"
+                left.source_names, right.source_names = ["Official"], ["DICE"]
+
+                result = deduplicate_events([left, right])
+
+                self.assertEqual(1, len(result))
+                self.assertEqual(headliner, result[0].headliner)
+                self.assertEqual(openers, result[0].openers)
+                self.assertEqual(coheads, result[0].co_headliners)
+                searchable = " ".join([
+                    result[0].headliner, *(result[0].openers or []),
+                    *(result[0].co_headliners or []),
+                ]).casefold()
+                self.assertIn(left_name.casefold(), searchable)
+                self.assertIn(right_name.casefold(), searchable)
+
+    def test_escape_the_internet_override_does_not_apply_elsewhere(self):
+        escape, bernth = make_event("Escape The Internet"), make_event("BERNTH")
+        escape.date = bernth.date = "2027-02-17"
+        result = deduplicate_events([escape, bernth])
+        self.assertEqual(2, len(result))
+        self.assertNotIn("feat.", " ".join(event.headliner for event in result))
+
     def test_structured_bill_merges_full_bill_and_inherits_ticket(self):
         structured = make_event("Michael Cera Palin", "Supersonic")
         structured.date = "2026-08-25"
@@ -167,6 +248,129 @@ class BillingReconciliationTests(unittest.TestCase):
         second = make_event("Artist A")
 
         self.assertEqual(2, len(deduplicate_events([first, second])))
+
+    def test_structured_co_headliner_reconciles_with_full_bill(self):
+        structured = make_event("Bedouine", "La Marbrerie (Montreuil)")
+        structured.date = "2026-09-07"
+        structured.co_headliners = ["Barbara Forstner"]
+        full = make_event("Bedouine + Barbara Forstner", "La Marbrerie")
+        full.date = "2026-09-07"
+        for item in (structured, full):
+            normalize_event_venue(item)
+
+        merged = deduplicate_events([structured, full])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual(["Barbara Forstner"], merged[0].co_headliners)
+        self.assertEqual("La Marbrerie", merged[0].venue)
+        self.assertEqual("Montreuil", merged[0].city)
+
+    def test_moved_structured_co_headliner_keeps_role(self):
+        stale = make_event("My New Band Believe", "Point Éphémère")
+        stale.date = "2026-10-19"
+        stale.co_headliners = ["Jasper Llewellyn"]
+        current = make_event(
+            "MY NEW BAND BELIEVE + Jasper Llewellyn", "La Maroquinerie"
+        )
+        current.date = "2026-10-19"
+        for item in (stale, current):
+            normalize_event_venue(item)
+
+        merged = deduplicate_events([stale, current])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("La Maroquinerie", merged[0].venue)
+        self.assertEqual(["Jasper Llewellyn"], merged[0].co_headliners)
+
+    def test_terminal_generic_guest_requires_strong_evidence(self):
+        plain = make_event("The Dear Hunter", "Petit Bain")
+        marked = make_event("The Dear Hunter + Guest", "Petit Bain")
+        self.assertEqual(2, len(deduplicate_events([plain, marked])))
+
+        plain.promoters = ["Official Promoter"]
+        marked.promoters = ["Official Promoter"]
+        self.assertEqual(1, len(deduplicate_events([plain, marked])))
+
+    def test_terminal_generic_guest_known_pairs_merge_with_shared_promoter(self):
+        for plain_name, marked_name in [
+            ("Boris", "Boris + Guest"),
+            ("NERLOV", "NERLOV + Guest"),
+            ("Fragile", "Fragile + Guest"),
+            ("7 WEEKS", "7 Weeks + Guest"),
+            ("BURNING HEADS", "Burning Heads + Guest"),
+        ]:
+            with self.subTest(plain=plain_name):
+                plain, marked = make_event(plain_name), make_event(marked_name)
+                plain.promoters = marked.promoters = ["Official Promoter"]
+                self.assertEqual(1, len(deduplicate_events([plain, marked])))
+
+    def test_terminal_guest_uses_official_plus_dice_corroboration(self):
+        plain = make_event("NERLOV", "Point Éphémère")
+        marked = make_event("NERLOV + Guest", "Point Éphémère")
+        plain.source_names = ["Point Éphémère"]
+        marked.source_names = ["DICE"]
+        self.assertEqual(1, len(deduplicate_events([plain, marked])))
+
+    def test_generic_ticket_page_is_not_shared_event_evidence(self):
+        plain = make_event("Artist")
+        marked = make_event("Artist + Guest")
+        plain.ticket_url = marked.ticket_url = "https://tickets.example/events/"
+        self.assertEqual(2, len(deduplicate_events([plain, marked])))
+
+    def test_event_ticket_normalization_ignores_tracking_and_trailing_slash(self):
+        plain = make_event("Metro Verlaine", "Point Éphémère")
+        marked = make_event("Metro Verlaine + Guest", "Point Éphémère")
+        plain.ticket_url = "https://dice.fm/event/metro-verlaine/?utm_source=venue"
+        marked.ticket_url = "https://dice.fm/event/metro-verlaine"
+        self.assertEqual(1, len(deduplicate_events([plain, marked])))
+
+    def test_reviewed_descriptive_title_and_ronnie_wood_collapse(self):
+        ftv = [
+            make_event("FTV UNPLUGGED : carte blanche à GRANDMA'S ASHES", "Point Éphémère"),
+            make_event("FTV UNPLUGGED : GRANDMA'S ASHES", "Point Éphémère"),
+        ]
+        for item in ftv:
+            item.date = "2026-09-12"
+        self.assertEqual(1, len(deduplicate_events(ftv)))
+
+        ronnie = [
+            make_event("RONNIE WOOD", "L'Olympia Bruno Coquatrix"),
+            make_event("Ronnie Wood and His Band featuring Imelda May", "L'Olympia Bruno Coquatrix"),
+        ]
+        for item in ronnie:
+            item.date = "2026-09-05"
+            item.ticket_url = "https://www.olympiahall.com/agenda/ronnie-wood/"
+        merged = deduplicate_events(ronnie)
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Ronnie Wood and His Band featuring Imelda May", merged[0].headliner)
+
+    def test_distinct_performance_titles_and_times_remain_separate(self):
+        early = make_event("TIGERCUB – 16H")
+        late = make_event("TIGERCUB – 20H")
+        early.start_time, late.start_time = "16:00", "20:00"
+        self.assertEqual(2, len(deduplicate_events([early, late])))
+
+    def test_plain_timed_card_reconciles_only_matching_labeled_show(self):
+        plain = make_event("TIGERCUB", "La Boule Noire")
+        plain.start_time = "16:00"
+        early = make_event("TIGERCUB – 16H", "La Boule Noire")
+        late = make_event("TIGERCUB – 20H", "La Boule Noire")
+        result = deduplicate_events([plain, early, late])
+        self.assertEqual(2, len(result))
+        self.assertEqual({"TIGERCUB – 16H", "TIGERCUB – 20H"}, {x.headliner for x in result})
+
+    def test_generic_parent_does_not_create_third_multi_set_performance(self):
+        parent = make_event("Mark Guiliana", "New Morning")
+        parent.ticket_url = "https://official.example/mark-guiliana"
+        first = make_event("Mark Guiliana - 1er set", "New Morning")
+        second = make_event("Mark Guiliana - 2e set", "New Morning")
+        first.start_time, second.start_time = "19:30", "21:30"
+
+        result = deduplicate_events([parent, first, second])
+
+        self.assertEqual(2, len(result))
+        self.assertEqual({"19:30", "21:30"}, {item.start_time for item in result})
+        self.assertTrue(all(item.ticket_url for item in result))
 
     def test_unrelated_same_date_and_venue_artist_does_not_merge(self):
         structured = make_event("Headliner")
@@ -287,6 +491,48 @@ class VenueNormalizationTests(unittest.TestCase):
                 }
                 self.assertEqual({expected}, normalized)
 
+    def test_accord_parfait_aliases_and_verified_geography(self):
+        normalized = []
+        for venue in ("L’Accord Parfait", "Studio L'Accord Parfait"):
+            item = make_event("Joseph Schiano di Lombo", venue)
+            item.city, item.department = "Unknown", ""
+            normalized.append(normalize_event_venue(item))
+        self.assertEqual({"L’Accord Parfait"}, {item.venue for item in normalized})
+        self.assertEqual({"Paris"}, {item.city for item in normalized})
+        self.assertEqual({"75"}, {item.department for item in normalized})
+
+    def test_marbrerie_suffix_is_display_name_plus_structured_city(self):
+        item = make_event("Bedouine", "La Marbrerie (Montreuil)")
+        item.city, item.department = "Paris", "75"
+        normalize_event_venue(item)
+        self.assertEqual("La Marbrerie", item.venue)
+        self.assertEqual("Montreuil", item.city)
+        self.assertEqual("93", item.department)
+
+
+class ReviewedMoveTests(unittest.TestCase):
+    def test_confirmed_moves_resolve_only_reviewed_date_artist_pairs(self):
+        cases = [
+            ("2026-10-06", "Father of Peace", "L'Alhambra", "La Maroquinerie"),
+            ("2026-10-19", "My New Band Believe", "Point Éphémère", "La Maroquinerie"),
+            ("2026-11-20", "ZEBRAHEAD", "La Maroquinerie", "L'Alhambra"),
+            ("2026-12-10", "Blondshell", "La Gaîté Lyrique", "Élysée Montmartre"),
+        ]
+        for date, artist, old, new in cases:
+            with self.subTest(artist=artist):
+                stale, current = make_event(artist, old), make_event(artist, new)
+                stale.date = current.date = date
+                for item in (stale, current):
+                    normalize_event_venue(item)
+                merged = deduplicate_events([stale, current])
+                self.assertEqual(1, len(merged))
+                self.assertEqual(new, merged[0].venue)
+
+    def test_different_venues_without_reviewed_move_remain_separate(self):
+        left = make_event("Unrelated Move Candidate", "Petit Bain")
+        right = make_event("Unrelated Move Candidate", "La Maroquinerie")
+        self.assertEqual(2, len(deduplicate_events([left, right])))
+
 
 class EventScopeTests(unittest.TestCase):
     def test_release_party_concert_is_supported(self):
@@ -405,6 +651,31 @@ class MetadataMergeTests(unittest.TestCase):
             "https://www.electriceyerock.com/example",
             merged.electric_eye_links[0]["url"],
         )
+
+    def test_merge_preserves_provenance_status_time_and_announcement(self):
+        from concert_calendar.deduplication import merge_events
+
+        existing = make_event("Metadata Artist")
+        existing.promoters = ["Official Promoter"]
+        existing.ticket_url = "https://official.example/event"
+        incoming = make_event("Metadata Artist")
+        incoming.genre_public = "Rock / Indie / Punk"
+        incoming.genre_source = "Official source"
+        incoming.genre_method = "source_explicit"
+        incoming.genre_evidence = [{"raw": "Rock", "source": "Official source"}]
+        incoming.ticket_status = "postponed"
+        incoming.start_time = "20:30"
+        incoming.announced_at = "2026-08-01T10:00:00Z"
+
+        merged = merge_events(existing, incoming)
+
+        self.assertEqual("Rock / Indie / Punk", merged.genre_public)
+        self.assertEqual("Official source", merged.genre_source)
+        self.assertEqual("source_explicit", merged.genre_method)
+        self.assertEqual("postponed", merged.ticket_status)
+        self.assertEqual("20:30", merged.start_time)
+        self.assertEqual("2026-08-01T10:00:00Z", merged.announced_at)
+        self.assertEqual("https://official.example/event", merged.ticket_url)
 
 
 class SourceQualityTests(unittest.TestCase):

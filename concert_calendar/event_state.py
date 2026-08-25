@@ -5,7 +5,11 @@ import hashlib
 import json
 from pathlib import Path
 
-from concert_calendar.deduplication import normalize_headliner
+from concert_calendar.deduplication import (
+    REVIEWED_EVENT_MOVES,
+    normalize_artist_component,
+    normalize_headliner,
+)
 from concert_calendar.models import ConcertEvent
 from concert_calendar.venues import normalize_venue_key
 
@@ -36,6 +40,26 @@ def canonical_event_identity(event: ConcertEvent | dict) -> str:
         (event_date[:10], normalize_headliner(headliner), normalize_venue_key(venue))
     )
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def _reviewed_predecessor_identities(event: ConcertEvent) -> list[str]:
+    """Return only explicit prior-location identities for reviewed moves."""
+
+    artist = normalize_artist_component(event.headliner)
+    result = []
+    for event_date, reviewed_artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
+        if (
+            event.date[:10] == event_date
+            and artist == reviewed_artist
+            and normalize_venue_key(event.venue) == normalize_venue_key(new_venue)
+        ):
+            value = "\x1f".join((
+                event_date,
+                normalize_headliner(event.headliner),
+                normalize_venue_key(old_venue),
+            ))
+            result.append(hashlib.sha256(value.encode("utf-8")).hexdigest())
+    return result
 
 
 def empty_state(updated_at: datetime) -> dict:
@@ -136,6 +160,15 @@ def reconcile_state(
     for event in events:
         identity = canonical_event_identity(event)
         existing = records.get(identity)
+        if existing is None:
+            existing = next(
+                (
+                    records[candidate]
+                    for candidate in _reviewed_predecessor_identities(event)
+                    if candidate in records
+                ),
+                None,
+            )
         first_seen = existing["first_seen"] if existing else (
             now_text if previous is not None else bootstrap_text
         )

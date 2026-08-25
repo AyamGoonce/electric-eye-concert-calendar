@@ -1,5 +1,6 @@
 import re
 import unicodedata
+from html import unescape
 
 from concert_calendar.models import ConcertEvent
 
@@ -31,6 +32,7 @@ VENUE_ALIASES = {
     "fete de l humanite": "Fête de l'Humanité",
     "file7": "File7",
     "lalhambra": "L'Alhambra",
+    "l alhambra": "L'Alhambra",
     "alhambra": "L'Alhambra",
     "l archipel": "L'Archipel",
     "archipel": "L'Archipel",
@@ -52,6 +54,9 @@ VENUE_ALIASES = {
     "maroquinerie": "La Maroquinerie",
     "la marberie": "La Marbrerie",
     "la marbrerie": "La Marbrerie",
+    "la marbrerie montreuil": "La Marbrerie",
+    "l accord parfait": "L’Accord Parfait",
+    "studio l accord parfait": "L’Accord Parfait",
     "la place": "La Place",
     "la seine musicale": "La Seine Musicale",
     "seine musicale grande seine": "La Seine Musicale – Grande Seine",
@@ -98,6 +103,14 @@ VENUE_ALIASES = {
 }
 
 
+# Only verified venue identities belong here.  These values correct stale or
+# missing source geography; they are not guesses based on the venue spelling.
+VENUE_GEOGRAPHY = {
+    "La Marbrerie": ("Montreuil", "93"),
+    "L’Accord Parfait": ("Paris", "75"),
+}
+
+
 UNKNOWN_VENUES = set()
 
 
@@ -106,7 +119,7 @@ def normalize_venue_key(value: str) -> str:
     Convert a venue name into a stable key for alias matching.
     """
 
-    normalized = unicodedata.normalize("NFKD", value or "")
+    normalized = unicodedata.normalize("NFKD", unescape(value or ""))
     normalized = "".join(
         character
         for character in normalized
@@ -129,7 +142,7 @@ def clean_unknown_venue_name(value: str) -> str:
     damage intentional capitalization.
     """
 
-    cleaned = re.sub(r"\s+", " ", value or "").strip()
+    cleaned = re.sub(r"\s+", " ", unescape(value or "")).strip()
     cleaned = re.sub(
         r"\s*-\s*paris$",
         "",
@@ -151,6 +164,8 @@ def normalize_event_venue(event: ConcertEvent) -> ConcertEvent:
 
     if normalized_venue is not None:
         event.venue = normalized_venue
+        if normalized_venue in VENUE_GEOGRAPHY:
+            event.city, event.department = VENUE_GEOGRAPHY[normalized_venue]
     else:
         event.venue = clean_unknown_venue_name(original_venue)
 

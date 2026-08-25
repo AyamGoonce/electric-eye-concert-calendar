@@ -224,6 +224,17 @@ class PersistentEventStateTests(unittest.TestCase):
         reconcile_state([improved], state, now=self.NOW + timedelta(hours=6))
         self.assertEqual(old.first_seen, improved.first_seen)
 
+    def test_reviewed_move_preserves_predecessor_first_seen(self):
+        old = self.make_event(headliner="Father of Peace", venue="L'Alhambra")
+        old.date = "2026-10-06"
+        state = reconcile_state([old], None, now=self.NOW)
+        moved = self.make_event(headliner="Father of Peace", venue="La Maroquinerie")
+        moved.date = "2026-10-06"
+
+        reconcile_state([moved], state, now=self.NOW + timedelta(hours=6))
+
+        self.assertEqual(old.first_seen, moved.first_seen)
+
     def test_malformed_state_fails_without_overwriting_it(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "calendar-state.json"

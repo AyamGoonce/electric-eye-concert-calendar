@@ -31,7 +31,12 @@ def event(**changes):
 
 class GenreEnrichmentTests(unittest.TestCase):
     def test_public_vocabulary_is_exactly_closed(self):
-        self.assertEqual(13, len(PUBLIC_GENRES))
+        self.assertEqual((
+            "Comedy", "Electronic", "Folk / Country", "French chanson",
+            "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
+            "R&B / Soul / Funk", "Reggae / Dub / Ska",
+            "Rock / Indie / Punk", "World / Latin",
+        ), PUBLIC_GENRES)
         self.assertEqual(len(PUBLIC_GENRES), len(set(PUBLIC_GENRES)))
 
     def test_source_explicit_and_source_mapping_provenance(self):
@@ -52,6 +57,40 @@ class GenreEnrichmentTests(unittest.TestCase):
         self.assertEqual("artist_mapping", matched.genre_method)
         self.assertIsNone(different.genre_public)
 
+    def test_reviewed_display_variant_uses_one_canonical_mapping(self):
+        item = event(headliner="BLEOOD : Kill Your Idols Europe Tour")
+        enrich_event_genres([item])
+        self.assertEqual("Hip-hop / Rap", item.genre_public)
+        self.assertEqual("artist_mapping", item.genre_method)
+
+    def test_co_headliners_require_shared_mapped_genre(self):
+        shared = event(headliner="The Afghan Whigs", co_headliners=["Drug Church"])
+        primary_only = event(
+            headliner="The Afghan Whigs", co_headliners=["Unmapped Billing Partner"]
+        )
+        conflicting = event(
+            headliner="Bloc Party", co_headliners=["Thee Sinseers"]
+        )
+        enrich_event_genres([shared, primary_only, conflicting])
+        self.assertEqual("Rock / Indie / Punk", shared.genre_public)
+        self.assertEqual("bill_consensus", shared.genre_method)
+        self.assertEqual("Rock / Indie / Punk", primary_only.genre_public)
+        self.assertEqual("bill_consensus", primary_only.genre_method)
+        self.assertIsNone(conflicting.genre_public)
+
+    def test_support_act_does_not_supply_headliner_genre(self):
+        item = event(headliner="Unmapped Headliner", openers=["Bloc Party"])
+        enrich_event_genres([item])
+        self.assertIsNone(item.genre_public)
+
+    def test_known_cross_bucket_identities_remain_blank(self):
+        items = [event(headliner=name) for name in (
+            "Gildaa", "Alma Rechtman", "Saint Levant", "FFF",
+            "Asaf Avidan", "Ben Harper",
+        )]
+        enrich_event_genres(items)
+        self.assertTrue(all(item.genre_public is None for item in items))
+
     def test_ambiguous_raw_genre_and_conflict_remain_blank(self):
         ambiguous = event(headliner="Ambiguous", genre="Pop, Rock", genre_evidence=[{"raw": "Pop, Rock", "source": "Official"}])
         conflict = event(headliner="Conflict", genre="Pop", genre_evidence=[{"raw": "Pop", "source": "A"}, {"raw": "Metal / Hard Rock", "source": "B"}])
@@ -63,8 +102,9 @@ class GenreEnrichmentTests(unittest.TestCase):
 
     def test_festival_does_not_inherit_headliner_mapping(self):
         festival = event(headliner="The Cure", festival_name="Rock en Seine")
-        enrich_event_genres([festival])
-        self.assertEqual("Festival", festival.genre_public)
+        report = enrich_event_genres([festival])
+        self.assertIsNone(festival.genre_public)
+        self.assertEqual(1, report["blank_festival"])
 
     def test_reviewed_mapping_has_evidence_and_valid_genres(self):
         mappings = load_reviewed_mappings()
@@ -110,6 +150,16 @@ class GenreEnrichmentTests(unittest.TestCase):
             path = Path(temporary) / "genres.json"
             path.write_text(json.dumps(value), encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Duplicate reviewed genre identity"):
+                load_reviewed_mappings(path)
+
+    def test_malformed_reviewed_mapping_is_rejected(self):
+        value = {"version": 1, "artists": [{
+            "artist": "Missing Provenance", "genre": "Pop",
+        }], "overrides": []}
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "genres.json"
+            path.write_text(json.dumps(value), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Malformed reviewed genre mapping"):
                 load_reviewed_mappings(path)
 
     def test_event_specific_genre_beats_artist_default(self):

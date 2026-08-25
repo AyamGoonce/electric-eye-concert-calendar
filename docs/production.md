@@ -162,7 +162,8 @@ or malformed values are ignored safely.
 
 ## Genre provenance and reviewed mappings
 
-The closed public vocabulary lives in `concert_calendar/genres.py`. Source raw
+The closed 12-category public vocabulary lives in `concert_calendar/genres.py`.
+Festival days remain genre-blank rather than creating a thirteenth category. Source raw
 values and source names remain build-side as evidence. Exact safe raw mappings
 are applied before the reviewed canonical artist dictionary in
 `concert_calendar/genre_mappings.json`; narrow reviewed overrides have highest
@@ -175,9 +176,11 @@ External genre research is deliberately absent from the production workflow.
 It is performed as a controlled maintenance audit, in descending blank-row
 impact, using authoritative event sources first, official artist biographies,
 then reviewed MusicBrainz/Wikidata structured metadata and corroborated
-editorial sources. `scripts/research_blank_genres.py` is an optional one-time
-audit helper, not an imported production component. Its output is reviewed
-before records are copied into the persistent dictionary.
+editorial sources. `scripts/resolve_genres.py` is an offline/manual maintenance
+helper, not an imported production component. It rejects ambiguous exact-name
+MusicBrainz identities and prints a review report by default; caches and report
+files are written only through explicit command-line options. Its output is
+reviewed before records are copied into the persistent dictionary.
 
 Each dictionary record requires a canonical artist, approved public genre,
 evidence source and type, review date, evidence URL when available, and notes.
@@ -188,6 +191,27 @@ reviewed; otherwise conflicts and genuinely multi-bucket artists remain blank.
 The build diagnostic includes every raw value and source, mapped target,
 mapping provenance, conflict, and unresolved canonical artist ordered by
 affected rows. See `docs/genre-research.md` for the current manual-review queue.
+
+## Reviewed event reconciliation
+
+Event reconciliation remains exact-first and conservative. Verified artist
+aliases, venue aliases, descriptive-title equivalents, and moved-event venue
+relationships are centralized rather than inferred with fuzzy matching.
+Terminal `+ Guest`/`+ Guests` variants require the same date and canonical
+venue plus an event-specific ticket URL, a shared promoter, or corroboration
+between an official source and DICE. Full-bill comparison includes both
+openers and co-headliners without changing their structured roles.
+
+Known venue aliases are applied before event identity. Verified venue
+geography may correct stale source city data, while unknown real venues remain
+valid and diagnostic-only. Reviewed moved-event predecessor identities may
+carry forward `first_seen`; arbitrary same-artist/same-date records at
+different venues never inherit state.
+
+The production report contains a bounded
+`unresolved_deduplication_candidates` list for same-artist venue conflicts and
+same-day event-specific ticket conflicts. Candidates remain separate until
+authoritative evidence or a reviewed rule resolves them.
 
 ## Archive and image policy
 

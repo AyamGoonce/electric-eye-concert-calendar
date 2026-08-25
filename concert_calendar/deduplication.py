@@ -1,32 +1,104 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from html import unescape
 
 import json
 from pathlib import Path
 import re
 import unicodedata
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.venues import normalize_event_venue, normalize_venue_key
 
 
 ARTIST_ALIASES = {
     "alison’s halo": "alison's halo",
     "day we ran": "dayweran",
+    "etran de l'aïr": "étran de l'aïr",
     "f.f.f.": "fff",
+    "the flamin' groovies": "flamin' groovies",
     "gaëlle joly": "gaelle joly",
     "gregoire jokic": "grégoire jokic",
     "howlin’ jaws": "howlin' jaws",
     "la p’tité fumée": "la p’tite fumée",
+    "la 808e nuit": "la 808eme nuit",
+    "la 808ème nuit": "la 808eme nuit",
     "la securite": "la sécurité",
     "lewis ofman – festivals": "lewis ofman",
     "noe preszow": "noé preszow",
+    "kiwi jr.": "kiwi jr",
     "sebastien tellier": "sébastien tellier",
+    "westside cowboys": "westside cowboy",
     "zoh amba (les femmes s’en mêlent)": (
         "zoh amba (les femmes s'en mêlent)"
     ),
 }
+
+
+# Reviewed event-level equivalences.  They intentionally do not generalize to
+# other artists, dates, venues, or editorial phrases.
+REVIEWED_EVENT_TITLES = {
+    ("2026-09-05", "l olympia bruno coquatrix", "ronnie wood"): (
+        "Ronnie Wood and His Band featuring Imelda May"
+    ),
+    (
+        "2026-09-05", "l olympia bruno coquatrix",
+        "ronnie wood and his band featuring imelda may",
+    ): "Ronnie Wood and His Band featuring Imelda May",
+    (
+        "2026-09-12", "point ephemere",
+        "ftv unplugged : carte blanche a grandma's ashes",
+    ): "FTV UNPLUGGED : GRANDMA'S ASHES",
+    (
+        "2026-09-12", "point ephemere",
+        "ftv unplugged : grandma's ashes",
+    ): "FTV UNPLUGGED : GRANDMA'S ASHES",
+}
+
+
+# These relocations were individually reviewed against current authoritative
+# listings.  The key is deliberately date + artist + old/new canonical venue.
+REVIEWED_EVENT_MOVES = (
+    ("2026-10-06", "father of peace", "L'Alhambra", "La Maroquinerie"),
+    ("2026-10-19", "my new band believe", "Point Éphémère", "La Maroquinerie"),
+    ("2026-11-20", "zebrahead", "La Maroquinerie", "L'Alhambra"),
+    ("2026-12-10", "blondshell", "La Gaîté Lyrique", "Élysée Montmartre"),
+)
+
+
+# Individually reviewed same-event bills.  These are deliberately scoped by
+# date, canonical venue, and the complete set of source-card artist identities.
+REVIEWED_EVENT_BILLS = (
+    {
+        "date": "2026-11-16",
+        "venue": "Le Zénith Paris – La Villette",
+        "artists": ("bloc party", "interpol"),
+        "headliner": "Bloc Party",
+        "co_headliners": ["Interpol"],
+    },
+    {
+        "date": "2026-12-02",
+        "venue": "Paul B – Massy",
+        "artists": ("alma rechtman", "gildaa"),
+        "headliner": "Alma Rechtman",
+        "co_headliners": ["Gildaa"],
+    },
+    {
+        "date": "2026-12-07",
+        "venue": "Le Zénith Paris – La Villette",
+        "artists": ("electric pyramid", "the dire straits experience"),
+        "headliner": "The Dire Straits Experience",
+        "openers": ["Electric Pyramid"],
+    },
+    {
+        "date": "2027-02-16",
+        "venue": "La Maroquinerie",
+        "artists": ("bernth", "escape the internet"),
+        "headliner": "Escape The Internet (feat. Bernth)",
+    },
+)
 
 # The official Adidas Arena event page explicitly bills this special guest.
 # GDP currently exposes the two artists as separate cards with one event URL.
@@ -45,6 +117,9 @@ VERIFIED_ARTIST_DISPLAY_NAMES = {
 }
 
 BILL_SEPARATOR_RE = re.compile(r"\s+(?:\+|•)\s+")
+GENERIC_GUEST_RE = re.compile(r"\s+\+\s+guests?\s*$", re.IGNORECASE)
+TIME_SUFFIX_RE = re.compile(r"\s+[–-]\s*(\d{1,2})\s*h(?:\s*(\d{2}))?\s*$", re.IGNORECASE)
+SET_SUFFIX_RE = re.compile(r"\s+-\s+(?:1er|2e)\s+set\s*$", re.IGNORECASE)
 
 
 def normalize_headliner(name: str) -> str:
@@ -53,7 +128,7 @@ def normalize_headliner(name: str) -> str:
     if not name:
         return ""
 
-    name = name.lower().strip()
+    name = unescape(name).lower().strip()
     name = re.sub(r"\s+", " ", name)
     return ARTIST_ALIASES.get(name, name)
 
@@ -77,9 +152,49 @@ def build_event_key(event: ConcertEvent) -> tuple:
 
     return (
         event.date,
-        normalize_headliner(event.headliner),
+        normalize_artist_component(event.headliner),
         (event.venue or "").lower().strip(),
     )
+
+
+def _base_generic_guest_title(value: str) -> str | None:
+    decoded = unescape(value or "")
+    base = GENERIC_GUEST_RE.sub("", decoded).strip()
+    return base if base != decoded.strip() else None
+
+
+def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
+    for event in events:
+        event.headliner = unescape(event.headliner)
+        event.openers = [unescape(value) for value in (event.openers or [])] or None
+        event.co_headliners = [
+            unescape(value) for value in (event.co_headliners or [])
+        ] or None
+        if event.event_title:
+            event.event_title = unescape(event.event_title)
+        if event.series_name:
+            event.series_name = unescape(event.series_name)
+        venue_identity = normalize_venue_key(event.venue)
+        artist_identity = normalize_artist_component(event.headliner)
+        reviewed_title = REVIEWED_EVENT_TITLES.get(
+            (event.date, venue_identity, artist_identity)
+        )
+        if reviewed_title:
+            event.headliner = reviewed_title
+
+        first_component = _split_full_bill(event.headliner)
+        move_artist = normalize_artist_component(
+            first_component[0] if first_component else event.headliner
+        )
+        for date, artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
+            if (
+                event.date == date
+                and move_artist == artist
+                and event.venue in {old_venue, new_venue}
+            ):
+                event.venue = new_venue
+                normalize_event_venue(event)
+                break
 
 
 def _stable_unique(values: list[str]) -> list[str] | None:
@@ -118,6 +233,13 @@ def merge_events(
     existing.co_headliners = _stable_unique(
         [*(existing.co_headliners or []), *(incoming.co_headliners or [])]
     ) or None
+    opener_identities = {
+        normalize_artist_component(value) for value in (existing.openers or [])
+    }
+    existing.co_headliners = [
+        value for value in (existing.co_headliners or [])
+        if normalize_artist_component(value) not in opener_identities
+    ] or None
     existing.promoters = sorted(
         {*(existing.promoters or []), *(incoming.promoters or [])}
     ) or None
@@ -127,6 +249,10 @@ def merge_events(
 
     if not existing.genre and incoming.genre:
         existing.genre = incoming.genre
+
+    for field in ("genre_public", "genre_source", "genre_method", "announced_at"):
+        if not getattr(existing, field) and getattr(incoming, field):
+            setattr(existing, field, getattr(incoming, field))
 
     combined_genre_evidence = []
     seen_genre_evidence = set()
@@ -150,7 +276,10 @@ def merge_events(
         existing.authoritative_billing or incoming.authoritative_billing
     )
     existing.sold_out = existing.sold_out or incoming.sold_out
-    status_priority = {None: 0, "tickets": 1, "not_on_sale": 2, "free": 3, "sold_out": 4}
+    status_priority = {
+        None: 0, "tickets": 1, "not_on_sale": 2, "free": 3,
+        "sold_out": 4, "postponed": 5, "cancelled": 6,
+    }
     if status_priority.get(incoming.ticket_status, 0) > status_priority.get(existing.ticket_status, 0):
         existing.ticket_status = incoming.ticket_status
     if not existing.start_time and incoming.start_time:
@@ -202,7 +331,10 @@ def _matches_structured_bill(
     structured: ConcertEvent,
     full_bill: ConcertEvent,
 ) -> bool:
-    if not structured.openers or full_bill.openers:
+    structured_artists = [
+        *(structured.openers or []), *(structured.co_headliners or [])
+    ]
+    if not structured_artists or full_bill.openers or full_bill.co_headliners:
         return False
 
     components = _split_full_bill(full_bill.headliner)
@@ -213,7 +345,7 @@ def _matches_structured_bill(
     normalized_bill = [normalize_artist_component(value) for value in components]
     normalized_structured = [
         normalize_artist_component(value)
-        for value in [structured.headliner, *structured.openers]
+        for value in [structured.headliner, *structured_artists]
     ]
 
     return (
@@ -229,11 +361,36 @@ def _same_event_specific_ticket(
     if not (_valid_http_url(left.ticket_url) and _valid_http_url(right.ticket_url)):
         return False
 
-    return left.ticket_url.rstrip("/") == right.ticket_url.rstrip("/")
+    if left.festival_name or right.festival_name:
+        return False
+
+    def normalized(value: str) -> str | None:
+        parsed = urlparse(value)
+        path = re.sub(r"/+", "/", parsed.path).rstrip("/")
+        generic_paths = {"", "/agenda", "/events", "/event", "/billetterie", "/tickets"}
+        query = [
+            (key, item) for key, item in parse_qsl(parsed.query, keep_blank_values=True)
+            if not key.casefold().startswith("utm_")
+        ]
+        if path.casefold() in generic_paths and not query:
+            return None
+        return urlunparse((
+            parsed.scheme.casefold(), parsed.netloc.casefold(), path,
+            "", urlencode(sorted(query)), "",
+        ))
+
+    return normalized(left.ticket_url) == normalized(right.ticket_url) is not None
 
 
 def _shared_promoter(left: ConcertEvent, right: ConcertEvent) -> bool:
     return bool(set(left.promoters or []) & set(right.promoters or []))
+
+
+def _official_and_aggregator_corroboration(
+    left: ConcertEvent, right: ConcertEvent
+) -> bool:
+    sources = set(left.source_names or []) | set(right.source_names or [])
+    return "DICE" in sources and bool(sources - {"DICE"})
 
 
 def _apply_verified_support_relationships(events: list[ConcertEvent]) -> None:
@@ -325,6 +482,10 @@ def _apply_display_capitalization(
             canonicalize(opener)
             for opener in (event.openers or [])
         ] or None
+        event.co_headliners = [
+            canonicalize(artist)
+            for artist in (event.co_headliners or [])
+        ] or None
 
 
 def _deduplicate_exact(events: list[ConcertEvent]) -> list[ConcertEvent]:
@@ -332,13 +493,135 @@ def _deduplicate_exact(events: list[ConcertEvent]) -> list[ConcertEvent]:
 
     for event in events:
         key = build_event_key(event)
-
         if key in deduplicated:
-            deduplicated[key] = merge_events(deduplicated[key], event)
+            merge_events(deduplicated[key], event)
         else:
             deduplicated[key] = event
 
     return list(deduplicated.values())
+
+
+def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Apply only the four manually reviewed event-level billing decisions."""
+
+    removed = set()
+    for rule in REVIEWED_EVENT_BILLS:
+        venue = normalize_venue_key(rule["venue"])
+        expected = set(rule["artists"])
+        matches = [
+            event for event in events
+            if id(event) not in removed
+            and event.date == rule["date"]
+            and normalize_venue_key(event.venue) == venue
+            and normalize_artist_component(event.headliner) in expected
+        ]
+        if {normalize_artist_component(event.headliner) for event in matches} != expected:
+            continue
+
+        preferred = normalize_artist_component(rule["headliner"])
+        base = next(
+            (event for event in matches if normalize_artist_component(event.headliner) == preferred),
+            matches[0],
+        )
+        for event in matches:
+            if event is not base:
+                merge_events(base, event)
+                removed.add(id(event))
+        base.headliner = rule["headliner"]
+        base.openers = list(rule.get("openers", [])) or None
+        base.co_headliners = list(rule.get("co_headliners", [])) or None
+
+    return [event for event in events if id(event) not in removed]
+
+
+def _reconcile_generic_guest_titles(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    removed = set()
+    for group in grouped.values():
+        for marked in group:
+            base = _base_generic_guest_title(marked.headliner)
+            if not base or id(marked) in removed:
+                continue
+            base_identity = normalize_artist_component(base)
+            for plain in group:
+                if plain is marked or id(plain) in removed:
+                    continue
+                if normalize_artist_component(plain.headliner) != base_identity:
+                    continue
+                if not (
+                    _same_event_specific_ticket(plain, marked)
+                    or _shared_promoter(plain, marked)
+                    or _official_and_aggregator_corroboration(plain, marked)
+                ):
+                    continue
+                merge_events(plain, marked)
+                removed.add(id(marked))
+                break
+    return [event for event in events if id(event) not in removed]
+
+
+def _reconcile_time_labeled_titles(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Attach a plain source card only to an explicitly matching timed show."""
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+    removed = set()
+    for group in grouped.values():
+        for labeled in group:
+            match = TIME_SUFFIX_RE.search(labeled.headliner)
+            if not match:
+                continue
+            base = labeled.headliner[:match.start()].strip()
+            expected_time = f"{int(match.group(1)):02d}:{match.group(2) or '00'}"
+            for plain in group:
+                if plain is labeled or id(plain) in removed:
+                    continue
+                if normalize_artist_component(plain.headliner) != normalize_artist_component(base):
+                    continue
+                if plain.start_time != expected_time:
+                    continue
+                merge_events(labeled, plain)
+                removed.add(id(plain))
+                break
+    return [event for event in events if id(event) not in removed]
+
+
+def _reconcile_multi_set_parent_cards(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Remove one generic product when explicit first/second-set rows exist."""
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+    removed = set()
+    for group in grouped.values():
+        labeled_by_base = defaultdict(list)
+        for event in group:
+            match = SET_SUFFIX_RE.search(event.headliner)
+            if match:
+                labeled_by_base[
+                    normalize_artist_component(event.headliner[:match.start()])
+                ].append(event)
+        for base, labeled in labeled_by_base.items():
+            if len(labeled) < 2:
+                continue
+            parent = next(
+                (
+                    event for event in group
+                    if event not in labeled
+                    and normalize_artist_component(event.headliner) == base
+                ),
+                None,
+            )
+            if parent is None:
+                continue
+            for performance in labeled:
+                merge_events(performance, parent)
+            removed.add(id(parent))
+    return [event for event in events if id(event) not in removed]
 
 
 def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
@@ -350,8 +633,13 @@ def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
     removed = set()
 
     for group in grouped.values():
-        structured_records = [event for event in group if event.openers]
-        full_bills = [event for event in group if not event.openers]
+        structured_records = [
+            event for event in group if event.openers or event.co_headliners
+        ]
+        full_bills = [
+            event for event in group
+            if not event.openers and not event.co_headliners
+        ]
 
         for structured in structured_records:
             for full_bill in full_bills:
@@ -471,13 +759,26 @@ def deduplicate_events(
     for event in events:
         initial_opener_state[build_event_key(event)].append(bool(event.openers))
 
+    _apply_reviewed_event_rules(events)
+    festival_represented_rows = _count_represented_festival_rows(events)
     display_candidates = _display_candidates(events)
     reconciled = _deduplicate_exact(events)
+    reconciled = _reconcile_reviewed_event_bills(reconciled)
     _apply_verified_support_relationships(reconciled)
     reconciled = _reconcile_full_bills(reconciled)
+    reconciled = _reconcile_generic_guest_titles(reconciled)
+    reconciled = _reconcile_time_labeled_titles(reconciled)
+    reconciled = _reconcile_multi_set_parent_cards(reconciled)
     reconciled = _consolidate_authoritative_festivals(reconciled, diagnostics)
     reconciled = _collapse_explicit_support_cards(reconciled)
     _apply_display_capitalization(reconciled, display_candidates)
+
+    if diagnostics is not None:
+        diagnostics["festival_artist_rows_collapsed"] = max(
+            diagnostics.get("festival_artist_rows_collapsed", 0),
+            festival_represented_rows,
+        )
+        diagnostics["unresolved_candidates"] = _unresolved_candidates(reconciled)
 
     if diagnostics is not None:
         diagnostics["opener_enriched_records"] = sum(
@@ -488,3 +789,69 @@ def deduplicate_events(
         )
 
     return reconciled
+
+
+def _count_represented_festival_rows(events: list[ConcertEvent]) -> int:
+    """Count source rows represented by authoritative festival-day bills."""
+
+    total = 0
+    for parent in events:
+        if not (parent.authoritative_billing and parent.festival_name and parent.openers):
+            continue
+        identities = {
+            normalize_artist_component(name)
+            for name in [parent.headliner, *(parent.openers or [])]
+        }
+        represented = sum(
+            event is not parent
+            and event.date == parent.date
+            and normalize_venue_key(event.venue) == normalize_venue_key(parent.venue)
+            and normalize_artist_component(event.headliner) in identities
+            for event in events
+        )
+        total += represented
+    return total
+
+
+def _unresolved_candidates(events: list[ConcertEvent], limit: int = 50) -> list[dict]:
+    """Return bounded, evidence-rich candidates without merging them."""
+
+    candidates = []
+    by_date_artist = defaultdict(list)
+    by_ticket = defaultdict(list)
+    for event in events:
+        by_date_artist[(event.date, normalize_artist_component(event.headliner))].append(event)
+        if _valid_http_url(event.ticket_url):
+            by_ticket[event.ticket_url.rstrip("/")].append(event)
+
+    for (date, artist), group in by_date_artist.items():
+        venues = {event.venue for event in group}
+        if len(venues) > 1:
+            candidates.append({
+                "kind": "venue_conflict", "date": date, "artist": artist,
+                "venues": sorted(venues),
+                "sources": sorted({s for event in group for s in (event.source_names or [])}),
+            })
+
+    for url, group in by_ticket.items():
+        by_date = defaultdict(list)
+        for event in group:
+            by_date[event.date].append(event)
+        for same_day in by_date.values():
+            if len(same_day) < 2 or not _same_event_specific_ticket(same_day[0], same_day[1]):
+                continue
+            fingerprints = {(event.venue, event.headliner) for event in same_day}
+            if len(fingerprints) > 1:
+                candidates.append({
+                    "kind": "shared_event_ticket", "ticket_url": url,
+                    "events": [
+                        {
+                            "date": event.date, "headliner": event.headliner,
+                            "venue": event.venue,
+                            "sources": event.source_names or [],
+                        }
+                        for event in same_day[:10]
+                    ],
+                })
+
+    return candidates[:limit]

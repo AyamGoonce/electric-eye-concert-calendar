@@ -12,6 +12,16 @@
   low-priority gap-filling source and must load after official sources.
 - Deduplicate conservatively with explicit aliases or tightly constrained
   normalization. Do not add fuzzy matching by default.
+- Keep reviewed artist aliases, descriptive-title equivalences, and relocated
+  event venue rules centralized in the deduplication layer. A terminal generic
+  `+ Guest(s)` marker is comparison-only and requires an event-specific ticket,
+  shared promoter, or official-source plus DICE corroboration.
+- Canonicalize verified venue aliases before event identity. Venue names and
+  municipalities remain separate; reviewed venue geography may correct stale
+  source city data.
+- Preserve genuine multiple performances through explicit early/late, set, or
+  time-labeled billing. A shared product URL is diagnostic evidence, not by
+  itself permission to merge performances on different dates.
 - In visible output, show the venue alone for Paris and `Venue (Town)` outside
   Paris. Keep city and department structured internally.
 - Do not accidentally commit generated calendars, scrape snapshots, logs,

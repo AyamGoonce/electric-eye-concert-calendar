@@ -11,7 +11,7 @@ from concert_calendar.models import ConcertEvent
 
 
 PUBLIC_GENRES = (
-    "Comedy", "Electronic", "Festival", "Folk / Country", "French chanson",
+    "Comedy", "Electronic", "Folk / Country", "French chanson",
     "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
     "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk",
     "World / Latin",
@@ -73,6 +73,7 @@ EXACT_RAW_MAPPINGS = {
     "rock alternatif": "Rock / Indie / Punk",
     "rock et assimiles": "Rock / Indie / Punk",
     "rock international": "Rock / Indie / Punk",
+    "rock progressif": "Rock / Indie / Punk",
     "indie": "Rock / Indie / Punk",
     "indie rock": "Rock / Indie / Punk",
     "epic indie music": "Rock / Indie / Punk",
@@ -91,12 +92,14 @@ EXACT_RAW_MAPPINGS = {
     "soul": "R&B / Soul / Funk",
     "concert - soul": "R&B / Soul / Funk",
     "concert - pop contemporaine": "Pop",
+    "concert - indie pop": "Pop",
     "concert - synth pop": "Pop",
     "concert - minimal experimental pop": "Pop",
     "concert - grime, hip-hop, spoken word": "Hip-hop / Rap",
     "musique du monde, latino": "World / Latin",
     "variete / chanson / pop francaise": "French chanson",
     "variete francaise": "French chanson",
+    "#altpop #electropop #pop": "Pop",
 }
 
 WEAK_RAW_GENRES = {
@@ -133,6 +136,129 @@ def map_raw_genre(value: str | None) -> str | None:
     return next(iter(matches)) if len(matches) == 1 else None
 
 
+CONTEXT_GENRE_RULES = (
+    ("Jazz / Blues", (
+        r"\bmardi jazz\b",
+        r"\bjazz a la villette\b",
+        r"\bjazzcore\b",
+        r"\bjazz\b",
+        r"\bblues\b",
+        r"\bbebop\b",
+    )),
+    ("Metal / Hard Rock", (
+        r"\bheavy metal\b",
+        r"\bmetalcore\b",
+        r"\bdeath metal\b",
+        r"\bblack metal\b",
+        r"\bdoom metal\b",
+        r"\bmetal\b",
+        r"\bhard rock\b",
+    )),
+    ("Hip-hop / Rap", (
+        r"\bhip[- ]?hop\b",
+        r"\brap\b",
+        r"\bgrime\b",
+        r"\btrap\b",
+    )),
+    ("Reggae / Dub / Ska", (
+        r"\breggae\b",
+        r"\bdub\b",
+        r"\bska\b",
+        r"\bdancehall\b",
+    )),
+    ("Electronic", (
+        r"\belectro\b",
+        r"\belectronic\b",
+        r"\btechno\b",
+        r"\bhouse\b",
+        r"\bambient\b",
+    )),
+    ("R&B / Soul / Funk", (
+        r"\br&b\b",
+        r"\brnb\b",
+        r"\bsoul\b",
+        r"\bfunk\b",
+        r"\bgospel\b",
+    )),
+    ("Folk / Country", (
+        r"\bfolk\b",
+        r"\bcountry\b",
+        r"\bamericana\b",
+        r"\bbluegrass\b",
+    )),
+    ("World / Latin", (
+        r"\blatin\b",
+        r"\bcumbia\b",
+        r"\bsalsa\b",
+        r"\bmerengue\b",
+        r"\bafrobeat\b",
+        r"\bafrobeats\b",
+        r"\bbossa nova\b",
+    )),
+    ("French chanson", (
+        r"\bchanson\b",
+        r"\bvariete francaise\b",
+    )),
+    ("Rock / Indie / Punk", (
+        r"\bpost[- ]?punk\b",
+        r"\bshoegaze\b",
+        r"\bgarage rock\b",
+        r"\bindie rock\b",
+        r"\bpunk\b",
+        r"\brock\b",
+    )),
+    ("Pop", (
+        r"\bdream pop\b",
+        r"\bindie pop\b",
+        r"\bhyperpop\b",
+        r"\bpop\b",
+    )),
+)
+
+
+# Reviewed source-title variants that contain harmless tour, set, or event
+# presentation text.  This is an exact allow-list, not a suffix-stripping rule.
+REVIEWED_MAPPING_ALIASES = {
+    normalize_artist_component("ALELA DIANE (USA)"): "alela diane",
+    normalize_artist_component("An Evening with Kristin Hersh"): "kristin hersh",
+    normalize_artist_component("Bilal - Celebrating 25 Years of 1st Born Second"): "bilal",
+    normalize_artist_component("Bleech 9:3 en concert (côté Records)"): "bleech 9:3",
+    normalize_artist_component("BLEOOD : Kill Your Idols Europe Tour"): "bleood",
+    normalize_artist_component("CARPENTER BRUT - THE END COMPLETE"): "carpenter brut",
+    normalize_artist_component("DIIV — Pitchfork Music Festival Paris 2026"): "diiv",
+    normalize_artist_component("DJ KRUSH + GUEST"): "dj krush",
+    normalize_artist_component("Elmiene | Sounds For Someone Tour"): "elmiene",
+    normalize_artist_component("EsDeeKid : Paris Headline"): "esdeekid",
+    normalize_artist_component("Festival de Marne : Alela Diane"): "alela diane",
+    normalize_artist_component("Festival de Marne : Yael Naim"): "yael naim",
+    normalize_artist_component("Good Kid - Can We Hang Out? Tour"): "good kid",
+    normalize_artist_component('GUADAL TEJAZ Release Party "Megalostrata"'): "guadal tejaz",
+    normalize_artist_component("Iceage (Double show) — Pitchfork Music Festival Paris 2026"): "iceage",
+    normalize_artist_component("John Craigie en concert (côté Records)"): "john craigie",
+    normalize_artist_component("Mark Guiliana - 1er set"): "mark guiliana",
+    normalize_artist_component("Mark Guiliana - 2e set"): "mark guiliana",
+    normalize_artist_component("Moon Walker | Moon Walker's Wasteland Country Tour"): "moon walker",
+    normalize_artist_component("WOLFGANG VOIGT presents GAS live"): "wolfgang voigt",
+}
+
+
+def infer_context_genre(event: ConcertEvent) -> str | None:
+    parts = [
+        event.event_title or "",
+        event.series_name or "",
+        event.festival_name or "",
+    ]
+    normalized = normalize_raw(" ".join(parts))
+    if not normalized:
+        return None
+    matches = {
+        genre
+        for genre, patterns in CONTEXT_GENRE_RULES
+        if any(re.search(pattern, normalized) for pattern in patterns)
+    }
+    return next(iter(matches)) if len(matches) == 1 else None
+
+
 def load_reviewed_mappings(path: Path | None = None) -> dict:
     path = path or Path(__file__).with_name("genre_mappings.json")
     value = json.loads(path.read_text(encoding="utf-8"))
@@ -154,6 +280,28 @@ def load_reviewed_mappings(path: Path | None = None) -> dict:
                 raise ValueError(f"Duplicate reviewed genre identity: {artist}")
             result[section][identity] = record
     return result
+
+
+def mapping_for_artist(name: str, mappings: dict) -> dict | None:
+    identity = normalize_artist_component(name)
+    identity = REVIEWED_MAPPING_ALIASES.get(identity, identity)
+    return mappings["overrides"].get(identity) or mappings["artists"].get(identity)
+
+
+def infer_bill_genre(event: ConcertEvent, mappings: dict) -> str | None:
+    if not event.co_headliners:
+        return None
+    headliner = mapping_for_artist(event.headliner, mappings)
+    if not headliner:
+        return None
+    co_headliner_genres = {
+        record["genre"]
+        for name in event.co_headliners
+        if (record := mapping_for_artist(name, mappings))
+    }
+    if co_headliner_genres - {headliner["genre"]}:
+        return None
+    return headliner["genre"]
 
 
 def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = None) -> dict:
@@ -181,8 +329,9 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             if map_raw_genre(item.get("raw"))
         }
         artist_id = normalize_artist_component(event.headliner)
-        override = mappings["overrides"].get(artist_id)
-        artist = mappings["artists"].get(artist_id)
+        mapped_artist_id = REVIEWED_MAPPING_ALIASES.get(artist_id, artist_id)
+        override = mappings["overrides"].get(mapped_artist_id)
+        artist = mappings["artists"].get(mapped_artist_id)
 
         weak_source_evidence = bool(evidence) and all(
             normalize_raw(item.get("raw", "")) in WEAK_RAW_GENRES
@@ -191,10 +340,9 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         )
 
         if event.festival_name:
-            event.genre_public = "Festival"
-            event.genre_method = "festival"
-            event.genre_source = "festival_name"
-            stats["festival"] += 1
+            event.genre_method = None
+            event.genre_source = None
+            stats["blank_festival"] += 1
         elif artist and len(mapped) == 1 and weak_source_evidence:
             event.genre_public = artist["genre"]
             event.genre_method = "artist_mapping"
@@ -205,7 +353,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             exact_public = any(normalize_raw(item.get("raw", "")) == normalize_raw(event.genre_public) for item in evidence)
             event.genre_method = "source_explicit" if exact_public else "source_mapping"
             stats[event.genre_method] += 1
-        elif override:
+        elif override and not event.co_headliners:
             event.genre_public = override["genre"]
             event.genre_method = "manual_override"
             event.genre_source = override["evidence_source"]
@@ -213,11 +361,21 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         elif len(mapped) > 1:
             conflicts.append({"event": event.headliner, "date": event.date, "genres": sorted(mapped)})
             stats["conflict"] += 1
-        elif artist:
+        elif artist and not event.co_headliners:
             event.genre_public = artist["genre"]
             event.genre_method = "artist_mapping"
             event.genre_source = artist["evidence_source"]
             stats["artist_mapping"] += 1
+        elif context_genre := infer_context_genre(event):
+            event.genre_public = context_genre
+            event.genre_method = "event_context"
+            event.genre_source = "event_title_or_series"
+            stats["event_context"] += 1
+        elif bill_genre := infer_bill_genre(event, mappings):
+            event.genre_public = bill_genre
+            event.genre_method = "bill_consensus"
+            event.genre_source = "mapped_bill_artists"
+            stats["bill_consensus"] += 1
         else:
             stats["blank_no_raw" if not evidence else "blank_unresolved_raw"] += 1
             for item in evidence:
@@ -244,6 +402,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         "coverage_percentage": round(populated * 100 / len(events), 2) if events else 0,
         "source_explicit": stats["source_explicit"], "source_mapping": stats["source_mapping"],
         "artist_mapping": stats["artist_mapping"], "override": stats["override"],
+        "event_context": stats["event_context"], "bill_consensus": stats["bill_consensus"],
         "blank_no_raw": stats["blank_no_raw"], "blank_unresolved_raw": stats["blank_unresolved_raw"],
         "blank_festival": stats["blank_festival"], "conflict_count": stats["conflict"],
         "conflicts": conflicts, "raw_inventory": dict(raw_inventory.most_common()),
