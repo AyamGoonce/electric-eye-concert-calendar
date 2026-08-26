@@ -55,7 +55,7 @@ def _reviewed_predecessor_identities(event: ConcertEvent) -> list[str]:
         ):
             value = "\x1f".join((
                 event_date,
-                normalize_headliner(event.headliner),
+                reviewed_artist,
                 normalize_venue_key(old_venue),
             ))
             result.append(hashlib.sha256(value.encode("utf-8")).hexdigest())

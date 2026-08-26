@@ -90,6 +90,28 @@ class AutomationValidationTests(unittest.TestCase):
         with self.assertRaises(ProductionValidationError):
             validate_events(events)
 
+    def test_event_contract_rejects_descriptive_venue_billing(self):
+        events = [valid_event(index) for index in range(100)]
+        events[0]["v"] = "En première partie de ARTIST | La Seine Musicale"
+        with self.assertRaises(ProductionValidationError):
+            validate_events(events)
+
+    def test_event_contract_rejects_relocation_notice_headliner(self):
+        events = [valid_event(index) for index in range(100)]
+        events[0]["h"] = "CHANGEMENT DE SALLE _ Artist"
+        with self.assertRaises(ProductionValidationError):
+            validate_events(events)
+
+    def test_event_contract_allows_legitimate_move_title(self):
+        events = [valid_event(index) for index in range(100)]
+        events[0]["h"] = "The Move"
+        validate_events(events)
+
+    def test_event_contract_allows_legitimate_angle_bracket_title(self):
+        events = [valid_event(index) for index in range(100)]
+        events[0]["h"] = "ALL(H)OURS <RISE UP>"
+        validate_events(events)
+
     def test_publish_stages_data_before_pointer_and_keeps_three_hashes(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -229,6 +251,22 @@ class PersistentEventStateTests(unittest.TestCase):
         old.date = "2026-10-06"
         state = reconcile_state([old], None, now=self.NOW)
         moved = self.make_event(headliner="Father of Peace", venue="La Maroquinerie")
+        moved.date = "2026-10-06"
+
+        reconcile_state([moved], state, now=self.NOW + timedelta(hours=6))
+
+        self.assertEqual(old.first_seen, moved.first_seen)
+
+    def test_humanity_last_breath_move_preserves_predecessor_first_seen(self):
+        old = self.make_event(
+            headliner="HUMANITY'S LAST BREATH", venue="Petit Bain"
+        )
+        old.date = "2026-10-06"
+        state = reconcile_state([old], None, now=self.NOW)
+        moved = self.make_event(
+            headliner="HUMANITY’S LAST BREATH",
+            venue="La Machine du Moulin Rouge",
+        )
         moved.date = "2026-10-06"
 
         reconcile_state([moved], state, now=self.NOW + timedelta(hours=6))

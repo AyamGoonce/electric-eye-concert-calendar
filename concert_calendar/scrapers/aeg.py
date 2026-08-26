@@ -128,6 +128,23 @@ def split_venue_city(text):
     return cleaned, ""
 
 
+def json_ld_location(json_ld):
+    """Return structured venue and locality when the visible row omits city."""
+
+    location = json_ld.get("location") or {}
+    if isinstance(location, list):
+        location = next((item for item in location if isinstance(item, dict)), {})
+    if not isinstance(location, dict):
+        return "", ""
+    address = location.get("address") or {}
+    if not isinstance(address, dict):
+        address = {}
+    return (
+        re.sub(r"\s+", " ", location.get("name") or "").strip(),
+        re.sub(r"\s+", " ", address.get("addressLocality") or "").strip(),
+    )
+
+
 def get_json_ld_event(soup):
     """
     Return the Event JSON-LD object from an AEG detail page.
@@ -218,6 +235,7 @@ def parse_detail_page(detail_url, headliner):
         starting_year = date.today().year
 
     event_rows = soup.select(".event-details")
+    structured_venue, structured_city = json_ld_location(json_ld)
 
     events = []
 
@@ -251,6 +269,9 @@ def parse_detail_page(detail_url, headliner):
         venue, city = split_venue_city(
             venue_element.get_text(" ", strip=True)
         )
+
+        if not city and venue == structured_venue:
+            city = structured_city
 
         if not venue or not city:
             continue

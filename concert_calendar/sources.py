@@ -56,6 +56,7 @@ def is_non_supported_event(title):
 
     party_is_concert_billing = bool(
         re.search(r"\brelease party\b", normalized_title)
+        or re.search(r"\bparty\b.*\blive on tour\b", normalized_title)
         or re.match(
             r"^bloc party(?:\s*\+|$)",
             normalized_title,

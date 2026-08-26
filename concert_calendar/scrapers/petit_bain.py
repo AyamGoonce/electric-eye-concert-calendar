@@ -1,5 +1,6 @@
 import re
 from datetime import date
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -40,6 +41,12 @@ GENERIC_SUPPORT_NAMES = {
     "support",
     "supports",
 }
+
+RELOCATION_PREFIX_RE = re.compile(
+    r"^(?:changement de (?:salle|lieu)|d(?:é|e)plac(?:é|e)|"
+    r"transf(?:é|e)r(?:é|e)|venue change|moved|relocated)\s*[_:|–-]+\s*(.+)$",
+    flags=re.IGNORECASE,
+)
 
 
 def clean_text(value):
@@ -83,6 +90,36 @@ def parse_card_date(value, today=None):
         return date(year, month, int(day_text)).isoformat()
     except ValueError:
         return ""
+
+
+def strip_relocation_notice(value):
+    """Return the performer from a clearly prefixed venue-update title."""
+
+    cleaned = clean_text(value)
+    match = RELOCATION_PREFIX_RE.match(cleaned)
+    return clean_text(match.group(1)) if match else cleaned
+
+
+def find_relocated_venue(soup):
+    """Read an explicit current-venue sentence from the event detail page."""
+
+    for element in soup.select("#compinfotar p, .compinfotar p, .event-notice p"):
+        text = clean_text(element.get_text(" ", strip=True))
+        if not re.search(
+            r"\b(?:changement de (?:salle|lieu)|d(?:é|e)plac(?:é|e)|"
+            r"transf(?:é|e)r(?:é|e)|nouvelle salle)\b",
+            text,
+            flags=re.IGNORECASE,
+        ):
+            continue
+        match = re.search(
+            r"\b(?:aura|auront|a)\b.*?\blieu\s+[àa]\s+(.+?)(?:\.|$)",
+            text,
+            flags=re.IGNORECASE,
+        )
+        if match:
+            return clean_text(match.group(1))
+    return ""
 
 
 def parse_card(card, today=None):
@@ -130,7 +167,7 @@ def parse_card(card, today=None):
 
     return ConcertEvent(
         date=event_date,
-        headliner=artists[0],
+        headliner=strip_relocation_notice(artists[0]),
         venue="Petit Bain",
         city="Paris",
         department="75",
@@ -174,6 +211,32 @@ def load_events():
 
         if event is None:
             continue
+
+        raw_title_element = card.select_one("#nomsoiree, .titevtprog .titartprog")
+        raw_title = (
+            clean_text(raw_title_element.get_text(" ", strip=True))
+            if raw_title_element
+            else ""
+        )
+        if RELOCATION_PREFIX_RE.match(raw_title):
+            detail_link = card.select_one("a[href*='/evenement/']")
+            detail_url = (
+                urljoin(EVENTS_URL, clean_text(detail_link.get("href")))
+                if detail_link
+                else ""
+            )
+            if detail_url:
+                detail_response = session.get(
+                    detail_url,
+                    headers=HEADERS,
+                    timeout=REQUEST_TIMEOUT,
+                )
+                detail_response.raise_for_status()
+                relocated_venue = find_relocated_venue(
+                    BeautifulSoup(detail_response.text, "html.parser")
+                )
+                if relocated_venue:
+                    event.venue = relocated_venue
 
         events_by_key.setdefault(event_key(event), event)
 

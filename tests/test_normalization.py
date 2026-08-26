@@ -1,4 +1,7 @@
 import unittest
+from unittest.mock import Mock, patch
+
+from bs4 import BeautifulSoup
 
 from concert_calendar.deduplication import (
     deduplicate_events,
@@ -16,6 +19,15 @@ from concert_calendar.venues import normalize_event_venue
 from concert_calendar.scrapers.olympia import parse_item as parse_olympia_item
 from concert_calendar.scrapers.seine_musicale import parse_detail as parse_seine_detail
 from concert_calendar.scrapers.veryshow import post_to_event as parse_veryshow_post
+from concert_calendar.scrapers.accor_arena import (
+    extract_explicit_support as extract_accor_support,
+    parse_item as parse_accor_item,
+)
+from concert_calendar.scrapers.aeg import parse_detail_page as parse_aeg_detail
+from concert_calendar.scrapers.petit_bain import (
+    find_relocated_venue,
+    strip_relocation_notice,
+)
 
 
 def make_event(headliner, venue="La Boule Noire"):
@@ -226,6 +238,83 @@ class BillingReconciliationTests(unittest.TestCase):
         self.assertEqual(
             ["AEG Presents France", "DICE"], sorted(result[0].source_names)
         )
+
+    def test_status_difference_does_not_split_same_event(self):
+        available = make_event("Same Artist")
+        sold_out = make_event("Same Artist")
+        sold_out.sold_out = True
+        sold_out.ticket_status = "sold_out"
+
+        result = deduplicate_events([available, sold_out])
+
+        self.assertEqual(1, len(result))
+        self.assertTrue(result[0].sold_out)
+        self.assertEqual("sold_out", result[0].ticket_status)
+
+    def test_reviewed_wolfgang_voigt_project_titles_merge(self):
+        plain = make_event("Wolfgang Voigt", "La Gaîté Lyrique")
+        project = make_event("WOLFGANG VOIGT presents GAS live", "La Gaîté Lyrique")
+        plain.date = project.date = "2026-09-23"
+
+        result = deduplicate_events([plain, project])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("WOLFGANG VOIGT presents GAS live", result[0].headliner)
+
+    def test_reviewed_augusta_full_band_titles_merge_and_keep_sold_out(self):
+        plain = make_event("Augusta", "Le Hasard Ludique")
+        full_band = make_event("Augusta (full band)", "Le Hasard Ludique")
+        plain.date = full_band.date = "2026-09-30"
+        full_band.sold_out = True
+        full_band.ticket_status = "sold_out"
+
+        result = deduplicate_events([plain, full_band])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("Augusta (full band)", result[0].headliner)
+        self.assertTrue(result[0].sold_out)
+        self.assertEqual("sold_out", result[0].ticket_status)
+
+    def test_additional_reviewed_descriptive_titles_merge(self):
+        cases = [
+            (
+                "2026-09-19", "Accor Arena", "The Pussycat Dolls",
+                "THE PUSSYCAT DOLLS - PCD FOREVER TOUR",
+            ),
+            (
+                "2026-10-28", "La Boule Noire", "Crenoka",
+                "CRENOKA (RELEASE PARTY)",
+            ),
+            (
+                "2026-11-02", "Accor Arena", "The World of Hans Zimmer",
+                "THE WORLD OF HANS ZIMMER - A NEW DIMENSION",
+            ),
+            (
+                "2027-03-18", "L'Olympia Bruno Coquatrix", "Chloé",
+                "CHLOÉ (Live)",
+            ),
+        ]
+        for event_date, venue, left_title, right_title in cases:
+            with self.subTest(title=left_title):
+                left = make_event(left_title, venue)
+                right = make_event(right_title, venue)
+                left.date = right.date = event_date
+                self.assertEqual(1, len(deduplicate_events([left, right])))
+
+    def test_reviewed_five_finger_bill_keeps_official_special_guests(self):
+        official = make_event("FIVE FINGER DEATH PUNCH", "Accor Arena")
+        promoter = make_event(
+            "Five Finger Death Punch et Lamb Of God", "Accor Arena"
+        )
+        official.date = promoter.date = "2027-02-10"
+        official.openers = ["Lamb of God", "Bleed From Within"]
+        official.authoritative_billing = True
+
+        result = deduplicate_events([official, promoter])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("FIVE FINGER DEATH PUNCH", result[0].headliner)
+        self.assertEqual(["Lamb of God", "Bleed From Within"], result[0].openers)
 
     def test_structured_bill_merges_full_bill_and_inherits_ticket(self):
         structured = make_event("Michael Cera Palin", "Supersonic")
@@ -490,6 +579,22 @@ class VenueNormalizationTests(unittest.TestCase):
                 event = normalize_event_venue(make_event("Artist", source))
                 self.assertEqual(expected, event.venue)
 
+    def test_reviewed_philharmonie_variants_canonicalize(self):
+        for venue in (
+            "Philarmonie de Paris",
+            "Philharmonie",
+            "Philharmonie de Paris",
+        ):
+            with self.subTest(venue=venue):
+                event = normalize_event_venue(make_event("Artist", venue))
+                self.assertEqual("Philharmonie de Paris", event.venue)
+
+    def test_festival_wrapper_canonicalizes_to_salle_gaveau(self):
+        event = normalize_event_venue(
+            make_event("Artist", "FESTIVAL CLASH (SALLE GAVEAU)")
+        )
+        self.assertEqual("Salle Gaveau", event.venue)
+
     def test_seine_musicale_rooms_share_canonical_public_venue(self):
         for venue in (
             "SEINE MUSICALE - GRANDE SEINE",
@@ -589,6 +694,10 @@ class ReviewedMoveTests(unittest.TestCase):
     def test_confirmed_moves_resolve_only_reviewed_date_artist_pairs(self):
         cases = [
             ("2026-10-06", "Father of Peace", "L'Alhambra", "La Maroquinerie"),
+            (
+                "2026-10-06", "Humanity's Last Breath", "Petit Bain",
+                "La Machine du Moulin Rouge",
+            ),
             ("2026-10-19", "My New Band Believe", "Point Éphémère", "La Maroquinerie"),
             ("2026-11-20", "ZEBRAHEAD", "La Maroquinerie", "L'Alhambra"),
             ("2026-12-10", "Blondshell", "La Gaîté Lyrique", "Élysée Montmartre"),
@@ -634,6 +743,11 @@ class EventScopeTests(unittest.TestCase):
 
     def test_generic_party_remains_excluded(self):
         self.assertFalse(is_supported_event(make_event("Friday Party")))
+
+    def test_named_party_live_tour_is_supported(self):
+        self.assertTrue(
+            is_supported_event(make_event("Niall Horan - Dinner Party Live On Tour"))
+        )
 
     def test_dj_release_party_remains_excluded(self):
         self.assertFalse(
@@ -1022,6 +1136,107 @@ Stéphane Chandelier • Batterie
             "https://www.lamaroquinerie.fr/fr/agenda/view/artist/",
             event.ticket_url,
         )
+
+
+class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
+    def test_aeg_json_ld_locality_recovers_cityless_montell_row(self):
+        html = """
+        <script type="application/ld+json">{
+          "@type":"Event", "startDate":"2026-11-15",
+          "location":{"name":"Casino de Paris","address":{"addressLocality":"Paris"}}
+        }</script>
+        <div class="event-details">
+          <p class="event-date">15 nov.</p>
+          <p class="event-venue">Casino de Paris</p>
+          <a href="https://tickets.example/montell">Réserver</a>
+        </div>
+        """
+        response = Mock(text=html)
+        response.raise_for_status = Mock()
+
+        with patch("concert_calendar.scrapers.aeg.requests.get", return_value=response):
+            events = parse_aeg_detail(
+                "https://www.aegpresents.fr/event/montell-fish/", "Montell Fish"
+            )
+
+        self.assertEqual(1, len(events))
+        self.assertEqual("2026-11-15", events[0].date)
+        self.assertEqual("Casino de Paris", events[0].venue)
+        self.assertEqual("Paris", events[0].city)
+
+    def test_accor_explicit_support_sentence_extracts_wet_leg(self):
+        self.assertEqual(
+            ["Wet Leg"],
+            extract_accor_support(
+                "<p><strong>Wet Leg</strong> en assurera la première partie.</p>",
+                "Tame Impala",
+            ),
+        )
+
+    def test_accor_explicit_special_guests_are_structured_support(self):
+        description = (
+            "<p>Five Finger Death Punch, accompagnés de Lamb of God et "
+            "Bleed From Within en invités spéciaux.</p>"
+        )
+        self.assertEqual(
+            ["Lamb of God", "Bleed From Within"],
+            extract_accor_support(description, "Five Finger Death Punch"),
+        )
+
+    def test_accor_tame_impala_sessions_both_receive_wet_leg(self):
+        item = {
+            "room": {"full_name": "Accor Arena"},
+            "spotify": "https://open.spotify.com/artist/example",
+            "sessions": [
+                {"date": "2027-06-12 19:45:00"},
+                {"date": "2027-06-13 19:45:00"},
+            ],
+            "translations": [{
+                "language": "fr", "title": "TAME IMPALA",
+                "category": "CONCERT", "sub_category": "POP ROCK FOLK",
+                "url_event": "https://tickets.example/tame-impala",
+                "description": (
+                    "<p><strong>Wet Leg</strong> en assurera la première partie.</p>"
+                ),
+            }],
+        }
+
+        events = parse_accor_item(item)
+
+        self.assertEqual(["2027-06-12", "2027-06-13"], [event.date for event in events])
+        self.assertTrue(all(event.openers == ["Wet Leg"] for event in events))
+        self.assertTrue(all(event.authoritative_billing for event in events))
+        self.assertFalse(any(event.headliner == "Wet Leg" for event in events))
+
+    def test_accor_sports_subcategory_is_not_treated_as_music(self):
+        item = {
+            "room": {"full_name": "Accor Arena"},
+            "sessions": [{"date": "2027-01-01 20:00:00"}],
+            "translations": [{
+                "language": "fr", "title": "UFC Fight Night",
+                "category": "SPORT", "sub_category": "MMA",
+                "description": "",
+            }],
+        }
+        self.assertEqual([], parse_accor_item(item))
+
+    def test_petit_bain_relocation_notice_has_structured_artist_and_venue(self):
+        self.assertEqual(
+            "HUMANITY’S LAST BREATH",
+            strip_relocation_notice("CHANGEMENT DE SALLE _ HUMANITY’S LAST BREATH"),
+        )
+        soup = BeautifulSoup(
+            """
+            <div id="compinfotar"><p>CHANGEMENT DE SALLE : le concert
+            initialement prévu à Petit Bain aura finalement lieu à
+            La Machine du Moulin Rouge.</p></div>
+            """,
+            "html.parser",
+        )
+        self.assertEqual("La Machine du Moulin Rouge", find_relocated_venue(soup))
+
+    def test_legitimate_title_with_move_word_is_unchanged(self):
+        self.assertEqual("The Move", strip_relocation_notice("The Move"))
 
 
 if __name__ == "__main__":

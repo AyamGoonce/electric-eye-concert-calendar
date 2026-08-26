@@ -27,6 +27,7 @@ ARTIST_ALIASES = {
     "la 808ème nuit": "la 808eme nuit",
     "la securite": "la sécurité",
     "lewis ofman – festivals": "lewis ofman",
+    "ms. lauryn hill": "lauryn hill",
     "noe preszow": "noé preszow",
     "kiwi jr.": "kiwi jr",
     "sebastien tellier": "sébastien tellier",
@@ -40,6 +41,43 @@ ARTIST_ALIASES = {
 # Reviewed event-level equivalences.  They intentionally do not generalize to
 # other artists, dates, venues, or editorial phrases.
 REVIEWED_EVENT_TITLES = {
+    ("2026-09-19", "accor arena", "the pussycat dolls"): "The Pussycat Dolls",
+    (
+        "2026-09-19", "accor arena",
+        "the pussycat dolls - pcd forever tour",
+    ): "The Pussycat Dolls",
+    ("2026-09-23", "la gaite lyrique", "wolfgang voigt"): (
+        "WOLFGANG VOIGT presents GAS live"
+    ),
+    (
+        "2026-09-23", "la gaite lyrique",
+        "wolfgang voigt presents gas live",
+    ): "WOLFGANG VOIGT presents GAS live",
+    ("2026-09-30", "le hasard ludique", "augusta"): "Augusta (full band)",
+    (
+        "2026-09-30", "le hasard ludique", "augusta (full band)",
+    ): "Augusta (full band)",
+    ("2026-10-28", "la boule noire", "crenoka"): "CRENOKA (RELEASE PARTY)",
+    (
+        "2026-10-28", "la boule noire", "crenoka (release party)",
+    ): "CRENOKA (RELEASE PARTY)",
+    (
+        "2026-11-02", "accor arena", "the world of hans zimmer",
+    ): "THE WORLD OF HANS ZIMMER - A NEW DIMENSION",
+    (
+        "2026-11-02", "accor arena",
+        "the world of hans zimmer - a new dimension",
+    ): "THE WORLD OF HANS ZIMMER - A NEW DIMENSION",
+    (
+        "2027-02-10", "accor arena", "five finger death punch et lamb of god",
+    ): "FIVE FINGER DEATH PUNCH",
+    (
+        "2027-02-10", "accor arena", "five finger death punch",
+    ): "FIVE FINGER DEATH PUNCH",
+    ("2027-03-18", "l olympia bruno coquatrix", "chloe"): "CHLOÉ (Live)",
+    (
+        "2027-03-18", "l olympia bruno coquatrix", "chloe (live)",
+    ): "CHLOÉ (Live)",
     ("2026-09-05", "l olympia bruno coquatrix", "ronnie wood"): (
         "Ronnie Wood and His Band featuring Imelda May"
     ),
@@ -62,6 +100,10 @@ REVIEWED_EVENT_TITLES = {
 # listings.  The key is deliberately date + artist + old/new canonical venue.
 REVIEWED_EVENT_MOVES = (
     ("2026-10-06", "father of peace", "L'Alhambra", "La Maroquinerie"),
+    (
+        "2026-10-06", "humanity's last breath",
+        "Petit Bain", "La Machine du Moulin Rouge",
+    ),
     ("2026-10-10", "paris jackson", "L'Alhambra", "La Bellevilloise"),
     ("2026-10-19", "my new band believe", "Point Éphémère", "La Maroquinerie"),
     ("2026-11-20", "zebrahead", "La Maroquinerie", "L'Alhambra"),

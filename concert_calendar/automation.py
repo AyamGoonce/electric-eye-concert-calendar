@@ -62,6 +62,20 @@ OPTIONAL_EVENT_KEYS = {
     "ee",
 }
 POINTER_PATTERN = re.compile(r"var manifest = Object\.freeze\((\{.*?\})\);")
+RAW_MARKUP_OR_URL_RE = re.compile(
+    r"</?(?:a|div|span|p|br|strong|em|script|style)\b[^>]*>|https?://|[\r\n]",
+    re.IGNORECASE,
+)
+RELOCATION_HEADLINER_RE = re.compile(
+    r"^(?:changement de (?:salle|lieu)|d(?:é|e)plac(?:é|e)|"
+    r"transf(?:é|e)r(?:é|e)|venue change|moved|relocated)\s*[_:|–-]",
+    re.IGNORECASE,
+)
+DESCRIPTIVE_VENUE_RE = re.compile(
+    r"(?:\||\ben premi(?:è|e)re partie de\b|\bspecial guests?\b|"
+    r"\bsupport\s*:)",
+    re.IGNORECASE,
+)
 
 
 class ProductionValidationError(RuntimeError):
@@ -120,6 +134,19 @@ def validate_events(events: list[dict]) -> None:
         ):
             raise ProductionValidationError(
                 f"Event {index} is missing headliner, venue, or city"
+            )
+        public_text = [event["h"], event["v"], event["c"], *event["o"]]
+        if any(RAW_MARKUP_OR_URL_RE.search(value) for value in public_text):
+            raise ProductionValidationError(
+                f"Event {index} contains markup, a URL, or a newline in a public field"
+            )
+        if RELOCATION_HEADLINER_RE.search(event["h"]):
+            raise ProductionValidationError(
+                f"Event {index} exposes a venue-change notice as its headliner"
+            )
+        if DESCRIPTIVE_VENUE_RE.search(event["v"]):
+            raise ProductionValidationError(
+                f"Event {index} contains descriptive billing text in its venue"
             )
         if not all(isinstance(event[key], list) for key in ("o", "x", "p")):
             raise ProductionValidationError(f"Event {index} has malformed lists")
