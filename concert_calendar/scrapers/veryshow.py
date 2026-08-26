@@ -175,6 +175,26 @@ def get_openers(post):
     return openers[:5] or None
 
 
+def parse_support_venue(value):
+    """Split VeryShow support copy from the actual venue name."""
+
+    value = clean_text(value)
+    match = re.fullmatch(
+        r"en première partie de\s+(.+?)\s*\|\s*(.+)",
+        value,
+        flags=re.IGNORECASE,
+    )
+
+    if not match:
+        return None
+
+    headliner, venue = (clean_text(part) for part in match.groups())
+    if not headliner or not venue:
+        return None
+
+    return headliner, venue
+
+
 def post_to_event(post):
     """
     Convert one VeryShow concert record into ConcertEvent.
@@ -184,6 +204,16 @@ def post_to_event(post):
     event_date = parse_date(post.get("date"))
     city = parse_city(post.get("city"))
     venue = clean_text(post.get("concert_hall"))
+    openers = get_openers(post)
+    authoritative_billing = False
+    support_venue = parse_support_venue(venue)
+
+    if support_venue:
+        parent_headliner, venue = support_venue
+        openers = [headliner, *(openers or [])]
+        openers = list(dict.fromkeys(openers))
+        headliner = parent_headliner
+        authoritative_billing = True
     ticket_url = clean_text(post.get("link")) or None
 
     if ticket_url and not re.match(
@@ -211,11 +241,12 @@ def post_to_event(post):
         venue=venue,
         city=city,
         department="",
-        openers=get_openers(post),
+        openers=openers,
         promoters=["VeryShow"],
         genre=None,
         facebook_event_url=None,
         ticket_url=ticket_url,
+        authoritative_billing=authoritative_billing,
     )
 
 

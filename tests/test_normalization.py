@@ -14,6 +14,8 @@ from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.sources import is_supported_event
 from concert_calendar.venues import normalize_event_venue
 from concert_calendar.scrapers.olympia import parse_item as parse_olympia_item
+from concert_calendar.scrapers.seine_musicale import parse_detail as parse_seine_detail
+from concert_calendar.scrapers.veryshow import post_to_event as parse_veryshow_post
 
 
 def make_event(headliner, venue="La Boule Noire"):
@@ -461,6 +463,11 @@ class VenueNormalizationTests(unittest.TestCase):
             "NEW MORNING": "New Morning",
             "Le Nouveau Casino": "Nouveau Casino",
             "POPUP!": "Le Pop-Up du Label",
+            "ESPACE CARPEAUX": "Espace Carpeaux",
+            "LA SCALA PARIS": "La Scala Paris",
+            "Le Zénith": "Le Zénith Paris – La Villette",
+            "THÉÂTRE ALEXANDRE DUMAS": "Théâtre Alexandre Dumas",
+            "Théâtre de L’Européen": "L'Européen",
         }
 
         for source, expected in aliases.items():
@@ -468,12 +475,65 @@ class VenueNormalizationTests(unittest.TestCase):
                 event = normalize_event_venue(make_event("Artist", source))
                 self.assertEqual(expected, event.venue)
 
-    def test_distinct_seine_musicale_room_remains_named(self):
-        event = normalize_event_venue(
-            make_event("Artist", "SEINE MUSICALE - GRANDE SEINE")
-        )
+    def test_seine_musicale_rooms_share_canonical_public_venue(self):
+        for venue in (
+            "SEINE MUSICALE - GRANDE SEINE",
+            "La Seine Musicale – Grande Seine (Boulogne-Billancourt)",
+            "Grande Seine",
+            "Auditorium Patrick Devedjian",
+            "Petite Seine",
+        ):
+            with self.subTest(venue=venue):
+                event = normalize_event_venue(make_event("Artist", venue))
+                self.assertEqual("La Seine Musicale", event.venue)
+                self.assertEqual("Boulogne-Billancourt", event.city)
+                self.assertEqual("92", event.department)
 
-        self.assertEqual("La Seine Musicale – Grande Seine", event.venue)
+    def test_seine_room_normalization_does_not_touch_unrelated_venue(self):
+        event = normalize_event_venue(make_event("Artist", "Grande Salle"))
+        self.assertEqual("Grande Salle", event.venue)
+
+    def test_veryshow_support_copy_is_not_used_as_a_venue(self):
+        event = parse_veryshow_post({
+            "artists_titles": ["JINJER"],
+            "date": "09/10/2026",
+            "city": "PARIS (75)",
+            "concert_hall": "En première partie de SPIRITBOX | La Seine Musicale",
+            "link": "https://example.test/tickets",
+        })
+        self.assertEqual("SPIRITBOX", event.headliner)
+        self.assertEqual(["JINJER"], event.openers)
+        self.assertEqual("La Seine Musicale", event.venue)
+        self.assertTrue(event.authoritative_billing)
+
+    def test_seine_detail_parses_bireli_and_spiritbox_billing(self):
+        bireli = parse_seine_detail(
+            '<script type="application/ld+json">'
+            '{"@type":"Event","name":"Biréli Lagrène",'
+            '"startDate":"2026-11-04T20:30",'
+            '"offers":{"url":"https://tickets.test/bireli"}}'
+            '</script>',
+            "https://example.test/bireli",
+            {"Jazz, Musiques du monde"},
+        )
+        self.assertEqual(1, len(bireli))
+        self.assertEqual("2026-11-04", bireli[0].date)
+        self.assertEqual("20:30", bireli[0].start_time)
+        self.assertEqual("La Seine Musicale", bireli[0].venue)
+        self.assertEqual("Boulogne-Billancourt", bireli[0].city)
+        self.assertEqual("92", bireli[0].department)
+
+        spiritbox = parse_seine_detail(
+            '<script type="application/ld+json">'
+            '{"@type":"Event","name":"Spiritbox",'
+            '"startDate":"2026-10-09T19:00"}'
+            '</script><p>avec <strong>Jinjer</strong> et '
+            '<strong>Dying Wish</strong> en invités spéciaux.</p>',
+            "https://example.test/spiritbox",
+            {"Hard Rock, Metal"},
+        )
+        self.assertEqual(["Jinjer", "Dying Wish"], spiritbox[0].openers)
+        self.assertTrue(spiritbox[0].authoritative_billing)
 
     def test_clear_venue_capitalization_variants_share_canonical_labels(self):
         groups = {

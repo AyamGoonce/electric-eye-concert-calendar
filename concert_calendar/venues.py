@@ -26,6 +26,7 @@ VENUE_ALIASES = {
     "emb": "EMB Sannois",
     "emb sannois": "EMB Sannois",
     "elysee montmartre": "Élysée Montmartre",
+    "espace carpeaux": "Espace Carpeaux",
     "l elysee montmartre": "Élysée Montmartre",
     "fgo barbara": "FGO-Barbara",
     "fete de l huma": "Fête de l'Humanité",
@@ -59,8 +60,16 @@ VENUE_ALIASES = {
     "studio l accord parfait": "L’Accord Parfait",
     "la place": "La Place",
     "la seine musicale": "La Seine Musicale",
-    "seine musicale grande seine": "La Seine Musicale – Grande Seine",
+    "la seine musicale grande seine": "La Seine Musicale",
+    "la seine musicale grande seine boulogne billancourt": "La Seine Musicale",
+    "seine musicale grande seine": "La Seine Musicale",
     "seine musicale": "La Seine Musicale",
+    "grande seine": "La Seine Musicale",
+    "auditorium patrick devedjian": "La Seine Musicale",
+    "petite seine": "La Seine Musicale",
+    "la petite seine": "La Seine Musicale",
+    "la scala": "La Scala Paris",
+    "la scala paris": "La Scala Paris",
     "le grand rex": "Le Grand Rex",
     "le poc": "Le POC",
     "le cafe de la danse": "Café de la Danse",
@@ -73,6 +82,7 @@ VENUE_ALIASES = {
     "pop up": "Le Pop-Up du Label",
     "popup": "Le Pop-Up du Label",
     "le trianon": "Le Trianon",
+    "le zenith": "Le Zénith Paris – La Villette",
     "trianon": "Le Trianon",
     "les etoiles": "Les Étoiles",
     "etoiles": "Les Étoiles",
@@ -96,10 +106,13 @@ VENUE_ALIASES = {
         "Théâtre du Casino Barrière d'Enghien-les-Bains"
     ),
     "theatre de rungis": "Théâtre de Rungis",
+    "theatre alexandre dumas": "Théâtre Alexandre Dumas",
+    "theatre de l europeen": "L'Européen",
     "trabendo": "Le Trabendo",
     "le trabendo": "Le Trabendo",
     "zenith paris la villette": "Le Zénith Paris – La Villette",
     "zenith de paris": "Le Zénith Paris – La Villette",
+    "le zenith paris la villette": "Le Zénith Paris – La Villette",
 }
 
 
@@ -107,6 +120,7 @@ VENUE_ALIASES = {
 # missing source geography; they are not guesses based on the venue spelling.
 VENUE_GEOGRAPHY = {
     "La Marbrerie": ("Montreuil", "93"),
+    "La Seine Musicale": ("Boulogne-Billancourt", "92"),
     "L’Accord Parfait": ("Paris", "75"),
 }
 
