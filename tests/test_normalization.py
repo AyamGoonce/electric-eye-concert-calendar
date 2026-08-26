@@ -212,6 +212,21 @@ class BillingReconciliationTests(unittest.TestCase):
         self.assertEqual(2, len(result))
         self.assertNotIn("feat.", " ".join(event.headliner for event in result))
 
+    def test_reviewed_paris_jackson_move_merges_stale_dice_venue(self):
+        stale = make_event("Paris Jackson", "L'Alhambra")
+        official = make_event("Paris Jackson", "La Bellevilloise")
+        stale.date = official.date = "2026-10-10"
+        stale.source_names = ["DICE"]
+        official.source_names = ["AEG Presents France"]
+
+        result = deduplicate_events([stale, official])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("La Bellevilloise", result[0].venue)
+        self.assertEqual(
+            ["AEG Presents France", "DICE"], sorted(result[0].source_names)
+        )
+
     def test_structured_bill_merges_full_bill_and_inherits_ticket(self):
         structured = make_event("Michael Cera Palin", "Supersonic")
         structured.date = "2026-08-25"
