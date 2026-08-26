@@ -246,6 +246,7 @@ REVIEWED_MAPPING_ALIASES = {
     normalize_artist_component("Moon Walker | Moon Walker's Wasteland Country Tour"): "moon walker",
     normalize_artist_component("Moon Walker en concert (côté Records)"): "moon walker",
     normalize_artist_component("KYTES en concert (côté Records)"): "kytes",
+    normalize_artist_component("Keziah Jones Symphonique"): "keziah jones",
     normalize_artist_component("THE BROOKS au Café de la Danse"): "the brooks",
     normalize_artist_component("TIANA MAJOR9 - November Scorpio Tour"): "tiana major9",
     normalize_artist_component("TIGERCUB – 16H"): "tigercub",
