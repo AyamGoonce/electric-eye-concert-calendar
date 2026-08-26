@@ -189,6 +189,9 @@ class GenreEnrichmentTests(unittest.TestCase):
     def test_safe_and_ambiguous_raw_examples(self):
         self.assertEqual("R&B / Soul / Funk", map_raw_genre("#neosoul"))
         self.assertEqual("Metal / Hard Rock", map_raw_genre("metalcore / newcore / metal progressif"))
+        self.assertEqual("Pop", map_raw_genre("Other, Pop"))
+        self.assertEqual("Pop", map_raw_genre("Pop, Variété Internationale"))
+        self.assertEqual("Pop", map_raw_genre("Variété Internationale"))
         self.assertIsNone(map_raw_genre("Pop, Rock"))
 
 

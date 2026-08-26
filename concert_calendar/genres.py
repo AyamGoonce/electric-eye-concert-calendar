@@ -54,7 +54,9 @@ EXACT_RAW_MAPPINGS = {
     "musiques electroniques": "Electronic",
     "musiques traditionnelles": "World / Latin",
     "one man show": "Comedy",
+    "other, pop": "Pop",
     "pop": "Pop",
+    "pop, variete internationale": "Pop",
     "punk": "Rock / Indie / Punk",
     "#indie #rock": "Rock / Indie / Punk",
     "#postpunk #rock #newwave": "Rock / Indie / Punk",
@@ -83,6 +85,7 @@ EXACT_RAW_MAPPINGS = {
     "concert - rock garage fuzz psyche": "Rock / Indie / Punk",
     "concert - rock indie": "Rock / Indie / Punk",
     "concert / grunge, indie rock": "Rock / Indie / Punk",
+    "concert / the voice, century pop": "Pop",
     "concert / indie rock, garage, shoegaze": "Rock / Indie / Punk",
     "concert post-punk delure": "Rock / Indie / Punk",
     "concert grunge / post-punk / indie rock": "Rock / Indie / Punk",
@@ -99,6 +102,7 @@ EXACT_RAW_MAPPINGS = {
     "musique du monde, latino": "World / Latin",
     "variete / chanson / pop francaise": "French chanson",
     "variete francaise": "French chanson",
+    "variete internationale": "Pop",
     "#altpop #electropop #pop": "Pop",
 }
 
@@ -230,6 +234,8 @@ REVIEWED_MAPPING_ALIASES = {
     normalize_artist_component("Elmiene | Sounds For Someone Tour"): "elmiene",
     normalize_artist_component("EsDeeKid : Paris Headline"): "esdeekid",
     normalize_artist_component("Festival de Marne : Alela Diane"): "alela diane",
+    normalize_artist_component("Festival de Marne : Charlie Winston"): "charlie winston",
+    normalize_artist_component("Festival de Marne : Sinclair"): "sinclair",
     normalize_artist_component("Festival de Marne : Yael Naim"): "yael naim",
     normalize_artist_component("Good Kid - Can We Hang Out? Tour"): "good kid",
     normalize_artist_component('GUADAL TEJAZ Release Party "Megalostrata"'): "guadal tejaz",
@@ -238,6 +244,12 @@ REVIEWED_MAPPING_ALIASES = {
     normalize_artist_component("Mark Guiliana - 1er set"): "mark guiliana",
     normalize_artist_component("Mark Guiliana - 2e set"): "mark guiliana",
     normalize_artist_component("Moon Walker | Moon Walker's Wasteland Country Tour"): "moon walker",
+    normalize_artist_component("Moon Walker en concert (côté Records)"): "moon walker",
+    normalize_artist_component("KYTES en concert (côté Records)"): "kytes",
+    normalize_artist_component("THE BROOKS au Café de la Danse"): "the brooks",
+    normalize_artist_component("TIANA MAJOR9 - November Scorpio Tour"): "tiana major9",
+    normalize_artist_component("TIGERCUB – 16H"): "tigercub",
+    normalize_artist_component("TIGERCUB – 20H"): "tigercub",
     normalize_artist_component("WOLFGANG VOIGT presents GAS live"): "wolfgang voigt",
 }
 
