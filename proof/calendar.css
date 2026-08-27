@@ -373,8 +373,26 @@
   overflow-wrap: anywhere;
 }
 
-.ee-calendar-page #ee-concert-calendar .ee-calendar-metadata span {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-genre {
   display: block;
+  min-height: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  font-weight: inherit;
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-genre:hover {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ee-calendar-accent);
+  text-decoration-color: currentColor;
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-ticket {
