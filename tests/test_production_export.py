@@ -311,6 +311,30 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("publicGenres.map", renderer)
         self.assertNotIn("genreValues.forEach", renderer)
 
+    def test_event_genre_label_uses_existing_filter_state(self):
+        renderer = read_renderer()
+
+        self.assertIn('genreButton(e.x[0])', renderer)
+        self.assertIn('c.value===genre', renderer)
+        self.assertIn('check.checked=true', renderer)
+        self.assertIn('updateGenreSummary();updateURL(true);render()', renderer)
+
+    def test_event_genre_label_is_safe_semantic_button(self):
+        renderer = read_renderer()
+
+        self.assertIn('button(document.createDocumentFragment(),"ee-calendar-genre",genre)', renderer)
+        self.assertIn('setAttribute("aria-label","Filter by "+genre)', renderer)
+        self.assertIn('event.preventDefault();event.stopPropagation()', renderer)
+        self.assertIn('event.key==="Enter"||event.key===" "', renderer)
+        self.assertIn('activateGenre(genre,event)', renderer)
+        self.assertIn('e.type = "button"', renderer)
+
+    def test_blank_event_has_no_unsorted_badge(self):
+        renderer = read_renderer()
+
+        self.assertIn('if(e.x.length)metadata.append(genreButton(e.x[0]))', renderer)
+        self.assertNotIn('"Unsorted"', renderer)
+
 
 class IntegrationAssetTests(unittest.TestCase):
     def setUp(self):
