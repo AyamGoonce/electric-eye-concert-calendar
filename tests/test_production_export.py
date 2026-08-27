@@ -335,6 +335,37 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn('if(e.x.length)metadata.append(genreButton(e.x[0]))', renderer)
         self.assertNotIn('"Unsorted"', renderer)
 
+    def test_collapsible_chronology_and_photographic_month_contract(self):
+        renderer = read_renderer()
+        styles = read_styles()
+
+        for required in (
+            'className="ee-calendar-year-section"',
+            'className="ee-calendar-month-section"',
+            '"ee-calendar-year-toggle"',
+            '"ee-calendar-month-toggle"',
+            'setAttribute("aria-expanded",String(isExpanded))',
+            'controls.expandAll.addEventListener("click"',
+            'controls.collapseAll.addEventListener("click"',
+            'if(active){grouped.forEach',
+            'expandedYears.add(linked.d.slice(0,4))',
+            'expandedMonths.add(linked.d.slice(0,7))',
+            'var chosen=monthImages[(month-1)*2+(year+month)%2]',
+            'ratio<1.9?"standard":ratio<2.4?"wide":"panoramic"',
+            'image.alt=""',
+            'image.loading=firstImage?"eager":"lazy"',
+            'image.srcset=',
+            'list.append(separator(e.d))',
+            'genreButton(e.x[0])',
+            'ticket.href=e.t',
+        ):
+            self.assertIn(required, renderer)
+        self.assertEqual(24, renderer.count("blogger.googleusercontent.com/img/b/"))
+        self.assertIn('object-fit: cover', styles)
+        self.assertIn('object-position: 50% 50%', styles)
+        self.assertIn('.ee-calendar-month-image--panoramic', styles)
+        self.assertNotIn('position: sticky;\n  top:', styles.split('.ee-calendar-month-toggle', 1)[1])
+
 
 class IntegrationAssetTests(unittest.TestCase):
     def setUp(self):
