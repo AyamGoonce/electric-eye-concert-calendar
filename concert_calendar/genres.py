@@ -252,6 +252,14 @@ REVIEWED_MAPPING_ALIASES = {
     normalize_artist_component("TIGERCUB – 16H"): "tigercub",
     normalize_artist_component("TIGERCUB – 20H"): "tigercub",
     normalize_artist_component("WOLFGANG VOIGT presents GAS live"): "wolfgang voigt",
+    normalize_artist_component("Gracie Abrams: The Look at My Life Tour"): "gracie abrams",
+    normalize_artist_component("Kelela - new avatar live"): "kelela",
+    normalize_artist_component("Niall Horan - Dinner Party Live On Tour"): "niall horan",
+    normalize_artist_component("SHEER MAG (US)"): "sheer mag",
+    normalize_artist_component("THE SURFRAJETTES + GUEST"): "the surfrajettes",
+    normalize_artist_component("2026 LE SSERAFIM TOUR ‘PUREFLOW’ IN PARIS"): "le sserafim",
+    normalize_artist_component("DEXYS MIDNIGHT RUNNERS"): "dexys",
+    normalize_artist_component("Renan Luce - Joue Repenti"): "renan luce",
 }
 
 

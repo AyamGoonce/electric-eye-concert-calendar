@@ -5208,6 +5208,708 @@
       "evidence_type": "wikidata_structured_genre",
       "review_date": "2026-08-26",
       "notes": "Exact artist identity; Wikidata genre: jazz."
+    },
+    {
+      "artist": "a6el – Tournée d’Automne",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://shotgun.live/en/events/romsii-a-6-el",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "ALL(H)OURS 1st World Tour <RISE UP> in Paris",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/k62pd9-allhours-1st-world-tour-rise-up-in-paris-10th-nov-cabaret-sauvage-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "AMPERS&ONE",
+      "genre": "Pop",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/354c2a04-7379-49cb-9553-97be5c82ca77",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Pop': 1}."
+    },
+    {
+      "artist": "ARTSON en live acoustique",
+      "genre": "French chanson",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/dk26gg-artson-en-live-acoustique-24th-feb-thtre-de-leuropen-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Asaf Avidan",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/5b9890b9-a2e8-4768-ad70-9f28bb81fc00",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Folk / Country': 2, 'Pop': 1, 'Rock / Indie / Punk': 5}."
+    },
+    {
+      "artist": "Aterciopelados: La Pipa de la Paz Tour",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/6d2rvb-aterciopelados-la-pipa-de-la-paz-tour-25th-sep-la-marbrerie-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Baozi",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/g5b5a6-baozi-ilan-sellouk-olne-11th-sep-popup-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Ben Harper",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/1582a5b8-538e-45e7-9ae4-4099439a0e79",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Folk / Country': 1, 'Pop': 1, 'R&B / Soul / Funk': 1, 'Rock / Indie / Punk': 3}."
+    },
+    {
+      "artist": "Billie Bird",
+      "genre": "Folk / Country",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/40d08a6d-c277-47ae-921e-0e0a2a395860",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Folk / Country': 1}."
+    },
+    {
+      "artist": "Billylildove - La Java - Paris",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/avxlp2-billylildove-la-java-paris-6th-nov-la-java-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Bootleg Beatles",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://bit.ly/TheBootlegBeatlesParis-AEG26",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact Beatles tribute-band identity and repertoire."
+    },
+    {
+      "artist": "Camille",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://www.olympiahall.com/agenda/camille/",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label explicitly includes French variété."
+    },
+    {
+      "artist": "Catch Your Breath",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://www.ticketmaster.fr/fr/liste/catch-your-breath-billet/idlist/6173/idtier/4827637",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label explicitly includes Hard rock / Metal."
+    },
+    {
+      "artist": "Celine Dion",
+      "genre": "Pop",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/847e8a0c-cc20-4213-9e16-975515c2a926",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'French chanson': 4, 'Pop': 11, 'R&B / Soul / Funk': 2, 'Rock / Indie / Punk': 3}."
+    },
+    {
+      "artist": "Chloé Antoniotti",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://file7.com/fr/programme/programme/24-10-2026-15h00-cafe-concert-chloe-antoniotti.html",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Christophe Maé",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/christophe-mae-billet/idmanif/638094/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Source label says French chanson; official artist catalog and reputable biography corroborate French chanson/pop."
+    },
+    {
+      "artist": "CHRISTOPHE WILLEM",
+      "genre": "Pop",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/3cb275d9-6e5b-4da4-8805-98fe758eba3f",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Pop': 3}."
+    },
+    {
+      "artist": "COEUR DE PIRATE",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://dice.fm/event/6960de7f46f3270001b025d0",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact francophone singer-songwriter identity."
+    },
+    {
+      "artist": "Cosey Mueller, en concert à Paris",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/k6y9r9-cosey-mueller-en-concert-paris-26th-sep-les-caves-saint-sabin-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "daoud",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/bb2ygk-daoud-29th-apr-lavant-seine-thtre-de-colombes-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Denuit",
+      "genre": "Electronic",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/2aacdbd3-e8ae-49b4-be16-1877cf672d6c",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Electronic': 2, 'Pop': 1}."
+    },
+    {
+      "artist": "DEVORE (RELEASE PARTY)",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/k65wxl-devore-release-party-george-idyll-twice-29th-sep-le-chinois-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Dewey",
+      "genre": "Folk / Country",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/mxgvvk-dewey-agris-past-life-romeo-18th-sep-popup-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Diane",
+      "genre": "French chanson",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/oe7pnr-diane-10th-dec-les-trois-baudets-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "DISKAY",
+      "genre": "Electronic",
+      "evidence_source": "MusicBrainz artist tags",
+      "evidence_url": "https://musicbrainz.org/artist/1bce74a2-ce00-489f-8775-c30c7736128f",
+      "evidence_type": "weighted_exact_artist_tag_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; weighted tags: {'Electronic': 2}."
+    },
+    {
+      "artist": "distraction4ever",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/partner/tickets/event/53pael-distraction4ever-sad-madona-27th-aug-point-ephmre-paris-tickets?dice_id=9768123&dice_channel=web&dice_tags=organic&dice_campaign=DICE&dice_feature=mio_marketing&_branch_match_id=1621536404433931584&utm_source=web&utm_campaign=DICE&utm_medium=mio_marketing&_branch_referrer=H4sIAAAAAAAAA8soKSkottLXz8nMy9ZLyUxO1UvL1U%2BzTDMxNExLSjS1tLSvK0pNSy0qysxLj08qyi8vTi2yDU9N8s4sAQDDrVfwOwAAAA%3D%3D",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Divine Shade",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/l8k98w-divine-shade-kloahk-13th-nov-supersonic-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Dogpark",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://www.aegpresents.fr/event/dogpark/",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "DOWNTOWN BOYS (US) + Guests",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/avx6yv-downtown-boys-us-guests-14th-dec-le-chinois-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Dutch Criminal Record",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/7dw8xb-dutch-criminal-record-hotel-mira-17th-oct-supersonic-records-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Eivør | 1ère Partie : Rabbitology",
+      "genre": "Folk / Country",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/pydrok-eivr-1re-partie-rabbitology-6th-mar-lolympia-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "ELOÏZ",
+      "genre": "French chanson",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/elo%C3%AFz/1652296966?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Enhypen",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://www.aegpresents.fr/event/enhypen/",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "ENOLA COX",
+      "genre": "Pop",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/enola-cox/1700843384?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Erotic Secrets of Pompeii",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://file7.com/fr/programme/programme/27-11-2026-20h00-soirees-fan-club-erotic-secrets-of-pompeii-lila-ehja.html",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Errances Nocturnes X Paris Electronic Week",
+      "genre": "Electronic",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://petitbain.org/evenement/errances-nocturnes-2/",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "EXIT MUSIK FOR A NIGHT #7 : IT IT ANITA",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/eo65xd-exit-musik-for-a-night-7-it-it-anita-arnaud-fournier-2nd-dec-le-chinois-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Fabe Beaurel Bambi et Elikia",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/mxgb7w-fabe-beaurel-bambi-et-elikia-jowee-omicil-4th-sep-la-dynamo-pantin-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Facesoul",
+      "genre": "R&B / Soul / Funk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://www.lehasardludique.paris/concert/2026-06-30/facesoul#reservation",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Festival de Marne : Coline Rio",
+      "genre": "French chanson",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/53lwol-festival-de-marne-coline-rio-marco-ferreira-9th-oct-espace-culturel-dispan-de-floran-lha-les-roses-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Festival de Marne : Sam Sauvage",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/yoa7kv-festival-de-marne-sam-sauvage-alice-on-the-roof-16th-oct-thtre-de-rungis-rungis-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Festival de Marne : ten56. / Revnoir / Aurore",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/ww675v-festival-de-marne-ten56-revnoir-aurore-16th-oct-salle-jacques-brel-fontenay-sous-bois-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Feu! Chatterton",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/feu-chatterton-billet/idmanif/623861/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed established French rock identity; current source label is POP ROCK FOLK."
+    },
+    {
+      "artist": "Finojet",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/dkmrqo-finojet-tom-river-9th-oct-supersonic-records-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "FIVE FINGER DEATH PUNCH",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/five-finger-death-punch-billet/idmanif/658183/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label is HARD METAL."
+    },
+    {
+      "artist": "FLEUR ET BLEUE",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://laboule-noire.fr/fleur-et-bleue/",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Floe, Bleuæ, Marquis & Opaline : POP & POÉSIE",
+      "genre": "Pop",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/7dgdwp-floe-bleu-marquis-opaline-pop-posie-4th-sep-la-java-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "FLORE BENGUIGUI & THE SENSIBLE NOTES",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/bb2aeo-flore-benguigui-the-sensible-notes-5th-dec-emb-sannois-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Fragile",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://petitbain.org/evenement/fragile/",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "Francesca Tandoi",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://www.newmorning.com/20270209-7791-francesca-tandoi.html",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "FUN RADIO IBIZA EXPERIENCE",
+      "genre": "Electronic",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/fun-radio-ibiza-experience-billet/idmanif/655995/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label is MUSIQUE ELECTRONIQUE."
+    },
+    {
+      "artist": "Ginton",
+      "genre": "Electronic",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://www.newmorning.com/20261125-7762-ginton.html",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "GONZAÏ NIGHT : ADULT DVD + GUEST",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Official/current event description",
+      "evidence_url": "https://dice.fm/event/xe3mrk-gonza-night-adult-dvd-guest-6th-nov-le-chinois-paris-tickets",
+      "evidence_type": "authoritative_event_genre_description",
+      "review_date": "2026-08-27",
+      "notes": "Exact current event identity; description explicitly names the reviewed genre/style."
+    },
+    {
+      "artist": "green star",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/green-star/1750147588?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Hatsune Miku",
+      "genre": "Pop",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/hatsune-miku-billet/idmanif/651074/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact virtual pop singer/project identity."
+    },
+    {
+      "artist": "HAYDEN THORPE",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/hayden-thorpe/321631765?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "HOSHI",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/hoshi-billet/idmanif/642926/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact French chanson/pop artist identity."
+    },
+    {
+      "artist": "Jessie Ware",
+      "genre": "R&B / Soul / Funk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://bit.ly/JessieWare-AEG26",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Exact MusicBrainz identity has dominant soul/R&B tag evidence."
+    },
+    {
+      "artist": "John Scofield’s “Combo 75”",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.laseinemusicale.com/fr/product/7546/auditorium_patrick_devedjian/john_scofield_s",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label explicitly includes Jazz."
+    },
+    {
+      "artist": "LA COLONIE DE VACANCES",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/la-colonie-de-vacances/1591281416?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Leïla Duclos",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/le%C3%AFla-duclos/1618972245?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "LENAÏG",
+      "genre": "French chanson",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/lena%C3%AFg/1758705406?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "LYNX IRL",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/lynx-irl/1870321336?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Montell Fish",
+      "genre": "R&B / Soul / Funk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://bit.ly/MontellFish-AEG26",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Exact MusicBrainz identity has alternative R&B tag evidence."
+    },
+    {
+      "artist": "Nina Winder-Lind",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/nina-winder-lind/1674741138?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Novulent",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/novulent/1617476529?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Omah Lay",
+      "genre": "World / Latin",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://dice.fm/event/69f1c244128c470001332235",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact Nigerian Afrobeats artist identity."
+    },
+    {
+      "artist": "PASION DE BUENA VISTA",
+      "genre": "World / Latin",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://theatres-yerres.fr/fr/pasion-de-buena-vista.html?cmp_id=77&news_id=1539&vID=86",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official venue description explicitly identifies Cuban music and dance."
+    },
+    {
+      "artist": "Porgy and Bess",
+      "genre": "Jazz / Blues",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.laseinemusicale.com/fr/product/7077/auditorium_patrick_devedjian/porgy_and_bess_de_george_gershwi",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current production source explicitly labels the event Jazz / world; the Gershwin work is presented in jazz context."
+    },
+    {
+      "artist": "Rush",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://bit.ly/Rush-AEG27",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact progressive-rock band identity."
+    },
+    {
+      "artist": "Saxon",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://mmfestival.mapado.com/event/672126-mennecy-metal-fest",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current source explicitly labels Hard / Metal; exact established heavy-metal identity."
+    },
+    {
+      "artist": "Shaking Hand",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/shaking-hand/1812887622?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Shallowater",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Apple Music and Deezer",
+      "evidence_url": "https://music.apple.com/fr/artist/shallowater/1621886877?uo=4",
+      "evidence_type": "exact_artist_catalog_consensus",
+      "review_date": "2026-08-27",
+      "notes": "Exact artist identity; Apple catalog genre agrees with the exact Deezer artist catalog bucket."
+    },
+    {
+      "artist": "Superbus",
+      "genre": "Rock / Indie / Punk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/superbus-billet/idmanif/638044/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact French pop-rock band identity."
+    },
+    {
+      "artist": "TAYC - JOYA TOUR",
+      "genre": "R&B / Soul / Funk",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/tayc-billet/idmanif/659406/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label is RNB SOUL FUNK DISCO."
+    },
+    {
+      "artist": "TIF",
+      "genre": "Hip-hop / Rap",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/tif-billet/idmanif/655893/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label is RAP HIP HOP."
+    },
+    {
+      "artist": "Vanessa Paradis",
+      "genre": "French chanson",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://billetterie.accorarena.com/fr/manifestation/vanessa-paradis-billet/idmanif/637029/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Current official source label is French variété/chanson."
+    },
+    {
+      "artist": "XG",
+      "genre": "Pop",
+      "evidence_source": "Reviewed current source and authoritative catalog evidence",
+      "evidence_url": "https://bit.ly/XG-AEG26",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed exact Japanese pop-group identity."
     }
   ],
   "overrides": [

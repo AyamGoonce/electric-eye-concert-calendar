@@ -86,10 +86,16 @@ class GenreEnrichmentTests(unittest.TestCase):
     def test_known_cross_bucket_identities_remain_blank(self):
         items = [event(headliner=name) for name in (
             "Gildaa", "Alma Rechtman", "Saint Levant", "FFF",
-            "Asaf Avidan", "Ben Harper",
         )]
         enrich_event_genres(items)
         self.assertTrue(all(item.genre_public is None for item in items))
+
+    def test_reviewed_dominant_rock_identities_are_classified(self):
+        items = [event(headliner=name) for name in ("Asaf Avidan", "Ben Harper")]
+        enrich_event_genres(items)
+        self.assertTrue(
+            all(item.genre_public == "Rock / Indie / Punk" for item in items)
+        )
 
     def test_ambiguous_raw_genre_and_conflict_remain_blank(self):
         ambiguous = event(headliner="Ambiguous", genre="Pop, Rock", genre_evidence=[{"raw": "Pop, Rock", "source": "Official"}])
