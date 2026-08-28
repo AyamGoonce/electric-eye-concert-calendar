@@ -145,6 +145,11 @@ def map_raw_genre(value: str | None) -> str | None:
         return public[normalized]
     if normalized in EXACT_RAW_MAPPINGS:
         return EXACT_RAW_MAPPINGS[normalized]
+    # Official venue taxonomies frequently qualify jazz by style or region
+    # (for example "Jazz actuel" or "Jazz brésil"). The explicit jazz label
+    # is sufficient for the broad public Jazz / Blues presentation bucket.
+    if not any(separator in normalized for separator in ("/", ",")) and re.search(r"\bjazz\b", normalized):
+        return "Jazz / Blues"
     matches = {
         genre for genre, tokens in SAFE_TOKEN_RULES
         if any(token in normalized for token in tokens)

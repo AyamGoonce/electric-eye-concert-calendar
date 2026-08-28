@@ -28,6 +28,7 @@ from concert_calendar.event_state import (
     reconcile_state,
     write_state,
 )
+from concert_calendar.content_index import build_index, enrich_events, fetch_entries, write_assets
 from concert_calendar.sources import load_events_with_report
 
 
@@ -44,6 +45,8 @@ CORE_SOURCES = {
     "Radical Production",
     "Rock en Seine",
     "Supersonic",
+    "Sunset/Sunside",
+    "Le Trianon",
     "Vedettes",
     "VeryShow",
 }
@@ -275,6 +278,10 @@ def build(args) -> int:
     validate_source_report(pipeline_report)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    print("Building Electric Eye editorial content index...")
+    content_index = build_index(fetch_entries())
+    enrich_events(events, content_index)
+    content_result = write_assets(output_dir, content_index)
     now = datetime.now(timezone.utc).replace(microsecond=0)
     try:
         previous_state = load_state(
@@ -318,6 +325,12 @@ def build(args) -> int:
         "state_bootstrapped": previous_state is None,
         "genre_report": pipeline_report.genre_report,
         "change_report": change_report,
+        "content_index": {
+            **content_result,
+            "diagnostics": content_index["diagnostics"],
+            "compact_bytes": (output_dir / "electric-eye-artist-lookup.js").stat().st_size,
+            "full_bytes": (output_dir / content_result["filename"]).stat().st_size,
+        },
     }
     report_path = output_dir / "automation-report.json"
     report_path.write_text(
@@ -381,11 +394,28 @@ def publish(args) -> int:
 
     shutil.copyfile(new_data, proof / new_data.name)
     shutil.copyfile(new_state, proof / STATE_FILENAME)
-    for stable_name in ("calendar-renderer.js", "calendar.css"):
+    for stable_name in (
+        "calendar-renderer.js", "calendar.css", "artist-page.js",
+        "artist-page.css", "artist-autolinker.js", "artist.html",
+        "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
+    ):
         source = generated / stable_name
         target = proof / stable_name
+        if not source.exists() and stable_name not in {"calendar-renderer.js", "calendar.css"}:
+            continue
         if not target.exists() or source.read_bytes() != target.read_bytes():
             shutil.copyfile(source, target)
+    content_pointer = generated / "electric-eye-content-current.js"
+    if content_pointer.exists():
+        content_manifest_text = content_pointer.read_text(encoding="utf-8")
+        content_match = re.search(r"ElectricEyeContentManifest=Object\.freeze\((\{.*?\})\)", content_manifest_text)
+        if not content_match:
+            raise ProductionValidationError("Generated content pointer is malformed")
+        content_manifest = json.loads(content_match.group(1))
+        content_data = generated / content_manifest["data"]
+        if hashlib.sha256(content_data.read_bytes()).hexdigest() != content_manifest["sha256"]:
+            raise ProductionValidationError("Generated content index hash is invalid")
+        shutil.copyfile(content_data, proof / content_data.name)
     shutil.copyfile(generated / "calendar-current.js", proof / "calendar-current.js")
 
     previous = []
@@ -401,6 +431,13 @@ def publish(args) -> int:
     for candidate in proof.glob("calendar-data.*.js"):
         if candidate.name not in keep:
             candidate.unlink()
+    content_candidates = sorted(
+        proof.glob("electric-eye-content.*.js"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    for candidate in content_candidates[3:]:
+        candidate.unlink()
 
     print("Retained data assets: " + ", ".join(sorted(keep)))
     return 0
@@ -443,6 +480,36 @@ def verify_hosted(args) -> int:
                     value in content_type for value in ("javascript", "css")
                 ):
                     raise ProductionValidationError(f"Hosted {stable} is invalid")
+            for stable in (
+                "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
+                "artist-page.js", "artist-page.css", "artist-autolinker.js", "artist.html",
+            ):
+                body, content_type = fetch(
+                    args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"
+                )
+                expected_types = ("html",) if stable.endswith(".html") else ("javascript", "css")
+                if not body or not any(value in content_type for value in expected_types):
+                    raise ProductionValidationError(f"Hosted {stable} is invalid")
+            content_pointer_body, _ = fetch(
+                args.base_url.rstrip("/") + "/electric-eye-content-current.js"
+                + f"?verify={args.sha256[:16]}"
+            )
+            content_match = re.search(
+                rb"ElectricEyeContentManifest=Object\.freeze\((\{.*?\})\)",
+                content_pointer_body,
+            )
+            if not content_match:
+                raise ProductionValidationError("Hosted content pointer is malformed")
+            content_manifest = json.loads(content_match.group(1))
+            content_body, content_type = fetch(
+                args.base_url.rstrip("/") + "/" + content_manifest["data"]
+                + f"?verify={args.sha256[:16]}"
+            )
+            if (
+                hashlib.sha256(content_body).hexdigest() != content_manifest["sha256"]
+                or "javascript" not in content_type
+            ):
+                raise ProductionValidationError("Hosted content index is invalid")
             print(
                 f"Hosted publication verified: {manifest['count']} events, "
                 f"SHA-256 {args.sha256}"

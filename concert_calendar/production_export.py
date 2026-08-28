@@ -19,6 +19,9 @@ DEFAULT_INTEGRATION_DIR = "output/blogger_prototype"
 STATIC_DIR = Path(__file__).with_name("static")
 RENDERER_PATH = STATIC_DIR / "calendar-renderer.js"
 STYLES_PATH = STATIC_DIR / "calendar.css"
+SUPPORTING_STATIC_ASSETS = (
+    "artist-page.js", "artist-page.css", "artist-autolinker.js", "artist.html",
+)
 
 ARTIST_SORT_OVERRIDES = {
     "a perfect circle": "Perfect Circle",
@@ -304,6 +307,8 @@ def export_integration_prototype(
 
     shutil.copyfile(RENDERER_PATH, destination / RENDERER_PATH.name)
     shutil.copyfile(STYLES_PATH, destination / STYLES_PATH.name)
+    for asset_name in SUPPORTING_STATIC_ASSETS:
+        shutil.copyfile(STATIC_DIR / asset_name, destination / asset_name)
     (destination / filename).write_text(data_asset, encoding="utf-8")
     (destination / "calendar-current.js").write_text(
         build_current_pointer(

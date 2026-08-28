@@ -149,11 +149,14 @@ class ProductionDataTests(unittest.TestCase):
             ["Rock / Indie / Punk"],
             genre_categories("Rock / Indie / Punk"),
         )
+        self.assertEqual(["Jazz / Blues"], genre_categories("Jazz actuel"))
+        self.assertEqual(["Jazz / Blues"], genre_categories("Jazz funk"))
         self.assertEqual([], genre_categories(None))
 
     def test_ambiguous_genre_does_not_combine_public_categories(self):
         self.assertEqual([], genre_categories("Pop, Rock"))
         self.assertEqual([], genre_categories("Jazz / Funk"))
+        self.assertEqual([], genre_categories("Jazz, Musiques du monde"))
 
     def test_exact_public_genre_is_preserved_as_one_label(self):
         self.assertEqual(
@@ -366,9 +369,7 @@ class ProductionHTMLTests(unittest.TestCase):
         ):
             self.assertIn(required, renderer)
         self.assertNotIn("blogger.googleusercontent.com/img/b/", renderer)
-        self.assertNotIn('createElement("img")', renderer)
         self.assertNotIn('monthImage', renderer)
-        self.assertNotIn('object-fit: cover', styles)
         self.assertNotIn('.ee-calendar-month-toggle--panoramic', styles)
         self.assertNotIn('.ee-calendar-month-image', styles)
         self.assertIn('background: #25282c', styles)
@@ -379,8 +380,16 @@ class ProductionHTMLTests(unittest.TestCase):
 
     def test_year_and_month_headers_do_not_create_images(self):
         renderer = read_renderer()
+        chronology = renderer[renderer.index("function monthSection"):renderer.index("function revealAll")]
+        self.assertNotIn('createElement("img")', chronology)
 
-        self.assertNotIn('createElement("img")', renderer)
+    def test_optional_event_thumbnail_is_lazy_and_links_to_artist_page(self):
+        renderer = read_renderer()
+        self.assertIn('img.loading="lazy"', renderer)
+        self.assertIn('img.decoding="async"', renderer)
+        self.assertIn('thumb.href=artistURL(headlinerLink.slug)', renderer)
+        self.assertIn('internal.href=artistURL(link.slug)', renderer)
+        self.assertIn('ticket.target="_blank"', renderer)
 
 
 class IntegrationAssetTests(unittest.TestCase):

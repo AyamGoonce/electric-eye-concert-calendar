@@ -926,6 +926,26 @@ def _unresolved_candidates(events: list[ConcertEvent], limit: int = 50) -> list[
         for same_day in by_date.values():
             if len(same_day) < 2 or not _same_event_specific_ticket(same_day[0], same_day[1]):
                 continue
+            timed_bases = []
+            timed_values = []
+            for event in same_day:
+                match = TIME_SUFFIX_RE.search(event.headliner)
+                if not match:
+                    break
+                timed_bases.append(normalize_artist_component(event.headliner[:match.start()]))
+                timed_values.append(
+                    f"{int(match.group(1)):02d}:{match.group(2) or '00'}"
+                )
+            else:
+                if (
+                    len(set(timed_bases)) == 1
+                    and len(set(timed_values)) == len(same_day)
+                    and all(
+                        event.start_time == expected
+                        for event, expected in zip(same_day, timed_values)
+                    )
+                ):
+                    continue
             fingerprints = {(event.venue, event.headliner) for event in same_day}
             if len(fingerprints) > 1:
                 candidates.append({
