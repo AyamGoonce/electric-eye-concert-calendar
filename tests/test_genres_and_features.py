@@ -280,7 +280,8 @@ class RendererFeatureContractTests(unittest.TestCase):
     def test_multi_genre_links_ics_preferences_counts_and_recovery_exist(self):
         renderer = read_renderer()
         for required in (
-            'p.getAll("genre")', 'p.append("genre",g)', "genres.includes(e.x[0])",
+            'p.getAll("genre")', 'p.append("genre",g)',
+            'e.x.length&&e.x[0]===g', 'g==="Unsorted"?!e.x.length',
             '"Copy link"', 'navigator.share', '"Add to calendar"', "buildICS",
             'localStorage.getItem("ee-calendar-sort")', 'venueCounts.get',
             '"Clear genres"', '"Clear date"', '"Clear venue"', '"Show all concerts"',

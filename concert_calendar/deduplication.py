@@ -38,9 +38,51 @@ ARTIST_ALIASES = {
 }
 
 
+# Exact reviewed display-title variants for the same performing identity.  The
+# values intentionally exclude timed/set labels and bills that introduce other
+# artists.  This keeps tour and presentation copy searchable while allowing
+# conservative date + canonical-venue event reconciliation.
+DESCRIPTIVE_ARTIST_ALIASES = {
+    "2026 le sserafim tour ‘pureflow’ in paris": "le sserafim",
+    "a$ap rocky - don't be dumb world tour": "a$ap rocky",
+    "accept 50th anniversary tour 2026": "accept",
+    "a6el – tournée d’automne": "a6el",
+    "asake: in god we trust world tour": "asake",
+    "bilal - celebrating 25 years of 1st born second": "bilal",
+    "bleech 9:3 en concert (côté records)": "bleech 9:3",
+    "bleood : kill your idols europe tour": "bleood",
+    "chaton - la cigale": "chaton",
+    "diiv — pitchfork music festival paris 2026": "diiv",
+    "earl sweatshirt & mike | home on the range tour 2026": (
+        "earl sweatshirt & mike"
+    ),
+    "elmiene | sounds for someone tour": "elmiene",
+    "esdeekid : paris headline": "esdeekid",
+    "good kid - can we hang out? tour": "good kid",
+    "gracie abrams: the look at my life tour": "gracie abrams",
+    "guadal tejaz release party \"megalostrata\"": "guadal tejaz",
+    "haute & freddy: big disgrace tour": "haute & freddy",
+    "j.cole : the fall-off tour": "j. cole",
+    "john craigie en concert (côté records)": "john craigie",
+    "kanadia en concert (côté records)": "kanadia",
+    "katseye - the wildworld tour": "katseye",
+    "kytes en concert (côté records)": "kytes",
+    "moon walker en concert (côté records)": "moon walker",
+    "moon walker | moon walker's wasteland country tour": "moon walker",
+    "niall horan - dinner party live on tour": "niall horan",
+    "placebo : 30th anniversary tour": "placebo",
+    "renan luce - joue repenti": "renan luce",
+    "stu larsen en concert (côté records)": "stu larsen",
+    "tamarae en concert (côté records)": "tamarae",
+}
+
+
 # Reviewed event-level equivalences.  They intentionally do not generalize to
 # other artists, dates, venues, or editorial phrases.
 REVIEWED_EVENT_TITLES = {
+    ("2026-09-09", "accor arena", "katseye"): (
+        "KATSEYE - THE WILDWORLD TOUR"
+    ),
     ("2026-09-19", "accor arena", "the pussycat dolls"): "The Pussycat Dolls",
     (
         "2026-09-19", "accor arena",
@@ -173,7 +215,8 @@ def normalize_headliner(name: str) -> str:
 
     name = unescape(name).lower().strip()
     name = re.sub(r"\s+", " ", name)
-    return ARTIST_ALIASES.get(name, name)
+    name = ARTIST_ALIASES.get(name, name)
+    return DESCRIPTIVE_ARTIST_ALIASES.get(name, name)
 
 
 def normalize_artist_component(name: str) -> str:

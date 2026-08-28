@@ -13,6 +13,8 @@ from concert_calendar.scrapers.dice import parse_event as parse_dice_event
 from concert_calendar.scrapers.livenation import document_to_event
 from concert_calendar.scrapers.cigale import parse_detail_metadata
 from concert_calendar.scrapers.maroquinerie import parse_card
+from concert_calendar.scrapers.radical import parse_card as parse_radical_card
+from concert_calendar.scrapers.supersonic import parse_event_row as parse_supersonic_row
 from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.sources import is_supported_event
 from concert_calendar.venues import normalize_event_venue
@@ -41,6 +43,30 @@ def make_event(headliner, venue="La Boule Noire"):
 
 
 class ArtistNormalizationTests(unittest.TestCase):
+    def test_reviewed_tour_title_variants_merge_without_fuzzy_matching(self):
+        katseye = make_event("KATSEYE", "Accor Arena")
+        tour = make_event("KATSEYE - THE WILDWORLD TOUR", "Accor Arena")
+        katseye.date = tour.date = "2026-09-09"
+        katseye.ticket_url = "https://ticketmaster.example/katseye"
+        tour.ticket_url = "https://accorarena.example/katseye"
+        tour.ticket_status = "sold_out"
+
+        merged = deduplicate_events([katseye, tour])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("KATSEYE - THE WILDWORLD TOUR", merged[0].headliner)
+        self.assertTrue(merged[0].ticket_url)
+        self.assertEqual("sold_out", merged[0].ticket_status)
+
+    def test_unreviewed_tour_like_title_does_not_merge(self):
+        self.assertEqual(
+            2,
+            len(deduplicate_events([
+                make_event("Unrelated Artist"),
+                make_event("Unrelated Artist - The Other Tour"),
+            ])),
+        )
+
     def test_known_joined_artist_alias_merges(self):
         events = deduplicate_events(
             [make_event("Day We Ran"), make_event("DAYWERAN")]
@@ -523,6 +549,36 @@ class BillingReconciliationTests(unittest.TestCase):
 
 
 class VenueNormalizationTests(unittest.TestCase):
+    def test_plenitude_arena_aliases_have_verified_geography(self):
+        for venue in (
+            "Paris La Défense Arena",
+            "Paris La Defense Arena",
+            "Plénitude Arena",
+        ):
+            with self.subTest(venue=venue):
+                event = make_event("Muse", venue)
+                event.city, event.department = "Paris", "75"
+                normalize_event_venue(event)
+                self.assertEqual("Plénitude Arena", event.venue)
+                self.assertEqual("Nanterre", event.city)
+                self.assertEqual("92", event.department)
+
+    def test_muse_venue_rename_merges_and_preserves_ticket(self):
+        alias = make_event("Muse", "Paris La Défense Arena")
+        current = make_event("Muse", "Plénitude Arena")
+        alias.date = current.date = "2026-11-27"
+        alias.ticket_url = "https://tix.to/muse"
+        current.ticket_url = "https://ticketmaster.example/muse"
+        for event in (alias, current):
+            normalize_event_venue(event)
+
+        merged = deduplicate_events([alias, current])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Plénitude Arena", merged[0].venue)
+        self.assertEqual("Nanterre", merged[0].city)
+        self.assertTrue(merged[0].ticket_url)
+
     def test_final_clear_venue_aliases_normalize(self):
         examples = {
             "La Marberie": "La Marbrerie",
@@ -1237,6 +1293,46 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
 
     def test_legitimate_title_with_move_word_is_unchanged(self):
         self.assertEqual("The Move", strip_relocation_notice("The Move"))
+
+    def test_supersonic_row_keeps_direct_official_event_page(self):
+        row = BeautifulSoup(
+            """
+            <article class="tribe-events-calendar-list__event-row">
+              <a class="tribe-events-calendar-list__event-title-link"
+                 href="/event/example-band/">Example Band • Support</a>
+              <time class="tribe-events-calendar-list__event-datetime"
+                    datetime="2026-10-03"></time>
+              <span class="tribe-events-calendar-list__event-venue-title">Supersonic</span>
+            </article>
+            """,
+            "html.parser",
+        ).article
+
+        event = parse_supersonic_row(
+            row, "https://supersonic-club.fr/events/"
+        )
+
+        self.assertEqual("https://supersonic-club.fr/event/example-band/", event.ticket_url)
+        self.assertEqual(["Support"], event.openers)
+
+    def test_radical_cancelled_event_has_status_without_fake_ticket(self):
+        card = BeautifulSoup(
+            """
+            <article class="concert-card">
+              <div class="concert-card__date">12 sept. 2026</div>
+              <div class="concert-card__title">The Limiñanas</div>
+              <div class="concert-card__place_m">Brétigny-sur-Orge</div>
+              <div class="concert-card__event">Fête de l'Humanité</div>
+              <div class="concert-card__statut">Annulé</div>
+            </article>
+            """,
+            "html.parser",
+        ).article
+
+        event = parse_radical_card(card)
+
+        self.assertEqual("cancelled", event.ticket_status)
+        self.assertIsNone(event.ticket_url)
 
 
 if __name__ == "__main__":

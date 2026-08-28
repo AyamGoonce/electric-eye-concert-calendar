@@ -279,7 +279,8 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("e.s.includes(q)", html)
         self.assertIn("e.d.startsWith(month)", html)
         self.assertIn("venueId(e.v)===venueId(venue)", html)
-        self.assertIn("genres.includes(e.x[0])", html)
+        self.assertIn('g==="Unsorted"?!e.x.length', html)
+        self.assertIn('e.x.length&&e.x[0]===g', html)
         self.assertIn('order==="date-desc"', html)
         self.assertIn('order==="artist-asc"', html)
         self.assertIn('order==="venue-asc"', html)
@@ -308,7 +309,7 @@ class ProductionHTMLTests(unittest.TestCase):
 
         for genre in PUBLIC_GENRES:
             self.assertEqual(1, renderer.count(f'"{genre}"'))
-        self.assertIn("publicGenres.map", renderer)
+        self.assertIn('publicGenres.concat(["Unsorted"]).map', renderer)
         self.assertNotIn("genreValues.forEach", renderer)
 
     def test_event_genre_label_uses_existing_filter_state(self):
@@ -333,9 +334,10 @@ class ProductionHTMLTests(unittest.TestCase):
         renderer = read_renderer()
 
         self.assertIn('if(e.x.length)metadata.append(genreButton(e.x[0]))', renderer)
-        self.assertNotIn('"Unsorted"', renderer)
+        self.assertIn('g==="Unsorted"?!e.x.length', renderer)
+        self.assertNotIn('genreButton("Unsorted")', renderer)
 
-    def test_collapsible_chronology_and_photographic_month_contract(self):
+    def test_collapsible_chronology_and_solid_month_contract(self):
         renderer = read_renderer()
         styles = read_styles()
 
@@ -347,17 +349,8 @@ class ProductionHTMLTests(unittest.TestCase):
             'setAttribute("aria-expanded",String(isExpanded))',
             'controls.expandAll.addEventListener("click"',
             'controls.collapseAll.addEventListener("click"',
-            'if(active){grouped.forEach',
-            'expandedYears.add(linked.d.slice(0,4))',
-            'expandedMonths.add(linked.d.slice(0,7))',
-            'var chosen=monthImages[(month-1)*2+(year+month)%2]',
-            'ratio<1.9?"standard":ratio<2.4?"wide":"panoramic"',
-            'position:"50% 50%"',
-            'solid:false',
-            'if(imageData.solid)',
-            'image.alt=""',
-            'image.loading=firstImage?"eager":"lazy"',
-            'image.srcset=',
+            'manualCollapsedMonths.delete(linkedMonth)',
+            'autoCollapsedMonths.delete(linkedMonth)',
             'list.append(separator(e.d))',
             'genreButton(e.x[0])',
             'ticket.href=e.t',
@@ -366,25 +359,28 @@ class ProductionHTMLTests(unittest.TestCase):
             'safelyBelowViewport(section.getBoundingClientRect(),innerHeight)',
             'section.contains(focused)',
             'autoCollapseBlocked=active||!!linked',
+            'function autoExpandOnDownwardScroll()',
+            'autoCollapsedMonths.add(key)',
+            'manualCollapsedMonths.has(key)',
+            'approachingViewport(section.getBoundingClientRect(),innerHeight)',
         ):
             self.assertIn(required, renderer)
-        self.assertEqual(24, renderer.count("blogger.googleusercontent.com/img/b/"))
-        self.assertIn('object-fit: cover', styles)
-        self.assertIn('object-position: var(--ee-month-position, 50% 50%)', styles)
-        self.assertIn('.ee-calendar-month-toggle--panoramic', styles)
-        self.assertIn('.ee-calendar-month-toggle--solid', styles)
+        self.assertNotIn("blogger.googleusercontent.com/img/b/", renderer)
+        self.assertNotIn('createElement("img")', renderer)
+        self.assertNotIn('monthImage', renderer)
+        self.assertNotIn('object-fit: cover', styles)
+        self.assertNotIn('.ee-calendar-month-toggle--panoramic', styles)
+        self.assertNotIn('.ee-calendar-month-image', styles)
+        self.assertIn('background: #25282c', styles)
+        self.assertIn('border-left: 4px solid var(--ee-calendar-accent)', styles)
         self.assertIn('.ee-calendar-month-events > li::marker', styles)
         self.assertIn('counter-increment: none', styles)
         self.assertNotIn('position: sticky;\n  top:', styles.split('.ee-calendar-month-toggle', 1)[1])
 
-    def test_year_headers_remain_solid_and_months_own_images(self):
+    def test_year_and_month_headers_do_not_create_images(self):
         renderer = read_renderer()
 
-        year_section = renderer.split('function yearSection', 1)[1].split(
-            'function revealAll', 1
-        )[0]
-        self.assertNotIn('createElement("img")', year_section)
-        self.assertIn('createElement("img")', renderer.split('function monthSection', 1)[1])
+        self.assertNotIn('createElement("img")', renderer)
 
 
 class IntegrationAssetTests(unittest.TestCase):

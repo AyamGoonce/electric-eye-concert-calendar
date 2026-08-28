@@ -246,6 +246,37 @@ class PersistentEventStateTests(unittest.TestCase):
         reconcile_state([improved], state, now=self.NOW + timedelta(hours=6))
         self.assertEqual(old.first_seen, improved.first_seen)
 
+    def test_plenitude_rename_does_not_reset_first_seen(self):
+        old = self.make_event(
+            date="2026-11-27", headliner="Muse",
+            venue="Paris La Défense Arena", city="Nanterre", department="92",
+        )
+        state = reconcile_state([old], None, now=self.NOW)
+        current = self.make_event(
+            date="2026-11-27", headliner="Muse",
+            venue="Plénitude Arena", city="Nanterre", department="92",
+        )
+
+        reconcile_state([current], state, now=self.NOW + timedelta(hours=6))
+
+        self.assertEqual(old.first_seen, current.first_seen)
+
+    def test_reviewed_tour_title_does_not_reset_first_seen(self):
+        old = self.make_event(
+            date="2026-09-09", headliner="KATSEYE",
+            venue="Accor Arena",
+        )
+        state = reconcile_state([old], None, now=self.NOW)
+        improved = self.make_event(
+            date="2026-09-09",
+            headliner="KATSEYE - THE WILDWORLD TOUR",
+            venue="Accor Arena",
+        )
+
+        reconcile_state([improved], state, now=self.NOW + timedelta(hours=6))
+
+        self.assertEqual(old.first_seen, improved.first_seen)
+
     def test_reviewed_move_preserves_predecessor_first_seen(self):
         old = self.make_event(headliner="Father of Peace", venue="L'Alhambra")
         old.date = "2026-10-06"

@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from concert_calendar.deduplication import (
+    DESCRIPTIVE_ARTIST_ALIASES,
     REVIEWED_EVENT_MOVES,
     normalize_artist_component,
     normalize_headliner,
@@ -43,7 +44,7 @@ def canonical_event_identity(event: ConcertEvent | dict) -> str:
 
 
 def _reviewed_predecessor_identities(event: ConcertEvent) -> list[str]:
-    """Return only explicit prior-location identities for reviewed moves."""
+    """Return explicit prior title/location identities for reviewed changes."""
 
     artist = normalize_artist_component(event.headliner)
     result = []
@@ -59,6 +60,25 @@ def _reviewed_predecessor_identities(event: ConcertEvent) -> list[str]:
                 normalize_venue_key(old_venue),
             ))
             result.append(hashlib.sha256(value.encode("utf-8")).hexdigest())
+
+    venue_identity = normalize_venue_key(event.venue)
+    if venue_identity == "plenitude arena":
+        value = "\x1f".join((
+            event.date[:10],
+            normalize_headliner(event.headliner),
+            "paris la defense arena",
+        ))
+        result.append(hashlib.sha256(value.encode("utf-8")).hexdigest())
+
+    for prior_title, canonical_title in DESCRIPTIVE_ARTIST_ALIASES.items():
+        if normalize_headliner(event.headliner) != canonical_title:
+            continue
+        value = "\x1f".join((
+            event.date[:10],
+            prior_title,
+            venue_identity,
+        ))
+        result.append(hashlib.sha256(value.encode("utf-8")).hexdigest())
     return result
 
 

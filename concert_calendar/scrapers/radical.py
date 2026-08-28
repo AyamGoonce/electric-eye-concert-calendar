@@ -113,6 +113,16 @@ def find_openers(card):
     return [value for value in openers if value] or None
 
 
+def find_ticket_status(card):
+    status = clean_text(
+        card.select_one(".concert-card__statut").get_text(" ", strip=True)
+    ) if card.select_one(".concert-card__statut") else ""
+    return {
+        "annulé": "cancelled",
+        "reporté": "postponed",
+    }.get(status.casefold())
+
+
 def parse_card(card):
     date_element = card.select_one(
         ".concert-card__date"
@@ -182,6 +192,7 @@ def parse_card(card):
         genre=None,
         facebook_event_url=None,
         ticket_url=find_ticket_url(card),
+        ticket_status=find_ticket_status(card),
     )
 
 

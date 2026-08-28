@@ -87,6 +87,7 @@ VENUE_ALIASES = {
     "les etoiles": "Les Étoiles",
     "etoiles": "Les Étoiles",
     "mennecy metal fest": "Mennecy Metal Fest",
+    "paris la defense arena": "Plénitude Arena",
     "plenitude arena": "Plénitude Arena",
     "petit bain": "Petit Bain",
     "point ephemere": "Point Éphémère",
@@ -127,6 +128,7 @@ VENUE_GEOGRAPHY = {
     "La Marbrerie": ("Montreuil", "93"),
     "La Seine Musicale": ("Boulogne-Billancourt", "92"),
     "L’Accord Parfait": ("Paris", "75"),
+    "Plénitude Arena": ("Nanterre", "92"),
 }
 
 

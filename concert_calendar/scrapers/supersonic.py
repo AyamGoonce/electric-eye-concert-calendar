@@ -62,6 +62,49 @@ def is_non_concert_event(title):
     )
 
 
+def parse_event_row(row, page_url):
+    title_link = row.select_one(
+        ".tribe-events-calendar-list__event-title-link"
+    )
+    date_element = row.select_one(
+        ".tribe-events-calendar-list__event-datetime"
+    )
+    venue_element = row.select_one(
+        ".tribe-events-calendar-list__event-venue-title"
+    )
+
+    if not title_link:
+        return None
+
+    full_title = title_link.get_text(" ", strip=True)
+    if not full_title or is_non_concert_event(full_title):
+        return None
+
+    artists = [
+        artist.strip()
+        for artist in full_title.split("•")
+        if artist.strip()
+    ]
+    headliner = artists[0] if artists else full_title
+    href = (title_link.get("href") or "").strip()
+
+    return ConcertEvent(
+        date=(date_element.get("datetime", "").strip() if date_element else ""),
+        headliner=headliner,
+        openers=artists[1:6] or None,
+        venue=(
+            venue_element.get_text(" ", strip=True)
+            if venue_element else "Supersonic"
+        ),
+        city="Paris",
+        department="75",
+        promoters=["Supersonic"],
+        genre=None,
+        facebook_event_url=None,
+        ticket_url=urljoin(page_url, href) if href else None,
+    )
+
+
 def load_events():
     events = []
     visited_pages = set()
@@ -111,65 +154,9 @@ def load_events():
         )
 
         for row in event_rows:
-            title_link = row.select_one(
-                ".tribe-events-calendar-list__event-title-link"
-            )
-
-            date_element = row.select_one(
-                ".tribe-events-calendar-list__event-datetime"
-            )
-
-            venue_element = row.select_one(
-                ".tribe-events-calendar-list__event-venue-title"
-            )
-
-            if not title_link:
-                continue
-
-            full_title = title_link.get_text(" ", strip=True)
-
-            if not full_title:
-                continue
-
-            artists = [
-                artist.strip()
-                for artist in full_title.split("•")
-                if artist.strip()
-            ]
-
-            headliner = artists[0] if artists else full_title
-            openers = artists[1:6] or None
-
-            date = (
-                date_element.get("datetime", "").strip()
-                if date_element
-                else ""
-            )
-
-            venue = (
-                venue_element.get_text(" ", strip=True)
-                if venue_element
-                else "Supersonic"
-            )
-
-            if is_non_concert_event(full_title):
-                print(f"Excluded non-concert event: {full_title}")
-                continue
-
-            event = ConcertEvent(
-                date=date,
-                headliner=headliner,
-                openers=openers,
-                venue=venue,
-                city="Paris",
-                department="75",
-                promoters=["Supersonic"],
-                genre=None,
-                facebook_event_url=None,
-                ticket_url=None,
-            )
-
-            events.append(event)
+            event = parse_event_row(row, page_url)
+            if event is not None:
+                events.append(event)
 
         next_link = soup.select_one(
             "a.tribe-events-c-nav__next"
