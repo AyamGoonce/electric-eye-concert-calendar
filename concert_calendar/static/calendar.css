@@ -337,8 +337,25 @@
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-list,
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-events {
   list-style: none;
+  list-style-type: none;
+  counter-reset: none;
   margin: 0;
   padding: 0;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-list > li,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li {
+  list-style: none;
+  list-style-type: none;
+  counter-increment: none;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-list > li::before,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-list > li::marker,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li::before,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li::marker {
+  content: none;
+  display: none;
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-section + .ee-calendar-month-section {
@@ -354,12 +371,16 @@
   color: var(--ee-calendar-on-dark);
 }
 
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle:has(.ee-calendar-month-image--wide) {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle--wide {
   height: clamp(145px, 16vw, 160px);
 }
 
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle:has(.ee-calendar-month-image--panoramic) {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle--panoramic {
   height: clamp(125px, 14vw, 145px);
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle--solid {
+  background: linear-gradient(115deg, #101010, #272727);
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle:hover {
@@ -373,7 +394,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 50%;
+  object-position: var(--ee-month-position, 50% 50%);
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-overlay {
@@ -384,7 +405,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 25px;
-  background: linear-gradient(90deg, rgba(8, 8, 8, .72), rgba(8, 8, 8, .58));
+  background: linear-gradient(90deg, rgba(8, 8, 8, var(--ee-month-overlay, .66)), rgba(8, 8, 8, calc(var(--ee-month-overlay, .66) - .08)));
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-name {
@@ -777,11 +798,11 @@
     height: clamp(130px, 38vw, 145px);
   }
 
-  .ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle:has(.ee-calendar-month-image--wide) {
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle--wide {
     height: clamp(120px, 34vw, 135px);
   }
 
-  .ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle:has(.ee-calendar-month-image--panoramic) {
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle--panoramic {
     height: clamp(105px, 31vw, 125px);
   }
 

@@ -352,19 +352,39 @@ class ProductionHTMLTests(unittest.TestCase):
             'expandedMonths.add(linked.d.slice(0,7))',
             'var chosen=monthImages[(month-1)*2+(year+month)%2]',
             'ratio<1.9?"standard":ratio<2.4?"wide":"panoramic"',
+            'position:"50% 50%"',
+            'solid:false',
+            'if(imageData.solid)',
             'image.alt=""',
             'image.loading=firstImage?"eager":"lazy"',
             'image.srcset=',
             'list.append(separator(e.d))',
             'genreButton(e.x[0])',
             'ticket.href=e.t',
+            'function autoCollapseOnUpwardScroll()',
+            'y<lastScrollY-4',
+            'safelyBelowViewport(section.getBoundingClientRect(),innerHeight)',
+            'section.contains(focused)',
+            'autoCollapseBlocked=active||!!linked',
         ):
             self.assertIn(required, renderer)
         self.assertEqual(24, renderer.count("blogger.googleusercontent.com/img/b/"))
         self.assertIn('object-fit: cover', styles)
-        self.assertIn('object-position: 50% 50%', styles)
-        self.assertIn('.ee-calendar-month-image--panoramic', styles)
+        self.assertIn('object-position: var(--ee-month-position, 50% 50%)', styles)
+        self.assertIn('.ee-calendar-month-toggle--panoramic', styles)
+        self.assertIn('.ee-calendar-month-toggle--solid', styles)
+        self.assertIn('.ee-calendar-month-events > li::marker', styles)
+        self.assertIn('counter-increment: none', styles)
         self.assertNotIn('position: sticky;\n  top:', styles.split('.ee-calendar-month-toggle', 1)[1])
+
+    def test_year_headers_remain_solid_and_months_own_images(self):
+        renderer = read_renderer()
+
+        year_section = renderer.split('function yearSection', 1)[1].split(
+            'function revealAll', 1
+        )[0]
+        self.assertNotIn('createElement("img")', year_section)
+        self.assertIn('createElement("img")', renderer.split('function monthSection', 1)[1])
 
 
 class IntegrationAssetTests(unittest.TestCase):
