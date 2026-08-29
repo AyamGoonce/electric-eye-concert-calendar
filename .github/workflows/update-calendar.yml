@@ -45,6 +45,9 @@ jobs:
       - name: Run tests
         run: python -m unittest discover -s tests
 
+      - name: Run artist auto-linker regression
+        run: node --test tests/artist_autolinker.test.js
+
       - name: Check out current Pages branch
         uses: actions/checkout@v7
         with:

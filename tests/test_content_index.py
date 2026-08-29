@@ -111,9 +111,50 @@ class ContentIndexTests(unittest.TestCase):
         script = Path("concert_calendar/static/artist-autolinker.js").read_text()
         self.assertIn("allOccurrences:false", script)
         self.assertIn("linked.has(slug)", script)
-        for excluded in ("a,script,style,noscript,code,pre", "iframe", "embed", "[data-ee-no-autolink]"):
+        self.assertIn('rootSelector:".post-body, .entry-content"', script)
+        for excluded in (
+            "a,script,style,noscript,code,pre",
+            "button,input,select,textarea",
+            "iframe,object,embed",
+            "nav,[role='navigation'],[role='button']",
+            ".ad,.adsbygoogle",
+            "[data-ee-no-autolink], .ee-no-autolink",
+        ):
             self.assertIn(excluded, script)
+        self.assertNotIn(".widget", script)
         self.assertNotIn("ElectricEyeContentIndex", script)
+
+    def test_autolinker_allows_blogger_post_body_inside_blog_widget(self):
+        script = Path("concert_calendar/static/artist-autolinker.js").read_text()
+        blogger_fixture = """
+          <div class="widget Blog">
+            <div class="post-body"><p>Sparks played in Paris.</p></div>
+          </div>
+          <aside class="widget"><p>Sparks sidebar item.</p></aside>
+        """
+
+        self.assertIn('<div class="widget Blog">', blogger_fixture)
+        self.assertIn('<div class="post-body">', blogger_fixture)
+        self.assertNotIn(".widget", script)
+        self.assertIn('document.querySelectorAll(config.rootSelector)', script)
+        self.assertIn('link.href=data.artistPage+encodeURIComponent(slug)', script)
+
+    def test_autolinker_sidebar_and_protected_content_contract(self):
+        script = Path("concert_calendar/static/artist-autolinker.js").read_text()
+        protected_fixture = """
+          <aside class="widget">Sparks sidebar item.</aside>
+          <div class="post-body">
+            <a href="/existing">Sparks</a>
+            <ins class="adsbygoogle">Sparks</ins>
+            <iframe title="Sparks embed"></iframe>
+            <p data-ee-no-autolink>Sparks opted out.</p>
+          </div>
+        """
+
+        self.assertIn('<aside class="widget">', protected_fixture)
+        self.assertIn('rootSelector:".post-body, .entry-content"', script)
+        for protected in ("a,script,style,noscript", ".adsbygoogle", "iframe", "[data-ee-no-autolink]"):
+            self.assertIn(protected, script)
 
     def test_artist_page_groups_articles_and_links_exact_calendar_event(self):
         script = Path("concert_calendar/static/artist-page.js").read_text()
