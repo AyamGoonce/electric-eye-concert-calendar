@@ -397,6 +397,7 @@ def publish(args) -> int:
     for stable_name in (
         "calendar-renderer.js", "calendar.css", "artist-page.js",
         "artist-page.css", "artist-autolinker.js", "artist.html",
+        "coverage-page.js", "coverage.html",
         "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
     ):
         source = generated / stable_name
@@ -483,6 +484,7 @@ def verify_hosted(args) -> int:
             for stable in (
                 "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
                 "artist-page.js", "artist-page.css", "artist-autolinker.js", "artist.html",
+                "coverage-page.js", "coverage.html",
             ):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"

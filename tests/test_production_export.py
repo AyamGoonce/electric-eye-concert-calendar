@@ -120,6 +120,16 @@ class ProductionDataTests(unittest.TestCase):
 
         self.assertIsNone(prepared["t"])
 
+    def test_unsuitable_official_image_is_omitted(self):
+        event = make_event(
+            "2026-09-01", "Artist",
+            image_url="https://official.example/assets/placeholder-logo.png",
+            image_source="Official venue",
+        )
+        prepared = prepare_upcoming_events([event], today=date(2026, 8, 31))[0]
+        self.assertNotIn("im", prepared)
+        self.assertNotIn("is", prepared)
+
     def test_festival_status_first_seen_and_sold_out_are_exported(self):
         event = make_event(
             "2026-09-01", "Festival Headliner",
@@ -387,8 +397,9 @@ class ProductionHTMLTests(unittest.TestCase):
         renderer = read_renderer()
         self.assertIn('img.loading="lazy"', renderer)
         self.assertIn('img.decoding="async"', renderer)
-        self.assertIn('thumb.href=artistURL(headlinerLink.slug)', renderer)
-        self.assertIn('internal.href=artistURL(link.slug)', renderer)
+        self.assertIn('thumb.href=coverageURL(e.i)', renderer)
+        self.assertIn('internal.href=coverageURL(e.i)', renderer)
+        self.assertIn('e.ee[0].total', renderer)
         self.assertIn('ticket.target="_blank"', renderer)
 
 

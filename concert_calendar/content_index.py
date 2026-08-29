@@ -24,6 +24,7 @@ HEADERS = {
     ),
 }
 ARTIST_PAGE_URL = "https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/artist.html?artist="
+COVERAGE_PAGE_URL = "https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/coverage.html?event="
 EXPLICIT_ALIASES = {
     "QOTSA": "Queens of the Stone Age",
     "Sheepdogs": "The Sheepdogs",
@@ -73,6 +74,26 @@ def classify_article(title, labels):
     if "playlist" in folded or "friday's playlist" in folded:
         return "playlist"
     if {"news", "announcement"} & folded:
+        return "news"
+    # Older Electric Eye posts predate consistent Blogger section labels. These
+    # reviewed house-title conventions are used only after label evidence.
+    if re.search(
+        r"\s@\s.+\s[-–]\s(?:january|february|march|april|may|june|july|"
+        r"august|september|october|november|december)\s+\d{1,2}(?:st|nd|rd|th)?,\s+20\d{2}$",
+        title,
+        re.I,
+    ):
+        return "concert_review"
+    if re.match(r"^(?:interview\s*:|an interview with\b)", title, re.I):
+        return "interview"
+    if re.match(r"^(?:friday(?:'s|’s) playlist|playlist\s*:)", title, re.I):
+        return "playlist"
+    if re.search(
+        r"\b(?:announce(?:s|d)?|to perform|to release|unveil(?:s|ed)?|"
+        r"reveal(?:s|ed)?|share(?:s|d)? (?:a |the )?new|new (?:single|album|video))\b",
+        title,
+        re.I,
+    ):
         return "news"
     return "other"
 
@@ -295,6 +316,13 @@ def enrich_events(events, index):
             if position == 0:
                 headliner_slug = slug
         event.electric_eye_links = links or None
+        if links:
+            article_ids = {
+                article_id
+                for link in links
+                for article_id in artists[link["slug"]]["ar"]
+            }
+            links[0]["total"] = len(article_ids)
         hero = artists.get(headliner_slug or "", {}).get("crh")
         if hero:
             event.image_url = hero["im"]

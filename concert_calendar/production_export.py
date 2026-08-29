@@ -21,6 +21,7 @@ RENDERER_PATH = STATIC_DIR / "calendar-renderer.js"
 STYLES_PATH = STATIC_DIR / "calendar.css"
 SUPPORTING_STATIC_ASSETS = (
     "artist-page.js", "artist-page.css", "artist-autolinker.js", "artist.html",
+    "coverage-page.js", "coverage.html",
 )
 
 ARTIST_SORT_OVERRIDES = {
@@ -78,12 +79,28 @@ def safe_ticket_url(value: str | None) -> str | None:
     return value
 
 
+def safe_image_url(value: str | None) -> str | None:
+    if not value:
+        return None
+    parsed = urlparse(value)
+    lowered = (parsed.path + "?" + parsed.query).casefold()
+    if parsed.scheme != "https" or not parsed.netloc:
+        return None
+    if any(marker in lowered for marker in (
+        "tracking", "pixel", "spacer", "placeholder", "default-image",
+        "default_image", "logo.", "/logo/", "favicon",
+    )):
+        return None
+    return value
+
+
 def genre_categories(value: str | None) -> list[str]:
     mapped = map_raw_genre(value)
     return [mapped] if mapped else []
 
 
 def event_to_data(event: ConcertEvent) -> dict:
+    image = safe_image_url(event.image_url)
     return {
         "d": event.date[:10],
         "h": event.headliner,
@@ -106,8 +123,8 @@ def event_to_data(event: ConcertEvent) -> dict:
         **({"an": event.announced_at} if event.announced_at else {}),
         **({"et": event.event_title} if event.event_title else {}),
         **({"sn": event.series_name} if event.series_name else {}),
-        **({"im": event.image_url} if event.image_url else {}),
-        **({"is": event.image_source} if event.image_source else {}),
+        **({"im": image} if image else {}),
+        **({"is": event.image_source} if image and event.image_source else {}),
         **({"ee": event.electric_eye_links} if event.electric_eye_links else {}),
     }
 

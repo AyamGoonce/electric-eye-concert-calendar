@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from concert_calendar.content_index import build_index, enrich_events
+from concert_calendar.content_index import build_index, classify_article, enrich_events
 from concert_calendar.models import ConcertEvent
 
 
@@ -66,6 +66,35 @@ class ContentIndexTests(unittest.TestCase):
         self.assertEqual(event.electric_eye_links[0]["slug"], "the-example")
         self.assertEqual(event.electric_eye_links[0]["role"], "headliner")
         self.assertEqual(event.image_source, "Electric Eye concert review")
+        self.assertEqual(event.electric_eye_links[0]["total"], 1)
+
+    def test_multi_artist_event_uses_unique_aggregate_article_count(self):
+        entries = [
+            entry("Alpha @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "Alpha"], "2026-01-01"),
+            entry("Beta @ Bataclan, Paris - January 2nd, 2026", ["Concert Review", "Beta"], "2026-01-02"),
+            entry("Alpha and Beta announce dates", ["News", "Alpha", "Beta"], "2026-01-03"),
+        ]
+        index = build_index(entries, generated_at="2026-01-01T00:00:00Z")
+        event = ConcertEvent(date="2027-01-01", headliner="Alpha", openers=["Beta"], venue="Bataclan", city="Paris", department="75")
+        enrich_events([event], index)
+        self.assertEqual(len(event.electric_eye_links), 2)
+        self.assertEqual(event.electric_eye_links[0]["total"], 3)
+
+    def test_support_review_hero_never_replaces_official_event_image(self):
+        image = "https://blogger.googleusercontent.com/example/s72-c/photo.jpg"
+        index = build_index([entry("Support @ Club, Paris - January 1st, 2026", ["Concert Review", "Support"], image=image)])
+        event = ConcertEvent(date="2027-01-01", headliner="Unindexed", openers=["Support"], venue="Bataclan", city="Paris", department="75", image_url="https://official.example/event.jpg", image_source="Bataclan")
+        enrich_events([event], index)
+        self.assertEqual(event.image_url, "https://official.example/event.jpg")
+        self.assertEqual(event.image_source, "Bataclan")
+
+    def test_reviewed_legacy_house_title_classification(self):
+        self.assertEqual(classify_article("Band @ Bataclan, Paris - June 30th, 2025", []), "concert_review")
+        self.assertEqual(classify_article("Interview: Band", []), "interview")
+        self.assertEqual(classify_article("Album Review: Band - Record", []), "album_review")
+        self.assertEqual(classify_article("Band announces dates", ["News"]), "news")
+        self.assertEqual(classify_article("Band To Perform At Le Zénith Next Fall", []), "news")
+        self.assertEqual(classify_article("A genuinely miscellaneous post", []), "other")
 
     def test_unindexed_artist_keeps_official_image_without_ee_link(self):
         index = build_index([], generated_at="2026-01-01T00:00:00Z")
@@ -90,7 +119,14 @@ class ContentIndexTests(unittest.TestCase):
         script = Path("concert_calendar/static/artist-page.js").read_text()
         for heading in ("Concert Reviews", "Interviews", "Album Reviews", "News", "Playlists"):
             self.assertIn(heading, script)
-        self.assertIn('"#event-" + event.i', script)
+        self.assertIn('"#event-"+event.i', script)
+
+    def test_event_coverage_page_deduplicates_urls_and_uses_all_event_artists(self):
+        script = Path("concert_calendar/static/coverage-page.js").read_text()
+        self.assertIn("new Map()", script)
+        self.assertIn("articles.get(article.u)", script)
+        self.assertIn("(event.ee||[]).map", script)
+        self.assertIn("Related artists:", script)
 
 
 if __name__ == "__main__":
