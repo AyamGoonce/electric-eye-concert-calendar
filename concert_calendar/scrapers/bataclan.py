@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import official_image_url, discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
 
 
@@ -126,6 +127,25 @@ def split_bill(value):
     return artists[0], artists[1:] or None
 
 
+def strapi_event_image(attributes):
+    for field in ("imageList", "imageCover"):
+        media = (((attributes.get(field) or {}).get("data") or {}).get("attributes") or {})
+        formats = media.get("formats") or {}
+        for format_name in ("list", "mood", "large"):
+            candidate = formats.get(format_name) or {}
+            if url := official_image_url(
+                candidate.get("url"),
+                width=candidate.get("width"),
+                height=candidate.get("height"),
+            ):
+                return url
+        if url := official_image_url(
+            media.get("url"), width=media.get("width"), height=media.get("height")
+        ):
+            return url
+    return None
+
+
 def parse_document(document):
     attributes = document.get("attributes") or {}
     event_date = clean_text(attributes.get("date"))[:10]
@@ -145,6 +165,7 @@ def parse_document(document):
         return None
 
     ticket_url = clean_text(attributes.get("ticketingUrl"))
+    image_url = strapi_event_image(attributes)
 
     if not ticket_url:
         meetings = attributes.get("meetings") or []
@@ -169,6 +190,8 @@ def parse_document(document):
         facebook_event_url=None,
         ticket_url=ticket_url or AGENDA_URL,
         sold_out=("complet" in status_uid or "sold-out" in status_uid),
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -239,4 +262,4 @@ def load_events():
 
     print(f"Created {len(events)} Bataclan ConcertEvent records")
 
-    return events
+    return discard_repeated_generic_images(events)

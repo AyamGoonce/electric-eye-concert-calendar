@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 
 import requests
 
+from concert_calendar.event_images import official_image_url, discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
 
 
@@ -146,6 +147,7 @@ def document_to_event(document):
 
     ticket_url = get_ticket_url(document)
     event_url = get_event_url(document)
+    image_url = official_image_url(document.get("image"))
 
     return ConcertEvent(
         date=date,
@@ -158,6 +160,8 @@ def document_to_event(document):
         genre=get_genre(document),
         facebook_event_url=None,
         ticket_url=ticket_url or event_url,
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -197,4 +201,4 @@ def load_events():
         if event is not None:
             events.append(event)
 
-    return events
+    return discard_repeated_generic_images(events)

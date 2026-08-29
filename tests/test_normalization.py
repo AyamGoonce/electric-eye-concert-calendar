@@ -8,10 +8,19 @@ from concert_calendar.deduplication import (
     normalize_headliner,
 )
 from concert_calendar.models import ConcertEvent
+from concert_calendar.event_images import (
+    discard_repeated_generic_images,
+    metadata_image_url,
+    official_image_url,
+    structured_image_url,
+)
 from concert_calendar.scrapers.gdp import normalize_date as normalize_gdp_date
 from concert_calendar.scrapers.dice import parse_event as parse_dice_event
 from concert_calendar.scrapers.livenation import document_to_event
+from concert_calendar.scrapers.bataclan import strapi_event_image
+from concert_calendar.scrapers.point_ephemere import parse_document as parse_point_document
 from concert_calendar.scrapers.cigale import parse_detail_metadata
+from concert_calendar.scrapers.corida import parse_show as parse_corida_show
 from concert_calendar.scrapers.maroquinerie import parse_card
 from concert_calendar.scrapers.radical import parse_card as parse_radical_card
 from concert_calendar.scrapers.supersonic import parse_event_row as parse_supersonic_row
@@ -924,6 +933,80 @@ class MetadataMergeTests(unittest.TestCase):
 
 
 class SourceQualityTests(unittest.TestCase):
+    def test_official_image_security_dimensions_and_structured_values(self):
+        self.assertEqual(
+            "https://official.example/event.jpg",
+            official_image_url("https://official.example/event.jpg", width=600, height=400),
+        )
+        self.assertIsNone(official_image_url("http://official.example/event.jpg"))
+        self.assertIsNone(official_image_url("https://official.example/logo.svg"))
+        self.assertIsNone(official_image_url("https://official.example/event.jpg", width=80, height=80))
+        self.assertEqual(
+            "https://official.example/schema.jpg",
+            structured_image_url([{"url": "https://official.example/schema.jpg", "width": 800, "height": 600}]),
+        )
+
+    def test_repeated_generic_site_image_is_rejected(self):
+        events = [make_event(f"Artist {index}") for index in range(5)]
+        for event in events:
+            event.image_url = "https://official.example/shared-default.jpg"
+            event.image_source = "Official"
+        discard_repeated_generic_images(events)
+        self.assertTrue(all(event.image_url is None for event in events))
+
+    def test_open_graph_image_is_extracted_from_already_fetched_page(self):
+        soup = BeautifulSoup(
+            '<meta property="og:image" content="https://official.example/event.jpg">',
+            "html.parser",
+        )
+        self.assertEqual(
+            "https://official.example/event.jpg", metadata_image_url(soup)
+        )
+
+    def test_open_graph_logo_is_rejected(self):
+        soup = BeautifulSoup(
+            '<meta property="og:image" content="https://official.example/site-logo.png">',
+            "html.parser",
+        )
+        self.assertIsNone(metadata_image_url(soup))
+
+    def test_bataclan_structured_api_image_is_extracted(self):
+        value = {
+            "imageList": {"data": {"attributes": {"formats": {"list": {
+                "url": "https://bataclan.example/list-event.jpg", "width": 600, "height": 600,
+            }}}}}
+        }
+        self.assertEqual("https://bataclan.example/list-event.jpg", strapi_event_image(value))
+
+    def test_point_ephemere_structured_cover_is_extracted(self):
+        event = parse_point_document({
+            "uid": "artist",
+            "data": {
+                "start_date": "2027-01-02", "name": "Artist",
+                "displayed_category": "Rock",
+                "cover": {"url": "https://images.prismic.io/event.jpg", "dimensions": {"width": 800, "height": 600}},
+            },
+        })
+        self.assertEqual("https://images.prismic.io/event.jpg", event.image_url)
+        self.assertEqual("Point Éphémère", event.image_source)
+
+    def test_corida_reuses_listing_event_image(self):
+        show = BeautifulSoup(
+            """
+            <div class="show animated">
+              <div class="show-image"><img src="https://corida.fr/uploads/artist.jpg"></div>
+              <div class="show animated">
+                <h2>Artist</h2><div class="venue">Salle Pleyel, Paris</div>
+                <span class="date">2 janvier 2027</span>
+              </div>
+            </div>
+            """,
+            "html.parser",
+        ).select_one("div.show")
+        events = parse_corida_show(show)
+        self.assertEqual("https://corida.fr/uploads/artist.jpg", events[0].image_url)
+        self.assertEqual("Corida", events[0].image_source)
+
     def test_olympia_explicit_complet_status_is_sold_out(self):
         item = {
             "post_title": "Sold Out Artist",
@@ -933,11 +1016,16 @@ class SourceQualityTests(unittest.TestCase):
                 "begin_date_ymd": "2027-01-02",
                 "end_date_ymd": "2027-01-02",
                 "infos_text_status": "Complet",
+                "image": {
+                    "url": "https://www.olympiahall.com/event.jpg", "width": 1000, "height": 1250,
+                    "sizes": {"page-programmation-desktop": "https://www.olympiahall.com/event-352.jpg", "page-programmation-desktop-width": 352, "page-programmation-desktop-height": 440},
+                },
             },
         }
         parsed = parse_olympia_item(item)
         self.assertEqual(1, len(parsed))
         self.assertTrue(parsed[0].sold_out)
+        self.assertEqual("https://www.olympiahall.com/event-352.jpg", parsed[0].image_url)
 
     def test_dice_release_party_has_no_invented_promoter_or_openers(self):
         event = parse_dice_event(
@@ -1156,6 +1244,7 @@ Stéphane Chandelier • Batterie
                         "url": "/event/artist-paris-tickets-edp1",
                     }
                 ],
+                "image": "https://dynamicmedia.livenationinternational.com/event.png",
             }
         )
 
@@ -1164,6 +1253,8 @@ Stéphane Chandelier • Batterie
             "https://www.livenation.fr/event/artist-paris-tickets-edp1",
             event.ticket_url,
         )
+        self.assertEqual("https://dynamicmedia.livenationinternational.com/event.png", event.image_url)
+        self.assertEqual("Live Nation", event.image_source)
 
     def test_maroquinerie_keeps_facebook_out_of_ticket_url(self):
         from bs4 import BeautifulSoup
@@ -1222,6 +1313,7 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
         html = """
         <script type="application/ld+json">{
           "@type":"Event", "startDate":"2026-11-15",
+          "image":"https://www.aegpresents.fr/event.jpg",
           "location":{"name":"Casino de Paris","address":{"addressLocality":"Paris"}}
         }</script>
         <div class="event-details">
@@ -1242,6 +1334,31 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
         self.assertEqual("2026-11-15", events[0].date)
         self.assertEqual("Casino de Paris", events[0].venue)
         self.assertEqual("Paris", events[0].city)
+        self.assertEqual("https://www.aegpresents.fr/event.jpg", events[0].image_url)
+        self.assertEqual("AEG Presents France", events[0].image_source)
+
+    def test_aeg_reuses_detail_response_open_graph_image_fallback(self):
+        html = """
+        <meta property="og:image" content="https://www.aegpresents.fr/event-og.jpg">
+        <script type="application/ld+json">{
+          "@type":"Event", "startDate":"2026-11-15",
+          "location":{"name":"Casino de Paris","address":{"addressLocality":"Paris"}}
+        }</script>
+        <div class="event-details">
+          <p class="event-date">15 nov.</p>
+          <p class="event-venue">Casino de Paris</p>
+        </div>
+        """
+        response = Mock(text=html)
+        response.raise_for_status = Mock()
+
+        with patch("concert_calendar.scrapers.aeg.requests.get", return_value=response) as get:
+            events = parse_aeg_detail(
+                "https://www.aegpresents.fr/event/example/", "Example"
+            )
+
+        self.assertEqual(1, get.call_count)
+        self.assertEqual("https://www.aegpresents.fr/event-og.jpg", events[0].image_url)
 
     def test_accor_explicit_support_sentence_extracts_wet_leg(self):
         self.assertEqual(

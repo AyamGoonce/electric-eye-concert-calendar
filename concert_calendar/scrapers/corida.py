@@ -4,6 +4,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import official_image_url, discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
 
 
@@ -174,6 +175,8 @@ def parse_show(show):
         return []
 
     ticket_url = find_ticket_url(show)
+    image = show.select_one(":scope > .show-image img[src]")
+    image_url = official_image_url(clean_text(image.get("src"))) if image else None
 
     events = []
 
@@ -197,6 +200,8 @@ def parse_show(show):
                 genre=None,
                 facebook_event_url=None,
                 ticket_url=ticket_url,
+                image_url=image_url,
+                image_source=SOURCE_NAME if image_url else None,
             )
         )
 
@@ -234,4 +239,4 @@ def load_events():
         "Corida ConcertEvent records"
     )
 
-    return events
+    return discard_repeated_generic_images(events)

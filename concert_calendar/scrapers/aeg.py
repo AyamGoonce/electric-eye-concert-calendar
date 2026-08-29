@@ -6,6 +6,11 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import (
+    discard_repeated_generic_images,
+    metadata_image_url,
+    structured_image_url,
+)
 from concert_calendar.models import ConcertEvent
 
 
@@ -226,6 +231,7 @@ def parse_detail_page(detail_url, headliner):
 
     soup = BeautifulSoup(response.text, "html.parser")
     json_ld = get_json_ld_event(soup)
+    image_url = structured_image_url(json_ld.get("image")) or metadata_image_url(soup)
 
     start_date = json_ld.get("startDate") or ""
 
@@ -298,6 +304,8 @@ def parse_detail_page(detail_url, headliner):
             genre=None,
             facebook_event_url=None,
             ticket_url=ticket_url,
+            image_url=image_url,
+            image_source=SOURCE_NAME if image_url else None,
         )
 
         events.append(event)
@@ -458,4 +466,4 @@ def load_events():
 
         events.extend(page_events)
 
-    return events
+    return discard_repeated_generic_images(events)

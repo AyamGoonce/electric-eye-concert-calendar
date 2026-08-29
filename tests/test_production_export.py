@@ -244,6 +244,20 @@ class OptionalEventMetadataTests(unittest.TestCase):
         self.assertNotIn("im", data)
         self.assertNotIn("is", data)
 
+    def test_repeated_generic_image_is_suppressed_across_sources(self):
+        events = [
+            make_event(
+                "2027-01-02", f"Artist {index}",
+                image_url="https://official.example/shared-event.jpg",
+                image_source="Official venue",
+            )
+            for index in range(5)
+        ]
+
+        payload = prepare_upcoming_events(events, today=date(2027, 1, 1))
+
+        self.assertTrue(all("im" not in item and "is" not in item for item in payload))
+
 
 class ProductionHTMLTests(unittest.TestCase):
     def setUp(self):

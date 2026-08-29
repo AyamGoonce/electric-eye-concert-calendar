@@ -3,6 +3,7 @@ from datetime import date, datetime, timedelta
 
 import requests
 
+from concert_calendar.event_images import official_image_url, discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
 
 
@@ -130,6 +131,13 @@ def parse_item(item):
     openers = split_support(meta.get("artistes_premiere_partie"))
     genre = ", ".join(sorted(genres.intersection(MUSIC_GENRES))) or None
     ticket_url = clean_text(item.get("permalink")) or None
+    image = meta.get("image") or {}
+    sizes = image.get("sizes") or {}
+    image_url = official_image_url(
+        sizes.get("page-programmation-desktop") or image.get("url"),
+        width=sizes.get("page-programmation-desktop-width") or image.get("width"),
+        height=sizes.get("page-programmation-desktop-height") or image.get("height"),
+    )
 
     return [
         ConcertEvent(
@@ -144,6 +152,8 @@ def parse_item(item):
             facebook_event_url=None,
             ticket_url=ticket_url,
             sold_out="complet" in status,
+            image_url=image_url,
+            image_source=SOURCE_NAME if image_url else None,
         )
         for event_date in dates
     ]
@@ -203,4 +213,4 @@ def load_events():
 
     print(f"Created {len(events)} L’Olympia ConcertEvent records")
 
-    return events
+    return discard_repeated_generic_images(events)

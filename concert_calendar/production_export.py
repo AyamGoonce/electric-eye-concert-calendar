@@ -10,6 +10,7 @@ import unicodedata
 from urllib.parse import urlparse
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.event_images import repeated_generic_image_urls
 from concert_calendar.genres import PUBLIC_GENRES, map_raw_genre
 from concert_calendar.event_state import canonical_event_identity
 
@@ -99,10 +100,13 @@ def genre_categories(value: str | None) -> list[str]:
     return [mapped] if mapped else []
 
 
-def event_to_data(event: ConcertEvent) -> dict:
+def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None) -> dict:
     # Aggregator artwork is not an official event/venue fallback.  DICE remains
     # useful for gap-filling event data, but its images are not published.
-    image = None if event.image_source == "DICE" else safe_image_url(event.image_url)
+    image = (
+        None if event.image_source == "DICE" or event.image_url in (rejected_images or set())
+        else safe_image_url(event.image_url)
+    )
     return {
         "d": event.date[:10],
         "h": event.headliner,
@@ -157,7 +161,9 @@ def prepare_upcoming_events(
         )
     )
 
-    return [event_to_data(event) for _, event in upcoming]
+    upcoming_events = [event for _, event in upcoming]
+    rejected_images = repeated_generic_image_urls(upcoming_events)
+    return [event_to_data(event, rejected_images) for event in upcoming_events]
 
 
 def serialize_data(value: object) -> str:

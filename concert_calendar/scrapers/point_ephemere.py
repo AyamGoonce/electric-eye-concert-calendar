@@ -3,6 +3,7 @@ from datetime import date, timedelta
 
 import requests
 
+from concert_calendar.event_images import official_image_url, discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
 
 
@@ -35,6 +36,17 @@ def link_url(value):
     return clean_text(value.get("url")) or None
 
 
+def prismic_event_image(value):
+    if not isinstance(value, dict):
+        return None
+    dimensions = value.get("dimensions") or {}
+    return official_image_url(
+        value.get("url"),
+        width=dimensions.get("width"),
+        height=dimensions.get("height"),
+    )
+
+
 def split_bill(value):
     artists = [
         clean_text(part)
@@ -53,6 +65,7 @@ def parse_document(document):
     event_date = clean_text(data.get("start_date"))
     headliner, openers = split_bill(data.get("name"))
     uid = clean_text(document.get("uid"))
+    image_url = prismic_event_image(data.get("cover"))
 
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", event_date):
         return None
@@ -77,6 +90,8 @@ def parse_document(document):
             link_url(data.get("ticket_link"))
             or EVENT_URL_TEMPLATE.format(uid=uid)
         ),
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -164,4 +179,4 @@ def load_events():
         "Point Éphémère ConcertEvent records"
     )
 
-    return events
+    return discard_repeated_generic_images(events)
