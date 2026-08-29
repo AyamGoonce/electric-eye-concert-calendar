@@ -13,7 +13,8 @@
     text(mount,"p",humanDate(event.d)+" · "+event.v+(event.c.toLowerCase()==="paris"?"":" · "+event.c),"ee-page-context");
     var actions=document.createElement("div");actions.className="ee-page-actions";
     var back=document.createElement("a");back.href=calendarUrl+"#event-"+event.i;back.textContent="View in Concert Calendar";actions.append(back);
-    if(event.t){var tickets=document.createElement("a");tickets.href=event.t;tickets.target="_blank";tickets.rel="noopener noreferrer";tickets.textContent="Tickets";actions.append(tickets);}mount.append(actions);
+    if(event.t){var tickets=document.createElement("a");tickets.href=event.t;tickets.target="_blank";tickets.rel="noopener noreferrer";tickets.textContent="Tickets";actions.append(tickets);}
+    var officialSeen=new Set();(event.ee||[]).forEach(function(item){var artist=index.artists[item.slug];if(!artist||!artist.os||officialSeen.has(artist.os))return;officialSeen.add(artist.os);var official=document.createElement("a");official.href=artist.os;official.target="_blank";official.rel="noopener noreferrer";official.textContent=artist.n+" Official Site";actions.append(official);});mount.append(actions);
     text(mount,"h2","Electric Eye Coverage","ee-coverage-heading");
     var slugs=(event.ee||[]).map(function(link){return link.slug;}),articles=new Map();
     slugs.forEach(function(slug){var artist=index.artists[slug];if(!artist)return;artist.ar.forEach(function(articleId){var article=index.articles[articleId],record=articles.get(article.u);if(!record){record={article:article,artists:[]};articles.set(article.u,record);}if(!record.artists.includes(artist.n))record.artists.push(artist.n);});});
