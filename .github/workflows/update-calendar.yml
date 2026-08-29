@@ -31,10 +31,12 @@ jobs:
 
     steps:
       - name: Check out automation source
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip
@@ -49,11 +51,18 @@ jobs:
         run: node --test tests/artist_autolinker.test.js
 
       - name: Check out current Pages branch
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: gh-pages
           path: pages
           fetch-depth: 0
+          persist-credentials: false
+
+      - name: Record last-known-good Pages release
+        id: baseline
+        run: |
+          echo "commit=$(git -C pages rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "sha256=$(python -m concert_calendar.automation pointer-digest --pointer pages/proof/calendar-current.js)" >> "$GITHUB_OUTPUT"
 
       - name: Build and validate live calendar
         id: build
@@ -74,36 +83,79 @@ jobs:
           fi
           python -m concert_calendar.automation build "${arguments[@]}"
 
-      - name: Stage validated Pages publication
-        run: >-
-          python -m concert_calendar.automation publish
-          --generated-dir output/automation
-          --pages-dir pages
+      - name: Check out Pages publication workspace
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: gh-pages
+          path: pages-write
+          fetch-depth: 0
 
-      - name: Commit and push Pages update
-        id: publish
-        working-directory: pages
+      - name: Confirm publication baseline is unchanged
+        run: test "$(git -C pages-write rev-parse HEAD)" = "${{ steps.baseline.outputs.commit }}"
+
+      - name: Stage immutable candidate publication
+        run: >-
+          python -m concert_calendar.automation stage-candidate
+          --generated-dir output/automation
+          --pages-dir pages-write
+          --candidate-id "${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
+
+      - name: Publish candidate without changing the live pointer
+        working-directory: pages-write
         run: |
-          if [[ -z "$(git status --porcelain -- proof)" ]]; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A "proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
+          git commit -m "Stage calendar candidate (${{ steps.build.outputs.event_count }} events)"
+          git push origin HEAD:gh-pages
+
+      - name: Verify candidate and stage live promotion
+        run: >-
+          python -m concert_calendar.automation promote-verified
+          --candidate-dir "pages-write/proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
+          --pages-dir pages-write
+          --base-url "https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
+          --sha256 "${{ steps.build.outputs.sha256 }}"
+
+      - name: Promote verified candidate to live Pages
+        id: publish
+        working-directory: pages-write
+        run: |
           git add -A proof
-          git commit -m "Update calendar data (${{ steps.build.outputs.event_count }} events)"
+          git commit -m "Promote verified calendar (${{ steps.build.outputs.event_count }} events)"
           git push origin HEAD:gh-pages
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Verify hosted publication
+      - name: Verify final live publication
+        id: final_verify
+        continue-on-error: true
         run: >-
           python -m concert_calendar.automation verify-hosted
           --base-url https://ayamgoonce.github.io/electric-eye-concert-calendar/proof
           --sha256 "${{ steps.build.outputs.sha256 }}"
 
+      - name: Restore last-known-good release after final verification failure
+        if: steps.final_verify.outcome == 'failure'
+        working-directory: pages-write
+        run: |
+          git restore --source="${{ steps.baseline.outputs.commit }}" --staged --worktree -- .
+          git commit -m "Rollback failed calendar publication"
+          git push origin HEAD:gh-pages
+
+      - name: Verify restored last-known-good release
+        if: steps.final_verify.outcome == 'failure'
+        run: >-
+          python -m concert_calendar.automation verify-hosted
+          --base-url https://ayamgoonce.github.io/electric-eye-concert-calendar/proof
+          --sha256 "${{ steps.baseline.outputs.sha256 }}"
+
+      - name: Fail after verified rollback
+        if: steps.final_verify.outcome == 'failure'
+        run: exit 1
+
       - name: Upload production diagnostics
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: calendar-production-report-${{ github.run_id }}
           path: output/automation/automation-report.json

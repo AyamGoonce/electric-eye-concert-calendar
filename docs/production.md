@@ -13,9 +13,13 @@ The production refresh runs entirely on a GitHub-hosted Ubuntu runner:
    URLs, hashes, source counts, and event counts are validated.
 6. Canonical event state is reconciled and validated against the durable
    `proof/calendar-state.json` file from the current Pages branch.
-7. Only validated assets and candidate state are staged and committed to the
-   `gh-pages` branch.
-8. The hosted pointer, hashed data, state, renderer, and CSS are verified over HTTPS.
+7. A complete immutable candidate is committed below `proof/candidates/`
+   without changing the live pointer.
+8. The hosted candidate pointer, data, state, and supporting assets are
+   verified over HTTPS before promotion.
+9. The verified candidate is promoted to `proof/`, stale test harnesses and
+   candidate directories are removed, and the final live publication is
+   verified independently.
 
 GitHub Pages hosts the static assets. Blogger remains the public website and
 loads those assets; ordinary updates do not require Blogger edits. The user's
@@ -82,17 +86,27 @@ catches obvious duplication or runaway pagination. A reviewed manual run can
 explicitly override this count-only guard; it cannot override any other
 validation.
 
-The workflow commits to `gh-pages` only after all local validation succeeds.
-The hashed data file and pointer change in the same Git commit, so Pages never
-receives a commit whose pointer references a missing file. A failed job leaves
-the existing Pages commit and calendar online.
+The workflow commits an immutable candidate to `gh-pages` only after all local
+validation succeeds. That commit does not modify `proof/calendar-current.js`,
+so candidate verification failure leaves the existing live calendar untouched.
+Only a candidate that passes hosted verification is copied into `proof/`; the
+hashed data file and pointer then change in the same promotion commit.
+
+The final live path is verified again after promotion. If that check fails,
+the workflow restores the recorded last-known-good tree in a normal rollback
+commit, pushes it without rewriting history, verifies the restored publication,
+and then fails the run. The source and initial Pages checkouts do not persist
+Git credentials; a separate authenticated Pages checkout is created only after
+the scrape and build have passed.
 
 ## Data retention and rollback
 
 Each successful publication retains the current hashed data asset and the two
 most recent prior assets. Older hashes are removed in the same atomic Pages
 commit. Stable renderer and CSS files are copied only when their content
-changes.
+changes. Production promotion also removes candidate directories and obsolete
+public fixtures or diagnostic harnesses; those fixtures remain available only
+in local generated test output.
 
 To roll back, restore `proof/calendar-current.js` from the desired known-good
 `gh-pages` commit together with its `calendar-state.json` and referenced data

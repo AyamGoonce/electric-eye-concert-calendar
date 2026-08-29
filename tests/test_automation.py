@@ -7,9 +7,13 @@ from datetime import datetime, timedelta, timezone
 import json
 
 from concert_calendar.automation import (
+    PUBLIC_STABLE_ASSETS,
+    STALE_PUBLIC_TEST_ASSETS,
     ProductionValidationError,
     publish,
+    promote_verified,
     read_pointer,
+    stage_candidate,
     validate_count_regression,
     validate_genre_coverage,
     validate_events,
@@ -45,6 +49,39 @@ def valid_event(index=0):
         "ts": "tickets",
         "st": None,
     }
+
+
+def write_generated_publication(destination, marker="candidate"):
+    destination.mkdir(parents=True, exist_ok=True)
+    for stable in PUBLIC_STABLE_ASSETS:
+        if stable != "electric-eye-content-current.js":
+            (destination / stable).write_text(stable, encoding="utf-8")
+    content_body = f"content-{marker}".encode()
+    content_digest = hashlib.sha256(content_body).hexdigest()
+    content_name = f"electric-eye-content.{content_digest[:16]}.js"
+    (destination / content_name).write_bytes(content_body)
+    (destination / "electric-eye-content-current.js").write_text(
+        "window.ElectricEyeContentManifest=Object.freeze("
+        + json.dumps({"data": content_name, "sha256": content_digest})
+        + ");\n",
+        encoding="utf-8",
+    )
+    state = {"version": 1, "updated_at": "2026-08-23T10:00:00Z", "events": {}}
+    state_digest = write_state(destination / "calendar-state.json", state)
+    filename, digest, asset = build_data_asset(
+        [valid_event(index) for index in range(100)],
+        published_at="2026-08-23T10:00:00Z",
+    )
+    (destination / filename).write_text(asset, encoding="utf-8")
+    (destination / "calendar-current.js").write_text(
+        build_current_pointer(
+            filename, digest, 100,
+            published_at="2026-08-23T10:00:00Z",
+            state_sha256=state_digest,
+        ),
+        encoding="utf-8",
+    )
+    return filename, digest
 
 
 class AutomationValidationTests(unittest.TestCase):
@@ -121,16 +158,6 @@ class AutomationValidationTests(unittest.TestCase):
             generated.mkdir()
             proof.mkdir(parents=True)
 
-            for stable in ("calendar-renderer.js", "calendar.css"):
-                (generated / stable).write_text(stable, encoding="utf-8")
-
-            state = {
-                "version": 1,
-                "updated_at": "2026-08-23T10:00:00Z",
-                "events": {},
-            }
-            state_digest = write_state(generated / "calendar-state.json", state)
-
             old_names = []
             for marker in ("oldest", "previous"):
                 body = marker.encode()
@@ -165,19 +192,7 @@ class AutomationValidationTests(unittest.TestCase):
                 check=True,
             )
 
-            filename, digest, asset = build_data_asset(
-                [valid_event(index) for index in range(100)]
-            )
-            (generated / filename).write_text(asset, encoding="utf-8")
-            (generated / "calendar-current.js").write_text(
-                build_current_pointer(
-                    filename,
-                    digest,
-                    100,
-                    published_at="2026-08-23T10:00:00Z",
-                    state_sha256=state_digest,
-                ), encoding="utf-8"
-            )
+            filename, digest = write_generated_publication(generated)
             args = type(
                 "Args",
                 (),
@@ -189,6 +204,83 @@ class AutomationValidationTests(unittest.TestCase):
             self.assertEqual(read_pointer(proof / "calendar-current.js")["data"], filename)
             self.assertEqual(len(list(proof.glob("calendar-data.*.js"))), 3)
             self.assertEqual((proof / "calendar-state.json").read_text(), (generated / "calendar-state.json").read_text())
+
+    def test_candidate_failure_leaves_live_release_and_success_promotes(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            generated = root / "generated"
+            pages = root / "pages"
+            proof = pages / "proof"
+            proof.mkdir(parents=True)
+            old_body = b"known-good"
+            old_digest = hashlib.sha256(old_body).hexdigest()
+            old_name = f"calendar-data.{old_digest[:16]}.js"
+            (proof / old_name).write_bytes(old_body)
+            (proof / "calendar-current.js").write_text(
+                build_current_pointer(old_name, old_digest, 99), encoding="utf-8"
+            )
+            for stale in STALE_PUBLIC_TEST_ASSETS:
+                (proof / stale).write_text("test harness", encoding="utf-8")
+            __import__("subprocess").run(["git", "init", "-q"], cwd=pages, check=True)
+            __import__("subprocess").run(["git", "add", "."], cwd=pages, check=True)
+            __import__("subprocess").run(
+                ["git", "-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "baseline"],
+                cwd=pages, check=True,
+            )
+            filename, digest = write_generated_publication(generated)
+            candidate_id = digest + "-123"
+            stage_candidate(type("Args", (), {
+                "generated_dir": str(generated), "pages_dir": str(pages),
+                "candidate_id": candidate_id,
+            })())
+            candidate = proof / "candidates" / candidate_id
+            promote_args = type("Args", (), {
+                "candidate_dir": str(candidate), "pages_dir": str(pages),
+                "base_url": "https://example.invalid/candidate",
+                "sha256": digest, "timeout": 1,
+            })()
+
+            def fail_verification(_args):
+                raise ProductionValidationError("forced hosted verification failure")
+
+            with self.assertRaises(ProductionValidationError):
+                promote_verified(promote_args, verifier=fail_verification)
+            self.assertEqual(read_pointer(proof / "calendar-current.js")["data"], old_name)
+
+            promote_verified(promote_args, verifier=lambda _args: 0)
+            self.assertEqual(read_pointer(proof / "calendar-current.js")["data"], filename)
+            self.assertFalse(any((proof / stale).exists() for stale in STALE_PUBLIC_TEST_ASSETS))
+            self.assertFalse((proof / "candidates").exists())
+
+    def test_final_verification_rollback_is_a_normal_commit_restoring_baseline(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            pages = Path(temporary)
+            proof = pages / "proof"
+            proof.mkdir()
+            subprocess = __import__("subprocess")
+            subprocess.run(["git", "init", "-q"], cwd=pages, check=True)
+            subprocess.run(["git", "config", "user.name", "Test"], cwd=pages, check=True)
+            subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=pages, check=True)
+            (proof / "calendar-current.js").write_text("known-good", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=pages, check=True)
+            subprocess.run(["git", "commit", "-qm", "baseline"], cwd=pages, check=True)
+            baseline = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=pages, text=True).strip()
+
+            (proof / "calendar-current.js").write_text("promoted-candidate", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=pages, check=True)
+            subprocess.run(["git", "commit", "-qm", "promotion"], cwd=pages, check=True)
+            subprocess.run(
+                ["git", "restore", f"--source={baseline}", "--staged", "--worktree", "--", "."],
+                cwd=pages, check=True,
+            )
+            subprocess.run(["git", "commit", "-qm", "rollback"], cwd=pages, check=True)
+
+            self.assertEqual((proof / "calendar-current.js").read_text(), "known-good")
+            self.assertEqual(
+                subprocess.check_output(["git", "rev-list", "--count", "HEAD"], cwd=pages, text=True).strip(),
+                "3",
+            )
+            subprocess.run(["git", "merge-base", "--is-ancestor", baseline, "HEAD"], cwd=pages, check=True)
 
 
 class PersistentEventStateTests(unittest.TestCase):

@@ -79,6 +79,17 @@ DESCRIPTIVE_VENUE_RE = re.compile(
     r"\bsupport\s*:)",
     re.IGNORECASE,
 )
+PUBLIC_STABLE_ASSETS = (
+    "calendar-renderer.js", "calendar.css", "artist-page.js",
+    "artist-page.css", "artist-autolinker.js", "artist.html",
+    "coverage-page.js", "coverage.html",
+    "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
+)
+STALE_PUBLIC_TEST_ASSETS = (
+    "calendar-current-missing.js", "calendar-malformed.js",
+    "data-first.html", "diagnostic.html", "index.html", "malformed.html",
+    "missing.html", "responsive-harness.html",
+)
 
 
 class ProductionValidationError(RuntimeError):
@@ -100,6 +111,11 @@ def read_pointer(path: Path) -> dict:
     ):
         raise ProductionValidationError(f"Malformed calendar pointer: {path}")
     return manifest
+
+
+def print_pointer_digest(args) -> int:
+    print(read_pointer(Path(args.pointer))["sha256"])
+    return 0
 
 
 def validate_events(events: list[dict]) -> None:
@@ -369,54 +385,86 @@ def git_timestamp(repository: Path, relative_path: Path) -> int:
     return int(result.stdout.strip() or 0)
 
 
+def validated_publication_files(source: Path) -> tuple[dict, list[Path]]:
+    pointer_path = source / "calendar-current.js"
+    pointer = read_pointer(pointer_path)
+    data = source / pointer["data"]
+    state = source / pointer.get("state", "")
+    if not data.is_file() or hashlib.sha256(data.read_bytes()).hexdigest() != pointer["sha256"]:
+        raise ProductionValidationError("Refusing to publish invalid generated data")
+    if (
+        not state.is_file()
+        or hashlib.sha256(state.read_bytes()).hexdigest() != pointer.get("stateSha256")
+    ):
+        raise ProductionValidationError("Refusing to publish invalid event state")
+
+    files = [pointer_path, data, state]
+    for stable_name in PUBLIC_STABLE_ASSETS:
+        stable = source / stable_name
+        if not stable.is_file():
+            raise ProductionValidationError(f"Generated publication is missing {stable_name}")
+        files.append(stable)
+
+    content_pointer = source / "electric-eye-content-current.js"
+    content_match = re.search(
+        r"ElectricEyeContentManifest=Object\.freeze\((\{.*?\})\)",
+        content_pointer.read_text(encoding="utf-8"),
+    )
+    if not content_match:
+        raise ProductionValidationError("Generated content pointer is malformed")
+    content_manifest = json.loads(content_match.group(1))
+    content_data = source / content_manifest.get("data", "")
+    if (
+        not content_data.is_file()
+        or hashlib.sha256(content_data.read_bytes()).hexdigest()
+        != content_manifest.get("sha256")
+    ):
+        raise ProductionValidationError("Generated content index hash is invalid")
+    files.append(content_data)
+    return pointer, list(dict.fromkeys(files))
+
+
+def stage_candidate(args) -> int:
+    generated = Path(args.generated_dir)
+    pages = Path(args.pages_dir)
+    if not re.fullmatch(r"[0-9a-f]{64}-[0-9]+", args.candidate_id):
+        raise ProductionValidationError("Candidate ID is malformed")
+    pointer, files = validated_publication_files(generated)
+    candidate = pages / "proof" / "candidates" / args.candidate_id
+    if candidate.exists():
+        raise ProductionValidationError(f"Candidate already exists: {args.candidate_id}")
+    candidate.mkdir(parents=True)
+    for source in files:
+        shutil.copyfile(source, candidate / source.name)
+    print(f"Staged immutable candidate {args.candidate_id}: {pointer['count']} events")
+    return 0
+
+
 def publish(args) -> int:
     generated = Path(args.generated_dir)
     pages = Path(args.pages_dir)
     proof = pages / "proof"
     proof.mkdir(parents=True, exist_ok=True)
 
-    new_pointer = read_pointer(generated / "calendar-current.js")
+    new_pointer, publication_files = validated_publication_files(generated)
     old_pointer = (
         read_pointer(proof / "calendar-current.js")
         if (proof / "calendar-current.js").exists()
         else None
     )
     new_data = generated / new_pointer["data"]
-    if hashlib.sha256(new_data.read_bytes()).hexdigest() != new_pointer["sha256"]:
-        raise ProductionValidationError("Refusing to publish invalid generated hash")
     new_state = generated / new_pointer.get("state", "")
-    if (
-        not new_state.is_file()
-        or hashlib.sha256(new_state.read_bytes()).hexdigest()
-        != new_pointer.get("stateSha256")
-    ):
-        raise ProductionValidationError("Refusing to publish invalid event state")
 
     shutil.copyfile(new_data, proof / new_data.name)
     shutil.copyfile(new_state, proof / STATE_FILENAME)
-    for stable_name in (
-        "calendar-renderer.js", "calendar.css", "artist-page.js",
-        "artist-page.css", "artist-autolinker.js", "artist.html",
-        "coverage-page.js", "coverage.html",
-        "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
-    ):
+    for stable_name in PUBLIC_STABLE_ASSETS:
         source = generated / stable_name
         target = proof / stable_name
-        if not source.exists() and stable_name not in {"calendar-renderer.js", "calendar.css"}:
-            continue
         if not target.exists() or source.read_bytes() != target.read_bytes():
             shutil.copyfile(source, target)
-    content_pointer = generated / "electric-eye-content-current.js"
-    if content_pointer.exists():
-        content_manifest_text = content_pointer.read_text(encoding="utf-8")
-        content_match = re.search(r"ElectricEyeContentManifest=Object\.freeze\((\{.*?\})\)", content_manifest_text)
-        if not content_match:
-            raise ProductionValidationError("Generated content pointer is malformed")
-        content_manifest = json.loads(content_match.group(1))
-        content_data = generated / content_manifest["data"]
-        if hashlib.sha256(content_data.read_bytes()).hexdigest() != content_manifest["sha256"]:
-            raise ProductionValidationError("Generated content index hash is invalid")
-        shutil.copyfile(content_data, proof / content_data.name)
+    for source in publication_files:
+        if source.name.startswith("electric-eye-content."):
+            shutil.copyfile(source, proof / source.name)
     shutil.copyfile(generated / "calendar-current.js", proof / "calendar-current.js")
 
     previous = []
@@ -439,9 +487,26 @@ def publish(args) -> int:
     )
     for candidate in content_candidates[3:]:
         candidate.unlink()
+    for stale_name in STALE_PUBLIC_TEST_ASSETS:
+        stale = proof / stale_name
+        if stale.exists():
+            stale.unlink()
+    candidates = proof / "candidates"
+    if candidates.exists():
+        shutil.rmtree(candidates)
 
     print("Retained data assets: " + ", ".join(sorted(keep)))
     return 0
+
+
+def promote_verified(args, verifier=None) -> int:
+    (verifier or verify_hosted)(args)
+    publish_args = type(
+        "PublishArgs",
+        (),
+        {"generated_dir": args.candidate_dir, "pages_dir": args.pages_dir},
+    )()
+    return publish(publish_args)
 
 
 def verify_hosted(args) -> int:
@@ -551,11 +616,29 @@ def make_parser() -> argparse.ArgumentParser:
     publish_parser.add_argument("--pages-dir", required=True)
     publish_parser.set_defaults(handler=publish)
 
+    candidate_parser = commands.add_parser("stage-candidate")
+    candidate_parser.add_argument("--generated-dir", required=True)
+    candidate_parser.add_argument("--pages-dir", required=True)
+    candidate_parser.add_argument("--candidate-id", required=True)
+    candidate_parser.set_defaults(handler=stage_candidate)
+
+    promote_parser = commands.add_parser("promote-verified")
+    promote_parser.add_argument("--candidate-dir", required=True)
+    promote_parser.add_argument("--pages-dir", required=True)
+    promote_parser.add_argument("--base-url", required=True)
+    promote_parser.add_argument("--sha256", required=True)
+    promote_parser.add_argument("--timeout", type=int, default=600)
+    promote_parser.set_defaults(handler=promote_verified)
+
     verify_parser = commands.add_parser("verify-hosted")
     verify_parser.add_argument("--base-url", required=True)
     verify_parser.add_argument("--sha256", required=True)
     verify_parser.add_argument("--timeout", type=int, default=600)
     verify_parser.set_defaults(handler=verify_hosted)
+
+    digest_parser = commands.add_parser("pointer-digest")
+    digest_parser.add_argument("--pointer", required=True)
+    digest_parser.set_defaults(handler=print_pointer_digest)
 
     return parser
 
