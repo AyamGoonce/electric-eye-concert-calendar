@@ -41,6 +41,10 @@ MANUAL_ARTIST_ARTICLES = {
     },
 }
 
+# Reviewed official artist websites. Add only the artist's own official site.
+OFFICIAL_ARTIST_SITES = {
+}
+
 PROSE_AUTOLINK_EXCLUSIONS = {
     # Reviewed ordinary words, geographic names, and contextually ambiguous
     # identities. They remain indexed and usable in structured calendar bills.
@@ -287,6 +291,11 @@ def build_index(entries, *, generated_at=None):
             if normalize_artist(target) == normalize_artist(canonical):
                 aliases.append(alias)
         item = {"n": canonical, "al": sorted(set(aliases), key=normalize_artist), "ar": article_ids}
+        official_site = OFFICIAL_ARTIST_SITES.get(canonical)
+        if official_site:
+            parsed_site = urlparse(official_site)
+            if parsed_site.scheme == "https" and parsed_site.netloc:
+                item["os"] = official_site
         heroes = [
             articles[index] for index in article_ids
             if articles[index]["y"] == "concert_review" and articles[index].get("im")
