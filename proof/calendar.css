@@ -435,7 +435,7 @@
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-event-row {
   display: grid;
-  grid-template-columns: 145px minmax(220px, 1.6fr) minmax(210px, 1fr) minmax(120px, .8fr) 92px;
+  grid-template-columns: 80px 125px minmax(220px, 1.6fr) minmax(180px, 1fr) minmax(110px, .7fr) 92px;
   gap: 18px;
   align-items: start;
   padding: 14px 18px;
@@ -460,10 +460,12 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-event-artist {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
   min-width: 0;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-media {
+  width: 80px;
+  min-height: 80px;
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-artist-copy {
@@ -489,7 +491,7 @@
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-coverage {
   margin-top: 6px;
-  color: var(--ee-calendar-muted);
+  color: var(--ee-calendar-accent);
   font-size: .72rem;
 }
 
@@ -651,7 +653,7 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-event-actions {
-  grid-column: 2 / -1;
+  grid-column: 3 / -1;
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -726,11 +728,18 @@
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-event-row {
-    grid-template-columns: 125px minmax(180px, 1.5fr) minmax(170px, 1fr) 88px;
+    grid-template-columns: 64px 105px minmax(180px, 1.5fr) minmax(150px, 1fr) 88px;
+  }
+
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-media,
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-thumbnail {
+    width: 64px;
+    height: 64px;
+    min-height: 64px;
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-metadata {
-    grid-column: 2 / 4;
+    grid-column: 3 / 5;
   }
 }
 
@@ -825,7 +834,7 @@
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-event-row {
     display: grid;
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 64px 1fr auto;
     gap: 7px 12px;
     padding: 15px;
     background: var(--ee-calendar-surface);
@@ -834,9 +843,28 @@
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-event-date,
-  .ee-calendar-page #ee-concert-calendar .ee-calendar-event-artist,
   .ee-calendar-page #ee-concert-calendar .ee-calendar-venue,
   .ee-calendar-page #ee-concert-calendar .ee-calendar-metadata {
+    grid-column: 1 / -1;
+  }
+
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-media {
+    grid-column: 1;
+    grid-row: 2;
+    width: 64px;
+    min-height: 0;
+  }
+
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-media:empty {
+    display: none;
+  }
+
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-event-artist {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-event-row:has(.ee-calendar-media:empty) .ee-calendar-event-artist {
     grid-column: 1 / -1;
   }
 
@@ -853,13 +881,13 @@
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-ticket {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
     min-height: 42px;
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-sold-out {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
   }
 
@@ -867,7 +895,7 @@
   .ee-calendar-page #ee-concert-calendar .ee-calendar-not-on-sale,
   .ee-calendar-page #ee-concert-calendar .ee-calendar-cancelled,
   .ee-calendar-page #ee-concert-calendar .ee-calendar-postponed {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
   }
 
