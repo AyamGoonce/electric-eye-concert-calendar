@@ -31,6 +31,13 @@ EXPLICIT_ALIASES = {
     "69 Eyes": "The 69 Eyes",
     "Altons": "The Altons",
 }
+
+# Reviewed manual associations for Electric Eye articles whose artist identity
+# cannot be established reliably from Blogger labels/title metadata.
+# Add only genuine Electric Eye article URLs here.
+MANUAL_ARTIST_ARTICLES = {
+}
+
 PROSE_AUTOLINK_EXCLUSIONS = {
     # Reviewed ordinary words, geographic names, and contextually ambiguous
     # identities. They remain indexed and usable in structured calendar bills.
@@ -206,6 +213,13 @@ def build_index(entries, *, generated_at=None):
         identity = normalize_artist(label)
         canonical_by_identity.setdefault(identity, label)
 
+    # Reviewed manual artists remain valid canonical identities even when
+    # automatic Blogger label/title detection misses them.
+    for canonical in MANUAL_ARTIST_ARTICLES:
+        identity = normalize_artist(canonical)
+        if identity:
+            canonical_by_identity.setdefault(identity, canonical)
+
     for alias, canonical in EXPLICIT_ALIASES.items():
         canonical_identity = normalize_artist(canonical)
         if canonical_identity in canonical_by_identity:
@@ -228,6 +242,13 @@ def build_index(entries, *, generated_at=None):
                 matched_names.append(canonical)
                 if label != canonical:
                     aliases_by_canonical[canonical].add(label)
+
+        # Exact reviewed article associations override missed automatic
+        # artist detection without creating identities from calendar data.
+        for canonical, manual_urls in MANUAL_ARTIST_ARTICLES.items():
+            if url in manual_urls and canonical not in matched_names:
+                matched_names.append(canonical)
+
         article_type = classify_article(title, labels)
         article = {
             "u": url,

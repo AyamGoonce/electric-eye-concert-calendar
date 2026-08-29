@@ -2,6 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+import concert_calendar.content_index as content_index
 from concert_calendar.content_index import build_index, classify_article, enrich_events, write_assets
 from concert_calendar.models import ConcertEvent
 
@@ -53,6 +54,27 @@ class ContentIndexTests(unittest.TestCase):
             ["concert_review", "album_review", "news"],
         )
         self.assertNotIn("im", index["articles"][1])
+
+    def test_manual_artist_article_association_survives_automatic_miss(self):
+        manual_url = "https://www.electriceyerock.com/2026/01/manual-artist.html"
+        item = entry("A genuinely miscellaneous post", ["News"], "2026-01-04")
+        item["link"][0]["href"] = manual_url
+
+        content_index.MANUAL_ARTIST_ARTICLES["Engelbert Humperdinck"] = {manual_url}
+        try:
+            index = build_index(
+                [item],
+                generated_at="2026-01-01T00:00:00Z",
+            )
+        finally:
+            del content_index.MANUAL_ARTIST_ARTICLES["Engelbert Humperdinck"]
+
+        self.assertIn("engelbert-humperdinck", index["artists"])
+        self.assertEqual(
+            index["lookup"]["engelbert humperdinck"],
+            "engelbert-humperdinck",
+        )
+        self.assertEqual(index["artists"]["engelbert-humperdinck"]["ar"], [0])
 
     def test_prose_ambiguous_artist_remains_available_to_structured_lookup(self):
         index = build_index([
