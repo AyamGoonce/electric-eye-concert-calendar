@@ -512,6 +512,20 @@
   line-height: 1.3;
 }
 
+.ee-calendar-page #ee-concert-calendar .ee-calendar-artist-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-artist-link:hover,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-artist-link:focus-visible {
+  color: var(--ee-calendar-accent);
+  text-decoration-color: currentColor;
+}
+
 .ee-calendar-page #ee-concert-calendar .ee-calendar-text-button,
 .ee-calendar-page #ee-concert-calendar .ee-calendar-event-artist .ee-calendar-text-button,
 .ee-calendar-page #ee-concert-calendar .ee-calendar-lineup-toggle {

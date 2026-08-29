@@ -267,7 +267,7 @@ class CoHeadlinerRendererTests(unittest.TestCase):
             renderer,
         )
         self.assertIn(
-            'e.ch.forEach(function(name){h.append(document.createTextNode(" + "));h.append(artistButton(name));});',
+            'e.ch.forEach(function(name){h.append(document.createTextNode(" + "));h.append(artistElement(name,e));});',
             renderer,
         )
         self.assertIn(
@@ -277,6 +277,15 @@ class CoHeadlinerRendererTests(unittest.TestCase):
 
 
 class RendererFeatureContractTests(unittest.TestCase):
+    def test_indexed_artist_links_are_separate_from_event_coverage_and_actions(self):
+        renderer = read_renderer()
+        self.assertIn('function artistElement(name,e)', renderer)
+        self.assertIn('proof/artist.html?artist=', renderer)
+        self.assertIn('proof/coverage.html?event=', renderer)
+        self.assertIn('className="ee-calendar-coverage"', renderer)
+        for action in ('"Tickets"', '"Copy link"', '"Share"', '"Add to calendar"'):
+            self.assertIn(action, renderer)
+
     def test_multi_genre_links_ics_preferences_counts_and_recovery_exist(self):
         renderer = read_renderer()
         for required in (

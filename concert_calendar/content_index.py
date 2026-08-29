@@ -31,7 +31,14 @@ EXPLICIT_ALIASES = {
     "69 Eyes": "The 69 Eyes",
     "Altons": "The Altons",
 }
-AMBIGUOUS_AUTOLINK_NAMES = {"Air", "Asia", "Ghost", "Kiss", "Live", "Yes"}
+PROSE_AUTOLINK_EXCLUSIONS = {
+    # Reviewed ordinary words, geographic names, and contextually ambiguous
+    # identities. They remain indexed and usable in structured calendar bills.
+    "Accept", "Air", "Answer", "Ash", "Asia", "Beat", "Circle",
+    "Conversation", "Down", "Earth", "Europe", "Fish", "Garbage",
+    "Ghost", "Kiss", "Live", "Nails", "Ride", "Seal", "Spoon",
+    "Sugar", "Trust", "Winter", "Yes",
+}
 GENERIC_LABELS = {
     "ad", "advertisement", "album", "album review", "announcement",
     "apple music", "concert", "concert review", "electric eye", "festival",
@@ -268,8 +275,6 @@ def build_index(entries, *, generated_at=None):
     lookup = {}
     for slug, artist in artists.items():
         for name in [artist["n"], *artist["al"]]:
-            if name in AMBIGUOUS_AUTOLINK_NAMES:
-                continue
             lookup[normalize_artist(name)] = slug
 
     counts = Counter(article["y"] for article in articles)
@@ -281,7 +286,7 @@ def build_index(entries, *, generated_at=None):
         "diagnostics": {
             "articleCounts": dict(sorted(counts.items())),
             "aliases": sum(len(item["al"]) for item in artists.values()),
-            "ambiguousLookupExclusions": sorted(AMBIGUOUS_AUTOLINK_NAMES),
+            "proseAutolinkExclusions": sorted(PROSE_AUTOLINK_EXCLUSIONS),
             "slugCollisions": collisions,
             "unresolvedArticles": sum(not article["a"] for article in articles),
         },
@@ -308,6 +313,7 @@ def enrich_events(events, index):
                 continue
             links.append({
                 "name": artists[slug]["n"], "slug": slug,
+                "display": name,
                 "count": len(artists[slug]["ar"]),
                 "role": (
                     "headliner" if position < headliner_count else
@@ -357,11 +363,14 @@ def write_assets(output_dir, index):
     compact = {
         "schema": 1,
         "artistPage": ARTIST_PAGE_URL,
+        "proseAutolinkExclusions": sorted({
+            slugify(name) for name in PROSE_AUTOLINK_EXCLUSIONS
+            if slugify(name) in index["artists"]
+        }),
         "terms": {
             name: slug
             for slug, artist in sorted(index["artists"].items())
             for name in [artist["n"], *artist["al"]]
-            if name not in AMBIGUOUS_AUTOLINK_NAMES
         },
     }
     (destination / "electric-eye-artist-lookup.js").write_text(

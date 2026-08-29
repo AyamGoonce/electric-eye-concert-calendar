@@ -1,7 +1,8 @@
+import tempfile
 import unittest
 from pathlib import Path
 
-from concert_calendar.content_index import build_index, classify_article, enrich_events
+from concert_calendar.content_index import build_index, classify_article, enrich_events, write_assets
 from concert_calendar.models import ConcertEvent
 
 
@@ -53,12 +54,33 @@ class ContentIndexTests(unittest.TestCase):
         )
         self.assertNotIn("im", index["articles"][1])
 
-    def test_ambiguous_artist_is_not_put_in_public_lookup(self):
+    def test_prose_ambiguous_artist_remains_available_to_structured_lookup(self):
         index = build_index([
             entry("Live @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "Live"]),
         ], generated_at="2026-01-01T00:00:00Z")
         self.assertIn("live", index["artists"])
-        self.assertNotIn("live", index["lookup"])
+        self.assertEqual("live", index["lookup"]["live"])
+        self.assertIn("Live", index["diagnostics"]["proseAutolinkExclusions"])
+
+    def test_down_stays_indexed_and_compact_but_is_excluded_from_free_prose(self):
+        index = build_index([
+            entry("Down @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "Down"]),
+        ], generated_at="2026-01-01T00:00:00Z")
+        event = ConcertEvent(
+            date="2027-01-01", headliner="Down", venue="Bataclan",
+            city="Paris", department="75",
+        )
+        enrich_events([event], index)
+
+        self.assertIn("down", index["artists"])
+        self.assertEqual("down", index["lookup"]["down"])
+        self.assertEqual("down", event.electric_eye_links[0]["slug"])
+        self.assertEqual("Down", event.electric_eye_links[0]["display"])
+        with tempfile.TemporaryDirectory() as directory:
+            write_assets(directory, index)
+            compact = Path(directory, "electric-eye-artist-lookup.js").read_text()
+        self.assertIn('"Down":"down"', compact)
+        self.assertIn('"proseAutolinkExclusions":["down"]', compact)
 
     def test_exact_index_match_enriches_links_and_prefers_review_hero(self):
         image = "https://blogger.googleusercontent.com/example/s72-c/photo.jpg"
@@ -72,6 +94,7 @@ class ContentIndexTests(unittest.TestCase):
         )
         enrich_events([event], index)
         self.assertEqual(event.electric_eye_links[0]["slug"], "the-example")
+        self.assertEqual(event.electric_eye_links[0]["display"], "The Example")
         self.assertEqual(event.electric_eye_links[0]["role"], "headliner")
         self.assertEqual(event.image_source, "Electric Eye concert review")
         self.assertEqual(event.electric_eye_links[0]["total"], 1)
@@ -87,6 +110,7 @@ class ContentIndexTests(unittest.TestCase):
         enrich_events([event], index)
         self.assertEqual(len(event.electric_eye_links), 2)
         self.assertEqual(event.electric_eye_links[0]["total"], 3)
+        self.assertEqual(["headliner", "opener"], [item["role"] for item in event.electric_eye_links])
 
     def test_support_review_hero_never_replaces_official_event_image(self):
         image = "https://blogger.googleusercontent.com/example/s72-c/photo.jpg"
