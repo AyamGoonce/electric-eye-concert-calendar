@@ -7,7 +7,7 @@
     var data = window.ElectricEyeArtistLookup;
     if (!data || document.documentElement.dataset.eeAutolinked) return;
     document.documentElement.dataset.eeAutolinked = "1";
-    var terms = data.terms || {}, termSlugs = {}, aliases = Object.keys(terms).sort(function (a,b) { return b.length-a.length; });
+    var terms = data.terms || {}, excluded = new Set(data.proseAutolinkExclusions || []), termSlugs = {}, aliases = Object.keys(terms).filter(function (term) { return !excluded.has(terms[term]); }).sort(function (a,b) { return b.length-a.length; });
     aliases.forEach(function (term) { termSlugs[term.toLocaleLowerCase()] = terms[term]; });
     if (!aliases.length) return;
     var pattern = new RegExp("(^|[^\\p{L}\\p{N}])(" + aliases.map(escapeRegExp).join("|") + ")(?=$|[^\\p{L}\\p{N}])", "giu");
