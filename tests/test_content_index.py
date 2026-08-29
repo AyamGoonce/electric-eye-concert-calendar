@@ -21,6 +21,14 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_article_url_rejects_unsafe_scheme(self):
+        unsafe = entry("Unsafe article", ["News"])
+        unsafe["link"][0]["href"] = "javascript:alert(1)"
+
+        index = build_index([unsafe], generated_at="2026-01-01T00:00:00Z")
+
+        self.assertEqual(index["articles"], [])
+
     def test_calendar_only_artist_cannot_create_index_identity(self):
         index = build_index([
             entry("Some general news", ["News", "Calendar Only Band"]),

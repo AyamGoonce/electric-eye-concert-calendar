@@ -101,7 +101,9 @@ def classify_article(title, labels):
 def alternate_url(entry):
     for link in entry.get("link", []):
         if link.get("rel") == "alternate" and link.get("type") == "text/html":
-            return link.get("href")
+            value = link.get("href")
+            parsed = urlparse(value or "")
+            return value if parsed.scheme == "https" and parsed.netloc else None
     return None
 
 
