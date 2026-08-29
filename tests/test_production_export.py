@@ -228,6 +228,22 @@ class OptionalEventMetadataTests(unittest.TestCase):
         self.assertNotIn("is", data)
         self.assertNotIn("ee", data)
 
+    def test_dice_aggregator_image_is_not_published(self):
+        item = ConcertEvent(
+            date="2026-09-01",
+            headliner="Slow Pilot",
+            venue="La Cigale",
+            city="Paris",
+            department="",
+            image_url="https://images.dice.fm/example.jpg",
+            image_source="DICE",
+        )
+
+        data = event_to_data(item)
+
+        self.assertNotIn("im", data)
+        self.assertNotIn("is", data)
+
 
 class ProductionHTMLTests(unittest.TestCase):
     def setUp(self):

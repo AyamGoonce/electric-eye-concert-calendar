@@ -100,7 +100,9 @@ def genre_categories(value: str | None) -> list[str]:
 
 
 def event_to_data(event: ConcertEvent) -> dict:
-    image = safe_image_url(event.image_url)
+    # Aggregator artwork is not an official event/venue fallback.  DICE remains
+    # useful for gap-filling event data, but its images are not published.
+    image = None if event.image_source == "DICE" else safe_image_url(event.image_url)
     return {
         "d": event.date[:10],
         "h": event.headliner,
