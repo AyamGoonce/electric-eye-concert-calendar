@@ -22,7 +22,7 @@
           if (!slug || (!config.allOccurrences && linked.has(slug))) continue;
           var start = match.index + match[1].length;
           fragment.append(document.createTextNode(source.slice(last,start)));
-          var link = document.createElement("a"); link.className="ee-artist-autolink"; link.href=data.artistPage+encodeURIComponent(slug); link.textContent=match[2]; fragment.append(link);
+          var link = document.createElement("a"); link.className="ee-artist-autolink"; link.href=data.artistPage+encodeURIComponent(slug)+"/"; link.textContent=match[2]; fragment.append(link);
           last = start + match[2].length; linked.add(slug); changed = true;
         }
         if (changed) { fragment.append(document.createTextNode(source.slice(last))); textNode.replaceWith(fragment); }

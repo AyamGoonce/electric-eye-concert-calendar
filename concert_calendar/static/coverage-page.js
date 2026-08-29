@@ -7,7 +7,7 @@
   function render() {
     var mount=document.getElementById("ee-coverage-results"),index=window.ElectricEyeContentIndex,data=window.ElectricEyeConcertData;
     if(!mount||!index||!data||mount.dataset.ready)return;
-    var id=new URLSearchParams(location.search).get("event")||"",event=data.find(function(item){return item.i===id;});
+    var id=new URLSearchParams(location.search).get("event")||location.pathname.match(/\/concert\/([^/]+)\/?$/)?.[1]||"",event=data.find(function(item){return item.i===decodeURIComponent(id);});
     if(!event){text(mount,"p","No matching concert coverage was found.","ee-artist-empty");return;}
     mount.dataset.ready="1";text(mount,"p","Electric Eye","ee-page-kicker");text(mount,"h1",event.h,"ee-artist-title");
     text(mount,"p",humanDate(event.d)+" · "+event.v+(event.c.toLowerCase()==="paris"?"":" · "+event.c),"ee-page-context");

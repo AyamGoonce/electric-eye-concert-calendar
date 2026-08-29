@@ -19,6 +19,7 @@ from concert_calendar.production_export import (
     export_integration_prototype,
     prepare_upcoming_events,
     safe_ticket_url,
+    write_clean_routes,
 )
 from concert_calendar.event_state import (
     EventStateError,
@@ -85,6 +86,9 @@ PUBLIC_STABLE_ASSETS = (
     "coverage-page.js", "coverage.html",
     "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
 )
+
+PUBLIC_ROOT_ASSETS = ("index.html",)
+PUBLIC_ROUTE_DIRS = ("artist", "concert")
 STALE_PUBLIC_TEST_ASSETS = (
     "calendar-current-missing.js", "calendar-malformed.js",
     "data-first.html", "diagnostic.html", "index.html", "malformed.html",
@@ -317,6 +321,11 @@ def build(args) -> int:
     )
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
+    route_result = write_clean_routes(output_dir, content_index, events_data)
+    print(
+        f"Created {route_result['artists']} artist routes and "
+        f"{route_result['concerts']} concert routes"
+    )
     validate_genre_coverage(pipeline_report.genre_report)
     pointer = validate_assets(output_dir, result)
 
@@ -421,6 +430,28 @@ def validated_publication_files(source: Path) -> tuple[dict, list[Path]]:
     ):
         raise ProductionValidationError("Generated content index hash is invalid")
     files.append(content_data)
+
+    for root_name in PUBLIC_ROOT_ASSETS:
+        root_asset = source / root_name
+        if not root_asset.is_file():
+            raise ProductionValidationError(
+                f"Generated publication is missing root asset {root_name}"
+            )
+        files.append(root_asset)
+
+    for route_name in PUBLIC_ROUTE_DIRS:
+        route_dir = source / route_name
+        if not route_dir.is_dir():
+            raise ProductionValidationError(
+                f"Generated publication is missing route directory {route_name}"
+            )
+        route_pages = sorted(route_dir.glob("*/index.html"))
+        if not route_pages:
+            raise ProductionValidationError(
+                f"Generated publication has no pages in route directory {route_name}"
+            )
+        files.extend(route_pages)
+
     return pointer, list(dict.fromkeys(files))
 
 
@@ -435,7 +466,10 @@ def stage_candidate(args) -> int:
         raise ProductionValidationError(f"Candidate already exists: {args.candidate_id}")
     candidate.mkdir(parents=True)
     for source in files:
-        shutil.copyfile(source, candidate / source.name)
+        relative = source.relative_to(generated)
+        target = candidate / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
     print(f"Staged immutable candidate {args.candidate_id}: {pointer['count']} events")
     return 0
 
@@ -466,6 +500,16 @@ def publish(args) -> int:
         if source.name.startswith("electric-eye-content."):
             shutil.copyfile(source, proof / source.name)
     shutil.copyfile(generated / "calendar-current.js", proof / "calendar-current.js")
+
+    for root_name in PUBLIC_ROOT_ASSETS:
+        shutil.copyfile(generated / root_name, pages / root_name)
+
+    for route_name in PUBLIC_ROUTE_DIRS:
+        source_routes = generated / route_name
+        target_routes = pages / route_name
+        if target_routes.exists():
+            shutil.rmtree(target_routes)
+        shutil.copytree(source_routes, target_routes)
 
     previous = []
     for candidate in proof.glob("calendar-data.*.js"):

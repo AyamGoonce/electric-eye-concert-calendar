@@ -114,14 +114,14 @@ jobs:
           python -m concert_calendar.automation promote-verified
           --candidate-dir "pages-write/proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
           --pages-dir pages-write
-          --base-url "https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
+          --base-url "https://archive.electriceyerock.com/proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
           --sha256 "${{ steps.build.outputs.sha256 }}"
 
       - name: Promote verified candidate to live Pages
         id: publish
         working-directory: pages-write
         run: |
-          git add -A proof
+          git add -A proof artist concert index.html
           git commit -m "Promote verified calendar (${{ steps.build.outputs.event_count }} events)"
           git push origin HEAD:gh-pages
           echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -131,7 +131,7 @@ jobs:
         continue-on-error: true
         run: >-
           python -m concert_calendar.automation verify-hosted
-          --base-url https://ayamgoonce.github.io/electric-eye-concert-calendar/proof
+          --base-url https://archive.electriceyerock.com/proof
           --sha256 "${{ steps.build.outputs.sha256 }}"
 
       - name: Restore last-known-good release after final verification failure
@@ -146,7 +146,7 @@ jobs:
         if: steps.final_verify.outcome == 'failure'
         run: >-
           python -m concert_calendar.automation verify-hosted
-          --base-url https://ayamgoonce.github.io/electric-eye-concert-calendar/proof
+          --base-url https://archive.electriceyerock.com/proof
           --sha256 "${{ steps.baseline.outputs.sha256 }}"
 
       - name: Fail after verified rollback

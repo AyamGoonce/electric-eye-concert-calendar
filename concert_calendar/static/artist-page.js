@@ -5,7 +5,7 @@
   function text(parent,tag,value,cls){var node=document.createElement(tag);node.textContent=value;if(cls)node.className=cls;parent.append(node);return node;}
   function humanDate(value){return new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(value+"T12:00:00Z"));}
   function render(){var mount=document.getElementById("ee-artist-results"),index=window.ElectricEyeContentIndex;if(!mount||!index||mount.dataset.ready)return;mount.dataset.ready="1";
-    var slug=new URLSearchParams(location.search).get("artist")||"",artist=index.artists[slug];if(!artist){text(mount,"p","No Electric Eye artist coverage was found.","ee-artist-empty");return;}
+    var slug=new URLSearchParams(location.search).get("artist")||location.pathname.match(/\/artist\/([^/]+)\/?$/)?.[1]||"",artist=index.artists[decodeURIComponent(slug)];if(!artist){text(mount,"p","No Electric Eye artist coverage was found.","ee-artist-empty");return;}
     text(mount,"p","Electric Eye","ee-page-kicker");text(mount,"h1",artist.n,"ee-artist-title");text(mount,"p","Reviews, interviews, news and archive coverage.","ee-page-context");
     if(artist.os){var actions=document.createElement("div");actions.className="ee-page-actions";var official=document.createElement("a");official.href=artist.os;official.target="_blank";official.rel="noopener noreferrer";official.textContent="Official Site";actions.append(official);mount.append(actions);}
     var groups={};artist.ar.map(function(id){return index.articles[id];}).forEach(function(article){(groups[article.y]||(groups[article.y]=[])).push(article);});

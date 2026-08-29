@@ -81,6 +81,24 @@ def write_generated_publication(destination, marker="candidate"):
         ),
         encoding="utf-8",
     )
+
+    (destination / "index.html").write_text(
+        "<!doctype html><title>Electric Eye Archive</title>",
+        encoding="utf-8",
+    )
+    artist_route = destination / "artist" / "test-artist"
+    artist_route.mkdir(parents=True)
+    (artist_route / "index.html").write_text(
+        "<!doctype html><title>Test Artist</title>",
+        encoding="utf-8",
+    )
+    concert_route = destination / "concert" / "0000000000000000"
+    concert_route.mkdir(parents=True)
+    (concert_route / "index.html").write_text(
+        "<!doctype html><title>Test Concert</title>",
+        encoding="utf-8",
+    )
+
     return filename, digest
 
 

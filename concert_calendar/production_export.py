@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import date, datetime, timezone
 import hashlib
+import html
 import json
 from pathlib import Path
 import re
@@ -316,6 +317,121 @@ def build_production_html(events: list[dict]) -> str:
 </body>
 </html>
 """
+
+
+
+def _clean_route_page(*, title: str, canonical: str, mount_id: str, renderer: str) -> str:
+    safe_title = html.escape(title)
+    safe_canonical = html.escape(canonical, quote=True)
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{safe_title}</title>
+  <link rel="canonical" href="{safe_canonical}">
+  <link rel="stylesheet" href="/proof/artist-page.css">
+</head>
+<body>
+  <main id="{mount_id}" class="ee-artist-results" aria-live="polite"></main>
+  <script src="/proof/electric-eye-content-current.js"></script>
+  <script src="/proof/calendar-current.js"></script>
+  <script src="/proof/{renderer}"></script>
+</body>
+</html>
+"""
+
+
+def _archive_landing_page() -> str:
+    return """<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Electric Eye Archive</title>
+  <style>
+    body{margin:0;background:#fff;color:#15171a;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{max-width:760px;margin:0 auto;padding:72px 24px}
+    p:first-child{color:#c62828;font-size:.78rem;font-weight:850;letter-spacing:.15em;text-transform:uppercase}
+    h1{font-size:clamp(2.5rem,7vw,5rem);letter-spacing:-.045em;line-height:1;margin:.2em 0}
+    p{line-height:1.6}
+    nav{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    a{padding:11px 15px;background:#15171a;color:#fff;text-decoration:none}
+    a+a{background:#c62828}
+  </style>
+</head>
+<body>
+  <main>
+    <p>Electric Eye</p>
+    <h1>Archive</h1>
+    <p>Artist coverage and concert connections from Electric Eye.</p>
+    <nav>
+      <a href="https://www.electriceyerock.com/">Electric Eye</a>
+      <a href="https://www.electriceyerock.com/p/paris-area-concert-calendar.html">Concert Calendar</a>
+    </nav>
+  </main>
+</body>
+</html>
+"""
+
+
+def write_clean_routes(
+    output_dir: str | Path,
+    content_index: dict,
+    events: list[dict],
+) -> dict[str, int]:
+    destination = Path(output_dir)
+
+    for directory_name in ("artist", "concert"):
+        directory = destination / directory_name
+        if directory.exists():
+            shutil.rmtree(directory)
+
+    artist_count = 0
+    for slug, artist in content_index["artists"].items():
+        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
+            continue
+        route = destination / "artist" / slug
+        route.mkdir(parents=True, exist_ok=True)
+        canonical = f"https://archive.electriceyerock.com/artist/{slug}/"
+        (route / "index.html").write_text(
+            _clean_route_page(
+                title=f"{artist['n']} | Electric Eye",
+                canonical=canonical,
+                mount_id="ee-artist-results",
+                renderer="artist-page.js",
+            ),
+            encoding="utf-8",
+        )
+        artist_count += 1
+
+    concert_count = 0
+    for event in events:
+        if not event.get("ee"):
+            continue
+        event_id = event.get("i", "")
+        if not re.fullmatch(r"[0-9a-f]{16}", event_id):
+            continue
+        route = destination / "concert" / event_id
+        route.mkdir(parents=True, exist_ok=True)
+        canonical = f"https://archive.electriceyerock.com/concert/{event_id}/"
+        (route / "index.html").write_text(
+            _clean_route_page(
+                title=f"{event['h']} | Electric Eye Concert Coverage",
+                canonical=canonical,
+                mount_id="ee-coverage-results",
+                renderer="coverage-page.js",
+            ),
+            encoding="utf-8",
+        )
+        concert_count += 1
+
+    (destination / "index.html").write_text(
+        _archive_landing_page(),
+        encoding="utf-8",
+    )
+
+    return {"artists": artist_count, "concerts": concert_count}
 
 
 def export_integration_prototype(

@@ -280,8 +280,8 @@ class RendererFeatureContractTests(unittest.TestCase):
     def test_indexed_artist_links_are_separate_from_event_coverage_and_actions(self):
         renderer = read_renderer()
         self.assertIn('function artistElement(name,e)', renderer)
-        self.assertIn('proof/artist.html?artist=', renderer)
-        self.assertIn('proof/coverage.html?event=', renderer)
+        self.assertIn('https://archive.electriceyerock.com/artist/', renderer)
+        self.assertIn('https://archive.electriceyerock.com/concert/', renderer)
         self.assertIn('className="ee-calendar-coverage"', renderer)
         for action in ('"Tickets"', '"Copy link"', '"Share"', '"Add to calendar"'):
             self.assertIn(action, renderer)

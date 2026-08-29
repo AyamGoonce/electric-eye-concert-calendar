@@ -23,8 +23,8 @@ HEADERS = {
         "AppleWebKit/537.36 Safari/537.36"
     ),
 }
-ARTIST_PAGE_URL = "https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/artist.html?artist="
-COVERAGE_PAGE_URL = "https://ayamgoonce.github.io/electric-eye-concert-calendar/proof/coverage.html?event="
+ARTIST_PAGE_URL = "https://archive.electriceyerock.com/artist/"
+COVERAGE_PAGE_URL = "https://archive.electriceyerock.com/concert/"
 EXPLICIT_ALIASES = {
     "QOTSA": "Queens of the Stone Age",
     "Sheepdogs": "The Sheepdogs",
