@@ -1,0 +1,16 @@
+(function () {
+  "use strict";
+  var calendarUrl="https://www.electriceyerock.com/p/paris-area-concert-calendar.html";
+  var headings={concert_review:"Concert Reviews",interview:"Interviews",album_review:"Album Reviews",news:"News",playlist:"Playlists",other:"More from Electric Eye"};
+  function text(parent,tag,value,cls){var node=document.createElement(tag);node.textContent=value;if(cls)node.className=cls;parent.append(node);return node;}
+  function humanDate(value){return new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}).format(new Date(value+"T12:00:00Z"));}
+  function render(){var mount=document.getElementById("ee-artist-results"),index=window.ElectricEyeContentIndex;if(!mount||!index||mount.dataset.ready)return;mount.dataset.ready="1";
+    var slug=new URLSearchParams(location.search).get("artist")||"",artist=index.artists[slug];if(!artist){text(mount,"p","No Electric Eye artist coverage was found.","ee-artist-empty");return;}
+    text(mount,"p","Electric Eye","ee-page-kicker");text(mount,"h1",artist.n,"ee-artist-title");text(mount,"p","Reviews, interviews, news and archive coverage.","ee-page-context");
+    if(artist.os){var actions=document.createElement("div");actions.className="ee-page-actions";var official=document.createElement("a");official.href=artist.os;official.target="_blank";official.rel="noopener noreferrer";official.textContent="Official Site";actions.append(official);mount.append(actions);}
+    var groups={};artist.ar.map(function(id){return index.articles[id];}).forEach(function(article){(groups[article.y]||(groups[article.y]=[])).push(article);});
+    Object.keys(headings).forEach(function(kind){if(!groups[kind])return;var section=document.createElement("section");text(section,"h2",headings[kind]);var list=document.createElement("ul");groups[kind].sort(function(a,b){return b.d.localeCompare(a.d);}).forEach(function(article){var item=document.createElement("li");item.className="ee-article-card";if(article.im){var image=document.createElement("img");image.src=article.im;image.alt="";image.loading="lazy";image.decoding="async";image.width=96;image.height=72;item.append(image);}var copy=document.createElement("div"),link=document.createElement("a");link.href=article.u;link.textContent=article.t;copy.append(link);var time=document.createElement("time");time.dateTime=article.d;time.textContent=humanDate(article.d);copy.append(time);item.append(copy);list.append(item);});section.append(list);mount.append(section);});
+    var events=(window.ElectricEyeConcertData||[]).filter(function(event){return(event.ee||[]).some(function(link){return link.slug===slug;});});if(events.length){var section=document.createElement("section");text(section,"h2","Upcoming Concerts");var list=document.createElement("ul");events.forEach(function(event){var item=document.createElement("li");item.className="ee-article-card";var link=document.createElement("a");link.href=calendarUrl+"#event-"+event.i;link.textContent=humanDate(event.d)+" — "+event.h+" — "+event.v;item.append(link);list.append(item);});section.append(list);mount.append(section);}
+  }
+  document.addEventListener("DOMContentLoaded",render);document.addEventListener("ee:content-index-ready",render);document.addEventListener("ee:concert-data-ready",render);render();
+}());
