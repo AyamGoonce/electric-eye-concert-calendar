@@ -1,7 +1,7 @@
 (function () {
   "use strict";
   var config = Object.assign({allOccurrences:false, rootSelector:".post-body, .entry-content", optOutSelector:"[data-ee-no-autolink], .ee-no-autolink"}, window.ElectricEyeAutoLinkConfig || {});
-  var skip = "a,script,style,noscript,code,pre,button,input,select,textarea,iframe,object,embed,nav,[role='navigation'],[role='button'],.widget,.ad,.adsbygoogle," + config.optOutSelector;
+  var skip = "a,script,style,noscript,code,pre,button,input,select,textarea,iframe,object,embed,nav,[role='navigation'],[role='button'],.ad,.adsbygoogle," + config.optOutSelector;
   function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
   function run() {
     var data = window.ElectricEyeArtistLookup;
