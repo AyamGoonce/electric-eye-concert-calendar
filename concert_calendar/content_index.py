@@ -36,6 +36,9 @@ EXPLICIT_ALIASES = {
 # cannot be established reliably from Blogger labels/title metadata.
 # Add only genuine Electric Eye article URLs here.
 MANUAL_ARTIST_ARTICLES = {
+    "Billy Corgan": {
+        "https://www.electriceyerock.com/2024/06/the-smashing-pumpkins-accor-arena-paris.html",
+    },
 }
 
 PROSE_AUTOLINK_EXCLUSIONS = {
