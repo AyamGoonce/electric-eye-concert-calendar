@@ -1193,6 +1193,29 @@ Stéphane Chandelier • Batterie
             event.ticket_url,
         )
 
+    def test_maroquinerie_rejects_spoofed_facebook_hostname(self):
+        card = BeautifulSoup(
+            """
+            <article>
+              <a href="/fr/agenda/view/artist/"></a>
+              <div class="thumbnail"><h2>Artist</h2></div>
+              <h3 class="date">10 octobre</h3>
+              <div class="booking">
+                <a href="https://facebook.com.example.org/events/123/">Tickets</a>
+              </div>
+            </article>
+            """,
+            "html.parser",
+        )
+
+        event = parse_card(card, 2026)
+
+        self.assertIsNone(event.facebook_event_url)
+        self.assertEqual(
+            "https://facebook.com.example.org/events/123/",
+            event.ticket_url,
+        )
+
 
 class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
     def test_aeg_json_ld_locality_recovers_cityless_montell_row(self):

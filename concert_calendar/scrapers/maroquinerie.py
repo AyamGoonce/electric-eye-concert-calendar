@@ -1,7 +1,7 @@
 import re
 import unicodedata
 from datetime import date
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -121,9 +121,10 @@ def parse_card(card, year):
         if ticket_link
         else ""
     )
+    ticket_hostname = (urlparse(ticket_href).hostname or "").casefold()
     facebook_event_url = (
         ticket_href
-        if "facebook.com" in ticket_href.casefold()
+        if ticket_hostname == "facebook.com" or ticket_hostname.endswith(".facebook.com")
         else None
     )
     available_link = (
