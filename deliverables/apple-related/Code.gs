@@ -1547,11 +1547,12 @@ function eeFastArticleIdentity_(post, registry) {
   var postId=String(post.id||""),override=(registry.articleOverrides||{})[postId]||null;
   var labels=(post.labels||[]).map(function(value){return String(value||"").trim();});
   var normalizedLabels={};labels.forEach(function(value){normalizedLabels[eeNorm_(value)]=true;});
+  var structuralLabels={};(registry.structuralLabels||[]).forEach(function(value){structuralLabels[eeNorm_(value)]=true;});
   var title=String(post.title||""),body=String(post.content||"").replace(/<[^>]+>/g," ").replace(/&nbsp;|&#160;/gi," ");
   var matches=[];
   function evidenceFor(artist){
     var names=eeUnique_([artist.canonicalName].concat(artist.aliases||[]).concat(artist.alternateSpellings||[]));
-    var exactLabel=names.some(function(name){return normalizedLabels[eeNorm_(name)];});
+    var exactLabel=names.some(function(name){var key=eeNorm_(name);return normalizedLabels[key]&&!structuralLabels[key];});
     var titleMatch=names.some(function(name){return eeExactEntityInText_(title,name);});
     var articleKnown=(artist.articleIds||[]).map(String).indexOf(postId)!==-1;
     var relationshipTerms=[]

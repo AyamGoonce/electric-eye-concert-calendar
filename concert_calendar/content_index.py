@@ -62,7 +62,7 @@ GENERIC_LABELS = {
     "ad", "advertisement", "album", "album review", "announcement",
     "apple music", "concert", "concert review", "electric eye", "festival",
     "friday's playlist", "interview", "live report", "live review", "news",
-    "opening", "opening act", "opener", "photo", "photography", "photos",
+    "obituary", "opening", "opening act", "opener", "photo", "photography", "photos",
     "pic", "pics", "pictures", "playlist", "record", "review", "single",
     "tour", "tour dates", "video", "youtube",
     "alternative", "alternative rock", "alt-country", "alt-rock", "americana",
@@ -184,6 +184,10 @@ def _label_in_text(label, text):
     return bool(identity and re.search(r"(?:^| )" + re.escape(identity) + r"(?: |$)", haystack))
 
 
+def _artist_label_allowed(label, title):
+    return label.casefold() not in GENERIC_LABELS or _label_in_text(label, title)
+
+
 def seed_artist_labels(entries):
     seeds = Counter()
     for entry in entries:
@@ -200,7 +204,7 @@ def seed_artist_labels(entries):
         if candidate:
             exact = [
                 label for label in labels
-                if label.casefold() not in GENERIC_LABELS
+                if _artist_label_allowed(label, title)
                 and normalize_artist(label) == normalize_artist(candidate)
             ]
             if exact:
@@ -208,7 +212,7 @@ def seed_artist_labels(entries):
             else:
                 for label in labels:
                     if (
-                        label.casefold() not in GENERIC_LABELS
+                        _artist_label_allowed(label, title)
                         and len(normalize_artist(label)) >= 3
                         and _label_in_text(label, candidate)
                     ):
@@ -216,7 +220,7 @@ def seed_artist_labels(entries):
         if article_type == "interview":
             for label in labels:
                 if (
-                    label.casefold() not in GENERIC_LABELS
+                    _artist_label_allowed(label, title)
                     and len(normalize_artist(label)) >= 4
                     and _label_in_text(label, title)
                 ):
@@ -263,6 +267,8 @@ def build_index(entries, *, generated_at=None):
         matched_names = []
         post_id = blogger_post_id(entry)
         for label in labels:
+            if not _artist_label_allowed(label, title):
+                continue
             canonical = canonical_by_identity.get(normalize_artist(label))
             if canonical and canonical not in matched_names:
                 matched_names.append(canonical)
@@ -439,6 +445,7 @@ def write_artist_exports(output_dir, index):
         "schemaVersion": 1,
         "contentIndexSchema": index["schema"],
         "generatedAt": index["generatedAt"],
+        "structuralLabels": sorted(GENERIC_LABELS),
         "artists": records,
         "articleOverrides": load_artist_identity_overrides().get("articleOverrides", {}),
     }

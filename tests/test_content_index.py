@@ -24,6 +24,31 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_obituary_category_does_not_create_band_match_without_title_evidence(self):
+        index = build_index([
+            entry(
+                "Obituary @ Bataclan, Paris - January 1st, 2026",
+                ["Concert Review", "Obituary"],
+                "2026-01-01",
+            ),
+            entry(
+                "Frank Beard, ZZ Top drummer, dies aged 76",
+                ["News", "Obituary", "Frank Beard", "ZZ Top"],
+                "2026-01-02",
+            ),
+        ], generated_at="2026-01-03T00:00:00Z")
+
+        self.assertIn("obituary", index["artists"])
+        self.assertEqual([0], index["artists"]["obituary"]["ar"])
+        self.assertIn("obituary", index["articles"][0]["a"])
+        self.assertNotIn("obituary", index["articles"][1]["a"])
+
+        beat = build_index([
+            entry("BEAT @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "BEAT"]),
+        ], generated_at="2026-01-03T00:00:00Z")
+        self.assertIn("beat", beat["artists"])
+        self.assertIn("beat", beat["articles"][0]["a"])
+
     def test_schema_two_identity_record_and_human_exports(self):
         index = build_index([
             entry("BEAT @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "BEAT"]),
@@ -41,6 +66,8 @@ class ContentIndexTests(unittest.TestCase):
             csv_export = Path(directory, "artist-index.csv").read_text()
             associations = Path(directory, "artist-article-associations.csv").read_text()
         self.assertIn('"canonicalName": "BEAT"', json_export)
+        self.assertIn('"structuralLabels": [', json_export)
+        self.assertIn('"obituary"', json_export)
         self.assertIn("canonicalName,slug,aliases", csv_export)
         self.assertIn("beat,BEAT,123456", associations)
 

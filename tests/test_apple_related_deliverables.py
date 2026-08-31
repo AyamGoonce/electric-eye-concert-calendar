@@ -250,7 +250,8 @@ JSON.stringify([
 
     def test_fast_identity_regression_matrix_and_ambiguous_names(self):
         result = self.run_apps_script(r'''
-var registry={schemaVersion:1,articleOverrides:{},artists:[
+var registry={schemaVersion:1,structuralLabels:["obituary","news","concert review"],articleOverrides:{},artists:[
+ {canonicalName:"Obituary",slug:"obituary",aliases:[],articleIds:[],ambiguityClass:"distinctive"},
  {canonicalName:"Sparks",slug:"sparks",aliases:[],articleIds:[],ambiguityClass:"common_word",members:["Ron Mael","Russell Mael"]},
  {canonicalName:"BEAT",slug:"beat",aliases:[],articleIds:[],ambiguityClass:"common_word",members:["Adrian Belew","Tony Levin","Steve Vai","Danny Carey"],associatedActs:["King Crimson"],keywords:["THRAK"]},
  {canonicalName:"Down",slug:"down",aliases:[],articleIds:[],ambiguityClass:"common_word"},
@@ -267,7 +268,9 @@ var registry={schemaVersion:1,articleOverrides:{},artists:[
 ]};
 function keys(post){return eeFastArticleIdentity_(post,registry).primaryArtistKeys;}
 JSON.stringify({
- ordinary:keys({id:"1",title:"How to beat the heat",labels:[],content:""}),
+  ordinary:keys({id:"1",title:"How to beat the heat",labels:[],content:""}),
+  obituaryMetadata:keys({id:"obit-meta",title:"Frank Beard, ZZ Top drummer, dies aged 76",labels:["News","Obituary"],content:""}),
+  obituaryBand:keys({id:"obit-band",title:"Obituary announce a new album",labels:["News","Obituary"],content:""}),
  ambiguousTitle:keys({id:"2",title:"BEAT returns",labels:[],content:""}),
  sparks:keys({id:"3",title:"Sparks return",labels:["Sparks"],content:"Ron Mael and Russell Mael discuss the record."}),
  beat:keys({id:"4",title:"BEAT announce Paris",labels:["BEAT","Adrian Belew","Tony Levin"],content:"Steve Vai revisits King Crimson and THRAK."}),
@@ -283,7 +286,7 @@ JSON.stringify({
 });
 ''')
         self.assertEqual(
-            '{"ordinary":[],"ambiguousTitle":[],"sparks":["sparks"],"beat":["beat"],'
+            '{"ordinary":[],"obituaryMetadata":["frank-beard"],"obituaryBand":["obituary"],"ambiguousTitle":[],"sparks":["sparks"],"beat":["beat"],'
             '"down":["down"],"possessed":["possessed"],"known":["the-cure"],'
             '"multi":["anthrax","ga-20"],"distinct":["shadow-of-intent","monty-alexander","killer-kin","hackett-rothery"],"concert":["kris-barras-band"],'
             '"obituary":["frank-beard"],"festival":[],"provisional":["new-artist"]}',
