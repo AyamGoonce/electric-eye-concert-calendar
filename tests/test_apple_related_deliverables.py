@@ -438,6 +438,43 @@ stored.EE_APPLE_BACKFILL_INDEX;
 ''')
         self.assertEqual("77", result)
 
+    def test_fetch_post_by_id_pages_feed_returns_match_and_reports_exhaustion(self):
+        helper = self.code[
+            self.code.index("function eeFetchPostById_") :
+            self.code.index("function eeRetryStoredErrors_")
+        ]
+        self.assertIn("eeFetchPosts_(startIndex, batchSize)", helper)
+        self.assertIn("startIndex += posts.length", helper)
+        self.assertNotIn("UrlFetchApp.fetch", helper)
+        self.assertNotRegex(helper, r"EE_APPLE_CONFIG\.feedUrl\s*\+\s*[\"']/[\"']")
+        self.assertIn('throw new Error("Blogger post not found: " + targetId)', helper)
+
+        discovery_worker = self.code[
+            self.code.index("function eeDiscoverArtistsWorker") :
+            self.code.index("function eeRefreshStaleArtistsWorker")
+        ]
+        self.assertIn("eeFetchPostById_", discovery_worker)
+
+        result = self.run_apps_script(r'''
+var calls=[];
+eeFetchPosts_=function(start,size){
+  calls.push([start,size]);
+  if(start===1)return [{id:"1"},{id:"2"}];
+  if(start===3)return [{id:"999",title:"Target",url:"https://example.test/target",content:"Body",labels:["Target"]}];
+  return [];
+};
+var post=eeFetchPostById_("999");
+var foundCalls=calls.slice(),missing="";calls=[];
+eeFetchPosts_=function(start,size){calls.push([start,size]);return start===1?[{id:"1"},{id:"2"}]:[];};
+try{eeFetchPostById_("404");}catch(error){missing=error.message;}
+JSON.stringify({id:post.id,title:post.title,foundCalls:foundCalls,missingCalls:calls,missing:missing});
+''')
+        self.assertEqual(
+            '{"id":"999","title":"Target","foundCalls":[[1,500],[3,500]],'
+            '"missingCalls":[[1,500],[3,500]],"missing":"Blogger post not found: 404"}',
+            result,
+        )
+
     def test_transient_failure_is_stored_as_error_and_batch_continues(self):
         result = self.run_apps_script(r'''
 var writes=[];

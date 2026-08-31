@@ -157,12 +157,22 @@ function eeBackfillWorker() {
 }
 
 function eeFetchPostById_(postId) {
-  var url=EE_APPLE_CONFIG.feedUrl+"/"+encodeURIComponent(postId)+"?alt=json";
-  var response=UrlFetchApp.fetch(url,{muteHttpExceptions:true});
-  if(response.getResponseCode()!==200)throw new Error("Blogger post feed returned "+response.getResponseCode());
-  var entry=JSON.parse(response.getContentText()).entry||{};
-  var alternate=(entry.link||[]).filter(function(link){return link.rel==="alternate";})[0];
-  return {id:String(entry.id.$t).split("post-").pop(),title:(entry.title||{}).$t||"",url:alternate?alternate.href:"",content:(entry.content||{}).$t||(entry.summary||{}).$t||"",labels:(entry.category||[]).map(function(category){return category.term;}),published:(entry.published||{}).$t||"",updated:(entry.updated||{}).$t||""};
+  var targetId = String(postId || "");
+  var startIndex = 1;
+  var batchSize = 500;
+
+  while (true) {
+    var posts = eeFetchPosts_(startIndex, batchSize);
+    if (!posts.length) break;
+
+    for (var i = 0; i < posts.length; i++) {
+      if (String(posts[i].id) === targetId) return posts[i];
+    }
+
+    startIndex += posts.length;
+  }
+
+  throw new Error("Blogger post not found: " + targetId);
 }
 
 function eeRetryStoredErrors_(deadline) {
