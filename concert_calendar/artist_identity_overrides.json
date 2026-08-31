@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "aliases": {
+    "69 Eyes": "The 69 Eyes",
+    "Altons": "The Altons",
+    "QOTSA": "Queens of the Stone Age",
+    "Sheepdogs": "The Sheepdogs"
+  },
+  "artists": {
+    "BEAT": {
+      "ambiguityClass": "common_word",
+      "members": ["Adrian Belew", "Tony Levin", "Steve Vai", "Danny Carey"],
+      "associatedActs": ["King Crimson"],
+      "keywords": ["THRAK"],
+      "identityEvidence": ["Reviewed Electric Eye musical-project identity"]
+    },
+    "Down": {
+      "ambiguityClass": "common_word",
+      "identityEvidence": ["Reviewed Electric Eye artist identity"]
+    },
+    "Frank Beard": {
+      "associatedActs": ["ZZ Top"],
+      "identityEvidence": ["Reviewed member relationship"]
+    },
+    "Ghost": {"ambiguityClass": "common_word"},
+    "Kiss": {"ambiguityClass": "common_word"},
+    "Live": {"ambiguityClass": "common_word"},
+    "Possessed": {"ambiguityClass": "common_word"},
+    "Sparks": {
+      "ambiguityClass": "common_word",
+      "members": ["Ron Mael", "Russell Mael"],
+      "identityEvidence": ["Reviewed Electric Eye band identity"]
+    },
+    "Tool": {"ambiguityClass": "common_word"}
+  },
+  "articleOverrides": {
+    "3124541008960499514": {
+      "primaryArtists": ["Floor Jansen"],
+      "identityEvidence": ["Reviewed exact Blogger post identity"]
+    },
+    "4579274501673632187": {
+      "primaryArtists": ["Dolly Parton"],
+      "identityEvidence": ["Reviewed editorial-subject identity"]
+    }
+  },
+  "manualArticleAssociations": {
+    "Billy Corgan": [
+      "https://www.electriceyerock.com/2024/06/the-smashing-pumpkins-accor-arena-paris.html"
+    ]
+  },
+  "officialSites": {}
+}

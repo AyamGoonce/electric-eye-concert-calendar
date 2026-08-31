@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import csv
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -25,25 +26,29 @@ HEADERS = {
 }
 ARTIST_PAGE_URL = "https://archive.electriceyerock.com/artist/"
 COVERAGE_PAGE_URL = "https://archive.electriceyerock.com/concert/"
-EXPLICIT_ALIASES = {
-    "QOTSA": "Queens of the Stone Age",
-    "Sheepdogs": "The Sheepdogs",
-    "69 Eyes": "The 69 Eyes",
-    "Altons": "The Altons",
-}
+IDENTITY_OVERRIDES_PATH = Path(__file__).with_name("artist_identity_overrides.json")
+
+
+def load_artist_identity_overrides(path=IDENTITY_OVERRIDES_PATH):
+    payload = json.loads(Path(path).read_text(encoding="utf-8"))
+    if payload.get("schemaVersion") != 1:
+        raise ValueError("Unsupported artist identity override schema")
+    return payload
+
+
+_IDENTITY_OVERRIDES = load_artist_identity_overrides()
+EXPLICIT_ALIASES = dict(_IDENTITY_OVERRIDES.get("aliases") or {})
 
 # Reviewed manual associations for Electric Eye articles whose artist identity
 # cannot be established reliably from Blogger labels/title metadata.
 # Add only genuine Electric Eye article URLs here.
 MANUAL_ARTIST_ARTICLES = {
-    "Billy Corgan": {
-        "https://www.electriceyerock.com/2024/06/the-smashing-pumpkins-accor-arena-paris.html",
-    },
+    artist: set(urls)
+    for artist, urls in (_IDENTITY_OVERRIDES.get("manualArticleAssociations") or {}).items()
 }
 
 # Reviewed official artist websites. Add only the artist's own official site.
-OFFICIAL_ARTIST_SITES = {
-}
+OFFICIAL_ARTIST_SITES = dict(_IDENTITY_OVERRIDES.get("officialSites") or {})
 
 PROSE_AUTOLINK_EXCLUSIONS = {
     # Reviewed ordinary words, geographic names, and contextually ambiguous
@@ -135,6 +140,12 @@ def resized_blogger_image(entry):
     return re.sub(r"/s\d+(?:-[a-z])?/", "/s320-c/", value)
 
 
+def blogger_post_id(entry):
+    value = str((entry.get("id") or {}).get("$t") or "")
+    match = re.search(r"post-(\d+)$", value)
+    return match.group(1) if match else None
+
+
 def fetch_entries(session=None):
     session = session or requests.Session()
     entries = []
@@ -214,6 +225,8 @@ def seed_artist_labels(entries):
 
 
 def build_index(entries, *, generated_at=None):
+    overrides = load_artist_identity_overrides()
+    reviewed_artists = overrides.get("artists") or {}
     seeds = seed_artist_labels(entries)
     canonical_by_identity = {}
     for label, _count in seeds.most_common():
@@ -226,6 +239,11 @@ def build_index(entries, *, generated_at=None):
         identity = normalize_artist(canonical)
         if identity:
             canonical_by_identity.setdefault(identity, canonical)
+    for override in (overrides.get("articleOverrides") or {}).values():
+        for canonical in override.get("primaryArtists", []):
+            identity = normalize_artist(canonical)
+            if identity:
+                canonical_by_identity.setdefault(identity, canonical)
 
     for alias, canonical in EXPLICIT_ALIASES.items():
         canonical_identity = normalize_artist(canonical)
@@ -243,6 +261,7 @@ def build_index(entries, *, generated_at=None):
         if not title or not url or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", published):
             continue
         matched_names = []
+        post_id = blogger_post_id(entry)
         for label in labels:
             canonical = canonical_by_identity.get(normalize_artist(label))
             if canonical and canonical not in matched_names:
@@ -255,6 +274,10 @@ def build_index(entries, *, generated_at=None):
         for canonical, manual_urls in MANUAL_ARTIST_ARTICLES.items():
             if url in manual_urls and canonical not in matched_names:
                 matched_names.append(canonical)
+        reviewed_article = (overrides.get("articleOverrides") or {}).get(post_id or "") or {}
+        for canonical in reviewed_article.get("primaryArtists", []):
+            if canonical not in matched_names:
+                matched_names.append(canonical)
 
         article_type = classify_article(title, labels)
         article = {
@@ -264,6 +287,8 @@ def build_index(entries, *, generated_at=None):
             "y": article_type,
             "a": [],
         }
+        if post_id:
+            article["pi"] = post_id
         picture = resized_blogger_image(entry)
         if picture and article_type == "concert_review":
             article["im"] = picture
@@ -291,6 +316,7 @@ def build_index(entries, *, generated_at=None):
             if normalize_artist(target) == normalize_artist(canonical):
                 aliases.append(alias)
         item = {"n": canonical, "al": sorted(set(aliases), key=normalize_artist), "ar": article_ids}
+        reviewed = reviewed_artists.get(canonical) or {}
         official_site = OFFICIAL_ARTIST_SITES.get(canonical)
         if official_site:
             parsed_site = urlparse(official_site)
@@ -303,6 +329,32 @@ def build_index(entries, *, generated_at=None):
         if heroes:
             hero = max(heroes, key=lambda article: article["d"])
             item["crh"] = {"im": hero["im"], "u": hero["u"], "d": hero["d"]}
+        item["identity"] = {
+            "schemaVersion": 1,
+            "canonicalName": canonical,
+            "slug": slug,
+            "aliases": item["al"],
+            "alternateSpellings": reviewed.get("alternateSpellings", []),
+            "members": reviewed.get("members", []),
+            "formerMembers": reviewed.get("formerMembers", []),
+            "associatedActs": reviewed.get("associatedActs", []),
+            "sideProjects": reviewed.get("sideProjects", []),
+            "collaborators": reviewed.get("collaborators", []),
+            "producers": reviewed.get("producers", []),
+            "songwriters": reviewed.get("songwriters", []),
+            "genres": reviewed.get("genres", []),
+            "keywords": reviewed.get("keywords", []),
+            "musicBrainzId": reviewed.get("musicBrainzId"),
+            "appleArtistId": reviewed.get("appleArtistId"),
+            "appleIdentityConfidence": reviewed.get("appleIdentityConfidence"),
+            "ambiguityClass": reviewed.get("ambiguityClass", "distinctive"),
+            "identityEvidence": reviewed.get("identityEvidence", []),
+            "articleCount": len(article_ids),
+            "articleIds": [articles[index].get("pi") for index in article_ids if articles[index].get("pi")],
+            "articleUrls": [articles[index]["u"] for index in article_ids],
+            "lastIdentityUpdatedAt": reviewed.get("lastIdentityUpdatedAt"),
+            "lastAppleCatalogueUpdatedAt": reviewed.get("lastAppleCatalogueUpdatedAt"),
+        }
         artists[slug] = item
 
     lookup = {}
@@ -312,7 +364,7 @@ def build_index(entries, *, generated_at=None):
 
     counts = Counter(article["y"] for article in articles)
     return {
-        "schema": 1,
+        "schema": 2,
         "generatedAt": generated_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "artists": artists,
         "articles": articles,
@@ -376,6 +428,55 @@ def _javascript_assignment(name, payload):
     return f"window.{name}=Object.freeze({value});\n"
 
 
+def write_artist_exports(output_dir, index):
+    destination = Path(output_dir)
+    destination.mkdir(parents=True, exist_ok=True)
+    records = [
+        index["artists"][slug]["identity"]
+        for slug in sorted(index["artists"], key=lambda value: normalize_artist(index["artists"][value]["n"]))
+    ]
+    registry = {
+        "schemaVersion": 1,
+        "contentIndexSchema": index["schema"],
+        "generatedAt": index["generatedAt"],
+        "artists": records,
+        "articleOverrides": load_artist_identity_overrides().get("articleOverrides", {}),
+    }
+    (destination / "artist-index.json").write_text(
+        json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    columns = [
+        "canonicalName", "slug", "aliases", "alternateSpellings", "members",
+        "formerMembers", "associatedActs", "sideProjects", "collaborators",
+        "producers", "songwriters", "genres", "keywords", "musicBrainzId",
+        "appleArtistId", "appleIdentityConfidence", "ambiguityClass",
+        "identityEvidence", "articleCount", "lastIdentityUpdatedAt",
+        "lastAppleCatalogueUpdatedAt",
+    ]
+    with (destination / "artist-index.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=columns)
+        writer.writeheader()
+        for record in records:
+            writer.writerow({
+                key: " | ".join(map(str, record.get(key) or []))
+                if isinstance(record.get(key), list) else record.get(key)
+                for key in columns
+            })
+    with (destination / "artist-article-associations.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=("slug", "canonicalName", "postId", "articleUrl"))
+        writer.writeheader()
+        for slug, artist in index["artists"].items():
+            for article_id in artist["ar"]:
+                article = index["articles"][article_id]
+                writer.writerow({
+                    "slug": slug, "canonicalName": artist["n"],
+                    "postId": article.get("pi", ""),
+                    "articleUrl": article["u"],
+                })
+    return {"artists": len(records), "associations": sum(item["articleCount"] for item in records)}
+
+
 def write_assets(output_dir, index):
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
@@ -411,8 +512,10 @@ def write_assets(output_dir, index):
         + "document.dispatchEvent(new CustomEvent('ee:artist-lookup-ready'));\n",
         encoding="utf-8",
     )
+    export_result = write_artist_exports(destination, index)
     return {
         "filename": filename, "sha256": digest,
         "artist_count": len(index["artists"]), "article_count": len(index["articles"]),
         "lookup_count": len(index["lookup"]),
+        "artist_export_count": export_result["artists"],
     }

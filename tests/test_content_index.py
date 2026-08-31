@@ -9,6 +9,7 @@ from concert_calendar.models import ConcertEvent
 
 def entry(title, labels, date="2026-01-01", image=None):
     value = {
+        "id": {"$t": "tag:blogger.com,1999:blog-1.post-123456"},
         "title": {"$t": title},
         "published": {"$t": f"{date}T12:00:00+01:00"},
         "category": [{"term": label} for label in labels],
@@ -23,6 +24,26 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_schema_two_identity_record_and_human_exports(self):
+        index = build_index([
+            entry("BEAT @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "BEAT"]),
+        ], generated_at="2026-01-01T00:00:00Z")
+        identity = index["artists"]["beat"]["identity"]
+        self.assertEqual(2, index["schema"])
+        self.assertEqual("BEAT", identity["canonicalName"])
+        self.assertEqual("common_word", identity["ambiguityClass"])
+        self.assertIn("Tony Levin", identity["members"])
+        self.assertEqual(["123456"], identity["articleIds"])
+
+        with tempfile.TemporaryDirectory() as directory:
+            write_assets(directory, index)
+            json_export = Path(directory, "artist-index.json").read_text()
+            csv_export = Path(directory, "artist-index.csv").read_text()
+            associations = Path(directory, "artist-article-associations.csv").read_text()
+        self.assertIn('"canonicalName": "BEAT"', json_export)
+        self.assertIn("canonicalName,slug,aliases", csv_export)
+        self.assertIn("beat,BEAT,123456", associations)
+
     def test_article_url_rejects_unsafe_scheme(self):
         unsafe = entry("Unsafe article", ["News"])
         unsafe["link"][0]["href"] = "javascript:alert(1)"

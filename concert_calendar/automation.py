@@ -85,6 +85,7 @@ PUBLIC_STABLE_ASSETS = (
     "artist-page.css", "artist-autolinker.js", "artist.html",
     "coverage-page.js", "coverage.html",
     "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
+    "artist-index.json", "artist-index.csv", "artist-article-associations.csv",
 )
 
 PUBLIC_ROOT_ASSETS = ("index.html",)
