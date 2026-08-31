@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
+import sys
 from pathlib import Path
 
 from bs4 import BeautifulSoup
@@ -22,7 +23,7 @@ class AppleRelatedDeliverableTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         subprocess.run(
-            [str(ROOT / ".venv/bin/python"), str(ROOT / "tools/build_apple_related_deliverables.py")],
+            [sys.executable, str(ROOT / "tools/build_apple_related_deliverables.py")],
             cwd=ROOT,
             check=True,
         )
