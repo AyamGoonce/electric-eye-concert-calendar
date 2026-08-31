@@ -1,6 +1,6 @@
 (function(){
   "use strict";
-  var manifest = Object.freeze({"data":"calendar-data.4e702bb1ab81d85e.js","sha256":"4e702bb1ab81d85e0996fecbcfe79b5f89b2a1c2fc828a5ab935978a70c460a2","count":2082,"publishedAt":"2026-08-31T14:04:04Z","state":"calendar-state.json","stateSha256":"2b55672553e2178598a6115265f2b9604b629b372216e2298a9c9bcfa2a6cb91"});
+  var manifest = Object.freeze({"data":"calendar-data.6d5436bd991fbfac.js","sha256":"6d5436bd991fbfac956f7c4923f9b8c905c4686eead4333d801eca785ffc292e","count":2080,"publishedAt":"2026-08-31T23:02:20Z","state":"calendar-state.json","stateSha256":"3c4e019b14d5a3b98243eb38bf102bf182a0f4347c40e2f2a28bb0040566b89f"});
   var currentSource = document.currentScript && document.currentScript.src;
   window.ElectricEyeConcertManifest = manifest;
   document.dispatchEvent(new CustomEvent("ee:concert-manifest-ready", {detail:manifest}));
