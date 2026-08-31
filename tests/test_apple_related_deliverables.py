@@ -1,4 +1,5 @@
 import re
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -13,10 +14,74 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "deliverables" / "apple-related"
 THEME = OUT / "Electric-Eye-Theme.xml"
 CODE = OUT / "Code.gs"
-FIXTURE = Path(
-    "/Users/ericsmacbookpro/Desktop/Electric Eye Backups/2026-08-30_12-16-19/"
-    "04 - Individual Posts/2026-06-12--keb-mo-bataclan-paris-june-12th-2026.html"
-)
+FIXTURE = ROOT / "tests" / "fixtures" / "apple-related" / "2026-06-12--keb-mo-bataclan-paris-june-12th-2026.html"
+
+
+def run_javascript(source):
+    node = shutil.which("node")
+    if node:
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / "harness.js"
+            source_path.write_text(source, encoding="utf-8")
+            runner = (
+                "const fs=require('fs'),vm=require('vm');"
+                "const source=fs.readFileSync(process.argv[1],'utf8');"
+                "const value=vm.runInNewContext(source,{console:{log:()=>{}}});"
+                "if(value!==undefined)process.stdout.write(String(value));"
+            )
+            result = subprocess.run(
+                [node, "-e", runner, str(source_path)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        return result.stdout.strip()
+
+    osascript = shutil.which("osascript")
+    if osascript:
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / "harness.js"
+            source_path.write_text(source, encoding="utf-8")
+            result = subprocess.run(
+                [osascript, "-l", "JavaScript", str(source_path)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        return result.stdout.strip()
+
+    raise RuntimeError("JavaScript tests require Node.js or macOS JavaScript for Automation")
+
+
+def check_javascript_syntax(source, label):
+    node = shutil.which("node")
+    if node:
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / f"{label}.js"
+            source_path.write_text(source, encoding="utf-8")
+            subprocess.run(
+                [node, "--check", str(source_path)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        return
+
+    osacompile = shutil.which("osacompile")
+    if osacompile:
+        with tempfile.TemporaryDirectory() as directory:
+            source_path = Path(directory) / f"{label}.js"
+            output_path = Path(directory) / f"{label}.scpt"
+            source_path.write_text(source, encoding="utf-8")
+            subprocess.run(
+                [osacompile, "-l", "JavaScript", "-o", str(output_path), str(source_path)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        return
+
+    raise RuntimeError("JavaScript syntax checks require Node.js or macOS osacompile")
 
 
 class AppleRelatedDeliverableTests(unittest.TestCase):
@@ -31,16 +96,7 @@ class AppleRelatedDeliverableTests(unittest.TestCase):
         cls.code = CODE.read_text(encoding="utf-8")
 
     def run_apps_script(self, suffix):
-        with tempfile.TemporaryDirectory() as directory:
-            source_path = Path(directory) / "harness.js"
-            source_path.write_text(self.code + "\n" + suffix, encoding="utf-8")
-            result = subprocess.run(
-                ["/usr/bin/osascript", "-l", "JavaScript", str(source_path)],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-        return result.stdout.strip()
+        return run_javascript(self.code + "\n" + suffix)
 
     def test_theme_is_valid_xml_and_exposes_every_post_id(self):
         ET.parse(THEME)
@@ -174,16 +230,7 @@ eeAppleLabelFallbackArtists_=function(){return ["in flames","trivium"];};
 var regressionPost={id:"1",title:"In Flames & Trivium Join Forces for Massive European Tour — Paris Date Announced",labels:["In Flames","Trivium"],content:"",url:""};
 JSON.stringify(eeEntityHints_(regressionPost).primaryArtists);
 '''
-        with tempfile.TemporaryDirectory() as directory:
-            source_path = Path(directory) / "multi-artist.js"
-            source_path.write_text(harness, encoding="utf-8")
-            result = subprocess.run(
-                ["/usr/bin/osascript", "-l", "JavaScript", str(source_path)],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-        self.assertEqual('["In Flames","Trivium"]', result.stdout.strip())
+        self.assertEqual('["In Flames","Trivium"]', run_javascript(harness))
 
     def test_reviewed_floor_and_dolly_subjects_are_exact(self):
         result = self.run_apps_script(r'''
@@ -435,26 +482,9 @@ var result=eeBackfillBatch(true);JSON.stringify({status:result.status,cursor:pro
             end = self.theme.index("//]]>", start)
             scripts[script_id] = self.theme[start:end]
 
-        with tempfile.TemporaryDirectory() as directory:
-            for script_id, source in scripts.items():
-                source_path = Path(directory) / f"{script_id}.js"
-                output_path = Path(directory) / f"{script_id}.scpt"
-                source_path.write_text(source, encoding="utf-8")
-                subprocess.run(
-                    ["/usr/bin/osacompile", "-l", "JavaScript", "-o", str(output_path), str(source_path)],
-                    check=True,
-                    capture_output=True,
-                )
-
-        with tempfile.TemporaryDirectory() as directory:
-            source_path = Path(directory) / "Code.gs"
-            output_path = Path(directory) / "Code.scpt"
-            source_path.write_text(self.code, encoding="utf-8")
-            subprocess.run(
-                ["/usr/bin/osacompile", "-l", "JavaScript", "-o", str(output_path), str(source_path)],
-                check=True,
-                capture_output=True,
-            )
+        for script_id, source in scripts.items():
+            check_javascript_syntax(source, script_id)
+        check_javascript_syntax(self.code, "Code")
 
 
 if __name__ == "__main__":
