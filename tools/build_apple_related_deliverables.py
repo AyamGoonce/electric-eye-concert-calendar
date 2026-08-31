@@ -5,14 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "deliverables" / "apple-related"
-THEME_SOURCE = Path(
-    "/Users/ericsmacbookpro/Desktop/Electric Eye Backups/2026-08-30_12-16-19/"
-    "01 - Theme XML/Electric-Eye-Theme.xml"
-)
-CODE_SOURCE = Path(
-    "/Users/ericsmacbookpro/.codex/attachments/"
-    "6c8faf8e-88af-4740-be20-82172bf5161c/pasted-text.txt"
-)
+THEME_SOURCE = ROOT / "sources" / "apple-related" / "Electric-Eye-Theme.base.xml"
+CODE_SOURCE = ROOT / "sources" / "apple-related" / "Code.base.gs"
 
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
