@@ -341,6 +341,39 @@ JSON.stringify({first:first.seeded,second:second.seeded,puts:puts,status:stored.
         self.assertIn('new Error("ARTIST_DISCOVERY_BUSY")', self.code)
         self.assertIn("eeReleaseWorkerLease_(lease)", self.code)
 
+    def test_artist_discovery_cursor_advances_only_after_terminal_outcome(self):
+        result = self.run_apps_script(r'''
+function discoveryCase(rowStatus,failureAt,retryable){
+  var props={EE_APPLE_ARTIST_DISCOVERY_INDEX:"1"},history=[],stored=[],fetches=0,discoveries=0;
+  PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;if(key==="EE_APPLE_ARTIST_DISCOVERY_INDEX")history.push(value);},deleteProperty:function(key){delete props[key];}};}};
+  var row=["artist","Artist",1,1,"","","",rowStatus,"","","","post-1",""];
+  eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};
+  eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+  eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){EE_APPLE_EXECUTION_DEADLINE=0;};
+  eeArtistRegistry_=function(){return {artists:[{slug:"artist",canonicalName:"Artist"}]};};
+  eeFetchPostById_=function(){fetches+=1;if(failureAt==="fetch"){var error=new Error("FETCH_FAILED");error.code="FETCH_FAILED";error.retryable=retryable;throw error;}return {id:"post-1"};};
+  eeDiscoverArtistCatalogue_=function(){discoveries+=1;if(failureAt==="discover"){var error=new Error("DISCOVERY_FAILED");error.code="DISCOVERY_FAILED";error.retryable=retryable;throw error;}stored.push("RESOLVED");return {status:"RESOLVED"};};
+  eePutArtistCatalogue_=function(record){stored.push(record.status);};
+  var workerResult=eeDiscoverArtistsWorker();
+  return {status:workerResult.status,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,history:history,stored:stored,fetches:fetches,discoveries:discoveries};
+}
+JSON.stringify({
+  resolved:discoveryCase("RESOLVED","",false),
+  success:discoveryCase("UNRESOLVED","",false),
+  retryFetch:discoveryCase("UNRESOLVED","fetch",true),
+  retryDiscovery:discoveryCase("UNRESOLVED","discover",true),
+  fatalFetch:discoveryCase("UNRESOLVED","fetch",false)
+});
+''')
+        self.assertEqual(
+            '{"resolved":{"status":"OK","cursor":"2","history":["2"],"stored":[],"fetches":0,"discoveries":0},'
+            '"success":{"status":"OK","cursor":"2","history":["1","2"],"stored":["RESOLVED"],"fetches":1,"discoveries":1},'
+            '"retryFetch":{"status":"RETRY_LATER","cursor":"1","history":["1","1"],"stored":[],"fetches":1,"discoveries":0},'
+            '"retryDiscovery":{"status":"RETRY_LATER","cursor":"1","history":["1","1"],"stored":[],"fetches":1,"discoveries":1},'
+            '"fatalFetch":{"status":"OK","cursor":"2","history":["1","2"],"stored":["ERROR"],"fetches":1,"discoveries":0}}',
+            result,
+        )
+
     def test_stale_catalogues_have_an_independent_bounded_refresh_worker(self):
         worker = self.code[self.code.index("function eeRefreshStaleArtistsWorker") : self.code.index("function eeAssembleArticlePayloadsWorker")]
         self.assertIn("EE_APPLE_STALE_REFRESH_INDEX", worker)
