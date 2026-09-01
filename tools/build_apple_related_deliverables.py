@@ -269,8 +269,43 @@ function eeExplainPayloadForPostId(postId) {
 
 APPLE_REQUESTS = r'''
 var EE_APPLE_EXECUTION_DEADLINE=0;
+var EE_APPLE_DISCOVERY_DIAGNOSTIC=null;
 function eeSetExecutionDeadline_(value){EE_APPLE_EXECUTION_DEADLINE=Number(value||0);}
 function eeClearExecutionDeadline_(){EE_APPLE_EXECUTION_DEADLINE=0;}
+
+function eeDiscoveryDiagnosticStart_(artist) {
+  var diagnostic={artistKey:String((artist||{}).slug||""),canonicalName:String((artist||{}).canonicalName||""),startedAt:Date.now(),queries:[],appleCalls:0,cacheHits:0,finished:false};
+  EE_APPLE_DISCOVERY_DIAGNOSTIC=diagnostic;
+  return diagnostic;
+}
+
+function eeDiscoveryDiagnosticQuery_(query) {
+  var diagnostic=EE_APPLE_DISCOVERY_DIAGNOSTIC;
+  if(!diagnostic)return null;
+  var entry={term:String((query||{}).term||""),entity:String((query||{}).entity||""),category:String((query||{}).category||""),candidateCount:0,accepted:0,rejected:0,reasons:{}};
+  diagnostic.queries.push(entry);return entry;
+}
+
+function eeDiscoveryDiagnosticCandidates_(entry,response) {if(entry)entry.candidateCount=((response||{}).results||[]).length;}
+function eeDiscoveryDiagnosticDecision_(entry,accepted,reason) {if(!entry)return;var key=String(reason||"UNSPECIFIED");if(accepted)entry.accepted+=1;else entry.rejected+=1;entry.reasons[key]=(entry.reasons[key]||0)+1;}
+function eeDiscoveryDiagnosticAppleCall_(){if(EE_APPLE_DISCOVERY_DIAGNOSTIC)EE_APPLE_DISCOVERY_DIAGNOSTIC.appleCalls+=1;}
+function eeDiscoveryDiagnosticCacheHit_(){if(EE_APPLE_DISCOVERY_DIAGNOSTIC)EE_APPLE_DISCOVERY_DIAGNOSTIC.cacheHits+=1;}
+
+function eeDiscoveryDiagnosticStopReason_(error) {
+  var value=String((error&&error.code)||(error&&error.message)||"");
+  if(/(?:^|_)HTTP_403(?:$|_)/.test(value))return "403";
+  if(/(?:^|_)HTTP_429(?:$|_)/.test(value))return "429";
+  if(value.indexOf("HEADROOM")!==-1)return "HEADROOM";
+  if(value.indexOf("COOLDOWN")!==-1)return "COOLDOWN";
+  return "";
+}
+
+function eeDiscoveryDiagnosticFinish_(diagnostic,status,reason,error) {
+  if(!diagnostic||diagnostic.finished)return;
+  diagnostic.finished=true;
+  console.log(JSON.stringify({type:"APPLE_ARTIST_DISCOVERY",artistKey:diagnostic.artistKey,canonicalName:diagnostic.canonicalName,queries:diagnostic.queries,appleCalls:diagnostic.appleCalls,cacheHits:diagnostic.cacheHits,terminalStatus:String(status||""),terminalReason:String(reason||""),elapsedMs:Math.max(0,Date.now()-diagnostic.startedAt),stoppedBy:eeDiscoveryDiagnosticStopReason_(error)}));
+  if(EE_APPLE_DISCOVERY_DIAGNOSTIC===diagnostic)EE_APPLE_DISCOVERY_DIAGNOSTIC=null;
+}
 
 function eeAppleTransientCode_(code) {
   return [403,429,500,502,503,504].indexOf(Number(code))!==-1;
@@ -304,6 +339,7 @@ function eeAppleFetch_(url, options, label) {
         throw headroom;
       }
       if(wait)Utilities.sleep(wait);
+      eeDiscoveryDiagnosticAppleCall_();
       var response=UrlFetchApp.fetch(url,options);
       properties.setProperty("EE_APPLE_CALL_COUNT",String(Number(properties.getProperty("EE_APPLE_CALL_COUNT")||0)+1));
       properties.setProperty("EE_APPLE_LAST_REQUEST_AT",String(Date.now()));
@@ -326,7 +362,7 @@ function eeAppleSearch_(query) {
   var url="https://itunes.apple.com/search?"+queryString;
   var digest=Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,url)).slice(0,40);
   var cache=CacheService.getScriptCache(),cacheKey="apple-search:"+digest,cached=cache.get(cacheKey);
-  if(cached){var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));return JSON.parse(cached);}
+  if(cached){eeDiscoveryDiagnosticCacheHit_();var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));return JSON.parse(cached);}
   var response=eeAppleFetch_(url,{muteHttpExceptions:true,headers:{Accept:"application/json"}},"APPLE_SEARCH");
   var value=JSON.parse(response.getContentText()),cacheText=JSON.stringify(value);
   if(cacheText.length<95000)cache.put(cacheKey,cacheText,EE_APPLE_CONFIG.payloadCacheSeconds);
@@ -341,7 +377,7 @@ function eeAppleLookup_(query) {
   var url="https://itunes.apple.com/lookup?"+queryString;
   var digest=Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,url)).slice(0,40);
   var cache=CacheService.getScriptCache(),cacheKey="apple-lookup:"+digest,cached=cache.get(cacheKey);
-  if(cached){var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));return JSON.parse(cached);}
+  if(cached){eeDiscoveryDiagnosticCacheHit_();var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));return JSON.parse(cached);}
   var response=eeAppleFetch_(url,{muteHttpExceptions:true,headers:{Accept:"application/json"}},"APPLE_LOOKUP");
   var value=JSON.parse(response.getContentText()),cacheText=JSON.stringify(value);
   if(cacheText.length<95000)cache.put(cacheKey,cacheText,EE_APPLE_CONFIG.payloadCacheSeconds);
@@ -515,16 +551,18 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
 }
 
 function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
+  var diagnostic=eeDiscoveryDiagnosticStart_(artist);
   var lease="CATALOGUE_"+String(artist.slug||"").replace(/[^A-Za-z0-9_-]/g,"_");
-  if(!eeAcquireWorkerLease_(lease,360000)){var busy=new Error("ARTIST_DISCOVERY_BUSY");busy.code="ARTIST_DISCOVERY_BUSY";busy.retryable=true;throw busy;}
+  if(!eeAcquireWorkerLease_(lease,360000)){var busy=new Error("ARTIST_DISCOVERY_BUSY");busy.code="ARTIST_DISCOVERY_BUSY";busy.retryable=true;eeDiscoveryDiagnosticFinish_(diagnostic,"RETRY_LATER",busy.code,busy);throw busy;}
   try{
-    var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.status!=="UNRESOLVED"&&!forceRefresh)return existing;
+    var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.status!=="UNRESOLVED"&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
     var legacy=eeGeneratePayloadLegacy_(post),identity=legacy.identity||{};
     var categories=(legacy.categories||[]).map(function(group){return {category:group.category,items:(group.items||[]).filter(function(item){return !item.creator||eeNorm_(item.creator)===eeNorm_(artist.canonicalName)||group.category!=="LISTEN";})};}).filter(function(group){return group.items.length;});
     var confidence=String(identity.level||"LOW"),appleArtistId=identity.artistId||artist.appleArtistId||"",status=(appleArtistId||confidence==="HIGH")?"RESOLVED":confidence==="MODERATE"?"AMBIGUOUS":"ERROR",errorReason=status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"";
     if(status==="ERROR")categories=[];
     var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:appleArtistId,musicBrainzId:artist.musicBrainzId||"",identityConfidence:confidence,status:status,error:errorReason,categories:categories,representativePostId:String(post.id)};
-    eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));record.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories};return record;
+    eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));record.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories};eeDiscoveryDiagnosticFinish_(diagnostic,status,errorReason||(status==="RESOLVED"?"CONFIDENT_MATCH":"PLAUSIBLE_MATCH"),null);return record;
+  }catch(error){eeDiscoveryDiagnosticFinish_(diagnostic,error&&error.retryable?"RETRY_LATER":"ERROR",String((error&&error.code)||(error&&error.message)||"DISCOVERY_ERROR"),error);throw error;
   }finally{eeReleaseWorkerLease_(lease);}
 }
 
@@ -869,6 +907,18 @@ def build_code() -> str:
         '    (response.results||[]).forEach(function(raw){\n      eeAddCandidateToMap_(map,raw,query,analysis);\n    });',
         '    diagnostics.rawResultCount+=(response.results||[]).length;\n    (response.results||[]).forEach(function(raw){\n      if(eeAddCandidateToMap_(map,raw,query,analysis))diagnostics.acceptedCount+=1;\n      else{diagnostics.rejectedCount+=1;diagnostics.relationshipRejectedCount+=1;diagnostics.rejectionReasons.NO_QUALIFYING_RELATIONSHIP=(diagnostics.rejectionReasons.NO_QUALIFYING_RELATIONSHIP||0)+1;}\n    });',
         "raw and rejected result accounting",
+    )
+    code = replace_once(
+        code,
+        '  plan.forEach(function(query){\n    var response=eeAppleSearch_(query);',
+        '  plan.forEach(function(query){\n    var queryDiagnostic=eeDiscoveryDiagnosticQuery_(query);\n    var response=eeAppleSearch_(query);\n    eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);',
+        "per-artist query diagnostics",
+    )
+    code = replace_once(
+        code,
+        '      if(eeAddCandidateToMap_(map,raw,query,analysis))diagnostics.acceptedCount+=1;\n      else{diagnostics.rejectedCount+=1;diagnostics.relationshipRejectedCount+=1;diagnostics.rejectionReasons.NO_QUALIFYING_RELATIONSHIP=(diagnostics.rejectionReasons.NO_QUALIFYING_RELATIONSHIP||0)+1;}',
+        '      if(eeAddCandidateToMap_(map,raw,query,analysis)){diagnostics.acceptedCount+=1;eeDiscoveryDiagnosticDecision_(queryDiagnostic,true,"QUALIFYING_RELATIONSHIP");}\n      else{diagnostics.rejectedCount+=1;diagnostics.relationshipRejectedCount+=1;diagnostics.rejectionReasons.NO_QUALIFYING_RELATIONSHIP=(diagnostics.rejectionReasons.NO_QUALIFYING_RELATIONSHIP||0)+1;eeDiscoveryDiagnosticDecision_(queryDiagnostic,false,"NO_QUALIFYING_RELATIONSHIP");}',
+        "per-query decision diagnostics",
     )
     code = replace_once(
         code,

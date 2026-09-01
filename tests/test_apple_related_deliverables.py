@@ -344,6 +344,59 @@ JSON.stringify({first:first.seeded,second:second.seeded,puts:puts,status:stored.
         self.assertIn('new Error("ARTIST_DISCOVERY_BUSY")', self.code)
         self.assertIn("eeReleaseWorkerLease_(lease)", self.code)
 
+    def test_artist_discovery_emits_compact_per_artist_diagnostics(self):
+        result = self.run_apps_script(r'''
+var logs=[];console.log=function(value){logs.push(value);};
+var saved=null,properties={};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
+eeGeneratePayloadLegacy_=function(){
+  var query=eeDiscoveryDiagnosticQuery_({term:"Sparks",entity:"musicArtist",category:"LISTEN"});
+  eeDiscoveryDiagnosticAppleCall_();eeDiscoveryDiagnosticCacheHit_();
+  eeDiscoveryDiagnosticCandidates_(query,{results:[{},{}]});
+  eeDiscoveryDiagnosticDecision_(query,true,"QUALIFYING_RELATIONSHIP");
+  eeDiscoveryDiagnosticDecision_(query,false,"NO_QUALIFYING_RELATIONSHIP");
+  return {identity:{level:"HIGH",artistId:"99"},categories:[]};
+};
+eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"sparks",canonicalName:"Sparks"},{id:"post-1"});
+var log=JSON.parse(logs[0]);
+JSON.stringify({status:record.status,count:logs.length,type:log.type,artistKey:log.artistKey,canonicalName:log.canonicalName,appleCalls:log.appleCalls,cacheHits:log.cacheHits,terminalStatus:log.terminalStatus,terminalReason:log.terminalReason,stoppedBy:log.stoppedBy,elapsedIsNumber:typeof log.elapsedMs==="number",query:log.queries[0]});
+''')
+        self.assertEqual(
+            '{"status":"RESOLVED","count":1,"type":"APPLE_ARTIST_DISCOVERY","artistKey":"sparks",'
+            '"canonicalName":"Sparks","appleCalls":1,"cacheHits":1,"terminalStatus":"RESOLVED",'
+            '"terminalReason":"CONFIDENT_MATCH","stoppedBy":"","elapsedIsNumber":true,'
+            '"query":{"term":"Sparks","entity":"musicArtist","category":"LISTEN","candidateCount":2,'
+            '"accepted":1,"rejected":1,"reasons":{"QUALIFYING_RELATIONSHIP":1,"NO_QUALIFYING_RELATIONSHIP":1}}}',
+            result,
+        )
+
+    def test_artist_discovery_diagnostics_report_retry_stop_without_changing_error(self):
+        result = self.run_apps_script(r'''
+var logs=[];console.log=function(value){logs.push(value);};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
+eeGeneratePayloadLegacy_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};
+var caught=null;try{eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post-1"});}catch(error){caught={code:error.code,retryable:error.retryable};}
+var log=JSON.parse(logs[0]);
+var stops=["APPLE_SEARCH_HTTP_403","APPLE_SEARCH_HTTP_429","APPLE_SEARCH_EXECUTION_HEADROOM","APPLE_RETRY_LATER_COOLDOWN"].map(function(code){return eeDiscoveryDiagnosticStopReason_({code:code});});
+JSON.stringify({caught:caught,count:logs.length,status:log.terminalStatus,reason:log.terminalReason,stoppedBy:log.stoppedBy,stops:stops});
+''')
+        self.assertEqual(
+            '{"caught":{"code":"APPLE_SEARCH_HTTP_429","retryable":true},"count":1,'
+            '"status":"RETRY_LATER","reason":"APPLE_SEARCH_HTTP_429","stoppedBy":"429",'
+            '"stops":["403","429","HEADROOM","COOLDOWN"]}',
+            result,
+        )
+
+    def test_artist_discovery_diagnostics_are_wired_to_existing_calls_only(self):
+        self.assertIn("eeDiscoveryDiagnosticAppleCall_();\n      var response=UrlFetchApp.fetch(url,options);", self.code)
+        self.assertEqual(2, self.code.count("if(cached){eeDiscoveryDiagnosticCacheHit_();"))
+        self.assertIn("var queryDiagnostic=eeDiscoveryDiagnosticQuery_(query);", self.code)
+        self.assertIn("eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);", self.code)
+
     def test_exhausted_artist_discovery_is_persisted_as_terminal_error(self):
         result = self.run_apps_script(r'''
 var saved=null,properties={},nextLevel="LOW",nextArtistId=null;
