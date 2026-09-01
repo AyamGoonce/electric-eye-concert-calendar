@@ -48,6 +48,13 @@ def _reviewed_predecessor_identities(event: ConcertEvent) -> list[str]:
 
     artist = normalize_artist_component(event.headliner)
     result = []
+    for alias in event.identity_aliases or []:
+        value = "\x1f".join((
+            event.date[:10],
+            normalize_headliner(alias),
+            normalize_venue_key(event.venue),
+        ))
+        result.append(hashlib.sha256(value.encode("utf-8")).hexdigest())
     for event_date, reviewed_artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
         if (
             event.date[:10] == event_date
@@ -179,16 +186,18 @@ def reconcile_state(
 
     for event in events:
         identity = canonical_event_identity(event)
-        existing = records.get(identity)
-        if existing is None:
-            existing = next(
-                (
-                    records[candidate]
-                    for candidate in _reviewed_predecessor_identities(event)
-                    if candidate in records
-                ),
-                None,
-            )
+        existing_candidates = [
+            records[candidate]
+            for candidate in [
+                identity, *_reviewed_predecessor_identities(event)
+            ]
+            if candidate in records
+        ]
+        existing = min(
+            existing_candidates,
+            key=lambda record: parse_timestamp(record["first_seen"]),
+            default=None,
+        )
         first_seen = existing["first_seen"] if existing else (
             now_text if previous is not None else bootstrap_text
         )

@@ -1387,6 +1387,33 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
             extract_accor_support(description, "Five Finger Death Punch"),
         )
 
+    def test_accor_evanescence_accompanied_billing_is_structured_support(self):
+        description = (
+            "<p>Evanescence sera sur la scène de l’Accor Arena, "
+            "accompagnés de Poppy et Nova Twins !</p>"
+        )
+        self.assertEqual(
+            ["Poppy", "Nova Twins"],
+            extract_accor_support(description, "Evanescence"),
+        )
+
+        item = {
+            "room": {"full_name": "Accor Arena"},
+            "spotify": "https://open.spotify.com/artist/evanescence",
+            "sessions": [{"date": "2026-09-17 19:00:00"}],
+            "translations": [{
+                "language": "fr",
+                "title": "EVANESCENCE",
+                "category": "CONCERT",
+                "sub_category": "HARD METAL",
+                "description": description,
+            }],
+        }
+        events = parse_accor_item(item)
+        self.assertEqual(1, len(events))
+        self.assertEqual(["Poppy", "Nova Twins"], events[0].openers)
+        self.assertTrue(events[0].authoritative_billing)
+
     def test_accor_tame_impala_sessions_both_receive_wet_leg(self):
         item = {
             "room": {"full_name": "Accor Arena"},

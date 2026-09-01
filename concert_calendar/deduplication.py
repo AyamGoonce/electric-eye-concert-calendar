@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from difflib import SequenceMatcher
 from html import unescape
+from itertools import combinations
 
 import json
 from pathlib import Path
@@ -23,7 +25,7 @@ TARGET_VENUE_IMAGE_SOURCES = {
 def image_source_priority(source):
     """Keep this pass's venue-card artwork below existing official imagery."""
 
-    if not source:
+    if not source or source == "DICE":
         return 0
     return 1 if source in TARGET_VENUE_IMAGE_SOURCES else 2
 
@@ -34,6 +36,7 @@ ARTIST_ALIASES = {
     "etran de l'aïr": "étran de l'aïr",
     "f.f.f.": "fff",
     "the flamin' groovies": "flamin' groovies",
+    "the afghan wigs": "the afghan whigs",
     "gaëlle joly": "gaelle joly",
     "gregoire jokic": "grégoire jokic",
     "howlin’ jaws": "howlin' jaws",
@@ -47,6 +50,7 @@ ARTIST_ALIASES = {
     "kiwi jr.": "kiwi jr",
     "sebastien tellier": "sébastien tellier",
     "westside cowboys": "westside cowboy",
+    "two door cinema": "two door cinema club",
     "zoh amba (les femmes s’en mêlent)": (
         "zoh amba (les femmes s'en mêlent)"
     ),
@@ -216,8 +220,14 @@ VERIFIED_ARTIST_DISPLAY_NAMES = {
     "uriah heep": "Uriah Heep",
 }
 
-BILL_SEPARATOR_RE = re.compile(r"\s+(?:\+|•)\s+")
-GENERIC_GUEST_RE = re.compile(r"\s+\+\s+guests?\s*$", re.IGNORECASE)
+BILL_SEPARATOR_RE = re.compile(
+    r"\s+(?:[+&×/•]|x|and|avec|with)\s+",
+    re.IGNORECASE,
+)
+GENERIC_GUEST_RE = re.compile(
+    r"\s+\+\s+(?:special\s+)?guests?\s*$",
+    re.IGNORECASE,
+)
 TIME_SUFFIX_RE = re.compile(r"\s+[–-]\s*(\d{1,2})\s*h(?:\s*(\d{2}))?\s*$", re.IGNORECASE)
 SET_SUFFIX_RE = re.compile(r"\s+-\s+(?:1er|2e)\s+set\s*$", re.IGNORECASE)
 
@@ -347,6 +357,14 @@ def merge_events(
     existing.source_names = sorted(
         {*(existing.source_names or []), *(incoming.source_names or [])}
     ) or None
+    existing.identity_aliases = _stable_unique([
+        *(existing.identity_aliases or []),
+        incoming.headliner,
+        *(incoming.identity_aliases or []),
+    ])
+    existing.first_seen = min(
+        value for value in (existing.first_seen, incoming.first_seen) if value
+    ) if existing.first_seen or incoming.first_seen else None
 
     if not existing.genre and incoming.genre:
         existing.genre = incoming.genre
@@ -428,8 +446,213 @@ def merge_events(
 
 
 def _split_full_bill(value: str) -> list[str]:
-    parts = BILL_SEPARATOR_RE.split(value or "")
+    parts = [part.strip() for part in BILL_SEPARATOR_RE.split(value or "")]
     return parts if len(parts) > 1 else []
+
+
+def _normalized_billing_component(value: str) -> str:
+    """Normalize punctuation only inside an explicitly parsed artist bill."""
+
+    value = re.sub(
+        r"\s*(?:\((?:live|uk|fr|us|usa)\)|(?:\s+|:\s*)20\d{2})\s*$",
+        "",
+        value or "",
+        flags=re.IGNORECASE,
+    )
+    value = normalize_artist_component(value).replace("'", "")
+    value = re.sub(r"[^\w]+", " ", value, flags=re.UNICODE)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def _primary_billing_set(event: ConcertEvent) -> frozenset[str]:
+    wrapped = _festival_event_billing(event)
+    if wrapped:
+        return wrapped[1]
+    components = _split_full_bill(event.headliner) or [event.headliner]
+    components.extend(event.co_headliners or [])
+    return frozenset(
+        identity
+        for identity in map(_normalized_billing_component, components)
+        if identity
+    )
+
+
+def _festival_wrapped_billing(value: str) -> tuple[str, frozenset[str]] | None:
+    """Return festival and artist identities from a reordered wrapper title."""
+
+    parts = [
+        part.strip()
+        for part in re.split(r"\s+[–—|-]\s+|\s*:\s*", unescape(value or ""))
+        if part.strip()
+    ]
+    if len(parts) != 2:
+        return None
+    festival_parts = [part for part in parts if re.search(
+        r"\b(?:festival|fest)\b", part, re.IGNORECASE
+    )]
+    if len(festival_parts) != 1:
+        return None
+    festival = festival_parts[0]
+    billing = parts[1] if parts[0] == festival else parts[0]
+    billing = GENERIC_GUEST_RE.sub("", billing).strip()
+    components = _split_full_bill(billing) or [billing]
+    artists = frozenset(
+        identity
+        for identity in map(_normalized_billing_component, components)
+        if identity
+    )
+    festival_identity = _normalized_billing_component(festival)
+    return (festival_identity, artists) if festival_identity and artists else None
+
+
+def _same_festival_wrapped_billing(
+    left: ConcertEvent, right: ConcertEvent
+) -> bool:
+    left_identity = _festival_event_billing(left)
+    right_identity = _festival_event_billing(right)
+    return bool(left_identity and left_identity == right_identity)
+
+
+def _festival_event_billing(
+    event: ConcertEvent,
+) -> tuple[str, frozenset[str]] | None:
+    return _festival_wrapped_billing(
+        event.headliner
+    ) or _festival_wrapped_billing(event.event_title or "")
+
+
+def _cross_source_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
+    left_sources = set(left.source_names or [])
+    right_sources = set(right.source_names or [])
+    return bool(
+        (left_sources and right_sources and left_sources != right_sources)
+        or _shared_promoter(left, right)
+        or _same_event_specific_ticket(left, right)
+    )
+
+
+def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
+    if left.festival_name or right.festival_name:
+        if (
+            not left.authoritative_billing
+            and not right.authoritative_billing
+            and _same_festival_wrapped_billing(left, right)
+        ):
+            return False
+        return True
+    for event in (left, right):
+        if TIME_SUFFIX_RE.search(event.headliner) or SET_SUFFIX_RE.search(event.headliner):
+            return True
+    return False
+
+
+def _tour_base_identity(value: str) -> str | None:
+    match = re.match(r"^(.+?)\s+[–—:|\-]\s+(.+)$", unescape(value or ""))
+    if not match or not re.search(
+        r"\b(?:tour|tourn[ée]e|anniversary|headline)\b",
+        match.group(2),
+        re.IGNORECASE,
+    ):
+        return None
+    return _normalized_billing_component(match.group(1))
+
+
+def _same_primary_billing(left: ConcertEvent, right: ConcertEvent) -> bool:
+    left_festival = _festival_event_billing(left)
+    right_festival = _festival_event_billing(right)
+    if left_festival or right_festival:
+        if left_festival and right_festival:
+            return left_festival == right_festival
+        wrapped = left_festival or right_festival
+        plain = right if left_festival else left
+        return wrapped[1] == _primary_billing_set(plain)
+    left_set, right_set = _primary_billing_set(left), _primary_billing_set(right)
+    if left_set and left_set == right_set:
+        return True
+    # A separately sourced singleton card commonly omits the co-bill printed on
+    # the venue card.  Preserve the fuller explicit bill without inventing a
+    # support hierarchy.
+    if (
+        left_set
+        and right_set
+        and min(len(left_set), len(right_set)) == 1
+        and (left_set < right_set or right_set < left_set)
+    ):
+        return True
+    left_identity = _normalized_billing_component(left.headliner)
+    right_identity = _normalized_billing_component(right.headliner)
+    if (
+        left_identity
+        and right_identity
+        and SequenceMatcher(None, left_identity, right_identity).ratio() >= 0.92
+    ):
+        return True
+    return bool(
+        (_tour_base_identity(left.headliner) == right_identity)
+        or (_tour_base_identity(right.headliner) == left_identity)
+    )
+
+
+def _billing_richness(event: ConcertEvent) -> tuple[int, ...]:
+    return (
+        int(bool(event.electric_eye_links)),
+        len(event.electric_eye_links or []),
+        len(_primary_billing_set(event)),
+        len(event.openers or []) + len(event.co_headliners or []),
+        int(bool(event.genre or event.genre_public)),
+        int(bool(event.image_url)),
+        int(bool(event.ticket_url)),
+        len(event.promoters or []),
+        len(event.source_names or []),
+    )
+
+
+def _remove_billed_artists_from_support(event: ConcertEvent) -> None:
+    billed = _primary_billing_set(event)
+    event.openers = [
+        opener for opener in (event.openers or [])
+        if _normalized_billing_component(opener) not in billed
+    ] or None
+    if _festival_event_billing(event):
+        event.co_headliners = [
+            artist for artist in (event.co_headliners or [])
+            if not re.search(r"\bguests?\b", artist, re.IGNORECASE)
+        ] or None
+
+
+def _reconcile_cross_source_billing_variants(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Merge explicit artist-set separator and conservative tour-copy variants."""
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    removed = set()
+    merged_count = 0
+    for group in grouped.values():
+        for left, right in combinations(group, 2):
+            if id(left) in removed or id(right) in removed:
+                continue
+            if _distinct_performance_evidence(left, right):
+                continue
+            if not _cross_source_evidence(left, right):
+                continue
+            if not _same_primary_billing(left, right):
+                continue
+            preferred, incoming = sorted(
+                (left, right), key=_billing_richness, reverse=True
+            )
+            merge_events(preferred, incoming)
+            _remove_billed_artists_from_support(preferred)
+            removed.add(id(incoming))
+            merged_count += 1
+
+    if diagnostics is not None:
+        diagnostics["billing_variants_merged"] = merged_count
+    return [event for event in events if id(event) not in removed]
 
 
 def _matches_structured_bill(
@@ -872,6 +1095,9 @@ def deduplicate_events(
     _apply_verified_support_relationships(reconciled)
     reconciled = _reconcile_full_bills(reconciled)
     reconciled = _reconcile_generic_guest_titles(reconciled)
+    reconciled = _reconcile_cross_source_billing_variants(
+        reconciled, diagnostics
+    )
     reconciled = _reconcile_time_labeled_titles(reconciled)
     reconciled = _reconcile_multi_set_parent_cards(reconciled)
     reconciled = _consolidate_authoritative_festivals(reconciled, diagnostics)
@@ -892,8 +1118,51 @@ def deduplicate_events(
             and True in initial_opener_state.get(build_event_key(event), [])
             for event in reconciled
         )
+        diagnostics["suspicious_near_duplicates"] = (
+            suspicious_near_duplicate_pairs(reconciled)
+        )
 
     return reconciled
+
+
+def suspicious_near_duplicate_pairs(events: list[ConcertEvent]) -> list[dict]:
+    """Report likely wording variants without automatically merging them."""
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    candidates = []
+    for (date, _), group in grouped.items():
+        for left, right in combinations(group, 2):
+            left_title = _normalized_billing_component(left.headliner)
+            right_title = _normalized_billing_component(right.headliner)
+            similarity = SequenceMatcher(None, left_title, right_title).ratio()
+            left_set, right_set = _primary_billing_set(left), _primary_billing_set(right)
+            union = left_set | right_set
+            overlap = len(left_set & right_set) / len(union) if union else 0.0
+            if similarity < 0.72 and overlap < 0.5:
+                continue
+            candidates.append({
+                "date": date,
+                "venue": left.venue,
+                "left": left.headliner,
+                "right": right.headliner,
+                "similarity": round(similarity, 3),
+                "artist_overlap": round(overlap, 3),
+                "sources": sorted(
+                    set(left.source_names or []) | set(right.source_names or [])
+                ),
+                "different_times": bool(
+                    left.start_time and right.start_time
+                    and left.start_time != right.start_time
+                ),
+                "distinct_performance": _distinct_performance_evidence(
+                    left, right
+                ),
+                "festival": bool(left.festival_name or right.festival_name),
+            })
+    return candidates
 
 
 def _count_represented_festival_rows(events: list[ConcertEvent]) -> int:

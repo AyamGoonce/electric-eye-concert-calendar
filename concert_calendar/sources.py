@@ -73,7 +73,9 @@ class PipelineReport:
     festival_days_aggregated: int
     festival_artist_rows_collapsed: int
     opener_enriched_records: int
+    billing_variants_merged: int
     unresolved_deduplication_candidates: list[dict]
+    suspicious_near_duplicate_candidates: list[dict]
     genre_report: dict
 
 
@@ -356,8 +358,14 @@ def load_events_with_report(
         opener_enriched_records=deduplication_diagnostics.get(
             "opener_enriched_records", 0
         ),
+        billing_variants_merged=deduplication_diagnostics.get(
+            "billing_variants_merged", 0
+        ),
         unresolved_deduplication_candidates=deduplication_diagnostics.get(
             "unresolved_candidates", []
+        ),
+        suspicious_near_duplicate_candidates=deduplication_diagnostics.get(
+            "suspicious_near_duplicates", []
         ),
         genre_report=genre_report,
     )

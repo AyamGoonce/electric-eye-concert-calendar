@@ -73,6 +73,30 @@ class NewlyAddedTests(unittest.TestCase):
             current["events"][identity]["first_seen"],
         )
 
+    def test_merged_alias_retains_oldest_prior_first_seen(self):
+        older_alias = self.event(headliner="Behemoth x Dimmu Borgir")
+        newer_title = self.event(headliner="Behemoth & Dimmu Borgir")
+        first = reconcile_state([older_alias], None, now=self.NOW)
+        second = reconcile_state(
+            [newer_title], first, now=self.NOW + timedelta(hours=6)
+        )
+        candidate = self.event(
+            headliner="Behemoth & Dimmu Borgir", source_names=["Venue"]
+        )
+        alias = self.event(
+            headliner="Behemoth x Dimmu Borgir", source_names=["Promoter"]
+        )
+        merged = deduplicate_events([candidate, alias])
+
+        current = reconcile_state(
+            merged, second, now=self.NOW + timedelta(hours=12)
+        )
+
+        identity = canonical_event_identity(merged[0])
+        self.assertEqual(
+            older_alias.first_seen, current["events"][identity]["first_seen"]
+        )
+
     def test_new_window_ends_after_72_hours(self):
         timestamp = "2026-09-01T12:00:00Z"
         self.assertTrue(is_new(timestamp, now=self.NOW + timedelta(hours=72)))

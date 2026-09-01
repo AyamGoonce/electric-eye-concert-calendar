@@ -71,6 +71,8 @@ def extract_explicit_support(description, headliner):
             r"\b(?:premi(?:è|e)res? parties?|en premi(?:è|e)re partie|"
             r"support|opening act|special guests?|invit(?:é|e)s? sp(?:é|e)ciaux)\b",
             normalized,
+        ) and not re.search(
+            r"\baccompagn(?:é|ée|és|ées)s?\s+de\b", normalized
         ):
             continue
 
@@ -88,6 +90,7 @@ def extract_explicit_support(description, headliner):
                 r"(?:avec|with)\s+(.+?)\s+en premi(?:è|e)re partie\b",
                 r"^(.+?)\s+en assurera la premi(?:è|e)re partie\b",
                 r"accompagn(?:é|e)s? de\s+(.+?)\s+en invit(?:é|e)s? sp(?:é|e)ciaux\b",
+                r"accompagn(?:é|ée|és|ées)s?\s+de\s+(.+?)(?:\s*[!.]|$)",
                 r"(?:support|opening act|special guests?)\s*:\s*(.+)$",
             )
             for pattern in patterns:
