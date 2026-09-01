@@ -284,7 +284,8 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-year-toggle,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-toggle,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-toggle {
   position: relative;
   display: flex;
   width: 100%;
@@ -309,7 +310,8 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-year-copy,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-copy {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-month-copy,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-copy {
   position: relative;
   z-index: 2;
   display: grid;
@@ -335,7 +337,8 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-list,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-list,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-events {
   list-style: none;
   list-style-type: none;
   counter-reset: none;
@@ -344,7 +347,8 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-list > li,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-list > li,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-events > li {
   list-style: none;
   list-style-type: none;
   counter-increment: none;
@@ -352,8 +356,10 @@
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-list > li::before,
 .ee-calendar-page #ee-concert-calendar .ee-calendar-month-list > li::marker,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li::before,
-.ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li::marker {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-list > li::before,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-list > li::marker,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-events > li::before,
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-events > li::marker {
   content: none;
   display: none;
 }
@@ -407,7 +413,43 @@
   border-top: 0;
 }
 
-.ee-calendar-page #ee-concert-calendar .ee-calendar-today {
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-section + .ee-calendar-day-section {
+  border-top: 1px solid var(--ee-calendar-border);
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-toggle {
+  min-height: 44px;
+  padding: 8px 18px;
+  background: #e3e5e7;
+  border: 0;
+  border-left: 3px solid #b8bdc2;
+  color: #41464b;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-toggle:hover {
+  background: #d8dbde;
+  border-color: var(--ee-calendar-accent);
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-name {
+  font-size: .76rem;
+  font-weight: 800;
+  letter-spacing: .075em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-toggle .ee-calendar-chevron {
+  width: 28px;
+  height: 28px;
+  font-size: 1.25rem;
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-day-body {
+  background: var(--ee-calendar-surface);
+}
+
+.ee-calendar-page #ee-concert-calendar .ee-calendar-today > section > .ee-calendar-day-toggle {
   box-shadow: inset 4px 0 0 var(--ee-calendar-accent);
 }
 
@@ -417,17 +459,6 @@
   font-size: .67rem;
 }
 
-.ee-calendar-page #ee-concert-calendar .ee-calendar-day-separator {
-  padding: 9px 18px 7px;
-  background: var(--ee-calendar-bg);
-  border-top: 1px solid var(--ee-calendar-border);
-  border-bottom: 1px solid var(--ee-calendar-border);
-  color: var(--ee-calendar-muted);
-  font-size: .72rem;
-  font-weight: 800;
-  letter-spacing: .075em;
-  text-transform: uppercase;
-}
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-day-separator:first-child {
   border-top: 0;
@@ -835,15 +866,13 @@
     margin-bottom: 0;
   }
 
-  .ee-calendar-page #ee-concert-calendar .ee-calendar-month-events > li:not(.ee-calendar-day-separator) {
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-day-events > li {
     margin-bottom: 10px;
   }
 
-  .ee-calendar-page #ee-concert-calendar .ee-calendar-event-list .ee-calendar-day-separator {
-    margin: 20px 0 8px;
-    padding: 6px 3px;
-    background: transparent;
-    border: 0;
+  .ee-calendar-page #ee-concert-calendar .ee-calendar-day-toggle {
+    min-height: 42px;
+    padding: 8px 12px;
   }
 
   .ee-calendar-page #ee-concert-calendar .ee-calendar-event-row {
