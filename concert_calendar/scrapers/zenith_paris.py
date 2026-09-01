@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 
 from concert_calendar.event_images import discard_repeated_generic_images, element_image_url
 from concert_calendar.models import ConcertEvent
+from concert_calendar.venues import VENUE_ALIASES, normalize_venue_key
 
 
 SOURCE_NAME = "Le Zénith Paris – La Villette"
@@ -48,7 +49,7 @@ def parse_card(card):
     return ConcertEvent(date=event_date.isoformat(), headliner=headliner, venue=SOURCE_NAME, city="Paris", department="75", ticket_url=urljoin(PROGRAMME_URL, clean(link.get("href"))), image_url=image_url, image_source=SOURCE_NAME if image_url else None)
 
 
-def load_events():
+def load_primary_events():
     response = requests.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
@@ -57,3 +58,54 @@ def load_events():
         if event := parse_card(card):
             events.setdefault((event.date, event.headliner.casefold(), event.venue.casefold()), event)
     return discard_repeated_generic_images(list(events.values()))
+
+
+def is_zenith_paris_event(event):
+    return VENUE_ALIASES.get(normalize_venue_key(event.venue)) == SOURCE_NAME
+
+
+def load_fallback_events():
+    """Recover the independently hosted Live Nation subset for this venue."""
+
+    from concert_calendar.scrapers import livenation
+
+    events = {}
+    for event in livenation.load_events():
+        if not is_zenith_paris_event(event):
+            continue
+        event.venue = SOURCE_NAME
+        event.city = "Paris"
+        event.department = "75"
+        events.setdefault(
+            (event.date, event.headliner.casefold(), event.venue.casefold()),
+            event,
+        )
+    return discard_repeated_generic_images(list(events.values()))
+
+
+def load_events():
+    try:
+        events = load_primary_events()
+        if events:
+            return events
+        primary_error = RuntimeError("primary source returned zero future events")
+    except requests.RequestException as error:
+        primary_error = error
+
+    print("Le Zénith primary source unavailable; using fallback Live Nation")
+    try:
+        events = load_fallback_events()
+    except Exception as fallback_error:
+        raise RuntimeError(
+            "Le Zénith primary and Live Nation fallback failed: "
+            f"primary={type(primary_error).__name__}: {primary_error}; "
+            f"fallback={type(fallback_error).__name__}: {fallback_error}"
+        ) from fallback_error
+
+    if not events:
+        raise RuntimeError(
+            "Le Zénith primary was unavailable and Live Nation fallback "
+            "returned zero future Zénith Paris events"
+        )
+    print(f"Le Zénith fallback Live Nation recovered {len(events)} events")
+    return events
