@@ -390,8 +390,8 @@ JSON.stringify({
         self.assertEqual(
             '{"resolved":{"status":"OK","cursor":"2","history":["2"],"stored":[],"fetches":0,"discoveries":0},'
             '"success":{"status":"OK","cursor":"2","history":["1","2"],"stored":["RESOLVED"],"fetches":1,"discoveries":1},'
-            '"retryFetch":{"status":"RETRY_LATER","cursor":"1","history":["1","1"],"stored":[],"fetches":1,"discoveries":0},'
-            '"retryDiscovery":{"status":"RETRY_LATER","cursor":"1","history":["1","1"],"stored":[],"fetches":1,"discoveries":1},'
+            '"retryFetch":{"status":"RETRY_LATER","cursor":"1","history":["1","1"],"stored":["UNRESOLVED"],"fetches":1,"discoveries":0},'
+            '"retryDiscovery":{"status":"RETRY_LATER","cursor":"1","history":["1","1"],"stored":["UNRESOLVED"],"fetches":1,"discoveries":1},'
             '"fatalFetch":{"status":"OK","cursor":"2","history":["1","2"],"stored":["ERROR"],"fetches":1,"discoveries":0}}',
             result,
         )
@@ -416,9 +416,9 @@ var queue=workerHarness([row("dead-end"),row("later")],function(artist){return a
 JSON.stringify({http403:transient("APPLE_SEARCH_HTTP_403"),http429:transient("APPLE_SEARCH_HTTP_429"),headroom:transient("APPLE_SEARCH_EXECUTION_HEADROOM"),queue:queue});
 ''')
         self.assertEqual(
-            '{"http403":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[]},'
-            '"http429":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[]},'
-            '"headroom":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[]},'
+            '{"http403":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[["first","UNRESOLVED","UNRESOLVED","APPLE_SEARCH_HTTP_403"]]},'
+            '"http429":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[["first","UNRESOLVED","UNRESOLVED","APPLE_SEARCH_HTTP_429"]]},'
+            '"headroom":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[["first","UNRESOLVED","UNRESOLVED","APPLE_SEARCH_EXECUTION_HEADROOM"]]},'
             '"queue":{"status":"OK","cursor":"3","calls":["dead-end","later"],"stored":[]}}',
             result,
         )
@@ -434,8 +434,72 @@ JSON.stringify({http403:transient("APPLE_SEARCH_HTTP_403"),http429:transient("AP
         worker = self.code[self.code.index("function eeRefreshStaleArtistsWorker") : self.code.index("function eeAssembleArticlePayloadsWorker")]
         self.assertIn("EE_APPLE_STALE_REFRESH_INDEX", worker)
         self.assertIn('eeDiscoverArtistCatalogue_(artist,post,true)', worker)
-        self.assertIn('status:"RETRY_LATER"', worker)
-        self.assertIn('status:"REFRESHED"', worker)
+        self.assertIn('status:"DEFERRED"', worker)
+        self.assertIn('status:isDeferred?"DEFERRED_RETRIED":"REFRESHED"', worker)
+        self.assertIn('?"DEFERRED_RETRIED":"REFRESHED"', worker)
+
+    def test_bounded_transient_retries_defer_and_unblock_later_artist(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_ARTIST_DISCOVERY_INDEX:"1"},history=[],calls=[];
+var rows=[
+  ["blocked","Blocked",1,1,"","","","UNRESOLVED","","","","post-blocked","",0,"",""],
+  ["later","Later",1,1,"","","","UNRESOLVED","","","","post-later","",0,"",""]
+];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;if(key==="EE_APPLE_ARTIST_DISCOVERY_INDEX")history.push(value);},deleteProperty:function(key){delete props[key];}};}};
+eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"]].concat(rows);}};}};};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){EE_APPLE_EXECUTION_DEADLINE=0;};
+eeFetchPostById_=function(id){return {id:id};};
+eeArtistRegistry_=function(){return {artists:[{slug:"blocked",canonicalName:"Blocked"},{slug:"later",canonicalName:"Later"}]};};
+eePutArtistCatalogue_=function(record){var row=record.artistKey==="blocked"?rows[0]:rows[1];row[6]=record.identityConfidence;row[7]=record.status;row[12]=record.error;row[13]=record.transientRetryCount||0;row[14]=record.lastTransientError||"";row[15]=record.retryAfter||"";};
+eeDiscoverArtistCatalogue_=function(artist){calls.push(artist.slug);if(artist.slug==="blocked"){var error=new Error("APPLE_SEARCH_HTTP_403");error.code="APPLE_SEARCH_HTTP_403";error.retryable=true;throw error;}rows[1][6]="HIGH";rows[1][7]="RESOLVED";return {status:"RESOLVED"};};
+var first=eeDiscoverArtistsWorker(),firstState={status:first.status,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,retries:rows[0][13],artistStatus:rows[0][7]};
+var second=eeDiscoverArtistsWorker(),secondState={status:second.status,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,retries:rows[0][13],artistStatus:rows[0][7]};
+var third=eeDiscoverArtistsWorker(),thirdState={status:third.status,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,retries:rows[0][13],artistStatus:rows[0][7],error:rows[0][12],retryAfter:!!rows[0][15],laterStatus:rows[1][7]};
+JSON.stringify({first:firstState,second:secondState,third:thirdState,calls:calls,history:history});
+''')
+        self.assertEqual(
+            '{"first":{"status":"RETRY_LATER","cursor":"1","retries":1,"artistStatus":"UNRESOLVED"},'
+            '"second":{"status":"RETRY_LATER","cursor":"1","retries":2,"artistStatus":"UNRESOLVED"},'
+            '"third":{"status":"OK","cursor":"3","retries":3,"artistStatus":"DEFERRED","error":"APPLE_SEARCH_HTTP_403","retryAfter":true,"laterStatus":"RESOLVED"},'
+            '"calls":["blocked","blocked","blocked","later"],"history":["1","1","1","1","1","2","2","3"]}',
+            result,
+        )
+
+    def test_all_retryable_artist_failures_are_bounded(self):
+        result = self.run_apps_script(r'''
+function bounded(code){
+  var props={EE_APPLE_ARTIST_DISCOVERY_INDEX:"1"},row=["artist","Artist",1,1,"","","","UNRESOLVED","","","","post","",0,"",""];
+  PropertiesService={getScriptProperties:function(){return {getProperty:function(k){return props[k]||"";},setProperty:function(k,v){props[k]=v;},deleteProperty:function(k){delete props[k];}};}};
+  eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeSetExecutionDeadline_=function(v){EE_APPLE_EXECUTION_DEADLINE=v;};eeClearExecutionDeadline_=function(){};eeFetchPostById_=function(){return {id:"post"};};eeArtistRegistry_=function(){return {artists:[{slug:"artist",canonicalName:"Artist"}]};};
+  eePutArtistCatalogue_=function(record){row[6]=record.identityConfidence;row[7]=record.status;row[12]=record.error;row[13]=record.transientRetryCount||0;row[14]=record.lastTransientError||"";row[15]=record.retryAfter||"";};
+  eeDiscoverArtistCatalogue_=function(){var e=new Error(code);e.code=code;e.retryable=true;throw e;};
+  eeDiscoverArtistsWorker();eeDiscoverArtistsWorker();var final=eeDiscoverArtistsWorker();return [row[7],row[12],row[13],props.EE_APPLE_ARTIST_DISCOVERY_INDEX,final.status];
+}
+JSON.stringify({http429:bounded("APPLE_SEARCH_HTTP_429"),http504:bounded("APPLE_SEARCH_HTTP_504"),headroom:bounded("APPLE_SEARCH_EXECUTION_HEADROOM"),lease:bounded("ARTIST_DISCOVERY_BUSY")});
+''')
+        self.assertEqual(
+            '{"http429":["DEFERRED","APPLE_SEARCH_HTTP_429",3,"2","OK"],'
+            '"http504":["DEFERRED","APPLE_SEARCH_HTTP_504",3,"2","OK"],'
+            '"headroom":["DEFERRED","APPLE_SEARCH_EXECUTION_HEADROOM",3,"2","OK"],'
+            '"lease":["DEFERRED","ARTIST_DISCOVERY_BUSY",3,"2","OK"]}',
+            result,
+        )
+
+    def test_deferred_artist_is_retried_after_cooldown_and_can_recover(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_STALE_REFRESH_INDEX:"1"},stored=[];
+var row=["deferred","Deferred",1,1,"","","DEFERRED","DEFERRED","","","","post","APPLE_SEARCH_HTTP_403",3,"APPLE_SEARCH_HTTP_403","2000-01-01T00:00:00.000Z"];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(k){return props[k]||"";},setProperty:function(k,v){props[k]=v;},deleteProperty:function(k){delete props[k];}};}};
+eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeSetExecutionDeadline_=function(v){EE_APPLE_EXECUTION_DEADLINE=v;};eeClearExecutionDeadline_=function(){};eeFetchPostById_=function(){return {id:"post"};};eeArtistRegistry_=function(){return {artists:[{slug:"deferred",canonicalName:"Deferred"}]};};
+eeDiscoverArtistCatalogue_=function(){row[6]="MODERATE";row[7]="AMBIGUOUS";row[12]="";row[13]=0;row[14]="";row[15]="";return {status:"AMBIGUOUS"};};
+eePutArtistCatalogue_=function(record){stored.push(record);};
+var worker=eeRefreshStaleArtistsWorker();JSON.stringify({result:worker,status:row[7],retries:row[13],cursor:props.EE_APPLE_STALE_REFRESH_INDEX});
+''')
+        self.assertEqual(
+            '{"result":{"status":"DEFERRED_RETRIED","artistKey":"deferred","terminalStatus":"AMBIGUOUS","cursor":2},"status":"AMBIGUOUS","retries":0,"cursor":"2"}',
+            result,
+        )
 
     def test_stale_ready_and_empty_classifications(self):
         result = self.run_apps_script(r'''
