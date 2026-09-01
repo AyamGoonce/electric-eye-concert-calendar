@@ -341,7 +341,7 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("URLSearchParams", html)
         self.assertIn('addEventListener("popstate"', html)
         self.assertIn('timeZone:"Europe/Paris"', html)
-        self.assertIn("ee-calendar-day-separator", html)
+        self.assertIn("ee-calendar-day-toggle", html)
         self.assertIn("ee-calendar-sold-out", html)
         self.assertIn("ee-calendar-new-badge", html)
         self.assertIn("e.o.slice(0,visible)", html)
@@ -387,14 +387,16 @@ class ProductionHTMLTests(unittest.TestCase):
         for required in (
             'className="ee-calendar-year-section"',
             'className="ee-calendar-month-section"',
+            'className="ee-calendar-day-section"',
             '"ee-calendar-year-toggle"',
             '"ee-calendar-month-toggle"',
+            '"ee-calendar-day-toggle"',
             'setAttribute("aria-expanded",String(isExpanded))',
             'controls.expandAll.addEventListener("click"',
             'controls.collapseAll.addEventListener("click"',
             'manualCollapsedMonths.delete(linkedMonth)',
             'autoCollapsedMonths.delete(linkedMonth)',
-            'list.append(separator(e.d))',
+            'list.append(daySection(day,dayItems))',
             'genreButton(e.x[0])',
             'ticket.href=e.t',
             'function autoCollapseOnUpwardScroll()',
@@ -413,10 +415,22 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertNotIn('.ee-calendar-month-toggle--panoramic', styles)
         self.assertNotIn('.ee-calendar-month-image', styles)
         self.assertIn('background: #25282c', styles)
+        self.assertIn('background: #e3e5e7', styles)
         self.assertIn('border-left: 4px solid var(--ee-calendar-accent)', styles)
-        self.assertIn('.ee-calendar-month-events > li::marker', styles)
+        self.assertIn('.ee-calendar-day-events > li::marker', styles)
         self.assertIn('counter-increment: none', styles)
         self.assertNotIn('position: sticky;\n  top:', styles.split('.ee-calendar-month-toggle', 1)[1])
+
+    def test_day_sections_default_open_and_toggle_independently(self):
+        renderer = read_renderer()
+
+        self.assertIn('setExpanded(toggle,body,!collapsedDays.has(key))', renderer)
+        self.assertIn(
+            'open?collapsedDays.delete(key):collapsedDays.add(key)', renderer
+        )
+        self.assertIn('list.className="ee-calendar-day-events"', renderer)
+        self.assertIn('items.forEach(function(e){list.append(row(e));})', renderer)
+        self.assertIn('collapsedDays.delete(linked.d)', renderer)
 
     def test_year_and_month_headers_do_not_create_images(self):
         renderer = read_renderer()
