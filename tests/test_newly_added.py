@@ -42,9 +42,8 @@ class NewlyAddedTests(unittest.TestCase):
         )
         venue = self.event(source_names=["Le Zénith Paris – La Villette"])
         promoter = self.event(
-            headliner="Behemoth x Dimmu Borgir",
-            source_names=["Live Nation"],
-        )
+    source_names=["Live Nation"],
+)
 
         deduplicated = deduplicate_events([venue, promoter])
         state = reconcile_state(
