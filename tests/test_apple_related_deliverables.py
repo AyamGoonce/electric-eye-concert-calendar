@@ -360,7 +360,7 @@ eeGeneratePayloadLegacy_=function(){
 };
 eePutArtistCatalogue_=function(record){saved=record;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
-var record=eeDiscoverArtistCatalogue_({slug:"sparks",canonicalName:"Sparks"},{id:"post-1"});
+var record=eeDiscoverArtistCatalogue_({slug:"sparks",canonicalName:"Sparks"},{id:"post-1"},true);
 var log=JSON.parse(logs[0]);
 JSON.stringify({status:record.status,count:logs.length,type:log.type,artistKey:log.artistKey,canonicalName:log.canonicalName,appleCalls:log.appleCalls,cacheHits:log.cacheHits,terminalStatus:log.terminalStatus,terminalReason:log.terminalReason,stoppedBy:log.stoppedBy,elapsedIsNumber:typeof log.elapsedMs==="number",query:log.queries[0]});
 ''')
@@ -379,7 +379,7 @@ var logs=[];console.log=function(value){logs.push(value);};
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
 eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
 eeGeneratePayloadLegacy_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};
-var caught=null;try{eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post-1"});}catch(error){caught={code:error.code,retryable:error.retryable};}
+var caught=null;try{eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post-1"},true);}catch(error){caught={code:error.code,retryable:error.retryable};}
 var log=JSON.parse(logs[0]);
 var stops=["APPLE_SEARCH_HTTP_403","APPLE_SEARCH_HTTP_429","APPLE_SEARCH_EXECUTION_HEADROOM","APPLE_RETRY_LATER_COOLDOWN"].map(function(code){return eeDiscoveryDiagnosticStopReason_({code:code});});
 JSON.stringify({caught:caught,count:logs.length,status:log.terminalStatus,reason:log.terminalReason,stoppedBy:log.stoppedBy,stops:stops});
@@ -397,6 +397,66 @@ JSON.stringify({caught:caught,count:logs.length,status:log.terminalStatus,reason
         self.assertIn("var queryDiagnostic=eeDiscoveryDiagnosticQuery_(query);", self.code)
         self.assertIn("eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);", self.code)
 
+    def test_clear_primary_artist_resolves_before_exhaustive_enrichment(self):
+        result = self.run_apps_script(r'''
+var saved=null,legacyCalls=0,searches=[],properties={};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
+eeArticleAnalysis_=function(){return {relationshipGraph:{nodes:[],edges:[]}};};
+eeAppleSettings_=function(){return {storefront:"FR"};};
+eeAppleSearch_=function(query){searches.push(query);return {results:[1,2,3].map(function(id){return {artistId:"99",artistName:"Ariel Pink",collectionId:id,collectionName:"Album "+id};})};};
+eeAddCandidateToMap_=function(map,raw){map[String(raw.collectionId)]={stableId:String(raw.collectionId),category:"LISTEN",creator:raw.artistName,appleArtistId:raw.artistId,title:raw.collectionName,relevanceScore:96};return true;};
+eeGeneratePayloadLegacy_=function(){legacyCalls+=1;throw new Error("EXHAUSTIVE_PATH_SHOULD_NOT_RUN");};
+eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"ariel-pink",canonicalName:"Ariel Pink"},{id:"post-1"});
+JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:record.identityConfidence,searchCount:searches.length,query:{term:searches[0].term,entity:searches[0].entity,category:searches[0].category},legacyCalls:legacyCalls,staleImmediately:Date.parse(saved.staleAfter)<=Date.now(),schemaVersion:record.catalogue.schemaVersion,generationVersion:record.catalogue.generationVersion,categories:record.catalogue.categories.length});
+''')
+        self.assertEqual(
+            '{"status":"RESOLVED","artistId":"99","confidence":"HIGH","searchCount":1,'
+            '"query":{"term":"Ariel Pink","entity":"album","category":"LISTEN"},"legacyCalls":0,'
+            '"staleImmediately":true,"schemaVersion":1,"generationVersion":3,"categories":1}',
+            result,
+        )
+
+    def test_ambiguous_primary_artist_uses_existing_deep_fallback(self):
+        result = self.run_apps_script(r'''
+var saved=null,legacyCalls=0,searches=0,properties={};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
+eeArticleAnalysis_=function(){return {relationshipGraph:{nodes:[],edges:[]}};};
+eeAppleSettings_=function(){return {storefront:"FR"};};
+eeAppleSearch_=function(){searches+=1;var rows=[];["11","22"].forEach(function(artistId){[1,2,3].forEach(function(id){rows.push({artistId:artistId,artistName:"Nails",collectionId:artistId+id,collectionName:"Album"});});});return {results:rows};};
+eeAddCandidateToMap_=function(){return true;};
+eeGeneratePayloadLegacy_=function(){legacyCalls+=1;return {identity:{level:"MODERATE",artistId:null},categories:[]};};
+eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"nails",canonicalName:"Nails"},{id:"post-1"});
+JSON.stringify({status:record.status,confidence:record.identityConfidence,primarySearches:searches,legacyCalls:legacyCalls,error:record.error});
+''')
+        self.assertEqual(
+            '{"status":"AMBIGUOUS","confidence":"MODERATE","primarySearches":1,"legacyCalls":1,"error":""}',
+            result,
+        )
+
+    def test_forced_refresh_preserves_full_associated_act_enrichment(self):
+        result = self.run_apps_script(r'''
+var saved=null,fastCalls=0,legacyCalls=0,properties={};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeGetArtistCatalogue_=function(){return {status:"RESOLVED"};};
+eePrimaryArtistIdentityPayload_=function(){fastCalls+=1;throw new Error("FAST_PATH_SHOULD_NOT_RUN");};
+eeGeneratePayloadLegacy_=function(){legacyCalls+=1;return {identity:{level:"HIGH",artistId:"99"},categories:[{category:"WATCH",items:[{stableId:"associated",creator:"King Crimson",title:"Associated act film"}]}]};};
+eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"beat",canonicalName:"BEAT",associatedActs:["King Crimson"]},{id:"post-1"},true);
+JSON.stringify({status:record.status,fastCalls:fastCalls,legacyCalls:legacyCalls,category:record.catalogue.categories[0].category,item:record.catalogue.categories[0].items[0].stableId,staleAfter:saved.staleAfter||""});
+''')
+        self.assertEqual(
+            '{"status":"RESOLVED","fastCalls":0,"legacyCalls":1,"category":"WATCH",'
+            '"item":"associated","staleAfter":""}',
+            result,
+        )
+
     def test_exhausted_artist_discovery_is_persisted_as_terminal_error(self):
         result = self.run_apps_script(r'''
 var saved=null,properties={},nextLevel="LOW",nextArtistId=null;
@@ -405,7 +465,7 @@ eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
 eeGeneratePayloadLegacy_=function(){return {identity:{level:nextLevel,artistId:nextArtistId},categories:[{category:"LISTEN",items:[{stableId:"wrong",creator:"Other Artist"}]}]};};
 eePutArtistCatalogue_=function(record){saved=record;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
-function attempt(level,artistId){nextLevel=level;nextArtistId=artistId;saved=null;var returned=eeDiscoverArtistCatalogue_({slug:"crimson-projekt",canonicalName:"Crimson ProjeKct"},{id:"post-1"});return {savedStatus:saved.status,savedConfidence:saved.identityConfidence,savedError:saved.error,savedCategories:saved.categories,returnedStatus:returned.status,returnedError:returned.error,catalogueCategories:returned.catalogue.categories};}
+function attempt(level,artistId){nextLevel=level;nextArtistId=artistId;saved=null;var returned=eeDiscoverArtistCatalogue_({slug:"crimson-projekt",canonicalName:"Crimson ProjeKct"},{id:"post-1"},true);return {savedStatus:saved.status,savedConfidence:saved.identityConfidence,savedError:saved.error,savedCategories:saved.categories,returnedStatus:returned.status,returnedError:returned.error,catalogueCategories:returned.catalogue.categories};}
 JSON.stringify({exhausted:attempt("LOW",null),plausible:attempt("MODERATE",null),confident:attempt("HIGH","123")});
 ''')
         self.assertEqual(
