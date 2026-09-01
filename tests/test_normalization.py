@@ -24,7 +24,10 @@ from concert_calendar.scrapers.corida import parse_show as parse_corida_show
 from concert_calendar.scrapers.maroquinerie import parse_card
 from concert_calendar.scrapers.radical import parse_card as parse_radical_card
 from concert_calendar.scrapers.supersonic import parse_event_row as parse_supersonic_row
-from concert_calendar.scraper_loader import discover_scrapers
+from concert_calendar.scraper_loader import (
+    discover_scrapers,
+    discover_scrapers_with_issues,
+)
 from concert_calendar.sources import is_supported_event
 from concert_calendar.venues import normalize_event_venue
 from concert_calendar.scrapers.olympia import parse_item as parse_olympia_item
@@ -828,6 +831,11 @@ class EventScopeTests(unittest.TestCase):
 
 
 class SourcePriorityTests(unittest.TestCase):
+    def test_every_scraper_module_is_registered_without_discovery_issues(self):
+        scrapers, issues = discover_scrapers_with_issues()
+        self.assertEqual({}, issues)
+        self.assertEqual(len(scrapers), len({item.SOURCE_NAME for item in scrapers}))
+
     def test_aggregator_loads_after_official_sources(self):
         scrapers = discover_scrapers()
         dice_index = next(

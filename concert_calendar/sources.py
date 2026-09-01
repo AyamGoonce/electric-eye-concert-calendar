@@ -4,20 +4,66 @@ import unicodedata
 from dataclasses import dataclass
 
 from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.deduplication import normalize_headliner
 from concert_calendar.geography import (
     is_ile_de_france_event,
     normalize_event_geography,
 )
 from concert_calendar.genres import enrich_event_genres
 from concert_calendar.promoters import normalize_event_promoters
-from concert_calendar.scraper_loader import discover_scrapers
+from concert_calendar.scraper_loader import discover_scrapers_with_issues
 from concert_calendar.venues import normalize_event_venue
+from concert_calendar.venues import normalize_venue_key
+
+
+IMAGE_ENRICHMENT_MODULES = ()
+
+
+def enrich_official_venue_images(events):
+    """Fill blank images from exact official venue-listing identities only."""
+
+    from importlib import import_module
+
+    if not events:
+        return events
+
+    candidates = {}
+    for module_name in IMAGE_ENRICHMENT_MODULES:
+        module = import_module(module_name)
+        for candidate in module.load_events():
+            key = (
+                candidate.date[:10],
+                normalize_venue_key(candidate.venue),
+                normalize_headliner(candidate.headliner),
+            )
+            if candidate.image_url:
+                candidates.setdefault(key, candidate)
+
+    enriched = 0
+    for event in events:
+        if event.image_url:
+            continue
+        key = (
+            event.date[:10],
+            normalize_venue_key(event.venue),
+            normalize_headliner(event.headliner),
+        )
+        candidate = candidates.get(key)
+        if candidate:
+            event.image_url = candidate.image_url
+            event.image_source = candidate.image_source
+            enriched += 1
+    print(f"Added {enriched} exact official venue-listing images")
+    return events
 
 
 @dataclass(frozen=True)
 class PipelineReport:
+    configured_sources: list[str]
+    source_health: list[dict]
     source_counts: dict[str, int]
     source_failures: dict[str, str]
+    registration_failures: dict[str, str]
     raw_count: int
     geography_normalized_count: int
     idf_count: int
@@ -160,10 +206,12 @@ def load_events_with_report(
     retry_delay_seconds: float = 2.0,
 ):
     raw_events = []
+    source_health = []
     source_counts = {}
     source_failures = {}
+    scrapers, registration_failures = discover_scrapers_with_issues()
 
-    for scraper in discover_scrapers():
+    for scraper in scrapers:
         print(f"Loading {scraper.SOURCE_NAME}...")
 
         scraper_events = None
@@ -209,6 +257,17 @@ def load_events_with_report(
         print()
 
         source_counts[scraper.SOURCE_NAME] = len(scraper_events)
+        source_health.append({
+            "source_name": scraper.SOURCE_NAME,
+            "module": scraper.__name__,
+            "status": (
+                "failed" if scraper.SOURCE_NAME in source_failures
+                else "ok" if scraper_events else "empty"
+            ),
+            "future_event_count": len(scraper_events),
+            "error": source_failures.get(scraper.SOURCE_NAME),
+            "allow_empty": bool(getattr(scraper, "ALLOW_EMPTY", False)),
+        })
         raw_events.extend(scraper_events)
 
     geography_normalized_events = []
@@ -247,6 +306,8 @@ def load_events_with_report(
         normalize_event_promoters(event)
         normalized_events.append(event)
 
+    enrich_official_venue_images(normalized_events)
+
     deduplication_diagnostics = {}
     deduplicated_events = deduplicate_events(
         normalized_events,
@@ -275,8 +336,11 @@ def load_events_with_report(
     )
 
     report = PipelineReport(
+        configured_sources=[scraper.SOURCE_NAME for scraper in scrapers],
+        source_health=source_health,
         source_counts=source_counts,
         source_failures=source_failures,
+        registration_failures=registration_failures,
         raw_count=len(raw_events),
         geography_normalized_count=len(geography_normalized_events),
         idf_count=len(ile_de_france_events),

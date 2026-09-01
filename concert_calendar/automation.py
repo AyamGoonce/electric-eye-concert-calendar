@@ -213,9 +213,33 @@ def validate_events(events: list[dict]) -> None:
 
 
 def validate_source_report(report) -> None:
+    if report.registration_failures:
+        failures = ", ".join(
+            f"{module}: {error}"
+            for module, error in sorted(report.registration_failures.items())
+        )
+        raise ProductionValidationError(
+            "Scraper registration failures: " + failures
+        )
     if report.source_failures:
         failed = ", ".join(sorted(report.source_failures))
         raise ProductionValidationError(f"Scrapers exhausted retries: {failed}")
+    exercised = {item["source_name"] for item in report.source_health}
+    unexercised = sorted(set(report.configured_sources) - exercised)
+    if unexercised:
+        raise ProductionValidationError(
+            "Registered scrapers were not exercised: " + ", ".join(unexercised)
+        )
+    unexpected_empty = sorted(
+        item["source_name"]
+        for item in report.source_health
+        if item["status"] == "empty" and not item["allow_empty"]
+    )
+    if unexpected_empty:
+        raise ProductionValidationError(
+            "Scrapers unexpectedly returned zero future events: "
+            + ", ".join(unexpected_empty)
+        )
     missing = sorted(
         source for source in CORE_SOURCES if report.source_counts.get(source, 0) == 0
     )
