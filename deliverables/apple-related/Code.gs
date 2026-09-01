@@ -1635,8 +1635,10 @@ function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
     var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.status!=="UNRESOLVED"&&!forceRefresh)return existing;
     var legacy=eeGeneratePayloadLegacy_(post),identity=legacy.identity||{};
     var categories=(legacy.categories||[]).map(function(group){return {category:group.category,items:(group.items||[]).filter(function(item){return !item.creator||eeNorm_(item.creator)===eeNorm_(artist.canonicalName)||group.category!=="LISTEN";})};}).filter(function(group){return group.items.length;});
-    var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:identity.artistId||artist.appleArtistId||"",musicBrainzId:artist.musicBrainzId||"",identityConfidence:identity.level||"LOW",status:identity.level==="HIGH"?"RESOLVED":"AMBIGUOUS",categories:categories,representativePostId:String(post.id)};
-    eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));return eeGetArtistCatalogue_(artist.slug);
+    var confidence=String(identity.level||"LOW"),appleArtistId=identity.artistId||artist.appleArtistId||"",status=(appleArtistId||confidence==="HIGH")?"RESOLVED":confidence==="MODERATE"?"AMBIGUOUS":"ERROR",errorReason=status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"";
+    if(status==="ERROR")categories=[];
+    var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:appleArtistId,musicBrainzId:artist.musicBrainzId||"",identityConfidence:confidence,status:status,error:errorReason,categories:categories,representativePostId:String(post.id)};
+    eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));record.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories};return record;
   }finally{eeReleaseWorkerLease_(lease);}
 }
 
@@ -1671,15 +1673,18 @@ function eeDiscoverArtistsWorker() {
       try{
         var post=eeFetchPostById_(representativePostId),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
         var catalogue=eeDiscoverArtistCatalogue_(artist,post);
-        if(!catalogue||["RESOLVED","AMBIGUOUS"].indexOf(String(catalogue.status))===-1)throw new Error("ARTIST_DISCOVERY_NO_TERMINAL_STATUS");
+        if(!catalogue||["RESOLVED","AMBIGUOUS","ERROR"].indexOf(String(catalogue.status))===-1)throw new Error("ARTIST_DISCOVERY_NO_TERMINAL_STATUS");
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
+        if(catalogue.status==="ERROR")console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"ERROR",errorReason:catalogue.error||"APPLE_ARTIST_DISCOVERY_EXHAUSTED",nextCursor:row+1}));
       }catch(error){
         if(error&&error.retryable){
           properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row));
           return {status:"RETRY_LATER",artistKey:artistKey,error:String(error.code||error.message)};
         }
-        eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,status:"ERROR",representativePostId:representativePostId,error:String(error.message||error),categories:[]});
+        var errorReason=String(error.code||error.message||error);
+        eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,identityConfidence:"ERROR",status:"ERROR",representativePostId:representativePostId,error:errorReason,categories:[]});
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
+        console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"ERROR",errorReason:errorReason,nextCursor:row+1}));
       }
     }
     return {status:"OK",cursor:Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1)};

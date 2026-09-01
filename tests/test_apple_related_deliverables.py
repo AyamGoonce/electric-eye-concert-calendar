@@ -344,6 +344,25 @@ JSON.stringify({first:first.seeded,second:second.seeded,puts:puts,status:stored.
         self.assertIn('new Error("ARTIST_DISCOVERY_BUSY")', self.code)
         self.assertIn("eeReleaseWorkerLease_(lease)", self.code)
 
+    def test_exhausted_artist_discovery_is_persisted_as_terminal_error(self):
+        result = self.run_apps_script(r'''
+var saved=null,properties={},nextLevel="LOW",nextArtistId=null;
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
+eeGeneratePayloadLegacy_=function(){return {identity:{level:nextLevel,artistId:nextArtistId},categories:[{category:"LISTEN",items:[{stableId:"wrong",creator:"Other Artist"}]}]};};
+eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+function attempt(level,artistId){nextLevel=level;nextArtistId=artistId;saved=null;var returned=eeDiscoverArtistCatalogue_({slug:"crimson-projekt",canonicalName:"Crimson ProjeKct"},{id:"post-1"});return {savedStatus:saved.status,savedConfidence:saved.identityConfidence,savedError:saved.error,savedCategories:saved.categories,returnedStatus:returned.status,returnedError:returned.error,catalogueCategories:returned.catalogue.categories};}
+JSON.stringify({exhausted:attempt("LOW",null),plausible:attempt("MODERATE",null),confident:attempt("HIGH","123")});
+''')
+        self.assertEqual(
+            '{"exhausted":{"savedStatus":"ERROR","savedConfidence":"LOW","savedError":"APPLE_ARTIST_DISCOVERY_EXHAUSTED",'
+            '"savedCategories":[],"returnedStatus":"ERROR","returnedError":"APPLE_ARTIST_DISCOVERY_EXHAUSTED","catalogueCategories":[]},'
+            '"plausible":{"savedStatus":"AMBIGUOUS","savedConfidence":"MODERATE","savedError":"","savedCategories":[],"returnedStatus":"AMBIGUOUS","returnedError":"","catalogueCategories":[]},'
+            '"confident":{"savedStatus":"RESOLVED","savedConfidence":"HIGH","savedError":"","savedCategories":[],"returnedStatus":"RESOLVED","returnedError":"","catalogueCategories":[]}}',
+            result,
+        )
+
     def test_artist_discovery_cursor_advances_only_after_terminal_outcome(self):
         result = self.run_apps_script(r'''
 function discoveryCase(rowStatus,failureAt,retryable){
@@ -376,6 +395,40 @@ JSON.stringify({
             '"fatalFetch":{"status":"OK","cursor":"2","history":["1","2"],"stored":["ERROR"],"fetches":1,"discoveries":0}}',
             result,
         )
+
+    def test_retryable_artist_failures_pin_and_terminal_error_allows_later_rows(self):
+        result = self.run_apps_script(r'''
+function workerHarness(rows,discover){
+  var props={EE_APPLE_ARTIST_DISCOVERY_INDEX:"1"},calls=[],stored=[];
+  PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;},deleteProperty:function(key){delete props[key];}};}};
+  eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"]].concat(rows);}};}};};
+  eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+  eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){EE_APPLE_EXECUTION_DEADLINE=0;};
+  eeFetchPostById_=function(id){return {id:id};};
+  eeArtistRegistry_=function(){return {artists:rows.map(function(row){return {slug:row[0],canonicalName:row[1]};})};};
+  eeDiscoverArtistCatalogue_=function(artist,post){calls.push(artist.slug);return discover(artist,post);};
+  eePutArtistCatalogue_=function(record){stored.push([record.artistKey,record.status,record.identityConfidence,record.error]);};
+  var workerResult=eeDiscoverArtistsWorker();return {status:workerResult.status,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,calls:calls,stored:stored};
+}
+function row(key){return [key,key,1,1,"","","","UNRESOLVED","","","","post-"+key,""];}
+function transient(code){return workerHarness([row("first")],function(){var error=new Error(code);error.code=code;error.retryable=true;throw error;});}
+var queue=workerHarness([row("dead-end"),row("later")],function(artist){return artist.slug==="dead-end"?{status:"ERROR",error:"APPLE_ARTIST_DISCOVERY_EXHAUSTED"}:{status:"RESOLVED"};});
+JSON.stringify({http403:transient("APPLE_SEARCH_HTTP_403"),http429:transient("APPLE_SEARCH_HTTP_429"),headroom:transient("APPLE_SEARCH_EXECUTION_HEADROOM"),queue:queue});
+''')
+        self.assertEqual(
+            '{"http403":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[]},'
+            '"http429":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[]},'
+            '"headroom":{"status":"RETRY_LATER","cursor":"1","calls":["first"],"stored":[]},'
+            '"queue":{"status":"OK","cursor":"3","calls":["dead-end","later"],"stored":[]}}',
+            result,
+        )
+
+        worker = self.code[
+            self.code.index("function eeDiscoverArtistsWorker") :
+            self.code.index("function eeRefreshStaleArtistsWorker")
+        ]
+        for field in ("artistKey", "canonicalName", "terminalStatus", "errorReason", "nextCursor"):
+            self.assertIn(field, worker)
 
     def test_stale_catalogues_have_an_independent_bounded_refresh_worker(self):
         worker = self.code[self.code.index("function eeRefreshStaleArtistsWorker") : self.code.index("function eeAssembleArticlePayloadsWorker")]
