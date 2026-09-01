@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 import re
 from urllib.parse import urlparse
+from urllib.parse import urljoin
 
 
 MIN_IMAGE_EDGE = 240
@@ -64,6 +65,46 @@ def metadata_image_url(soup):
         if element and (candidate := official_image_url(element.get("content"))):
             return candidate
     return None
+
+
+def element_image_url(element, *, base_url):
+    """Return the safest largest image exposed by one event-card element."""
+
+    if element is None:
+        return None
+    candidates = []
+    for attribute in ("data-src", "data-lazy-src", "src"):
+        if value := element.get(attribute):
+            candidates.append((0, value))
+    for attribute in ("data-srcset", "srcset"):
+        for item in (element.get(attribute) or "").split(","):
+            parts = item.strip().split()
+            if not parts:
+                continue
+            width = 0
+            if len(parts) > 1 and parts[-1].endswith("w"):
+                try:
+                    width = int(parts[-1][:-1])
+                except ValueError:
+                    pass
+            candidates.append((width, parts[0]))
+    for _, value in sorted(candidates, reverse=True):
+        if result := official_image_url(
+            urljoin(base_url, value),
+            width=element.get("width"),
+            height=element.get("height"),
+        ):
+            return result
+    return None
+
+
+def background_image_url(style, *, base_url):
+    """Return a safe URL from one inline CSS background-image declaration."""
+
+    if not isinstance(style, str):
+        return None
+    match = re.search(r"background-image\s*:\s*url\(\s*(['\"]?)(.*?)\1\s*\)", style, re.I)
+    return official_image_url(urljoin(base_url, match.group(2))) if match else None
 
 
 def repeated_generic_image_urls(events, *, distinct_headliner_limit=5):
