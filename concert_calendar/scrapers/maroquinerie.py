@@ -6,6 +6,7 @@ from urllib.parse import urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import discard_repeated_generic_images, element_image_url
 from concert_calendar.models import ConcertEvent
 
 
@@ -132,6 +133,7 @@ def parse_card(card, year):
         if facebook_event_url
         else ticket_link or detail_link
     )
+    image_url = element_image_url(card.select_one(".thumbnail img"), base_url=SITE_URL)
 
     return ConcertEvent(
         date=event_date,
@@ -148,6 +150,8 @@ def parse_card(card, year):
             if available_link
             else AGENDA_URL
         ),
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -232,4 +236,4 @@ def load_events():
         "La Maroquinerie ConcertEvent records"
     )
 
-    return events
+    return discard_repeated_generic_images(events)

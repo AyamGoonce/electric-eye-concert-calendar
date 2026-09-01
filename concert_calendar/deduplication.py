@@ -13,6 +13,21 @@ from concert_calendar.models import ConcertEvent
 from concert_calendar.venues import normalize_event_venue, normalize_venue_key
 
 
+TARGET_VENUE_IMAGE_SOURCES = {
+    "New Morning", "La Maroquinerie", "Le Trabendo", "La Gaîté Lyrique",
+    "Le Hasard Ludique", "Le Zénith Paris – La Villette", "Petit Bain",
+    "La Boule Noire", "Salle Pleyel", "Élysée Montmartre",
+}
+
+
+def image_source_priority(source):
+    """Keep this pass's venue-card artwork below existing official imagery."""
+
+    if not source:
+        return 0
+    return 1 if source in TARGET_VENUE_IMAGE_SOURCES else 2
+
+
 ARTIST_ALIASES = {
     "alison’s halo": "alison's halo",
     "day we ran": "dayweran",
@@ -377,7 +392,11 @@ def merge_events(
     if not existing.series_name and incoming.series_name:
         existing.series_name = incoming.series_name
 
-    if not existing.image_url and incoming.image_url:
+    if incoming.image_url and (
+        not existing.image_url
+        or image_source_priority(incoming.image_source)
+        > image_source_priority(existing.image_source)
+    ):
         existing.image_url = incoming.image_url
         existing.image_source = incoming.image_source
     elif (

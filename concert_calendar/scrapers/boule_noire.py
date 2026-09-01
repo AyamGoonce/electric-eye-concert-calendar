@@ -5,6 +5,7 @@ from datetime import date, datetime
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import discard_repeated_generic_images, element_image_url
 from concert_calendar.models import ConcertEvent
 
 
@@ -73,6 +74,10 @@ def parse_card(card):
     if event_date < date.today():
         return None
 
+    image_url = element_image_url(
+        card.select_one(".elementor-post__thumbnail img"), base_url=PROGRAMME_URL
+    )
+
     return ConcertEvent(
         date=event_date.isoformat(),
         headliner=headliner,
@@ -84,6 +89,8 @@ def parse_card(card):
         genre=None,
         facebook_event_url=None,
         ticket_url=clean_text(title_element.get("href")) or PROGRAMME_URL,
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -127,4 +134,4 @@ def load_events():
 
     events = list(events_by_key.values())
     print(f"Created {len(events)} La Boule Noire ConcertEvent records")
-    return events
+    return discard_repeated_generic_images(events)

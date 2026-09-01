@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import background_image_url, discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
 
 
@@ -80,6 +81,12 @@ def parse_card(card):
     if not event_date or not headliner or not href:
         return None
 
+    image_element = link.select_one(".image[style]")
+    image_url = background_image_url(
+        image_element.get("style") if image_element else None,
+        base_url=SITE_URL,
+    )
+
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
@@ -95,6 +102,8 @@ def parse_card(card):
         ),
         facebook_event_url=None,
         ticket_url=urljoin(SITE_URL, href),
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -141,4 +150,4 @@ def load_events():
         "Le Hasard Ludique ConcertEvent records"
     )
 
-    return events
+    return discard_repeated_generic_images(events)

@@ -5,6 +5,7 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 
+from concert_calendar.event_images import discard_repeated_generic_images, element_image_url
 from concert_calendar.models import ConcertEvent
 
 
@@ -165,6 +166,10 @@ def parse_card(card, today=None):
     if not event_date or not artists:
         return None
 
+    image_url = element_image_url(
+        card.select_one("#contimgunevt img"), base_url=EVENTS_URL
+    )
+
     return ConcertEvent(
         date=event_date,
         headliner=strip_relocation_notice(artists[0]),
@@ -180,6 +185,8 @@ def parse_card(card, today=None):
             if event_link
             else None
         ),
+        image_url=image_url,
+        image_source=SOURCE_NAME if image_url else None,
     )
 
 
@@ -247,4 +254,4 @@ def load_events():
         "Petit Bain ConcertEvent records"
     )
 
-    return events
+    return discard_repeated_generic_images(events)
