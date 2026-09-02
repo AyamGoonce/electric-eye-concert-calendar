@@ -2,7 +2,7 @@ name: Update Electric Eye Concert Calendar
 
 on:
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "17 */3 * * *"
   workflow_dispatch:
     inputs:
       allow_large_count_change:
