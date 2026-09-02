@@ -218,8 +218,10 @@ def load_events_with_report(
 
         scraper_events = None
         last_error = None
+        attempts_made = 0
 
         for attempt in range(1, scraper_attempts + 1):
+            attempts_made = attempt
             try:
                 scraper_events = scraper.load_events()
                 if scraper_events or attempt == scraper_attempts:
@@ -269,6 +271,11 @@ def load_events_with_report(
             "future_event_count": len(scraper_events),
             "error": source_failures.get(scraper.SOURCE_NAME),
             "allow_empty": bool(getattr(scraper, "ALLOW_EMPTY", False)),
+            "attempt_count": attempts_made,
+            "retry_count": max(0, attempts_made - 1),
+            "fresh_event_count": len(scraper_events),
+            "fallback_event_count": 0,
+            "last_successful_at": None,
         })
         raw_events.extend(scraper_events)
 

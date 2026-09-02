@@ -213,7 +213,7 @@ class AutomationValidationTests(unittest.TestCase):
         ):
             validate_source_report(report)
 
-    def test_source_health_rejects_crashed_scraper(self):
+    def test_source_health_reports_crashed_scraper_without_failing_build(self):
         scraper = type(
             "Scraper",
             (),
@@ -230,10 +230,112 @@ class AutomationValidationTests(unittest.TestCase):
                 scraper_attempts=1, retry_delay_seconds=0
             )
         self.assertEqual("failed", report.source_health[0]["status"])
-        with self.assertRaisesRegex(
-            ProductionValidationError, "Scrapers exhausted retries"
+        self.assertEqual(1, report.source_health[0]["attempt_count"])
+        self.assertEqual(0, report.source_health[0]["retry_count"])
+        self.assertEqual(0, report.source_health[0]["fresh_event_count"])
+        self.assertEqual(0, report.source_health[0]["fallback_event_count"])
+        self.assertIn(
+            "RuntimeError: upstream failed",
+            report.source_failures["Broken source"],
+        )
+        with (
+            patch("concert_calendar.automation.CORE_SOURCES", set()),
+            self.assertRaisesRegex(
+                ProductionValidationError, "zero event count"
+            ),
         ):
             validate_source_report(report)
+
+    def test_one_failed_source_does_not_discard_healthy_source_events(self):
+        failed = type(
+            "FailedScraper",
+            (),
+            {
+                "SOURCE_NAME": "Failed source",
+                "load_events": Mock(side_effect=TimeoutError("timed out")),
+            },
+        )
+        healthy = type(
+            "HealthyScraper",
+            (),
+            {
+                "SOURCE_NAME": "Healthy source",
+                "load_events": Mock(return_value=[ConcertEvent(
+                    date="2027-01-01",
+                    headliner="Artist",
+                    venue="La CLEF",
+                    city="Saint-Germain-en-Laye",
+                    department="78",
+                )]),
+            },
+        )
+        with (
+            patch(
+                "concert_calendar.sources.discover_scrapers_with_issues",
+                return_value=([failed, healthy], {}),
+            ),
+            patch("concert_calendar.automation.CORE_SOURCES", set()),
+        ):
+            events, report = load_events_with_report(
+                scraper_attempts=3, retry_delay_seconds=0
+            )
+            validate_source_report(report)
+
+        self.assertEqual(1, len(events))
+        self.assertEqual("Artist", events[0].headliner)
+        self.assertEqual(3, failed.load_events.call_count)
+        failed_health = report.source_health[0]
+        self.assertEqual("failed", failed_health["status"])
+        self.assertEqual(3, failed_health["attempt_count"])
+        self.assertEqual(2, failed_health["retry_count"])
+        self.assertEqual(0, failed_health["fresh_event_count"])
+        self.assertEqual(0, failed_health["fallback_event_count"])
+        self.assertEqual("ok", report.source_health[1]["status"])
+        self.assertEqual(1, report.source_health[1]["fresh_event_count"])
+
+    def test_failed_core_source_is_degraded_not_misreported_as_empty(self):
+        scraper = type(
+            "FailedCoreScraper",
+            (),
+            {
+                "SOURCE_NAME": "Core source",
+                "load_events": Mock(side_effect=ConnectionError("offline")),
+            },
+        )
+        healthy = type(
+            "HealthyScraper",
+            (),
+            {
+                "SOURCE_NAME": "Healthy source",
+                "load_events": Mock(return_value=[ConcertEvent(
+                    date="2027-01-01",
+                    headliner="Artist",
+                    venue="La CLEF",
+                    city="Saint-Germain-en-Laye",
+                    department="78",
+                )]),
+            },
+        )
+        with (
+            patch(
+                "concert_calendar.sources.discover_scrapers_with_issues",
+                return_value=([scraper, healthy], {}),
+            ),
+            patch("concert_calendar.automation.CORE_SOURCES", {"Core source"}),
+        ):
+            _, report = load_events_with_report(
+                scraper_attempts=1, retry_delay_seconds=0
+            )
+            validate_source_report(report)
+
+        self.assertEqual("failed", report.source_health[0]["status"])
+        self.assertNotEqual("empty", report.source_health[0]["status"])
+
+    def test_multiple_source_failures_still_trip_global_count_guard(self):
+        with self.assertRaisesRegex(
+            ProductionValidationError, "outside guarded range"
+        ):
+            validate_count_regression(500, 2000)
 
     def test_count_regression_guard_allows_normal_drift(self):
         validate_count_regression(1600, 1732)

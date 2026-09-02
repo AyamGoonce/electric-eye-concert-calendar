@@ -73,8 +73,11 @@ class ZenithFallbackTests(unittest.TestCase):
                 scraper_attempts=1, retry_delay_seconds=0
             )
         self.assertIn(zenith_paris.SOURCE_NAME, report.source_failures)
-        with self.assertRaisesRegex(
-            ProductionValidationError, "Scrapers exhausted retries"
+        with (
+            patch("concert_calendar.automation.CORE_SOURCES", set()),
+            self.assertRaisesRegex(
+                ProductionValidationError, "zero event count"
+            ),
         ):
             validate_source_report(report)
 
