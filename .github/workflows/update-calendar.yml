@@ -81,7 +81,21 @@ jobs:
           if [[ "$FAILURE_TEST" == "true" ]]; then
             arguments+=(--simulate-validation-failure)
           fi
-          python -m concert_calendar.automation build "${arguments[@]}"
+          build_calendar() {
+            python -m concert_calendar.automation build "${arguments[@]}"
+          }
+
+          if build_calendar; then
+            exit 0
+          fi
+
+          if [[ "$FAILURE_TEST" == "true" ]]; then
+            exit 1
+          fi
+
+          echo "Build/validation failed; retrying once in 15 minutes."
+          sleep 900
+          build_calendar
 
       - name: Check out Pages publication workspace
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
