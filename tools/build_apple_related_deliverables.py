@@ -418,6 +418,13 @@ function eePayloadAtLeastAsUseful_(candidate,existing) {
   });
 }
 
+function eePrimaryRecommendationRank_(item,primaryArtists,primaryArtistIds) {
+  var itemId=String((item||{}).appleArtistId||""),creator=eeNorm_((item||{}).creator||"");
+  if(itemId&&(primaryArtistIds||[]).map(String).indexOf(itemId)!==-1)return 0;
+  if((primaryArtists||[]).some(function(name){return creator===eeNorm_(name);}))return 0;
+  return 1;
+}
+
 function eeStoredPayloadHasRecommendations_(stored) {
   var value=String(stored||"");
   if(value.indexOf("GZIP64:")===0)return true;
@@ -573,8 +580,8 @@ function eePutArtistCatalogue_(record) {
 
 function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
   var groups={LISTEN:{},WATCH:{},READ:{}},articleText=String(post.title||"")+" "+String(post.content||"").replace(/<[^>]+>/g," ");
-  catalogues.forEach(function(record){((record.catalogue||{}).categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){var ranked=JSON.parse(JSON.stringify(item)),boost=0;if(ranked.title&&eeExactEntityInText_(articleText,ranked.title))boost+=6;if(analysis.articleType==="interview"&&ranked.creator&&eeExactEntityInText_(post.title||"",ranked.creator))boost+=3;ranked.relevanceScore=Number(ranked.relevanceScore||0)+boost;var key=String(ranked.stableId||ranked.url||ranked.title),existing=groups[group.category]&&groups[group.category][key];if(groups[group.category]&&(!existing||Number(ranked.relevanceScore||0)>Number(existing.relevanceScore||0)))groups[group.category][key]=ranked;});});});
-  var categories=[];["LISTEN","WATCH","READ"].forEach(function(category){var items=Object.keys(groups[category]).map(function(key){return groups[category][key];});items.sort(function(a,b){return Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title).localeCompare(String(b.title));});if(items.length)categories.push({category:category,items:items});});
+  catalogues.forEach(function(record){((record.catalogue||{}).categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){var ranked=JSON.parse(JSON.stringify(item)),sourceUrl=ranked.url||ranked.canonicalAppleUrl||"",trackedUrl=sourceUrl?eeAffiliateUrl_(group.category,sourceUrl):"";if(sourceUrl&&!trackedUrl)return;if(trackedUrl)ranked.url=trackedUrl;var boost=0;if(ranked.title&&eeExactEntityInText_(articleText,ranked.title))boost+=6;if(analysis.articleType==="interview"&&ranked.creator&&eeExactEntityInText_(post.title||"",ranked.creator))boost+=3;ranked.relevanceScore=Number(ranked.relevanceScore||0)+boost;var key=String(ranked.stableId||ranked.url||ranked.title),existing=groups[group.category]&&groups[group.category][key];if(groups[group.category]&&(!existing||Number(ranked.relevanceScore||0)>Number(existing.relevanceScore||0)))groups[group.category][key]=ranked;});});});
+  var primaryIds=catalogues.map(function(record){return record.appleArtistId;}).filter(Boolean),categories=[];["LISTEN","WATCH","READ"].forEach(function(category){var items=Object.keys(groups[category]).map(function(key){return groups[category][key];});items.sort(function(a,b){return eePrimaryRecommendationRank_(a,analysis.primaryArtists,primaryIds)-eePrimaryRecommendationRank_(b,analysis.primaryArtists,primaryIds)||Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title).localeCompare(String(b.title));});if(items.length)categories.push({category:category,items:items});});
   return {schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,generatedAt:new Date().toISOString(),postId:String(post.id),canonicalUrl:post.url||"",storefront:eeAppleSettings_().storefront,subject:{title:post.title||"",primaryArtists:analysis.primaryArtists,people:analysis.people||[]},identity:{level:analysis.identityConfidence,artistId:catalogues.length===1?catalogues[0].appleArtistId||null:null,confidenceScore:analysis.identityConfidence==="HIGH"?100:75},categories:categories,diagnostics:{architecture:"ARTIST_REGISTRY_V1",artistKeys:analysis.primaryArtistKeys,cacheHits:catalogues.length,emptyClassification:categories.length?null:(analysis.primaryArtistKeys.length?"EMPTY_NO_QUALIFYING_RELATIONSHIP":"EMPTY_NO_SUBJECT")}};
 }
 
@@ -599,6 +606,7 @@ function eeEnrichmentTransient_(error){var value=String((error&&error.code)||(er
 
 function eeIncrementalResolvedEnrichment_(artist,post,existing) {
   var analysis=eeArticleAnalysis_(post),settings=eeAppleSettings_(),plan=eeSearchPlan_(analysis,settings.storefront);
+  analysis.existingAppleArtistIds=[String(existing.appleArtistId)];
   if((analysis.primaryArtists||[]).length>1){var primarySet={};analysis.primaryArtists.forEach(function(name){primarySet[eeNorm_(name)]=true;});plan=plan.filter(function(query){return query.intent==="ARTIST"&&primarySet[eeNorm_(query.term||"")];});}
   var prior=(existing.catalogue||{}).enrichment||{},completed={},map={};
   (prior.completedQueries||[]).forEach(function(key){completed[String(key)]=true;});
@@ -615,7 +623,7 @@ function eeIncrementalResolvedEnrichment_(artist,post,existing) {
   }
   var completedKeys=Object.keys(completed),remaining=plan.filter(function(query){return !completed[eeEnrichmentQueryKey_(query)];}),groups={LISTEN:[],WATCH:[],READ:[]};
   Object.keys(map).forEach(function(key){var item=map[key];if(groups[item.category])groups[item.category].push(item);});
-  var categories=[];["LISTEN","WATCH","READ"].forEach(function(category){groups[category].sort(function(a,b){return Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title||"").localeCompare(String(b.title||""));});if(groups[category].length)categories.push({category:category,items:groups[category]});});
+  var categories=[];["LISTEN","WATCH","READ"].forEach(function(category){groups[category].sort(function(a,b){return eePrimaryRecommendationRank_(a,[artist.canonicalName],[existing.appleArtistId])-eePrimaryRecommendationRank_(b,[artist.canonicalName],[existing.appleArtistId])||Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title||"").localeCompare(String(b.title||""));});if(groups[category].length)categories.push({category:category,items:groups[category]});});
   var state={status:remaining.length?"PENDING":"FINALIZE",completedQueries:completedKeys,totalQueries:plan.length,pendingQueries:remaining.length,lastError:lastError};
   eeDiscoveryDiagnosticEnrichment_(state);
   return {readyForFinalization:!remaining.length&&!lastError,categories:categories,enrichment:state,lastError:lastError};
@@ -980,6 +988,22 @@ def build_code() -> str:
         'eeNorm_(analysis.primaryArtists[0]||"")',
     )
     code = code.replace("eeNorm_eeNorm_", "eeNorm_")
+    code = replace_once(
+        code,
+        '  analysis.relationshipGraph.nodes.filter(function(node){return node.weight>=76;}).forEach(function(node){add(node,"LISTEN","music","album");add(node,"WATCH","music","musicVideo");add(node,"READ","ebook","ebook");add(node,"READ","audiobook","audiobook");});',
+        '  analysis.relationshipGraph.nodes.filter(function(node){return node.weight>=76;}).forEach(function(node){add(node,"LISTEN","music","album");if(node.normalizedName===primary){add(node,"WATCH","music","musicVideo");add(node,"READ","ebook","ebook");add(node,"READ","audiobook","audiobook");}});',
+        "primary-only WATCH and READ plan",
+    )
+    code = replace_once(
+        code,
+        '  var exactPrimaryCreator=eeNorm_(creator)===primary;\n  var relationshipMatch=query.relationshipWeight&&(',
+        '  var exactPrimaryCreator=eeNorm_(creator)===primary;\n'
+        '  if((query.category==="WATCH"||query.category==="READ")&&eeNorm_(query.term||"")!==primary)return null;\n'
+        '  var verifiedArtistId=String((analysis.existingAppleArtistIds||[])[0]||""),candidateArtistId=String(raw.artistId||raw.collectionArtistId||"");\n'
+        '  if(verifiedArtistId&&candidateArtistId&&exactPrimaryCreator&&(query.category==="LISTEN"||query.category==="WATCH")&&candidateArtistId!==verifiedArtistId)return null;\n'
+        '  var relationshipMatch=query.relationshipWeight&&(',
+        "primary-only WATCH and READ candidates",
+    )
     code = code.replace(
         "festival|tour|video|playlist|friday'?s playlist",
         "festival|tour|video|new|dates?|releases?|announces?|paris|album|single|song|track|show|tickets?|playlist|friday'?s playlist",
@@ -1080,6 +1104,61 @@ def build_code() -> str:
     )
     code = replace_once(
         code,
+        '    groups[category].sort(function(a,b){\n      return order[a.relevanceTier]-order[b.relevanceTier] ||\n        b.relevanceScore-a.relevanceScore ||',
+        '    groups[category].sort(function(a,b){\n'
+        '      return eePrimaryRecommendationRank_(a,analysis.primaryArtists,[identity.artistId])-eePrimaryRecommendationRank_(b,analysis.primaryArtists,[identity.artistId]) ||\n'
+        '        order[a.relevanceTier]-order[b.relevanceTier] ||\n'
+        '        b.relevanceScore-a.relevanceScore ||',
+        "primary artist result ordering",
+    )
+    code = replace_once(
+        code,
+        '  if(\n    (category==="LISTEN"||category==="WATCH") &&\n    /(^|\\.)music\\.apple\\.com$/.test(host)\n  ){\n    var musicUrl=raw.replace(\n      /^https?:\\/\\/[^\\/?#]+/i,\n      "https://geo.music.apple.com"\n    );',
+        '  if(\n    (category==="LISTEN"||category==="WATCH") &&\n    /(^|\\.)music\\.apple\\.com$/.test(host)\n  ){\n    var musicUrl=raw.replace(\n      /^https?:\\/\\/[^\\/?#]+/i,\n      "https://geo.music.apple.com"\n    );\n\n'
+        '    musicUrl=eeAppleAffiliateSetParam_(musicUrl,"at","1010lScn");\n'
+        '    musicUrl=eeAppleAffiliateSetParam_(musicUrl,"app","music");\n'
+        '    musicUrl=eeAppleAffiliateSetParam_(musicUrl,"ct","ee-related");\n'
+        '    musicUrl=eeAppleAffiliateSetParam_(musicUrl,"ls","1");\n\n'
+        '    return musicUrl;\n'
+        '  }\n\n'
+        '  if(category==="LISTEN"&&/(^|\\.)itunes\\.apple\\.com$/.test(host)){\n'
+        '    var musicUrl=raw;',
+        "Apple Music legacy-host attribution",
+    )
+    code = replace_once(
+        code,
+        '  if(category==="WATCH"&&/(^|\\.)tv\\.apple\\.com$/.test(host)){\n'
+        '    var tvUrl=eeAppleAffiliateSetParam_(raw,"at","1010lScn");\n'
+        '    tvUrl=eeAppleAffiliateSetParam_(tvUrl,"ct","ee-related");\n'
+        '    return tvUrl;\n'
+        '  }\n\n'
+        '  return raw;',
+        '  if(category==="WATCH"&&/(^|\\.)(?:tv\\.apple\\.com|itunes\\.apple\\.com)$/.test(host)){\n'
+        '    var tvUrl=eeAppleAffiliateSetParam_(raw,"at","1010lScn");\n'
+        '    tvUrl=eeAppleAffiliateSetParam_(tvUrl,"ct","ee-related");\n'
+        '    return tvUrl;\n'
+        '  }\n\n'
+        '  if(category==="READ"&&/(^|\\.)(?:books\\.apple\\.com|itunes\\.apple\\.com)$/.test(host)){\n'
+        '    return /(?:[?&])at=1010lScn(?:[&#]|$)/i.test(raw)?raw:"";\n'
+        '  }\n\n'
+        '  return raw;',
+        "affiliate-safe TV and Books URLs",
+    )
+    code = replace_once(
+        code,
+        '  var priceValue=raw.collectionPrice!=null?raw.collectionPrice:(raw.trackPrice!=null?raw.trackPrice:raw.price);\n\n  return {',
+        '  var affiliateUrl=eeAffiliateUrl_(query.category,url);if(!affiliateUrl)return null;\n'
+        '  var priceValue=raw.collectionPrice!=null?raw.collectionPrice:(raw.trackPrice!=null?raw.trackPrice:raw.price);\n\n  return {',
+        "reject unattributed Apple products",
+    )
+    code = replace_once(
+        code,
+        '    url:eeAffiliateUrl_(query.category,url),',
+        '    url:affiliateUrl,',
+        "use validated affiliate URL",
+    )
+    code = replace_once(
+        code,
         '    score=96;\n    tier="DIRECT";\n    reason="Official Apple Music video by the primary artist in the configured storefront.";',
         '    score=88;\n    tier="CLOSELY_RELATED";\n    reason="Official Apple Music video by the primary artist in the configured storefront.";',
         "music video ranking",
@@ -1093,7 +1172,11 @@ def build_code() -> str:
     code = replace_once(
         code,
         '      if(eeContains_(title,analysis.people[subjectIndex])){\n        score=92;tier="DIRECT";reason="Apple title directly names the article subject.";\n      }',
-        '      var person=analysis.people[subjectIndex],credited=[].concat(raw.cast||[]).concat(raw.performers||[]).concat(raw.director||[]).some(function(name){return eeNorm_(name)===eeNorm_(person);});\n      if((query.category!=="WATCH"&&eeContains_(title,person))||(query.category==="WATCH"&&credited)){\n        score=92;tier="DIRECT";reason=query.category==="WATCH"?"Apple cast or credits identify the article subject.":"Apple title directly names the article subject.";\n      }',
+        '      var person=analysis.people[subjectIndex];if((query.category==="WATCH"||query.category==="READ")&&eeNorm_(person)!==primary)continue;\n'
+        '      var credited=[].concat(raw.cast||[]).concat(raw.performers||[]).concat(raw.director||[]).some(function(name){return eeNorm_(name)===eeNorm_(person);});\n'
+        '      if((query.category!=="WATCH"&&eeContains_(title,person))||(query.category==="WATCH"&&credited)){\n'
+        '        score=92;tier="DIRECT";reason=query.category==="WATCH"?"Apple cast or credits identify the article subject.":"Apple title directly names the article subject.";\n'
+        '      }',
         "title-only person rejection",
     )
     code = replace_once(

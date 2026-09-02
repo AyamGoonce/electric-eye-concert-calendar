@@ -892,6 +892,62 @@ JSON.stringify(items.map(function(item){return [item.stableId,item.relevanceScor
         self.assertEqual('[["doc",99],["actor",97]]', result)
         self.assertIn('score=88;', self.code)
 
+    def test_primary_artist_quality_for_reviewed_problem_cases(self):
+        result = self.run_apps_script(r'''
+function query(term,category,entity){return {category:category,entity:entity,term:term,relationshipWeight:96,relationship:"primary band or artist",storefront:"FR"};}
+var nails={primaryArtists:["Nails"],people:[]};
+var nailsFalse=eeCandidate_({collectionId:1,collectionName:"The Downward Spiral",artistName:"Nine Inch Nails",artistId:10,collectionViewUrl:"https://music.apple.com/fr/album/1"},query("Nails","LISTEN","album"),nails);
+var nailsExact=eeCandidate_({collectionId:2,collectionName:"Unsilent Death",artistName:"Nails",artistId:20,collectionViewUrl:"https://music.apple.com/fr/album/2"},query("Nails","LISTEN","album"),nails);
+var hollywoodWatch=eeCandidate_({trackId:3,trackName:"Alice Cooper Live",artistName:"Alice Cooper",artistId:30,trackViewUrl:"https://music.apple.com/fr/music-video/3"},query("Alice Cooper","WATCH","musicVideo"),{primaryArtists:["Hollywood Vampires"],people:[]});
+var megadethRead=eeCandidate_({trackId:4,trackName:"Mustaine",artistName:"Dave Mustaine",trackViewUrl:"https://books.apple.com/fr/book/id4?at=1010lScn",primaryGenreName:"Music"},query("Dave Mustaine","READ","ebook"),{primaryArtists:["Megadeth"],people:["Dave Mustaine"]});
+eeAppleSettings_=function(){return {storefront:"FR"};};
+var analysis={primaryArtistKeys:["glitch-mob"],primaryArtists:["The Glitch Mob"],people:[],identityConfidence:"HIGH",articleType:"album_review"};
+var payload=eeAssemblePayloadFromCatalogues_({id:"5",title:"Drink The Sea",content:"",url:"/5"},analysis,[{appleArtistId:"50",catalogue:{categories:[{category:"LISTEN",items:[{stableId:"related",title:"Other",creator:"Carcass associate",appleArtistId:"51",relevanceScore:999},{stableId:"drink",title:"Drink The Sea",creator:"The Glitch Mob",appleArtistId:"50",relevanceScore:80}]}]}}]);
+var carcass=eeCandidate_({collectionId:6,collectionName:"Heartwork",artistName:"Carcass",artistId:60,collectionViewUrl:"https://music.apple.com/fr/album/6"},query("Carcass","LISTEN","album"),{primaryArtists:["Carcass"],people:[]});
+JSON.stringify({nailsFalse:!!nailsFalse,nailsExact:nailsExact&&nailsExact.creator,hollywoodWatch:!!hollywoodWatch,megadethRead:!!megadethRead,drinkFirst:payload.categories[0].items[0].title,carcass:carcass&&carcass.creator});
+''')
+        self.assertEqual(
+            '{"nailsFalse":false,"nailsExact":"Nails","hollywoodWatch":false,'
+            '"megadethRead":false,"drinkFirst":"Drink The Sea","carcass":"Carcass"}',
+            result,
+        )
+
+    def test_watch_and_read_enrichment_is_primary_only_in_existing_worker(self):
+        result = self.run_apps_script(r'''
+var analysis={primaryArtists:["Hollywood Vampires"],relationshipGraph:{nodes:[
+ {name:"Hollywood Vampires",normalizedName:"hollywood vampires",type:"ARTIST",relationship:"primary band or artist",weight:96},
+ {name:"Alice Cooper",normalizedName:"alice cooper",type:"PERSON",relationship:"member of primary artist",weight:90}
+]}};
+var plan=eeSearchPlan_(analysis,"FR");
+JSON.stringify(plan.map(function(item){return item.category+":"+item.term;}));
+''')
+        self.assertEqual(
+            '["LISTEN:Hollywood Vampires","WATCH:Hollywood Vampires",'
+            '"READ:Hollywood Vampires","READ:Hollywood Vampires","LISTEN:Alice Cooper"]',
+            result,
+        )
+        enrichment = self.code[
+            self.code.index("function eeIncrementalResolvedEnrichment_") :
+            self.code.index("function eeDiscoverArtistCatalogue_")
+        ]
+        self.assertIn("eeSearchPlan_", enrichment)
+        self.assertIn("eeAppleSearch_", enrichment)
+
+    def test_every_enabled_apple_link_has_affiliate_token_and_books_fail_closed(self):
+        result = self.run_apps_script(r'''
+var urls={music:eeAffiliateUrl_("LISTEN","https://music.apple.com/fr/album/example/id1?at=wrong"),legacyMusic:eeAffiliateUrl_("LISTEN","https://itunes.apple.com/fr/album/example/id2"),tv:eeAffiliateUrl_("WATCH","https://tv.apple.com/fr/movie/example/umc.cmc.1"),legacyTv:eeAffiliateUrl_("WATCH","https://itunes.apple.com/fr/movie/example/id3"),bareBook:eeAffiliateUrl_("READ","https://books.apple.com/fr/book/example/id4"),trackedBook:eeAffiliateUrl_("READ","https://books.apple.com/fr/book/example/id4?at=1010lScn")};
+var analysis={primaryArtists:["Megadeth"],people:[]},query={category:"READ",entity:"ebook",term:"Megadeth",relationshipWeight:96,relationship:"primary band or artist",storefront:"FR"};
+var bare=eeCandidate_({trackId:4,trackName:"Megadeth",artistName:"Megadeth",trackViewUrl:"https://books.apple.com/fr/book/id4",primaryGenreName:"Music"},query,analysis);
+var tracked=eeCandidate_({trackId:5,trackName:"Megadeth",artistName:"Megadeth",trackViewUrl:"https://books.apple.com/fr/book/id5?at=1010lScn",primaryGenreName:"Music"},query,analysis);
+JSON.stringify({tokens:[urls.music,urls.legacyMusic,urls.tv,urls.legacyTv].every(function(url){return /[?&]at=1010lScn(?:&|$)/.test(url);}),musicApp:/[?&]app=music(?:&|$)/.test(urls.music)&&/[?&]app=music(?:&|$)/.test(urls.legacyMusic),bareBook:urls.bareBook,trackedBook:urls.trackedBook,bareCandidate:!!bare,trackedCandidate:!!tracked});
+''')
+        self.assertEqual(
+            '{"tokens":true,"musicApp":true,"bareBook":"",'
+            '"trackedBook":"https://books.apple.com/fr/book/example/id4?at=1010lScn",'
+            '"bareCandidate":false,"trackedCandidate":true}',
+            result,
+        )
+
     def test_ambiguous_exact_artist_is_allowed_but_substring_watch_is_rejected(self):
         result = self.run_apps_script(r'''
 var analysis={primaryArtists:["Yes"],people:[]};
