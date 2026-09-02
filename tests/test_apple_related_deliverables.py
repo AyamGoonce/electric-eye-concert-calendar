@@ -608,11 +608,63 @@ JSON.stringify({http403:transient("APPLE_SEARCH_HTTP_403"),http429:transient("AP
     def test_stale_catalogues_have_an_independent_bounded_refresh_worker(self):
         worker = self.code[self.code.index("function eeRefreshStaleArtistsWorker") : self.code.index("function eeAssembleArticlePayloadsWorker")]
         self.assertIn("EE_APPLE_STALE_REFRESH_INDEX", worker)
-        self.assertIn('eeDiscoverArtistCatalogue_(artist,post,true)', worker)
+        self.assertIn('eeDiscoverArtistCatalogue_(artist,post,isVerifiedResolved)', worker)
         self.assertIn('properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1")', worker)
         self.assertIn('status:"DEFERRED"', worker)
-        self.assertIn('status:isDeferred?"DEFERRED_RETRIED":"REFRESHED"', worker)
-        self.assertIn('?"DEFERRED_RETRIED":"REFRESHED"', worker)
+        self.assertIn('isVerifiedResolved?"ENRICHMENT_REFRESHED"', worker)
+        self.assertIn('isDeferred?"DEFERRED_RETRIED":"IDENTITY_RETRIED"', worker)
+
+    def test_legacy_stale_resolved_row_routes_to_resumable_enrichment(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_STALE_REFRESH_INDEX:"1"},forceValues=[];
+var row=["lauryn-hill","Ms. Lauryn Hill",1,1,"99","mb","HIGH","RESOLVED",{categories:[{category:"LISTEN",items:[{stableId:"existing"}]}]},"","2000-01-01T00:00:00.000Z","post","",0,"",""];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;},deleteProperty:function(key){delete props[key];}};}};
+eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){};
+eeArtistRegistry_=function(){return {artists:[{slug:"lauryn-hill",canonicalName:"Ms. Lauryn Hill",ambiguityClass:"distinctive"}]};};eeFetchPostById_=function(){return {id:"post"};};
+eeDiscoverArtistCatalogue_=function(artist,post,forceRefresh){forceValues.push(forceRefresh);return {status:"RESOLVED"};};
+var worker=eeRefreshStaleArtistsWorker();JSON.stringify({status:worker.status,terminalStatus:worker.terminalStatus,forceValues:forceValues,cursor:props.EE_APPLE_STALE_REFRESH_INDEX,assembly:props.EE_APPLE_ASSEMBLY_INDEX});
+''')
+        self.assertEqual(
+            '{"status":"ENRICHMENT_REFRESHED","terminalStatus":"RESOLVED",'
+            '"forceValues":[true],"cursor":"2","assembly":"1"}',
+            result,
+        )
+
+    def test_refresh_transport_failure_preserves_legacy_resolved_identity(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_STALE_REFRESH_INDEX:"1"},saved=null;
+var oldCatalogue={categories:[{category:"LISTEN",items:[{stableId:"existing"}]}]};
+var row=["maceo-parker","Maceo Parker",1,1,"42","mb","HIGH","RESOLVED",oldCatalogue,"","2000-01-01T00:00:00.000Z","post","",0,"",""];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;},deleteProperty:function(key){delete props[key];}};}};
+eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){};
+eeArtistRegistry_=function(){return {artists:[{slug:"maceo-parker",canonicalName:"Maceo Parker",ambiguityClass:"distinctive"}]};};eeFetchPostById_=function(){return {id:"post"};};eeDecodePayloadCell_=function(value){return value;};
+eeDiscoverArtistCatalogue_=function(){var error=new Error("APPLE_SEARCH_EXECUTION_HEADROOM");error.code="APPLE_SEARCH_EXECUTION_HEADROOM";error.retryable=true;throw error;};eePutArtistCatalogue_=function(record){saved=record;};
+var worker=eeRefreshStaleArtistsWorker();JSON.stringify({workerStatus:worker.status,terminalStatus:worker.terminalStatus,savedStatus:saved.status,artistId:saved.appleArtistId,confidence:saved.identityConfidence,item:saved.categories[0].items[0].stableId,enrichment:saved.enrichment.status,error:saved.error});
+''')
+        self.assertEqual(
+            '{"workerStatus":"ENRICHMENT_PENDING","terminalStatus":"RESOLVED",'
+            '"savedStatus":"RESOLVED","artistId":"42","confidence":"HIGH","item":"existing",'
+            '"enrichment":"PENDING","error":"APPLE_SEARCH_EXECUTION_HEADROOM"}',
+            result,
+        )
+
+    def test_clear_identity_transport_retry_is_short_and_ambiguous_identity_defers(self):
+        result = self.run_apps_script(r'''
+function identityCase(ambiguityClass){
+  var props={EE_APPLE_ARTIST_DISCOVERY_INDEX:"1"},saved=null,row=["artist","Artist",1,1,"","","UNRESOLVED","UNRESOLVED","","","","post","",2,"",""];
+  PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;},deleteProperty:function(key){delete props[key];}};}};
+  eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){};eeFetchPostById_=function(){return {id:"post"};};
+  eeArtistRegistry_=function(){return {artists:[{slug:"artist",canonicalName:"Artist",ambiguityClass:ambiguityClass}]};};eeDiscoverArtistCatalogue_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};eePutArtistCatalogue_=function(record){saved=record;};
+  var worker=eeDiscoverArtistsWorker();return {worker:worker.status,status:saved.status,confidence:saved.identityConfidence,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,retryMinutes:Math.round((Date.parse(saved.retryAfter)-Date.now())/60000)};
+}
+JSON.stringify({clear:identityCase("distinctive"),fish:identityCase("common_word")});
+''')
+        self.assertEqual(
+            '{"clear":{"worker":"OK","status":"UNRESOLVED","confidence":"UNRESOLVED",'
+            '"cursor":"2","retryMinutes":15},"fish":{"worker":"OK","status":"DEFERRED",'
+            '"confidence":"DEFERRED","cursor":"2","retryMinutes":360}}',
+            result,
+        )
 
     def test_assembler_does_not_publish_empty_for_resolved_pending_catalogue(self):
         result = self.run_apps_script(r'''
@@ -644,6 +696,26 @@ var result=eeAssembleArticlePayloadsWorker();JSON.stringify({status:result.statu
             "deferredArtists",
         ):
             self.assertIn(counter, status_function)
+
+    def test_architecture_counters_migrate_missing_enrichment_metadata_to_pending(self):
+        result = self.run_apps_script(r'''
+var logs=[];console.log=function(value){logs.push(value);};
+var artists=[
+ ["header"],
+ ["full","Full",1,1,"1","","HIGH","RESOLVED",{categories:[{category:"LISTEN",items:[{stableId:"full"}]}],enrichment:{status:"FULL"}},"","2099-01-01T00:00:00.000Z","post-full","",0,"",""],
+ ["legacy","Legacy",1,1,"2","","HIGH","RESOLVED",{categories:[{category:"LISTEN",items:[{stableId:"partial"}]}]},"","2000-01-01T00:00:00.000Z","post-legacy","",0,"",""],
+ ["fish","Fish",1,1,"","","DEFERRED","DEFERRED",{categories:[]},"","","post-fish","",3,"","2099-01-01T00:00:00.000Z"]
+];
+var identities=[["header"],["post-legacy","",0,1,'["legacy"]']];
+var payloads=[["header"]];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(){return "";}};}};
+eeArticleIdentitySheet_=function(){return {getDataRange:function(){return {getValues:function(){return identities;}};}};};eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return artists;}};}};};eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return payloads;}};}};};eeDecodePayloadCell_=function(value){return value;};
+var status=eeArchitectureStatus();JSON.stringify({verified:status.verifiedAppleIds,full:status.resolvedFullyEnriched,pending:status.resolvedEnrichmentPending,partial:status.partiallyEnrichedArtists,stale:status.staleArtists,deferred:status.deferredArtists,waiting:status.articlesWaitingOnEnrichment});
+''')
+        self.assertEqual(
+            '{"verified":2,"full":1,"pending":1,"partial":1,"stale":1,"deferred":1,"waiting":1}',
+            result,
+        )
 
     def test_bounded_transient_retries_defer_and_unblock_later_artist(self):
         result = self.run_apps_script(r'''

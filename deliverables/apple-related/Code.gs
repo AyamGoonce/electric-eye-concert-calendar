@@ -1635,6 +1635,8 @@ function eeReleaseWorkerLease_(name) {var lock=LockService.getScriptLock();lock.
 function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity",["postId","canonicalUrl","analyzedAt","analysisVersion","primaryArtistKeys","primaryArtists","confidence","ambiguous","evidenceJson","articleType"]);}
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
+var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
+function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
 
 function eeArtistCatalogueSheet_() {
   var header=["artistKey","canonicalName","registrySchemaVersion","catalogueSchemaVersion","appleArtistId","musicBrainzId","identityConfidence","status","catalogueJson","generatedAt","staleAfter","representativePostId","error","transientRetryCount","lastTransientError","retryAfter"],sheet=eeNamedSheet_("Apple Artists",header);
@@ -1723,7 +1725,8 @@ function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
   var lease="CATALOGUE_"+String(artist.slug||"").replace(/[^A-Za-z0-9_-]/g,"_");
   if(!eeAcquireWorkerLease_(lease,360000)){var busy=new Error("ARTIST_DISCOVERY_BUSY");busy.code="ARTIST_DISCOVERY_BUSY";busy.retryable=true;eeDiscoveryDiagnosticFinish_(diagnostic,"RETRY_LATER",busy.code,busy);throw busy;}
   try{
-    var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.status!=="UNRESOLVED"&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
+    var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.appleArtistId&&existing.status!=="RESOLVED"){existing.status="RESOLVED";existing.identityConfidence="HIGH";}
+    if(existing&&["UNRESOLVED","DEFERRED"].indexOf(existing.status)===-1&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
     if(forceRefresh&&existing&&existing.status==="RESOLVED"&&existing.appleArtistId){
       var progress=eeIncrementalResolvedEnrichment_(artist,post,existing);
       if(!progress.readyForFinalization){
@@ -1786,13 +1789,20 @@ function eeDiscoverArtistsWorker() {
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         if(catalogue.status==="ERROR")console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"ERROR",errorReason:catalogue.error||"APPLE_ARTIST_DISCOVERY_EXHAUSTED",nextCursor:row+1}));
       }catch(error){
-        if(error&&error.retryable){
+        if(eeEnrichmentTransient_(error)){
           var transientError=String(error.code||error.message||error),retryCount=Math.max(0,Number(values[row][13]||0))+1,retryAfter="";
           if(retryCount<EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT){
             eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,identityConfidence:"UNRESOLVED",status:"UNRESOLVED",representativePostId:representativePostId,error:transientError,categories:[],transientRetryCount:retryCount,lastTransientError:transientError});
             properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row));
             console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,transientError:transientError,retryCount:retryCount,retryLimit:EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT,cursor:row}));
             return {status:"RETRY_LATER",artistKey:artistKey,error:transientError,retryCount:retryCount,retryLimit:EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT};
+          }
+          if(eeArtistClearCanonical_(artist)){
+            retryAfter=new Date(Date.now()+EE_APPLE_CLEAR_IDENTITY_RETRY_MS).toISOString();
+            eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,identityConfidence:"UNRESOLVED",status:"UNRESOLVED",representativePostId:representativePostId,error:transientError,categories:[],transientRetryCount:retryCount,lastTransientError:transientError,retryAfter:retryAfter});
+            properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
+            console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"IDENTITY_RETRY_PENDING",lastTransientError:transientError,retryCount:retryCount,retryAfter:retryAfter,nextCursor:row+1}));
+            continue;
           }
           retryAfter=new Date(Date.now()+EE_APPLE_ARTIST_DEFERRED_RETRY_MS).toISOString();
           eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,identityConfidence:"DEFERRED",status:"DEFERRED",representativePostId:representativePostId,error:transientError,categories:[],transientRetryCount:retryCount,lastTransientError:transientError,retryAfter:retryAfter});
@@ -1814,17 +1824,24 @@ function eeRefreshStaleArtistsWorker() {
   if(!eeAcquireWorkerLease_("STALE_REFRESH",240000))return {status:"BUSY"};
   try{var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_STALE_REFRESH_INDEX")||1));eeSetExecutionDeadline_(Date.now()+180000);
   for(var row=cursor;row<values.length;row+=1){
-    var status=String(values[row][7]||""),isDeferred=status==="DEFERRED",isStale=status==="RESOLVED"&&values[row][10]&&Date.parse(String(values[row][10]))<=Date.now(),retryAfter=String(values[row][15]||"");
-    if(!isStale&&(!isDeferred||!retryAfter||Date.parse(retryAfter)>Date.now())){properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));continue;}
+    var status=String(values[row][7]||""),appleArtistId=String(values[row][4]||""),isVerifiedResolved=!!appleArtistId&&(status==="RESOLVED"||status==="DEFERRED"||String(values[row][6]||"")==="HIGH"),isDeferred=status==="DEFERRED"&&!isVerifiedResolved,isStale=isVerifiedResolved&&values[row][10]&&Date.parse(String(values[row][10]))<=Date.now(),retryAfter=String(values[row][15]||"");
     var artistKey=String(values[row][0]),canonicalName=String(values[row][1]),representativePostId=String(values[row][11]||""),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
+    var isClearIdentityRetry=status==="UNRESOLVED"&&eeArtistClearCanonical_(artist)&&!!retryAfter&&Date.parse(retryAfter)<=Date.now();
+    if(!isStale&&!isClearIdentityRetry&&(!isDeferred||!retryAfter||Date.parse(retryAfter)>Date.now())){properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));continue;}
     try{
-      var post=eeFetchPostById_(representativePostId),catalogue=eeDiscoverArtistCatalogue_(artist,post,true);properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");
+      var post=eeFetchPostById_(representativePostId),catalogue=eeDiscoverArtistCatalogue_(artist,post,isVerifiedResolved);properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");
       properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));
-      return {status:isDeferred?"DEFERRED_RETRIED":"REFRESHED",artistKey:artist.slug,terminalStatus:String(catalogue&&catalogue.status||""),cursor:row+1};
+      return {status:isVerifiedResolved?"ENRICHMENT_REFRESHED":isDeferred?"DEFERRED_RETRIED":"IDENTITY_RETRIED",artistKey:artist.slug,terminalStatus:String(catalogue&&catalogue.status||""),cursor:row+1};
     }catch(error){
       var errorReason=String(error&&error.code||error&&error.message||error);
-      if(error&&error.retryable){
+      if(eeEnrichmentTransient_(error)){
+        if(isVerifiedResolved){
+          var priorCatalogue={};try{priorCatalogue=values[row][8]?eeDecodePayloadCell_(values[row][8]):{};}catch(decodeError){}var priorEnrichment=priorCatalogue.enrichment||{status:"PENDING",completedQueries:[],totalQueries:0,pendingQueries:1};priorEnrichment.status="PENDING";priorEnrichment.lastError=errorReason;
+          eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,appleArtistId:appleArtistId,musicBrainzId:String(values[row][5]||""),identityConfidence:"HIGH",status:"RESOLVED",representativePostId:representativePostId,error:errorReason,categories:priorCatalogue.categories||[],staleAfter:new Date().toISOString(),enrichment:priorEnrichment,lastTransientError:errorReason});
+          properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));return {status:"ENRICHMENT_PENDING",artistKey:artist.slug,error:errorReason,terminalStatus:"RESOLVED",cursor:row+1};
+        }
         var retryCount=Math.max(0,Number(values[row][13]||0))+1,nextRetryAfter=new Date(Date.now()+EE_APPLE_ARTIST_DEFERRED_RETRY_MS).toISOString();
+        if(eeArtistClearCanonical_(artist)){nextRetryAfter=new Date(Date.now()+EE_APPLE_CLEAR_IDENTITY_RETRY_MS).toISOString();eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,identityConfidence:"UNRESOLVED",status:"UNRESOLVED",representativePostId:representativePostId,error:errorReason,categories:[],transientRetryCount:retryCount,lastTransientError:errorReason,retryAfter:nextRetryAfter});properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));return {status:"IDENTITY_RETRY_PENDING",artistKey:artist.slug,error:errorReason,retryCount:retryCount,retryAfter:nextRetryAfter,cursor:row+1};}
         eePutArtistCatalogue_({artistKey:artistKey,canonicalName:canonicalName,identityConfidence:"DEFERRED",status:"DEFERRED",representativePostId:representativePostId,error:errorReason,categories:[],transientRetryCount:retryCount,lastTransientError:errorReason,retryAfter:nextRetryAfter});
         properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));
         console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"DEFERRED",lastTransientError:errorReason,retryCount:retryCount,retryAfter:nextRetryAfter,nextCursor:row+1}));
@@ -1841,7 +1858,7 @@ function eeRefreshStaleArtistsWorker() {
 function eeAssembleArticlePayloadsWorker() {
   if(!eeAcquireWorkerLease_("ASSEMBLY",240000))return {status:"BUSY"};
   try{var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)),processed=0;
-  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED";});if(keys.length&&catalogues.length!==keys.length)continue;var enrichmentPending=catalogues.some(function(record){var state=((record.catalogue||{}).enrichment||{}).status;return state&&state!=="FULL";});var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(enrichmentPending&&!eePayloadHasRecommendations_(payload)){var existingPayload=eeGetPayload_(String(values[row][0]));if(eePayloadHasRecommendations_(existingPayload))continue;continue;}eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
+  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED";});if(keys.length&&catalogues.length!==keys.length)continue;var enrichmentPending=catalogues.some(function(record){var state=((record.catalogue||{}).enrichment||{}).status;return !state||state!=="FULL";});var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(enrichmentPending&&!eePayloadHasRecommendations_(payload)){var existingPayload=eeGetPayload_(String(values[row][0]));if(eePayloadHasRecommendations_(existingPayload))continue;continue;}eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
   return {status:"OK",processed:processed,cursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)};}finally{eeReleaseWorkerLease_("ASSEMBLY");}
 }
 
@@ -1853,7 +1870,7 @@ function eeSeedArtistCataloguesFromGeneration2() {
 
 function eeArchitectureStatus() {
   var properties=PropertiesService.getScriptProperties(),identity=eeArticleIdentitySheet_().getDataRange().getValues(),artists=eeArtistCatalogueSheet_().getDataRange().getValues(),payloads=eePayloadSheet_().getDataRange().getValues(),result={postsAnalyzed:Math.max(0,identity.length-1),canonicalArtists:Math.max(0,artists.length-1),verifiedAppleIds:0,unresolvedArtists:0,ambiguousArtists:0,deferredArtists:0,resolvedFullyEnriched:0,resolvedEnrichmentPending:0,partiallyEnrichedArtists:0,articlesWaitingOnEnrichment:0,artistTransientRetries:0,staleArtists:0,payloadStatus:{READY:0,EMPTY:{},ERROR:{}},appleCalls:Number(properties.getProperty("EE_APPLE_CALL_COUNT")||0),appleCacheHits:Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0),catalogueGenerations:Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0),identityCursor:Number(properties.getProperty("EE_APPLE_IDENTITY_INDEX")||1),artistDiscoveryCursor:Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1),assemblyCursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1),staleRefreshCursor:Number(properties.getProperty("EE_APPLE_STALE_REFRESH_INDEX")||1),cooldownUntil:properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")||null,mostRecentTransientFailure:properties.getProperty("EE_APPLE_LAST_TRANSIENT_FAILURE")||null},pendingArtistKeys={};
-  for(var row=1;row<artists.length;row+=1){if(artists[row][4])result.verifiedAppleIds+=1;if(artists[row][7]==="UNRESOLVED")result.unresolvedArtists+=1;if(artists[row][7]==="AMBIGUOUS")result.ambiguousArtists+=1;if(artists[row][7]==="DEFERRED")result.deferredArtists+=1;if(artists[row][7]==="RESOLVED"){var catalogue={};try{catalogue=artists[row][8]?eeDecodePayloadCell_(artists[row][8]):{};}catch(error){}var enrichment=(catalogue.enrichment||{}).status||"FULL";if(enrichment==="FULL")result.resolvedFullyEnriched+=1;else{result.resolvedEnrichmentPending+=1;pendingArtistKeys[String(artists[row][0])]=true;if((catalogue.categories||[]).some(function(group){return (group.items||[]).length;}))result.partiallyEnrichedArtists+=1;}}result.artistTransientRetries+=Math.max(0,Number(artists[row][13]||0));if(artists[row][10]&&Date.parse(String(artists[row][10]))<=Date.now())result.staleArtists+=1;}
+  for(var row=1;row<artists.length;row+=1){var rowStatus=String(artists[row][7]||""),rowAppleId=String(artists[row][4]||""),rowStale=!!artists[row][10]&&Date.parse(String(artists[row][10]))<=Date.now(),verifiedResolved=!!rowAppleId&&(rowStatus==="RESOLVED"||rowStatus==="DEFERRED"||String(artists[row][6]||"")==="HIGH");if(rowAppleId)result.verifiedAppleIds+=1;if(rowStatus==="UNRESOLVED")result.unresolvedArtists+=1;if(rowStatus==="AMBIGUOUS")result.ambiguousArtists+=1;if(rowStatus==="DEFERRED"&&!verifiedResolved)result.deferredArtists+=1;if(verifiedResolved){var catalogue={};try{catalogue=artists[row][8]?eeDecodePayloadCell_(artists[row][8]):{};}catch(error){}var enrichment=(catalogue.enrichment||{}).status||"";if(enrichment==="FULL")result.resolvedFullyEnriched+=1;else{result.resolvedEnrichmentPending+=1;pendingArtistKeys[String(artists[row][0])]=true;if((catalogue.categories||[]).some(function(group){return (group.items||[]).length;}))result.partiallyEnrichedArtists+=1;}}result.artistTransientRetries+=Math.max(0,Number(artists[row][13]||0));if(rowStale)result.staleArtists+=1;}
   var readyPayloadPosts={};for(var payloadRow=1;payloadRow<payloads.length;payloadRow+=1){if(String(payloads[payloadRow][5]||"")==="READY"&&eeStoredPayloadHasRecommendations_(payloads[payloadRow][4]))readyPayloadPosts[String(payloads[payloadRow][0])]=true;}
   for(var identityRow=1;identityRow<identity.length;identityRow+=1){var identityKeys=[];try{identityKeys=JSON.parse(String(identity[identityRow][4]||"[]"));}catch(error){}if(!readyPayloadPosts[String(identity[identityRow][0])]&&identityKeys.some(function(key){return pendingArtistKeys[String(key)];}))result.articlesWaitingOnEnrichment+=1;}
   for(var index=1;index<payloads.length;index+=1){var status=String(payloads[index][5]||""),error=String(payloads[index][6]||"")||"UNCLASSIFIED";if(status==="READY")result.payloadStatus.READY+=1;else if(status==="EMPTY")result.payloadStatus.EMPTY[error]=(result.payloadStatus.EMPTY[error]||0)+1;else if(status==="ERROR")result.payloadStatus.ERROR[error]=(result.payloadStatus.ERROR[error]||0)+1;}
