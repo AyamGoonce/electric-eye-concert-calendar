@@ -182,6 +182,18 @@ def is_supported_event(event):
     supported and will remain in the calendar.
     """
 
+    # Temporary reviewed exclusion: Olympia lists Ronnie Wood only on
+    # 2026-09-05. A phantom 2026-09-06 occurrence is currently emitted
+    # upstream and must not reach the public calendar.
+    if (
+        (event.date or "")[:10] == "2026-09-06"
+        and normalize_venue_key(event.venue or "")
+        == normalize_venue_key("L'Olympia Bruno Coquatrix")
+        and normalize_headliner(event.headliner)
+        == normalize_headliner("Ronnie Wood")
+    ):
+        return False
+
     if is_non_supported_event(event.headliner):
         return False
 
