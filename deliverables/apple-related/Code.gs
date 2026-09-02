@@ -1881,11 +1881,25 @@ function eeRefreshStaleArtistsWorker() {
   properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX","1");return {status:"COMPLETE",cursor:1};}finally{eeClearExecutionDeadline_();eeReleaseWorkerLease_("STALE_REFRESH");}
 }
 
+var EE_APPLE_ASSEMBLY_ROW_LIMIT=25;
+var EE_APPLE_ASSEMBLY_TIME_LIMIT_MS=150000;
 function eeAssembleArticlePayloadsWorker() {
   if(!eeAcquireWorkerLease_("ASSEMBLY",240000))return {status:"BUSY"};
-  try{var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)),processed=0;
-  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue);});if(keys.length&&!catalogues.length)continue;var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
-  return {status:"OK",processed:processed,cursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)};}finally{eeReleaseWorkerLease_("ASSEMBLY");}
+  var started=Date.now();
+  try{
+    var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1));
+    var totals={status:"OK",processed:0,readyWritten:0,readyPreserved:0,skippedNoSubject:0,skippedUnresolved:0,skippedNoProducts:0,nextCursor:cursor,elapsedMs:0};
+    for(var row=cursor;row<values.length&&totals.processed<EE_APPLE_ASSEMBLY_ROW_LIMIT&&Date.now()-started<EE_APPLE_ASSEMBLY_TIME_LIMIT_MS;row+=1){
+      var nextCursor=row+1;totals.processed+=1;
+      var keys=JSON.parse(String(values[row][4]||"[]"));if(!keys.length){totals.skippedNoSubject+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
+      var records=keys.map(eeGetArtistCatalogue_).filter(Boolean),resolved=records.filter(function(record){return record.status==="RESOLVED";});if(!resolved.length){totals.skippedUnresolved+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
+      var catalogues=resolved.filter(function(record){return eePayloadHasRecommendations_(record.catalogue);});if(!catalogues.length){totals.skippedNoProducts+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
+      var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(!eePayloadHasRecommendations_(payload)){totals.skippedNoProducts+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
+      var existing=eeGetPayload_(String(values[row][0])),preserved=eePayloadHasRecommendations_(existing)&&!eePayloadAtLeastAsUseful_(payload,existing);eePutPayload_(post,payload,"READY","",0);if(preserved)totals.readyPreserved+=1;else totals.readyWritten+=1;
+      properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;
+    }
+    totals.elapsedMs=Date.now()-started;console.log(JSON.stringify(totals));return totals;
+  }finally{eeReleaseWorkerLease_("ASSEMBLY");}
 }
 
 function eeSeedArtistCataloguesFromGeneration2() {
