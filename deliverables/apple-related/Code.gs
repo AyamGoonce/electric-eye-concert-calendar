@@ -348,6 +348,30 @@ function eePayloadHasRecommendations_(payload) {
   }));
 }
 
+function eePayloadCategoryCounts_(payload) {
+  var counts={};
+  ((payload||{}).categories||[]).forEach(function(group){
+    var category=String((group||{}).category||"");
+    if(category)counts[category]=(counts[category]||0)+((group&&group.items)||[]).length;
+  });
+  return counts;
+}
+
+function eePayloadAtLeastAsUseful_(candidate,existing) {
+  if(!eePayloadHasRecommendations_(candidate))return false;
+  if(!eePayloadHasRecommendations_(existing))return true;
+  var next=eePayloadCategoryCounts_(candidate),prior=eePayloadCategoryCounts_(existing);
+  var nextItems={};((candidate||{}).categories||[]).forEach(function(group){
+    nextItems[group.category]=nextItems[group.category]||{};(group.items||[]).forEach(function(item){nextItems[group.category][String(item.stableId||item.url||item.title||"")]=true;});
+  });
+  return Object.keys(prior).every(function(category){
+    if(Number(next[category]||0)<Number(prior[category]||0))return false;
+    var available=nextItems[category]||{};
+    var priorGroup=((existing||{}).categories||[]).filter(function(group){return group.category===category;})[0]||{};
+    return (priorGroup.items||[]).every(function(item){return !!available[String(item.stableId||item.url||item.title||"")];});
+  });
+}
+
 function eeStoredPayloadHasRecommendations_(stored) {
   var value=String(stored||"");
   if(value.indexOf("GZIP64:")===0)return true;
@@ -936,6 +960,8 @@ function eeGetPayload_(postId) {
 }
 
 function eePutPayload_(post, payload, status, error, retryCount) {
+  var existing=eeGetPayload_(post.id);
+  if(eePayloadHasRecommendations_(existing)&&(status!=="READY"||!eePayloadAtLeastAsUseful_(payload,existing)))return false;
   var sheet = eePayloadSheet_();
   var values = sheet.getDataRange().getValues();
   var target = values.length + 1;
@@ -1678,8 +1704,8 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
 }
 
 function eePrimaryArtistIdentityPayload_(artist,post) {
-  var sourceAnalysis=eeArticleAnalysis_(post),settings=eeAppleSettings_();
-  var analysis={primaryArtists:[artist.canonicalName],people:[],associatedPeople:[],existingAppleArtistIds:artist.appleArtistId?[String(artist.appleArtistId)]:[],relationshipGraph:sourceAnalysis.relationshipGraph||{nodes:[],edges:[]}};
+  var settings=eeAppleSettings_();
+  var analysis={primaryArtists:[artist.canonicalName],people:[],associatedPeople:[],existingAppleArtistIds:artist.appleArtistId?[String(artist.appleArtistId)]:[],relationshipGraph:{nodes:[],edges:[]}};
   var query=eePrimaryLookupQuery_(analysis,settings.storefront,"LISTEN","album"),queryDiagnostic=eeDiscoveryDiagnosticQuery_(query),response=eeAppleSearch_(query),results=response.results||[],map={};
   eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);
   results.forEach(function(raw){
@@ -1758,7 +1784,7 @@ function eeGeneratePayload_(post) {
   var registry=eeArtistRegistry_(),analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis);
   if(!analysis.primaryArtistKeys.length)return eeAssemblePayloadFromCatalogues_(post,analysis,[]);
   var catalogues=[];
-  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key);if(!record||record.status==="UNRESOLVED")record=eeDiscoverArtistCatalogue_(artist,post);if(record&&record.status==="RESOLVED")catalogues.push(record);});
+  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key);if((!record||record.status==="UNRESOLVED")&&!catalogues.length)record=eeDiscoverArtistCatalogue_(artist,post);if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
   return eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);
 }
 
@@ -1858,7 +1884,7 @@ function eeRefreshStaleArtistsWorker() {
 function eeAssembleArticlePayloadsWorker() {
   if(!eeAcquireWorkerLease_("ASSEMBLY",240000))return {status:"BUSY"};
   try{var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)),processed=0;
-  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED";});if(keys.length&&catalogues.length!==keys.length)continue;var enrichmentPending=catalogues.some(function(record){var state=((record.catalogue||{}).enrichment||{}).status;return !state||state!=="FULL";});var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(enrichmentPending&&!eePayloadHasRecommendations_(payload)){var existingPayload=eeGetPayload_(String(values[row][0]));if(eePayloadHasRecommendations_(existingPayload))continue;continue;}eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
+  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue);});if(keys.length&&!catalogues.length)continue;var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
   return {status:"OK",processed:processed,cursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)};}finally{eeReleaseWorkerLease_("ASSEMBLY");}
 }
 

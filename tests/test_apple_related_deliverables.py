@@ -306,6 +306,77 @@ JSON.stringify({discovery:discovery,first:first.categories[0].items.length,secon
 ''')
         self.assertEqual('{"discovery":0,"first":1,"second":1,"version":3}', result)
 
+    def test_minimal_pending_catalogue_is_ready_without_waiting_for_related_artist(self):
+        result = self.run_apps_script(r'''
+var puts=[],discoveries=[];
+eeAppleSettings_=function(){return {enabled:true,storefront:"FR"};};
+eeArtistRegistry_=function(){return {schemaVersion:1,articleOverrides:{},structuralLabels:[],artists:[
+ {canonicalName:"Primary",slug:"primary",aliases:[],articleIds:["1"],ambiguityClass:"distinctive"},
+ {canonicalName:"Related",slug:"related",aliases:[],articleIds:["1"],ambiguityClass:"distinctive"}
+]};};
+eePutArticleIdentity_=function(){};eeGetArtistCatalogue_=function(){return null;};
+eeDiscoverArtistCatalogue_=function(artist){discoveries.push(artist.slug);if(artist.slug==="related")throw new Error("RELATED_MUST_NOT_BLOCK");return {artistKey:"primary",canonicalName:"Primary",appleArtistId:"99",status:"RESOLVED",catalogue:{categories:[{category:"LISTEN",items:[{stableId:"album",title:"Album",creator:"Primary"}]}],enrichment:{status:"PENDING"}}};};
+eePutPayload_=function(post,payload,status){puts.push({status:status,payload:payload});};
+var payload=eeProcessPost_({id:"1",title:"Primary and Related",labels:[],content:"",url:"/1"});
+JSON.stringify({status:puts[0].status,discoveries:discoveries,items:payload.categories[0].items.length,enrichmentRequired:!!payload.enrichment});
+''')
+        self.assertEqual(
+            '{"status":"READY","discoveries":["primary"],"items":1,"enrichmentRequired":false}',
+            result,
+        )
+
+    def test_last_known_good_ready_rejects_empty_error_and_poorer_payload(self):
+        result = self.run_apps_script(r'''
+var existing={storefront:"FR",categories:[{category:"LISTEN",items:[{stableId:"a"},{stableId:"b"}]},{category:"WATCH",items:[{stableId:"v"}]}]},writes=[];
+eeGetPayload_=function(){return existing;};eeEncodePayloadCell_=function(value){return JSON.stringify(value);};
+eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"]];}};},getRange:function(){return {setValues:function(rows){writes.push(rows[0]);}};}};};
+CacheService={getScriptCache:function(){return {remove:function(){}};}};
+var post={id:"1",url:"/1"};
+var empty=eePutPayload_(post,{storefront:"FR",categories:[]},"EMPTY","none",0);
+var error=eePutPayload_(post,{storefront:"FR",categories:[]},"ERROR","failed",0);
+var poorer=eePutPayload_(post,{storefront:"FR",categories:[{category:"LISTEN",items:[{stableId:"a"}]}]},"READY","",0);
+var richer=eePutPayload_(post,{storefront:"FR",categories:[{category:"LISTEN",items:[{stableId:"a"},{stableId:"b"},{stableId:"c"}]},{category:"WATCH",items:[{stableId:"v"}]}]},"READY","",0);
+JSON.stringify({empty:empty,error:error,poorer:poorer,writes:writes.length,lastStatus:writes[0][5]});
+''')
+        self.assertEqual(
+            '{"empty":false,"error":false,"poorer":false,"writes":1,"lastStatus":"READY"}',
+            result,
+        )
+
+    def test_minimal_ready_round_trips_through_existing_reader_boundary(self):
+        result = self.run_apps_script(r'''
+var rows=[["postId","canonicalUrl","generatedAt","storefront","payloadJson","status","error","retryCount"]];
+var sheet={getLastRow:function(){return rows.length-1;},getLastColumn:function(){return 8;},getDataRange:function(){return {getValues:function(){return rows;}};},getRange:function(row){return {setValues:function(values){rows[row-1]=values[0];},setValue:function(){}};}};
+eePayloadSheet_=function(){return sheet;};eeEncodePayloadCell_=function(value){return JSON.stringify(value);};eeDecodePayloadCell_=function(value){return JSON.parse(value);};
+var cache={};CacheService={getScriptCache:function(){return {get:function(key){return cache[key]||null;},put:function(key,value){cache[key]=value;},remove:function(key){delete cache[key];}};}};
+eeAppleSettings_=function(){return {enabled:true,storefront:"FR"};};eeApplePostAllowed_=function(){return true;};
+eeGeneratePayload_=function(post){return {schemaVersion:1,generationVersion:3,postId:String(post.id),storefront:"FR",categories:[{category:"LISTEN",items:[{stableId:"album",title:"Album"}]}],diagnostics:{enrichment:"PENDING"}};};
+ContentService={MimeType:{JSON:"JSON",JAVASCRIPT:"JS"},createTextOutput:function(text){return {text:text,setMimeType:function(){return this;}};}};
+eeProcessPost_({id:"42",url:"/article"});
+var stored=eeGetPayload_("42"),response=JSON.parse(doGet({parameter:{action:"payload",postId:"42"}}).text);
+JSON.stringify({status:rows[1][5],stored:stored.categories[0].items[0].stableId,served:response.categories[0].items[0].stableId,diagnostics:Object.prototype.hasOwnProperty.call(response,"diagnostics")});
+''')
+        self.assertEqual(
+            '{"status":"READY","stored":"album","served":"album","diagnostics":false}',
+            result,
+        )
+
+    def test_no_subject_article_does_not_block_later_ready_article(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_ASSEMBLY_INDEX:"1"},writes=[];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;}};}};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeArticleIdentitySheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],["empty","",0,1,"[]","[]","NONE",false,"","other"],["ready","",0,1,'["artist"]','["Artist"]',"HIGH",false,"","other"]];}};}};};
+eeGetArtistCatalogue_=function(key){return key==="artist"?{status:"RESOLVED",catalogue:{categories:[{category:"LISTEN",items:[{stableId:"album",title:"Album"}]}],enrichment:{status:"PENDING"}}}:null;};
+eeFetchPostById_=function(id){return {id:id,title:id,url:"/"+id,content:""};};eeAppleSettings_=function(){return {storefront:"FR"};};
+eePutPayload_=function(post,payload,status){writes.push([post.id,status]);};
+var worker=eeAssembleArticlePayloadsWorker();JSON.stringify({processed:worker.processed,writes:writes,cursor:props.EE_APPLE_ASSEMBLY_INDEX});
+''')
+        self.assertEqual(
+            '{"processed":2,"writes":[["empty","EMPTY"],["ready","READY"]],"cursor":"3"}',
+            result,
+        )
+
     def test_article_context_reranks_cached_items_without_mutating_catalogue(self):
         result = self.run_apps_script(r'''
 eeAppleSettings_=function(){return {storefront:"FR"};};
