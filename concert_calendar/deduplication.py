@@ -19,6 +19,7 @@ TARGET_VENUE_IMAGE_SOURCES = {
     "New Morning", "La Maroquinerie", "Le Trabendo", "La Gaîté Lyrique",
     "Le Hasard Ludique", "Le Zénith Paris – La Villette", "Petit Bain",
     "La Boule Noire", "Salle Pleyel", "Élysée Montmartre",
+    "Café de la Danse",
 }
 
 
@@ -99,6 +100,13 @@ DESCRIPTIVE_ARTIST_ALIASES = {
 # Reviewed event-level equivalences.  They intentionally do not generalize to
 # other artists, dates, venues, or editorial phrases.
 REVIEWED_EVENT_TITLES = {
+    (
+        "2026-10-13", "cafe de la danse", "the brooks",
+    ): "The Brooks",
+    (
+        "2026-10-13", "cafe de la danse",
+        "the brooks au cafe de la danse",
+    ): "The Brooks",
     ("2026-09-09", "accor arena", "katseye"): (
         "KATSEYE - THE WILDWORLD TOUR"
     ),
@@ -291,6 +299,13 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
             (event.date, venue_identity, artist_identity)
         )
         if reviewed_title:
+            if normalize_headliner(event.headliner) != normalize_headliner(
+                reviewed_title
+            ):
+                event.identity_aliases = _stable_unique([
+                    *(event.identity_aliases or []),
+                    event.headliner,
+                ])
             event.headliner = reviewed_title
 
         first_component = _split_full_bill(event.headliner)
