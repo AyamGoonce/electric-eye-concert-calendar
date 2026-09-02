@@ -457,6 +457,68 @@ JSON.stringify({status:record.status,fastCalls:fastCalls,legacyCalls:legacyCalls
             result,
         )
 
+    def test_resolved_enrichment_headroom_preserves_identity_and_partial_catalogue(self):
+        result = self.run_apps_script(r'''
+var saved=null,properties={},calls=[];
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+var existing={artistKey:"maceo-parker",canonicalName:"Maceo Parker",appleArtistId:"42",identityConfidence:"HIGH",status:"RESOLVED",musicBrainzId:"mb",catalogue:{categories:[],enrichment:{status:"PENDING",completedQueries:[],totalQueries:2,pendingQueries:2}}};
+eeGetArtistCatalogue_=function(){return existing;};
+eeArticleAnalysis_=function(){return {primaryArtists:["Maceo Parker"],people:[],associatedPeople:[],existingAppleArtistIds:["42"],relationshipGraph:{nodes:[],edges:[]}};};
+eeAppleSettings_=function(){return {storefront:"FR"};};
+eeSearchPlan_=function(){return [{category:"LISTEN",media:"music",entity:"album",term:"Maceo Parker",intent:"ARTIST",storefront:"FR"},{category:"WATCH",media:"music",entity:"musicVideo",term:"Maceo Parker",intent:"ARTIST",storefront:"FR"}];};
+eeAppleSearch_=function(query){calls.push(query.category);if(query.category==="WATCH"){var error=new Error("APPLE_SEARCH_EXECUTION_HEADROOM");error.code="APPLE_SEARCH_EXECUTION_HEADROOM";error.retryable=true;throw error;}return {results:[{artistId:"42",artistName:"Maceo Parker",collectionId:"album-1",collectionName:"Life on Planet Groove"}]};};
+eeAddCandidateToMap_=function(map,raw,query){map[query.category+":"+raw.collectionId]={stableId:raw.collectionId,category:query.category,creator:raw.artistName,title:raw.collectionName,relevanceScore:96};return true;};
+eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"maceo-parker",canonicalName:"Maceo Parker"},{id:"post-1"},true);
+JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:record.identityConfidence,error:record.error,calls:calls,categories:record.catalogue.categories.map(function(group){return [group.category,group.items.length];}),enrichment:record.catalogue.enrichment,savedStatus:saved.status});
+''')
+        self.assertEqual(
+            '{"status":"RESOLVED","artistId":"42","confidence":"HIGH",'
+            '"error":"APPLE_SEARCH_EXECUTION_HEADROOM","calls":["LISTEN","WATCH"],'
+            '"categories":[["LISTEN",1]],"enrichment":{"status":"PENDING",'
+            '"completedQueries":["LISTEN|music|album|maceo parker|FR"],"totalQueries":2,'
+            '"pendingQueries":1,"lastError":"APPLE_SEARCH_EXECUTION_HEADROOM"},"savedStatus":"RESOLVED"}',
+            result,
+        )
+
+    def test_partial_enrichment_resumes_after_completed_query(self):
+        result = self.run_apps_script(r'''
+var saved=null,properties={},calls=[];EE_APPLE_ENRICHMENT_QUERIES_PER_RUN=1;
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+var existing={artistKey:"artist",canonicalName:"Artist",appleArtistId:"42",identityConfidence:"HIGH",status:"RESOLVED",catalogue:{categories:[],enrichment:{status:"PENDING",completedQueries:[],totalQueries:3,pendingQueries:3}}};
+eeGetArtistCatalogue_=function(){return existing;};eeArticleAnalysis_=function(){return {primaryArtists:["Artist"],relationshipGraph:{nodes:[],edges:[]}};};eeAppleSettings_=function(){return {storefront:"FR"};};
+eeSearchPlan_=function(){return ["LISTEN","WATCH","READ"].map(function(category){return {category:category,media:category==="READ"?"ebook":"music",entity:category==="LISTEN"?"album":category==="WATCH"?"musicVideo":"ebook",term:"Artist",intent:"ARTIST",storefront:"FR"};});};
+eeAppleSearch_=function(query){calls.push(query.category);return {results:[{artistId:"42",artistName:"Artist",collectionId:query.category,collectionName:query.category}]};};
+eeAddCandidateToMap_=function(map,raw,query){map[query.category+":"+raw.collectionId]={stableId:raw.collectionId,category:query.category,creator:raw.artistName,title:raw.collectionName,relevanceScore:96};return true;};
+eePutArtistCatalogue_=function(record){saved=record;};PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var first=eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post"},true);existing={artistKey:saved.artistKey,canonicalName:saved.canonicalName,appleArtistId:saved.appleArtistId,identityConfidence:saved.identityConfidence,status:saved.status,catalogue:saved.catalogue||{categories:saved.categories,enrichment:saved.enrichment}};existing.catalogue={categories:saved.categories,enrichment:saved.enrichment};
+var second=eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post"},true);
+JSON.stringify({calls:calls,firstCompleted:first.enrichment.completedQueries,secondCompleted:second.enrichment.completedQueries,categories:second.categories.map(function(group){return group.category;})});
+''')
+        self.assertEqual(
+            '{"calls":["LISTEN","WATCH"],"firstCompleted":["LISTEN|music|album|artist|FR"],'
+            '"secondCompleted":["LISTEN|music|album|artist|FR","WATCH|music|musicVideo|artist|FR"],'
+            '"categories":["LISTEN","WATCH"]}',
+            result,
+        )
+
+    def test_resolved_finalization_transport_failure_cannot_defer_identity(self):
+        result = self.run_apps_script(r'''
+var saved=null,properties={};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+var existing={artistKey:"artist",canonicalName:"Artist",appleArtistId:"42",identityConfidence:"HIGH",status:"RESOLVED",catalogue:{categories:[{category:"LISTEN",items:[{stableId:"kept"}]}],enrichment:{status:"FINALIZE",completedQueries:["done"],totalQueries:1,pendingQueries:0}}};
+eeGetArtistCatalogue_=function(){return existing;};eeIncrementalResolvedEnrichment_=function(){return {readyForFinalization:true,categories:[{category:"LISTEN",items:[{stableId:"new-progress"}]}],enrichment:{status:"FINALIZE",completedQueries:["done","new"],totalQueries:2,pendingQueries:0}};};
+eeGeneratePayloadLegacy_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};
+eePutArtistCatalogue_=function(record){saved=record;};PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post"},true);
+JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:record.identityConfidence,item:record.catalogue.categories[0].items[0].stableId,enrichment:record.enrichment.status,error:record.error,savedStatus:saved.status});
+''')
+        self.assertEqual(
+            '{"status":"RESOLVED","artistId":"42","confidence":"HIGH","item":"new-progress",'
+            '"enrichment":"FINALIZE_PENDING","error":"APPLE_SEARCH_HTTP_429","savedStatus":"RESOLVED"}',
+            result,
+        )
+
     def test_exhausted_artist_discovery_is_persisted_as_terminal_error(self):
         result = self.run_apps_script(r'''
 var saved=null,properties={},nextLevel="LOW",nextArtistId=null;
@@ -547,9 +609,41 @@ JSON.stringify({http403:transient("APPLE_SEARCH_HTTP_403"),http429:transient("AP
         worker = self.code[self.code.index("function eeRefreshStaleArtistsWorker") : self.code.index("function eeAssembleArticlePayloadsWorker")]
         self.assertIn("EE_APPLE_STALE_REFRESH_INDEX", worker)
         self.assertIn('eeDiscoverArtistCatalogue_(artist,post,true)', worker)
+        self.assertIn('properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1")', worker)
         self.assertIn('status:"DEFERRED"', worker)
         self.assertIn('status:isDeferred?"DEFERRED_RETRIED":"REFRESHED"', worker)
         self.assertIn('?"DEFERRED_RETRIED":"REFRESHED"', worker)
+
+    def test_assembler_does_not_publish_empty_for_resolved_pending_catalogue(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_ASSEMBLY_INDEX:"1"},puts=[];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;},deleteProperty:function(key){delete props[key];}};}};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeArticleIdentitySheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],["post-1","",0,1,'["artist"]','["Artist"]',"HIGH",false,"","other"]];}};}};};
+eeGetArtistCatalogue_=function(){return {status:"RESOLVED",catalogue:{categories:[],enrichment:{status:"PENDING",pendingQueries:2}}};};
+eeFetchPostById_=function(){return {id:"post-1",title:"Artist",content:""};};eeAppleSettings_=function(){return {storefront:"FR"};};
+eeGetPayload_=function(){return {categories:[{category:"LISTEN",items:[{stableId:"existing"}]}]};};
+eePutPayload_=function(){puts.push([].slice.call(arguments));};
+var result=eeAssembleArticlePayloadsWorker();JSON.stringify({status:result.status,processed:result.processed,puts:puts.length,cursor:props.EE_APPLE_ASSEMBLY_INDEX});
+''')
+        self.assertEqual(
+            '{"status":"OK","processed":0,"puts":0,"cursor":"2"}',
+            result,
+        )
+
+    def test_architecture_status_exposes_enrichment_counters(self):
+        status_function = self.code[
+            self.code.index("function eeArchitectureStatus") : self.code.index("function doGet")
+        ]
+        for counter in (
+            "resolvedFullyEnriched",
+            "resolvedEnrichmentPending",
+            "partiallyEnrichedArtists",
+            "articlesWaitingOnEnrichment",
+            "unresolvedArtists",
+            "deferredArtists",
+        ):
+            self.assertIn(counter, status_function)
 
     def test_bounded_transient_retries_defer_and_unblock_later_artist(self):
         result = self.run_apps_script(r'''

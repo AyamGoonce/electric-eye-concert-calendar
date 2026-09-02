@@ -290,6 +290,7 @@ function eeDiscoveryDiagnosticCandidates_(entry,response) {if(entry)entry.candid
 function eeDiscoveryDiagnosticDecision_(entry,accepted,reason) {if(!entry)return;var key=String(reason||"UNSPECIFIED");if(accepted)entry.accepted+=1;else entry.rejected+=1;entry.reasons[key]=(entry.reasons[key]||0)+1;}
 function eeDiscoveryDiagnosticAppleCall_(){if(EE_APPLE_DISCOVERY_DIAGNOSTIC)EE_APPLE_DISCOVERY_DIAGNOSTIC.appleCalls+=1;}
 function eeDiscoveryDiagnosticCacheHit_(){if(EE_APPLE_DISCOVERY_DIAGNOSTIC)EE_APPLE_DISCOVERY_DIAGNOSTIC.cacheHits+=1;}
+function eeDiscoveryDiagnosticEnrichment_(state){if(EE_APPLE_DISCOVERY_DIAGNOSTIC)EE_APPLE_DISCOVERY_DIAGNOSTIC.enrichment=state||null;}
 
 function eeDiscoveryDiagnosticStopReason_(error) {
   var value=String((error&&error.code)||(error&&error.message)||"");
@@ -303,7 +304,7 @@ function eeDiscoveryDiagnosticStopReason_(error) {
 function eeDiscoveryDiagnosticFinish_(diagnostic,status,reason,error) {
   if(!diagnostic||diagnostic.finished)return;
   diagnostic.finished=true;
-  console.log(JSON.stringify({type:"APPLE_ARTIST_DISCOVERY",artistKey:diagnostic.artistKey,canonicalName:diagnostic.canonicalName,queries:diagnostic.queries,appleCalls:diagnostic.appleCalls,cacheHits:diagnostic.cacheHits,terminalStatus:String(status||""),terminalReason:String(reason||""),elapsedMs:Math.max(0,Date.now()-diagnostic.startedAt),stoppedBy:eeDiscoveryDiagnosticStopReason_(error)}));
+  console.log(JSON.stringify({type:"APPLE_ARTIST_DISCOVERY",artistKey:diagnostic.artistKey,canonicalName:diagnostic.canonicalName,queries:diagnostic.queries,appleCalls:diagnostic.appleCalls,cacheHits:diagnostic.cacheHits,terminalStatus:String(status||""),terminalReason:String(reason||""),elapsedMs:Math.max(0,Date.now()-diagnostic.startedAt),stoppedBy:eeDiscoveryDiagnosticStopReason_(error),enrichment:diagnostic.enrichment||null}));
   if(EE_APPLE_DISCOVERY_DIAGNOSTIC===diagnostic)EE_APPLE_DISCOVERY_DIAGNOSTIC=null;
 }
 
@@ -540,6 +541,7 @@ function eeGetArtistCatalogue_(artistKey) {
 function eePutArtistCatalogue_(record) {
   var sheet=eeArtistCatalogueSheet_(),now=new Date(),generated=record.generatedAt||now.toISOString(),stale=record.staleAfter||new Date(now.getTime()+30*86400000).toISOString();
   var catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories||[]};
+  if(record.enrichment)catalogue.enrichment=record.enrichment;
   eeUpsertRow_(sheet,0,record.artistKey,[record.artistKey,record.canonicalName,1,1,record.appleArtistId||"",record.musicBrainzId||"",record.identityConfidence||"",record.status||"UNRESOLVED",eeEncodePayloadCell_(catalogue),generated,stale,record.representativePostId||"",record.error||"",Math.max(0,Number(record.transientRetryCount||0)),record.lastTransientError||"",record.retryAfter||""]);
 }
 
@@ -565,21 +567,64 @@ function eePrimaryArtistIdentityPayload_(artist,post) {
   return {schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,identity:identity,categories:items.length?[{category:"LISTEN",items:items}]:[],diagnostics:{fastPrimaryIdentity:true,searchIntents:["LISTEN:album:"+artist.canonicalName],rawResultCount:results.length}};
 }
 
+var EE_APPLE_ENRICHMENT_QUERIES_PER_RUN=3;
+function eeEnrichmentQueryKey_(query){return [query.category,query.media,query.entity,eeNorm_(query.term||""),String(query.storefront||"").toUpperCase()].join("|");}
+function eeEnrichmentTransient_(error){var value=String((error&&error.code)||(error&&error.message)||error||"");return !!(error&&error.retryable)||/HTTP_(?:403|429|5\d\d)|HEADROOM|COOLDOWN|network|timed?\s*out|connection|service unavailable|fetch failed/i.test(value);}
+
+function eeIncrementalResolvedEnrichment_(artist,post,existing) {
+  var analysis=eeArticleAnalysis_(post),settings=eeAppleSettings_(),plan=eeSearchPlan_(analysis,settings.storefront);
+  if((analysis.primaryArtists||[]).length>1){var primarySet={};analysis.primaryArtists.forEach(function(name){primarySet[eeNorm_(name)]=true;});plan=plan.filter(function(query){return query.intent==="ARTIST"&&primarySet[eeNorm_(query.term||"")];});}
+  var prior=(existing.catalogue||{}).enrichment||{},completed={},map={};
+  (prior.completedQueries||[]).forEach(function(key){completed[String(key)]=true;});
+  ((existing.catalogue||{}).categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){map[String(item.category||group.category)+":"+String(item.stableId||item.url||item.title)]=item;});});
+  var attempted=0,lastError="";
+  for(var index=0;index<plan.length&&attempted<EE_APPLE_ENRICHMENT_QUERIES_PER_RUN;index+=1){
+    var query=plan[index],key=eeEnrichmentQueryKey_(query);if(completed[key])continue;
+    var queryDiagnostic=eeDiscoveryDiagnosticQuery_(query);
+    try{
+      var response=eeAppleSearch_(query);eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);
+      (response.results||[]).forEach(function(raw){if(eeAddCandidateToMap_(map,raw,query,analysis))eeDiscoveryDiagnosticDecision_(queryDiagnostic,true,"QUALIFYING_RELATIONSHIP");else eeDiscoveryDiagnosticDecision_(queryDiagnostic,false,"NO_QUALIFYING_RELATIONSHIP");});
+      completed[key]=true;attempted+=1;
+    }catch(error){if(!eeEnrichmentTransient_(error))throw error;lastError=String(error.code||error.message||error);break;}
+  }
+  var completedKeys=Object.keys(completed),remaining=plan.filter(function(query){return !completed[eeEnrichmentQueryKey_(query)];}),groups={LISTEN:[],WATCH:[],READ:[]};
+  Object.keys(map).forEach(function(key){var item=map[key];if(groups[item.category])groups[item.category].push(item);});
+  var categories=[];["LISTEN","WATCH","READ"].forEach(function(category){groups[category].sort(function(a,b){return Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title||"").localeCompare(String(b.title||""));});if(groups[category].length)categories.push({category:category,items:groups[category]});});
+  var state={status:remaining.length?"PENDING":"FINALIZE",completedQueries:completedKeys,totalQueries:plan.length,pendingQueries:remaining.length,lastError:lastError};
+  eeDiscoveryDiagnosticEnrichment_(state);
+  return {readyForFinalization:!remaining.length&&!lastError,categories:categories,enrichment:state,lastError:lastError};
+}
+
 function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
   var diagnostic=eeDiscoveryDiagnosticStart_(artist);
   var lease="CATALOGUE_"+String(artist.slug||"").replace(/[^A-Za-z0-9_-]/g,"_");
   if(!eeAcquireWorkerLease_(lease,360000)){var busy=new Error("ARTIST_DISCOVERY_BUSY");busy.code="ARTIST_DISCOVERY_BUSY";busy.retryable=true;eeDiscoveryDiagnosticFinish_(diagnostic,"RETRY_LATER",busy.code,busy);throw busy;}
   try{
     var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.status!=="UNRESOLVED"&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
+    if(forceRefresh&&existing&&existing.status==="RESOLVED"&&existing.appleArtistId){
+      var progress=eeIncrementalResolvedEnrichment_(artist,post,existing);
+      if(!progress.readyForFinalization){
+        var pendingRecord={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:existing.appleArtistId,musicBrainzId:existing.musicBrainzId||artist.musicBrainzId||"",identityConfidence:existing.identityConfidence||"HIGH",status:"RESOLVED",error:progress.lastError,categories:progress.categories,representativePostId:String(post.id),staleAfter:new Date().toISOString(),enrichment:progress.enrichment};
+        eePutArtistCatalogue_(pendingRecord);pendingRecord.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:pendingRecord.artistKey,canonicalName:pendingRecord.canonicalName,categories:pendingRecord.categories,enrichment:pendingRecord.enrichment};eeDiscoveryDiagnosticFinish_(diagnostic,"RESOLVED","ENRICHMENT_PENDING",progress.lastError?{code:progress.lastError}:null);return pendingRecord;
+      }
+    }
     var legacy=forceRefresh?eeGeneratePayloadLegacy_(post):eePrimaryArtistIdentityPayload_(artist,post),fastResolved=!forceRefresh&&String((legacy.identity||{}).level)==="HIGH"&&!!(legacy.identity||{}).artistId;
     if(!forceRefresh&&!fastResolved)legacy=eeGeneratePayloadLegacy_(post);
     var identity=legacy.identity||{};
     var categories=(legacy.categories||[]).map(function(group){return {category:group.category,items:(group.items||[]).filter(function(item){return !item.creator||eeNorm_(item.creator)===eeNorm_(artist.canonicalName)||group.category!=="LISTEN";})};}).filter(function(group){return group.items.length;});
     var confidence=String(identity.level||"LOW"),appleArtistId=identity.artistId||artist.appleArtistId||"",status=(appleArtistId||confidence==="HIGH")?"RESOLVED":confidence==="MODERATE"?"AMBIGUOUS":"ERROR",errorReason=status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"";
     if(status==="ERROR")categories=[];
-    var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:appleArtistId,musicBrainzId:artist.musicBrainzId||"",identityConfidence:confidence,status:status,error:errorReason,categories:categories,representativePostId:String(post.id),staleAfter:fastResolved?new Date().toISOString():""};
-    eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));record.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories};eeDiscoveryDiagnosticFinish_(diagnostic,status,errorReason||(fastResolved?"PRIMARY_IDENTITY_CONFIDENT":status==="RESOLVED"?"CONFIDENT_MATCH":"PLAUSIBLE_MATCH"),null);return record;
-  }catch(error){eeDiscoveryDiagnosticFinish_(diagnostic,error&&error.retryable?"RETRY_LATER":"ERROR",String((error&&error.code)||(error&&error.message)||"DISCOVERY_ERROR"),error);throw error;
+    var enrichment=status==="RESOLVED"?{status:fastResolved?"PENDING":"FULL",completedQueries:[],totalQueries:0,pendingQueries:fastResolved?1:0,lastError:""}:null;
+    var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:appleArtistId,musicBrainzId:artist.musicBrainzId||"",identityConfidence:confidence,status:status,error:errorReason,categories:categories,representativePostId:String(post.id),staleAfter:fastResolved?new Date().toISOString():"",enrichment:enrichment};
+    eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));record.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories};if(enrichment)record.catalogue.enrichment=enrichment;eeDiscoveryDiagnosticEnrichment_(enrichment);eeDiscoveryDiagnosticFinish_(diagnostic,status,errorReason||(fastResolved?"PRIMARY_IDENTITY_CONFIDENT":status==="RESOLVED"?"CONFIDENT_MATCH":"PLAUSIBLE_MATCH"),null);return record;
+  }catch(error){
+    if(forceRefresh&&existing&&existing.status==="RESOLVED"&&existing.appleArtistId&&eeEnrichmentTransient_(error)){
+      var transientReason=String(error.code||error.message||error),preservedCategories=(progress&&progress.categories)||((existing.catalogue||{}).categories||[]),preservedState=(progress&&progress.enrichment)||(existing.catalogue||{}).enrichment||{};
+      preservedState={status:"FINALIZE_PENDING",completedQueries:preservedState.completedQueries||[],totalQueries:Number(preservedState.totalQueries||0),pendingQueries:Number(preservedState.pendingQueries||0),lastError:transientReason};eeDiscoveryDiagnosticEnrichment_(preservedState);
+      var preserved={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:existing.appleArtistId,musicBrainzId:existing.musicBrainzId||artist.musicBrainzId||"",identityConfidence:existing.identityConfidence||"HIGH",status:"RESOLVED",error:transientReason,categories:preservedCategories,representativePostId:String(post.id),staleAfter:new Date().toISOString(),enrichment:preservedState};
+      eePutArtistCatalogue_(preserved);preserved.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:preserved.artistKey,canonicalName:preserved.canonicalName,categories:preserved.categories,enrichment:preserved.enrichment};eeDiscoveryDiagnosticFinish_(diagnostic,"RESOLVED","ENRICHMENT_PENDING",error);return preserved;
+    }
+    eeDiscoveryDiagnosticFinish_(diagnostic,error&&error.retryable?"RETRY_LATER":"ERROR",String((error&&error.code)||(error&&error.message)||"DISCOVERY_ERROR"),error);throw error;
   }finally{eeReleaseWorkerLease_(lease);}
 }
 
@@ -650,7 +695,7 @@ function eeRefreshStaleArtistsWorker() {
     if(!isStale&&(!isDeferred||!retryAfter||Date.parse(retryAfter)>Date.now())){properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));continue;}
     var artistKey=String(values[row][0]),canonicalName=String(values[row][1]),representativePostId=String(values[row][11]||""),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
     try{
-      var post=eeFetchPostById_(representativePostId),catalogue=eeDiscoverArtistCatalogue_(artist,post,true);
+      var post=eeFetchPostById_(representativePostId),catalogue=eeDiscoverArtistCatalogue_(artist,post,true);properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");
       properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));
       return {status:isDeferred?"DEFERRED_RETRIED":"REFRESHED",artistKey:artist.slug,terminalStatus:String(catalogue&&catalogue.status||""),cursor:row+1};
     }catch(error){
@@ -673,7 +718,7 @@ function eeRefreshStaleArtistsWorker() {
 function eeAssembleArticlePayloadsWorker() {
   if(!eeAcquireWorkerLease_("ASSEMBLY",240000))return {status:"BUSY"};
   try{var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)),processed=0;
-  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED";});if(keys.length&&catalogues.length!==keys.length)continue;var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
+  for(var row=cursor;row<values.length&&processed<100;row+=1){properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(row+1));var keys=JSON.parse(String(values[row][4]||"[]")),catalogues=keys.map(eeGetArtistCatalogue_).filter(function(record){return record&&record.status==="RESOLVED";});if(keys.length&&catalogues.length!==keys.length)continue;var enrichmentPending=catalogues.some(function(record){var state=((record.catalogue||{}).enrichment||{}).status;return state&&state!=="FULL";});var post=eeFetchPostById_(String(values[row][0])),analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(enrichmentPending&&!eePayloadHasRecommendations_(payload)){var existingPayload=eeGetPayload_(String(values[row][0]));if(eePayloadHasRecommendations_(existingPayload))continue;continue;}eePutPayload_(post,payload,eePayloadHasRecommendations_(payload)?"READY":"EMPTY",String((payload.diagnostics||{}).emptyClassification||""),0);processed+=1;}
   return {status:"OK",processed:processed,cursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)};}finally{eeReleaseWorkerLease_("ASSEMBLY");}
 }
 
@@ -684,8 +729,10 @@ function eeSeedArtistCataloguesFromGeneration2() {
 }
 
 function eeArchitectureStatus() {
-  var properties=PropertiesService.getScriptProperties(),identity=eeArticleIdentitySheet_().getDataRange().getValues(),artists=eeArtistCatalogueSheet_().getDataRange().getValues(),payloads=eePayloadSheet_().getDataRange().getValues(),result={postsAnalyzed:Math.max(0,identity.length-1),canonicalArtists:Math.max(0,artists.length-1),verifiedAppleIds:0,unresolvedArtists:0,ambiguousArtists:0,deferredArtists:0,artistTransientRetries:0,staleArtists:0,payloadStatus:{READY:0,EMPTY:{},ERROR:{}},appleCalls:Number(properties.getProperty("EE_APPLE_CALL_COUNT")||0),appleCacheHits:Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0),catalogueGenerations:Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0),identityCursor:Number(properties.getProperty("EE_APPLE_IDENTITY_INDEX")||1),artistDiscoveryCursor:Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1),assemblyCursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1),staleRefreshCursor:Number(properties.getProperty("EE_APPLE_STALE_REFRESH_INDEX")||1),cooldownUntil:properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")||null,mostRecentTransientFailure:properties.getProperty("EE_APPLE_LAST_TRANSIENT_FAILURE")||null};
-  for(var row=1;row<artists.length;row+=1){if(artists[row][4])result.verifiedAppleIds+=1;if(artists[row][7]==="UNRESOLVED")result.unresolvedArtists+=1;if(artists[row][7]==="AMBIGUOUS")result.ambiguousArtists+=1;if(artists[row][7]==="DEFERRED")result.deferredArtists+=1;result.artistTransientRetries+=Math.max(0,Number(artists[row][13]||0));if(artists[row][10]&&Date.parse(String(artists[row][10]))<=Date.now())result.staleArtists+=1;}
+  var properties=PropertiesService.getScriptProperties(),identity=eeArticleIdentitySheet_().getDataRange().getValues(),artists=eeArtistCatalogueSheet_().getDataRange().getValues(),payloads=eePayloadSheet_().getDataRange().getValues(),result={postsAnalyzed:Math.max(0,identity.length-1),canonicalArtists:Math.max(0,artists.length-1),verifiedAppleIds:0,unresolvedArtists:0,ambiguousArtists:0,deferredArtists:0,resolvedFullyEnriched:0,resolvedEnrichmentPending:0,partiallyEnrichedArtists:0,articlesWaitingOnEnrichment:0,artistTransientRetries:0,staleArtists:0,payloadStatus:{READY:0,EMPTY:{},ERROR:{}},appleCalls:Number(properties.getProperty("EE_APPLE_CALL_COUNT")||0),appleCacheHits:Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0),catalogueGenerations:Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0),identityCursor:Number(properties.getProperty("EE_APPLE_IDENTITY_INDEX")||1),artistDiscoveryCursor:Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1),assemblyCursor:Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1),staleRefreshCursor:Number(properties.getProperty("EE_APPLE_STALE_REFRESH_INDEX")||1),cooldownUntil:properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")||null,mostRecentTransientFailure:properties.getProperty("EE_APPLE_LAST_TRANSIENT_FAILURE")||null},pendingArtistKeys={};
+  for(var row=1;row<artists.length;row+=1){if(artists[row][4])result.verifiedAppleIds+=1;if(artists[row][7]==="UNRESOLVED")result.unresolvedArtists+=1;if(artists[row][7]==="AMBIGUOUS")result.ambiguousArtists+=1;if(artists[row][7]==="DEFERRED")result.deferredArtists+=1;if(artists[row][7]==="RESOLVED"){var catalogue={};try{catalogue=artists[row][8]?eeDecodePayloadCell_(artists[row][8]):{};}catch(error){}var enrichment=(catalogue.enrichment||{}).status||"FULL";if(enrichment==="FULL")result.resolvedFullyEnriched+=1;else{result.resolvedEnrichmentPending+=1;pendingArtistKeys[String(artists[row][0])]=true;if((catalogue.categories||[]).some(function(group){return (group.items||[]).length;}))result.partiallyEnrichedArtists+=1;}}result.artistTransientRetries+=Math.max(0,Number(artists[row][13]||0));if(artists[row][10]&&Date.parse(String(artists[row][10]))<=Date.now())result.staleArtists+=1;}
+  var readyPayloadPosts={};for(var payloadRow=1;payloadRow<payloads.length;payloadRow+=1){if(String(payloads[payloadRow][5]||"")==="READY"&&eeStoredPayloadHasRecommendations_(payloads[payloadRow][4]))readyPayloadPosts[String(payloads[payloadRow][0])]=true;}
+  for(var identityRow=1;identityRow<identity.length;identityRow+=1){var identityKeys=[];try{identityKeys=JSON.parse(String(identity[identityRow][4]||"[]"));}catch(error){}if(!readyPayloadPosts[String(identity[identityRow][0])]&&identityKeys.some(function(key){return pendingArtistKeys[String(key)];}))result.articlesWaitingOnEnrichment+=1;}
   for(var index=1;index<payloads.length;index+=1){var status=String(payloads[index][5]||""),error=String(payloads[index][6]||"")||"UNCLASSIFIED";if(status==="READY")result.payloadStatus.READY+=1;else if(status==="EMPTY")result.payloadStatus.EMPTY[error]=(result.payloadStatus.EMPTY[error]||0)+1;else if(status==="ERROR")result.payloadStatus.ERROR[error]=(result.payloadStatus.ERROR[error]||0)+1;}
   console.log(JSON.stringify(result));return result;
 }
