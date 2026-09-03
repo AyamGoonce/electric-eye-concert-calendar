@@ -187,8 +187,6 @@ def is_supported_event(event):
     # upstream and must not reach the public calendar.
     if (
         (event.date or "")[:10] == "2026-09-06"
-        and normalize_venue_key(event.venue or "")
-        == normalize_venue_key("L'Olympia Bruno Coquatrix")
         and normalize_headliner(event.headliner)
         == normalize_headliner("Ronnie Wood")
     ):
