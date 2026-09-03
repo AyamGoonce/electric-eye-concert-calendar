@@ -212,6 +212,75 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
         right = event("ARTIST", venue="Accor Arena", source="Aggregator")
         self.assertEqual(2, len(deduplicate_events([left, right])))
 
+    def test_reviewed_clawfinger_move_keeps_trabendo(self):
+        stale = event(
+            "Clawfinger", venue="Élysée Montmartre",
+            source="Élysée Montmartre", date="2026-10-30",
+        )
+        current = event(
+            "Clawfinger", venue="Le Trabendo",
+            source="AEG Presents France", date="2026-10-30",
+        )
+        current.start_time = "20:00"
+
+        result = deduplicate_events([stale, current])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("Le Trabendo", result[0].venue)
+        self.assertEqual("20:00", result[0].start_time)
+        self.assertEqual(
+            {"AEG Presents France", "Élysée Montmartre"},
+            set(result[0].source_names),
+        )
+
+    def test_reviewed_os_garotin_move_keeps_new_morning(self):
+        stale = event(
+            "Os Garotin", venue="Cabaret Sauvage",
+            source="Cabaret Sauvage", date="2026-09-13",
+        )
+        current = event(
+            "Os Garotin", venue="New Morning",
+            source="New Morning", date="2026-09-13",
+        )
+
+        result = deduplicate_events([stale, current])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("New Morning", result[0].venue)
+
+    def test_reviewed_south_arcade_move_keeps_alhambra(self):
+        stale = event(
+            "South Arcade", venue="Backstage By The Mill",
+            source="Backstage By The Mill", date="2027-03-18",
+        )
+        current = event(
+            "South Arcade", venue="L'Alhambra",
+            source="AEG Presents France", date="2027-03-18",
+        )
+
+        result = deduplicate_events([stale, current])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("L'Alhambra", result[0].venue)
+
+    def test_bagshow_multi_venue_structure_is_not_collapsed(self):
+        trianon = event(
+            "BAG’SHOW 2026", venue="Le Trianon",
+            source="Le Trianon", date="2026-10-24",
+        )
+        elysee = event(
+            "BAG’SHOW 2026", venue="Élysée Montmartre",
+            source="Élysée Montmartre", date="2026-10-24",
+        )
+
+        result = deduplicate_events([trianon, elysee])
+
+        self.assertEqual(2, len(result))
+        self.assertEqual(
+            {"Le Trianon", "Élysée Montmartre"},
+            {item.venue for item in result},
+        )
+
     def test_same_venue_date_different_performance_times_stay_separate(self):
         early = event("Artist – 16H", source="Venue")
         late = event("ARTIST – 20H", source="Promoter")

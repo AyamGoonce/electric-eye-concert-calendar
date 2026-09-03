@@ -628,6 +628,24 @@ class PersistentEventStateTests(unittest.TestCase):
 
         self.assertEqual(old.first_seen, moved.first_seen)
 
+    def test_new_reviewed_moves_preserve_predecessor_first_seen(self):
+        cases = (
+            ("2026-10-30", "Clawfinger", "Élysée Montmartre", "Le Trabendo"),
+            ("2026-09-13", "Os Garotin", "Cabaret Sauvage", "New Morning"),
+            ("2027-03-18", "South Arcade", "Backstage By The Mill", "L'Alhambra"),
+        )
+        for event_date, artist, old_venue, new_venue in cases:
+            with self.subTest(artist=artist):
+                old = self.make_event(headliner=artist, venue=old_venue)
+                old.date = event_date
+                state = reconcile_state([old], None, now=self.NOW)
+                moved = self.make_event(headliner=artist, venue=new_venue)
+                moved.date = event_date
+
+                reconcile_state([moved], state, now=self.NOW + timedelta(hours=6))
+
+                self.assertEqual(old.first_seen, moved.first_seen)
+
     def test_malformed_state_fails_without_overwriting_it(self):
         with tempfile.TemporaryDirectory() as temporary:
             path = Path(temporary) / "calendar-state.json"

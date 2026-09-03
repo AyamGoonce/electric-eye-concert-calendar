@@ -177,6 +177,9 @@ REVIEWED_EVENT_MOVES = (
     ("2026-10-19", "my new band believe", "Point Éphémère", "La Maroquinerie"),
     ("2026-11-20", "zebrahead", "La Maroquinerie", "L'Alhambra"),
     ("2026-12-10", "blondshell", "La Gaîté Lyrique", "Élysée Montmartre"),
+    ("2026-10-30", "clawfinger", "Élysée Montmartre", "Le Trabendo"),
+    ("2026-09-13", "os garotin", "Cabaret Sauvage", "New Morning"),
+    ("2027-03-18", "south arcade", "Backstage By The Mill", "L'Alhambra"),
 )
 
 
