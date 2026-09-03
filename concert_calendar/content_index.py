@@ -184,8 +184,30 @@ def _label_in_text(label, text):
     return bool(identity and re.search(r"(?:^| )" + re.escape(identity) + r"(?: |$)", haystack))
 
 
-def _artist_label_allowed(label, title):
-    return label.casefold() not in GENERIC_LABELS or _label_in_text(label, title)
+def _title_artist_candidate(title, article_type):
+    if article_type == "concert_review" and " @ " in title:
+        return title.split(" @ ", 1)[0].strip()
+    if article_type == "album_review":
+        candidate = re.sub(r"^album review\s*(?::|[–-])\s*", "", title, flags=re.I)
+        return re.split(r"\s+[–-]\s+", candidate, maxsplit=1)[0].strip()
+    action = re.match(
+        r"^(.+?)\s+(?:announce|announces|release|releases|share|shares|"
+        r"unveil|unveils|return|returns|perform|performs)\b",
+        title,
+        re.I,
+    )
+    return action.group(1).strip() if action else ""
+
+
+def _artist_label_allowed(label, title, article_type=None):
+    """Require independent title evidence before a structural label is an artist."""
+
+    if label.casefold() not in GENERIC_LABELS:
+        return True
+    candidate = _title_artist_candidate(
+        title, article_type or classify_article(title, [label])
+    )
+    return normalize_artist(label) == normalize_artist(candidate)
 
 
 def seed_artist_labels(entries):
@@ -195,16 +217,11 @@ def seed_artist_labels(entries):
         labels = [item.get("term", "").strip() for item in entry.get("category", [])]
         labels = [label for label in labels if label]
         article_type = classify_article(title, labels)
-        candidate = ""
-        if article_type == "concert_review" and " @ " in title:
-            candidate = title.split(" @ ", 1)[0].strip()
-        elif article_type == "album_review":
-            candidate = re.sub(r"^album review\s*:\s*", "", title, flags=re.I)
-            candidate = re.split(r"\s+[–-]\s+", candidate, maxsplit=1)[0].strip()
+        candidate = _title_artist_candidate(title, article_type)
         if candidate:
             exact = [
                 label for label in labels
-                if _artist_label_allowed(label, title)
+                if _artist_label_allowed(label, title, article_type)
                 and normalize_artist(label) == normalize_artist(candidate)
             ]
             if exact:
@@ -212,7 +229,7 @@ def seed_artist_labels(entries):
             else:
                 for label in labels:
                     if (
-                        _artist_label_allowed(label, title)
+                        _artist_label_allowed(label, title, article_type)
                         and len(normalize_artist(label)) >= 3
                         and _label_in_text(label, candidate)
                     ):
@@ -220,7 +237,7 @@ def seed_artist_labels(entries):
         if article_type == "interview":
             for label in labels:
                 if (
-                    _artist_label_allowed(label, title)
+                    _artist_label_allowed(label, title, article_type)
                     and len(normalize_artist(label)) >= 4
                     and _label_in_text(label, title)
                 ):
@@ -266,8 +283,9 @@ def build_index(entries, *, generated_at=None):
             continue
         matched_names = []
         post_id = blogger_post_id(entry)
+        article_type = classify_article(title, labels)
         for label in labels:
-            if not _artist_label_allowed(label, title):
+            if not _artist_label_allowed(label, title, article_type):
                 continue
             canonical = canonical_by_identity.get(normalize_artist(label))
             if canonical and canonical not in matched_names:
@@ -285,7 +303,6 @@ def build_index(entries, *, generated_at=None):
             if canonical not in matched_names:
                 matched_names.append(canonical)
 
-        article_type = classify_article(title, labels)
         article = {
             "u": url,
             "t": title,
@@ -357,6 +374,18 @@ def build_index(entries, *, generated_at=None):
             "identityEvidence": reviewed.get("identityEvidence", []),
             "articleCount": len(article_ids),
             "articleIds": [articles[index].get("pi") for index in article_ids if articles[index].get("pi")],
+            "reviewedArticleIds": [
+                articles[index].get("pi")
+                for index in article_ids
+                if articles[index].get("pi") and (
+                    articles[index]["u"] in MANUAL_ARTIST_ARTICLES.get(canonical, set())
+                    or canonical in (
+                        (overrides.get("articleOverrides") or {})
+                        .get(articles[index].get("pi"), {})
+                        .get("primaryArtists", [])
+                    )
+                )
+            ],
             "articleUrls": [articles[index]["u"] for index in article_ids],
             "lastIdentityUpdatedAt": reviewed.get("lastIdentityUpdatedAt"),
             "lastAppleCatalogueUpdatedAt": reviewed.get("lastAppleCatalogueUpdatedAt"),
@@ -459,7 +488,7 @@ def write_artist_exports(output_dir, index):
         "producers", "songwriters", "genres", "keywords", "musicBrainzId",
         "appleArtistId", "appleIdentityConfidence", "ambiguityClass",
         "identityEvidence", "articleCount", "lastIdentityUpdatedAt",
-        "lastAppleCatalogueUpdatedAt",
+        "lastAppleCatalogueUpdatedAt", "reviewedArticleIds",
     ]
     with (destination / "artist-index.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns)

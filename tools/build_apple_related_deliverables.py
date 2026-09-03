@@ -475,6 +475,77 @@ function eeAppleTvPush_(items, seen, raw, storefront, subject) {
 '''
 
 
+PRODUCTION_ORCHESTRATOR = r'''
+var EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN=1;
+var EE_APPLE_PRODUCTION_TIME_LIMIT_MS=150000;
+var EE_APPLE_PRODUCTION_NEWEST_SCAN=12;
+
+function eeStoredPayloadGeneration_(stored) {try{return Number((eeDecodePayloadCell_(stored)||{}).generationVersion||0);}catch(error){return 0;}}
+
+function eeProductionPayloadState_() {
+  var values=eePayloadSheet_().getDataRange().getValues(),map={};
+  for(var row=1;row<values.length;row+=1)map[String(values[row][0])]={status:String(values[row][5]||""),generationVersion:eeStoredPayloadGeneration_(values[row][4]),hasRecommendations:String(values[row][5]||"")==="READY"&&eeStoredPayloadHasRecommendations_(values[row][4]),error:String(values[row][6]||""),retryCount:Math.max(0,Number(values[row][7]||0))};
+  return map;
+}
+
+function eeProductionNeedsPost_(state) {
+  if(!state)return true;if(state.status==="READY"&&state.hasRecommendations)return false;if(state.status==="EMPTY"&&state.generationVersion>=EE_APPLE_CONFIG.generationVersion)return false;
+  if(state.status==="ERROR"&&eeEnrichmentTransient_(state.error||""))return true;
+  if(state.status==="ERROR"&&state.generationVersion>=EE_APPLE_CONFIG.generationVersion&&state.retryCount>=2)return false;
+  return true;
+}
+
+function eeProductionMaintenanceStep_(properties,deadline) {
+  var phases=["DISCOVERY","ENRICHMENT","ASSEMBLY"],index=Math.max(0,Number(properties.getProperty("EE_APPLE_PRODUCTION_MAINTENANCE_PHASE")||0))%phases.length,phase=phases[index],result;
+  if(Date.now()>=deadline-15000)return {phase:phase,status:"HEADROOM"};
+  eeSetExecutionDeadline_(deadline);
+  if(phase==="DISCOVERY")result=eeDiscoverArtistsMaintenanceWorker_();
+  else if(phase==="ENRICHMENT")result=eeRefreshStaleArtistsMaintenanceWorker_();
+  else result=eeAssembleArticlePayloadsMaintenanceWorker_();
+  properties.setProperty("EE_APPLE_PRODUCTION_MAINTENANCE_PHASE",String((index+1)%phases.length));
+  return {phase:phase,status:String((result||{}).status||""),result:result||null};
+}
+
+function eeAppleRecommendationsProductionWorker() {
+  if(!eeAppleSettings_().enabled)return {status:"DISABLED"};
+  var properties=PropertiesService.getScriptProperties(),cooldownUntil=Number(properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")||0);
+  if(cooldownUntil>Date.now()){var cooling={status:"COOLDOWN",generationVersion:EE_APPLE_CONFIG.generationVersion,attempted:0,ready:0,empty:0,error:0,retryLater:0,retryAfter:new Date(cooldownUntil).toISOString(),elapsedMs:0};console.log(JSON.stringify(cooling));return cooling;}
+  if(!eeAcquireWorkerLease_("PRODUCTION",240000))return {status:"BUSY"};
+  var started=Date.now(),deadline=started+EE_APPLE_PRODUCTION_TIME_LIMIT_MS,generation=String(EE_APPLE_CONFIG.generationVersion),state=eeProductionPayloadState_(),attemptedThisRun={},stopRequested=false;
+  var totals={status:"OK",generationVersion:EE_APPLE_CONFIG.generationVersion,attempted:0,ready:0,empty:0,error:0,retryLater:0,skippedReady:0,newestAttempted:0,archiveAttempted:0,nextCursor:1,maintenance:null,elapsedMs:0};
+  if(properties.getProperty("EE_APPLE_PRODUCTION_GENERATION")!==generation){properties.setProperty("EE_APPLE_PRODUCTION_GENERATION",generation);properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");}
+  eeSetExecutionDeadline_(deadline);
+  try{
+    function processPost(post,source){
+      if(!post||totals.attempted>=EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN||Date.now()>=deadline)return false;var postId=String(post.id),prior=state[postId]||null;if(attemptedThisRun[postId])return false;
+      if(!eeProductionNeedsPost_(prior)){if(prior&&prior.status==="READY")totals.skippedReady+=1;return false;}
+      attemptedThisRun[postId]=true;totals.attempted+=1;if(source==="NEWEST")totals.newestAttempted+=1;else totals.archiveAttempted+=1;
+      try{var payload=eeProcessPost_(post,prior?prior.retryCount+1:0),ready=eePayloadHasRecommendations_(payload);if(ready)totals.ready+=1;else totals.empty+=1;state[postId]={status:ready?"READY":"EMPTY",generationVersion:EE_APPLE_CONFIG.generationVersion,hasRecommendations:ready,retryCount:prior?prior.retryCount+1:0};}
+      catch(error){if(error&&(error.retryable||eeEnrichmentTransient_(error))){totals.retryLater+=1;totals.status="RETRY_LATER";stopRequested=true;return false;}totals.error+=1;state[postId]={status:"ERROR",generationVersion:EE_APPLE_CONFIG.generationVersion,hasRecommendations:false,error:String(error&&error.message||error),retryCount:prior?prior.retryCount+1:1};}
+      return true;
+    }
+    var newest=eeFetchPosts_(1,EE_APPLE_PRODUCTION_NEWEST_SCAN);
+    for(var index=0;index<newest.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline;index+=1)if(!attemptedThisRun[String(newest[index].id)]&&eeProductionNeedsPost_(state[String(newest[index].id)]||null)){processPost(newest[index],"NEWEST");break;}
+    var cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_PRODUCTION_INDEX")||1));
+    while(!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline){var posts=eeFetchPosts_(cursor,25);if(!posts.length){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}var found=false;for(var row=0;row<posts.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline;row+=1){var post=posts[row];cursor+=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX",String(cursor));if(attemptedThisRun[String(post.id)]||!eeProductionNeedsPost_(state[String(post.id)]||null)){if((state[String(post.id)]||{}).status==="READY")totals.skippedReady+=1;continue;}found=true;processPost(post,"ARCHIVE");break;}if(found)continue;if(posts.length<25){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}}
+    if(!stopRequested)totals.maintenance=eeProductionMaintenanceStep_(properties,deadline);
+    totals.nextCursor=Math.max(1,Number(properties.getProperty("EE_APPLE_PRODUCTION_INDEX")||1));totals.elapsedMs=Date.now()-started;if(Date.now()>=deadline&&totals.status==="OK")totals.status="TIME_LIMIT";console.log(JSON.stringify(totals));return totals;
+  }finally{eeClearExecutionDeadline_();eeReleaseWorkerLease_("PRODUCTION");}
+}
+
+/* Single installed production trigger. */
+function eeDiscoverArtistsWorker() {return eeAppleRecommendationsProductionWorker();}
+'''
+
+
+LEGACY_MAINTENANCE_ENTRY_POINTS = r'''
+/* Old scheduled entry points remain intentionally idle: the single production
+   worker rotates through their internal maintenance implementations. */
+function eeRefreshStaleArtistsWorker() {return {status:"LEGACY_TRIGGER_IDLE",productionTrigger:"eeDiscoverArtistsWorker"};}
+function eeAssembleArticlePayloadsWorker() {return {status:"LEGACY_TRIGGER_IDLE",productionTrigger:"eeDiscoverArtistsWorker"};}
+'''
+
+
 ARTIST_REGISTRY = r'''
 function eeArtistRegistry_() {
   var cache=CacheService.getScriptCache(),key="ee-artist-registry-v1",cached=cache.get(key);
@@ -489,6 +560,14 @@ function eeArtistRegistry_() {
 
 function eeExactEntityInText_(text,name) {return eeContains_(text,name);}
 
+function eeTitleArtistCandidate_(title) {
+  title=String(title||"");
+  var concert=title.match(/^(.+?)\s+@\s+/);
+  var action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|perform|performs)\b/i);
+  var album=title.match(/^album review\s*(?::|[–-])\s*(.+?)(?:\s+[–-]\s+|$)/i);
+  return String((concert||action||album||[])[1]||"").trim();
+}
+
 function eeFastArticleIdentity_(post, registry) {
   registry=registry||eeArtistRegistry_();
   var postId=String(post.id||""),override=(registry.articleOverrides||{})[postId]||null;
@@ -499,16 +578,20 @@ function eeFastArticleIdentity_(post, registry) {
   var matches=[];
   function evidenceFor(artist){
     var names=eeUnique_([artist.canonicalName].concat(artist.aliases||[]).concat(artist.alternateSpellings||[]));
+    var structuralArtist=names.some(function(name){return !!structuralLabels[eeNorm_(name)];});
+    var titleCandidate=eeNorm_(eeTitleArtistCandidate_(title));
+    var independentStructuralTitle=structuralArtist&&names.some(function(name){return eeNorm_(name)===titleCandidate;});
     var exactLabel=names.some(function(name){var key=eeNorm_(name);return normalizedLabels[key]&&!structuralLabels[key];});
     var titleMatch=names.some(function(name){return eeExactEntityInText_(title,name);});
     var articleKnown=(artist.articleIds||[]).map(String).indexOf(postId)!==-1;
+    var reviewedKnown=(artist.reviewedArticleIds||[]).map(String).indexOf(postId)!==-1;
     var relationshipTerms=[]
       .concat(artist.members||[],artist.formerMembers||[],artist.associatedActs||[],artist.sideProjects||[],artist.keywords||[]);
     var relationshipHits=relationshipTerms.filter(function(name){return eeExactEntityInText_(title+" "+body,name);});
     var mentions=names.reduce(function(total,name){var needle=eeNorm_(name),hay=eeNorm_(body);return total+(needle?hay.split(needle).length-1:0);},0);
     var ambiguous=artist.ambiguityClass&&artist.ambiguityClass!=="distinctive";
-    var accepted=articleKnown||(!ambiguous&&(exactLabel||titleMatch))||(ambiguous&&exactLabel&&(relationshipHits.length>0||mentions>=2));
-    return {accepted:accepted,score:articleKnown?120:exactLabel&&relationshipHits.length?110:exactLabel&&mentions>=2?105:exactLabel?96:titleMatch?88:0,evidence:[articleKnown&&"existing artist-index article association",exactLabel&&"exact Blogger artist label",titleMatch&&"bounded title identity",relationshipHits.length&&("relationship corroboration: "+relationshipHits.join(", ")),mentions>=2&&"repeated body mentions"].filter(Boolean),ambiguous:ambiguous};
+    var accepted=reviewedKnown||independentStructuralTitle||(!structuralArtist&&articleKnown)||(!structuralArtist&&!ambiguous&&(exactLabel||titleMatch))||(!structuralArtist&&ambiguous&&exactLabel&&(relationshipHits.length>0||mentions>=2));
+    return {accepted:accepted,score:reviewedKnown?125:articleKnown?120:independentStructuralTitle?115:exactLabel&&relationshipHits.length?110:exactLabel&&mentions>=2?105:exactLabel?96:titleMatch?88:0,evidence:[reviewedKnown&&"reviewed article association",articleKnown&&!structuralArtist&&"existing artist-index article association",independentStructuralTitle&&"independent title-derived artist identity",exactLabel&&"exact Blogger artist label",titleMatch&&"bounded title identity",relationshipHits.length&&("relationship corroboration: "+relationshipHits.join(", ")),mentions>=2&&"repeated body mentions"].filter(Boolean),ambiguous:ambiguous};
   }
   if(override){
     (override.primaryArtists||[]).forEach(function(name){var artist=(registry.artists||[]).filter(function(value){return eeNorm_(value.canonicalName)===eeNorm_(name);})[0];if(artist)matches.push({artist:artist,score:130,evidence:override.identityEvidence||["reviewed article override"],ambiguous:false});});
@@ -516,8 +599,7 @@ function eeFastArticleIdentity_(post, registry) {
     (registry.artists||[]).forEach(function(artist){var result=evidenceFor(artist);if(result.accepted)matches.push({artist:artist,score:result.score,evidence:result.evidence,ambiguous:result.ambiguous});});
   }
   if(!matches.length&&!override){
-    var candidate="",concert=title.match(/^(.+?)\s+@\s+/),action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|perform|performs)\b/i),album=title.match(/^album review\s*:\s*(.+?)(?:\s+[–-]\s+|$)/i);
-    candidate=String((concert||action||album||[])[1]||"").trim();
+    var candidate=eeTitleArtistCandidate_(title);
     var candidateNorm=eeNorm_(candidate),generic=/^(?:news|review|music|concert|festival|tour|video|album|single|song|track|show|tickets?|paris|new)$/i,ambiguousWords={beat:true,down:true,possessed:true,live:true,ghost:true,tool:true,kiss:true,sparks:true};
     var corroborated=labels.some(function(label){return eeNorm_(label)===candidateNorm;});
     if(candidate&&corroborated&&!generic.test(candidate)&&!ambiguousWords[candidateNorm])matches.push({artist:{canonicalName:candidate,slug:candidateNorm.replace(/\s+/g,"-"),aliases:[],articleIds:[],ambiguityClass:"provisional"},score:94,evidence:["provisional exact title and Blogger label"],ambiguous:false});
@@ -579,10 +661,75 @@ function eePutArtistCatalogue_(record) {
 }
 
 function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
+  var allowedCatalogues={};(analysis.primaryArtistKeys||[]).forEach(function(key,index){allowedCatalogues[String(key)]=eeNorm_((analysis.primaryArtists||[])[index]||"");});
+  catalogues=(catalogues||[]).filter(function(record){var expected=allowedCatalogues[String(record.artistKey||"")];return !!expected&&expected===eeNorm_(record.canonicalName||"");});
   var groups={LISTEN:{},WATCH:{},READ:{}},articleText=String(post.title||"")+" "+String(post.content||"").replace(/<[^>]+>/g," ");
   catalogues.forEach(function(record){((record.catalogue||{}).categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){var ranked=JSON.parse(JSON.stringify(item)),sourceUrl=ranked.url||ranked.canonicalAppleUrl||"",trackedUrl=sourceUrl?eeAffiliateUrl_(group.category,sourceUrl):"";if(sourceUrl&&!trackedUrl)return;if(trackedUrl)ranked.url=trackedUrl;var boost=0;if(ranked.title&&eeExactEntityInText_(articleText,ranked.title))boost+=6;if(analysis.articleType==="interview"&&ranked.creator&&eeExactEntityInText_(post.title||"",ranked.creator))boost+=3;ranked.relevanceScore=Number(ranked.relevanceScore||0)+boost;var key=String(ranked.stableId||ranked.url||ranked.title),existing=groups[group.category]&&groups[group.category][key];if(groups[group.category]&&(!existing||Number(ranked.relevanceScore||0)>Number(existing.relevanceScore||0)))groups[group.category][key]=ranked;});});});
   var primaryIds=catalogues.map(function(record){return record.appleArtistId;}).filter(Boolean),categories=[];["LISTEN","WATCH","READ"].forEach(function(category){var items=Object.keys(groups[category]).map(function(key){return groups[category][key];});items.sort(function(a,b){return eePrimaryRecommendationRank_(a,analysis.primaryArtists,primaryIds)-eePrimaryRecommendationRank_(b,analysis.primaryArtists,primaryIds)||Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title).localeCompare(String(b.title));});if(items.length)categories.push({category:category,items:items});});
   return {schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,generatedAt:new Date().toISOString(),postId:String(post.id),canonicalUrl:post.url||"",storefront:eeAppleSettings_().storefront,subject:{title:post.title||"",primaryArtists:analysis.primaryArtists,people:analysis.people||[]},identity:{level:analysis.identityConfidence,artistId:catalogues.length===1?catalogues[0].appleArtistId||null:null,confidenceScore:analysis.identityConfidence==="HIGH"?100:75},categories:categories,diagnostics:{architecture:"ARTIST_REGISTRY_V1",artistKeys:analysis.primaryArtistKeys,cacheHits:catalogues.length,emptyClassification:categories.length?null:(analysis.primaryArtistKeys.length?"EMPTY_NO_QUALIFYING_RELATIONSHIP":"EMPTY_NO_SUBJECT")}};
+}
+
+function eeReadOnlySheet_(name) {var settings=eeAppleSettings_();if(!settings.spreadsheetId)throw new Error("EE_APPLE_SPREADSHEET_ID is not configured");var sheet=SpreadsheetApp.openById(settings.spreadsheetId).getSheetByName(name);if(!sheet)throw new Error("Missing sheet: "+name);return sheet;}
+
+function eeCorrectedPayloadIdentity_(payload,registry) {var subject=(payload.subject||{}),post={id:String(payload.postId||""),url:String(payload.canonicalUrl||""),title:String(subject.title||""),labels:[],content:""};return eeFastArticleIdentity_(post,registry);}
+
+function eeReadyAuditRelationshipNames_(artists) {var names=[];(artists||[]).forEach(function(artist){names=names.concat([artist.canonicalName].concat(artist.aliases||[],artist.alternateSpellings||[],artist.members||[],artist.formerMembers||[],artist.sideProjects||[]));});return eeUnique_(names.map(eeNorm_).filter(Boolean));}
+
+function eeReadyAuditFinding_(payload,registry,sharedIds,artistStates) {
+  payload=payload||{};var structural={},reasons=[],subject=(payload.subject||{}),storedNames=subject.primaryArtists||[],keys=(payload.diagnostics||{}).artistKeys||[],storedId=String((payload.identity||{}).artistId||""),analysis=eeCorrectedPayloadIdentity_(payload,registry),correctedNames=analysis.primaryArtists||[],correctedKeys=analysis.primaryArtistKeys||[];
+  (registry.structuralLabels||[]).forEach(function(value){structural[eeNorm_(value)]=true;});
+  storedNames.forEach(function(name){if(structural[eeNorm_(name)])reasons.push("STRUCTURAL_PRIMARY_ARTIST:"+eeNorm_(name));});
+  keys.forEach(function(key){if(structural[eeNorm_(String(key).replace(/-/g," "))])reasons.push("STRUCTURAL_ARTIST_KEY:"+String(key));});
+  var correctedArtists=correctedKeys.map(function(key){return (registry.artists||[]).filter(function(artist){return String(artist.slug)===String(key);})[0];}).filter(Boolean),reviewedIds=eeUnique_(correctedArtists.map(function(artist){return String(artist.appleArtistId||"");}).filter(Boolean));
+  if(keys.length===storedNames.length)keys.forEach(function(key,index){var artist=(registry.artists||[]).filter(function(value){return String(value.slug)===String(key);})[0];if(artist&&eeNorm_(artist.canonicalName)!==eeNorm_(storedNames[index]))reasons.push("ARTIST_KEY_CANONICAL_NAME_CONFLICT:"+String(key));});
+  if(storedId&&reviewedIds.length&&reviewedIds.indexOf(storedId)===-1)reasons.push("APPLE_ARTIST_ID_CONFLICT:"+storedId+":"+reviewedIds.join(","));
+  if(storedId&&sharedIds[storedId]&&sharedIds[storedId].length>1)reasons.push("APPLE_ID_SHARED_ACROSS_UNRELATED_ARTISTS:"+storedId);
+  if(storedId==="452501576"&&!correctedNames.some(function(name){return eeNorm_(name)==="the sheepdogs";}))reasons.push("SHEEPDOGS_APPLE_ID_UNRELATED_IDENTITY");
+  var items=[];(payload.categories||[]).forEach(function(group){items=items.concat(group.items||[]);});var creators=eeUnique_(items.map(function(item){return String(item.creator||"").trim();}).filter(Boolean)),itemAppleIds=eeUnique_(items.map(function(item){return String(item.appleArtistId||"");}).filter(Boolean)),allowed=eeReadyAuditRelationshipNames_(correctedArtists),conflicts=creators.filter(function(creator){return allowed.indexOf(eeNorm_(creator))===-1;});
+  if(reviewedIds.length&&itemAppleIds.length&&itemAppleIds.every(function(id){return reviewedIds.indexOf(id)===-1;}))reasons.push("ALL_RECOMMENDATION_APPLE_IDS_CONFLICT");
+  if(creators.length&&conflicts.length===creators.length&&correctedNames.length)reasons.push("ALL_RECOMMENDATION_CREATORS_CONFLICT_WITH_PRIMARY");
+  conflicts.forEach(function(creator){var creatorNorm=eeNorm_(creator);if(correctedNames.some(function(name){var primary=eeNorm_(name);return primary&&creatorNorm&&(primary.indexOf(creatorNorm)!==-1||creatorNorm.indexOf(primary)!==-1);} ))reasons.push("LEXICAL_IDENTITY_COLLISION:"+creator);});
+  reasons=eeUnique_(reasons);var objective=reasons.length>0,ambiguous=!objective&&(!correctedNames.length||analysis.ambiguous),categories={};(payload.categories||[]).forEach(function(group){categories[String(group.category||"")]=(group.items||[]).length;});var pending=correctedKeys.some(function(key){var state=artistStates[String(key)]||{};return state.enrichmentStatus!=="FULL";});var enrichment=!objective&&!ambiguous&&!!categories.LISTEN&&(!categories.WATCH||!categories.READ)&&pending;
+  var classification=objective?"CONTAMINATED":ambiguous?"AMBIGUOUS":enrichment?"ENRICHMENT_CANDIDATE":"CLEAN",autoSafe=classification==="CONTAMINATED"&&correctedNames.length>0&&!analysis.ambiguous;
+  return {classification:classification,postId:String(payload.postId||""),canonicalUrl:String(payload.canonicalUrl||""),title:String(subject.title||""),storedPrimaryArtists:storedNames,correctedPrimaryArtists:correctedNames,artistKeys:keys,storedAppleArtistId:storedId,recommendationCreators:creators,conflictingCreators:conflicts,reasons:reasons,proposedAction:classification==="CONTAMINATED"?(autoSafe?"REGENERATE_REVIEWED_QUALITY":"MANUAL_REVIEW"):classification==="ENRICHMENT_CANDIDATE"?"CONTINUE_INCREMENTAL_ENRICHMENT":classification==="AMBIGUOUS"?"MANUAL_REVIEW":"NONE",automaticRepairSafe:autoSafe};
+}
+
+function eeAuditContaminatedReadyPayloads() {
+  var registry=eeArtistRegistry_(),payloadValues=eeReadOnlySheet_("Apple Payloads").getDataRange().getValues(),artistSheet=SpreadsheetApp.openById(eeAppleSettings_().spreadsheetId).getSheetByName("Apple Artists"),artistValues=artistSheet?artistSheet.getDataRange().getValues():[],decoded=[],shared={},artistStates={};
+  for(var artistRow=1;artistRow<artistValues.length;artistRow+=1){var catalogue={};try{catalogue=artistValues[artistRow][8]?eeDecodePayloadCell_(String(artistValues[artistRow][8])):{};}catch(error){}artistStates[String(artistValues[artistRow][0])]={enrichmentStatus:String(((catalogue.enrichment||{}).status)||"")};}
+  for(var row=1;row<payloadValues.length;row+=1){if(String(payloadValues[row][5])!=="READY")continue;try{var payload=eeDecodePayloadCell_(String(payloadValues[row][4]||""));decoded.push(payload);var id=String((payload.identity||{}).artistId||""),identitySignature=eeUnique_(((payload.subject||{}).primaryArtists||[]).map(eeNorm_)).sort().join("|");if(id&&identitySignature){shared[id]=shared[id]||[];if(shared[id].indexOf(identitySignature)===-1)shared[id].push(identitySignature);}}catch(error){}}
+  var findings=[],counts={totalReadyScanned:decoded.length,CLEAN:0,CONTAMINATED:0,ENRICHMENT_CANDIDATE:0,AMBIGUOUS:0,structuralContamination:0,appleIdContradictions:0,creatorMismatches:0,lexicalCollisions:0};decoded.forEach(function(payload){var finding=eeReadyAuditFinding_(payload,registry,shared,artistStates);counts[finding.classification]+=1;finding.reasons.forEach(function(reason){if(reason.indexOf("STRUCTURAL_")===0)counts.structuralContamination+=1;if(reason.indexOf("APPLE_")===0||reason.indexOf("SHEEPDOGS_")===0)counts.appleIdContradictions+=1;if(reason.indexOf("CREATOR")!==-1)counts.creatorMismatches+=1;if(reason.indexOf("LEXICAL_")===0)counts.lexicalCollisions+=1;});if(finding.classification!=="CLEAN")findings.push(finding);});var result={status:"OK",dryRun:true,counts:counts,findings:findings};console.log(JSON.stringify(result));return result;
+}
+
+function eeReadyQualityIssues_(payload,registry) {var finding=eeReadyAuditFinding_(payload,registry||eeArtistRegistry_(),{},{});return finding.classification==="CONTAMINATED"?finding.reasons:[];}
+
+function eeQualityRepairItemValid_(item,primaryNames,primaryIds) {
+  var creator=eeNorm_((item||{}).creator||""),artistId=String((item||{}).appleArtistId||"");
+  return !!((artistId&&primaryIds.indexOf(artistId)!==-1)||(creator&&primaryNames.indexOf(creator)!==-1));
+}
+
+function eeMergeValidatedRepairItems_(candidate,existing,registry) {
+  var names=((candidate.subject||{}).primaryArtists||[]).map(eeNorm_),ids=[];
+  (registry.artists||[]).forEach(function(artist){if(names.indexOf(eeNorm_(artist.canonicalName))!==-1&&artist.appleArtistId)ids.push(String(artist.appleArtistId));});
+  if((candidate.identity||{}).artistId)ids.push(String(candidate.identity.artistId));ids=eeUnique_(ids);
+  var groups={};(candidate.categories||[]).forEach(function(group){groups[group.category]=group;});
+  (existing.categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){if(!eeQualityRepairItemValid_(item,names,ids))return;var target=groups[group.category]||(groups[group.category]={category:group.category,items:[]}),key=String(item.stableId||item.url||item.title||"");if(!(target.items||[]).some(function(value){return String(value.stableId||value.url||value.title||"")===key;}))target.items.push(item);});});
+  candidate.categories=["LISTEN","WATCH","READ"].map(function(category){return groups[category];}).filter(function(group){return group&&(group.items||[]).length;});return candidate;
+}
+
+function eePutReviewedQualityRepair_(post,payload) {
+  var sheet=eePayloadSheet_(),stored=eeEncodePayloadCell_(payload),values=sheet.getDataRange().getValues(),target=values.length+1;
+  for(var row=1;row<values.length;row+=1)if(String(values[row][0])===String(post.id)){target=row+1;break;}
+  sheet.getRange(target,1,1,8).setValues([[String(post.id),post.url||"",new Date().toISOString(),payload.storefront||EE_APPLE_CONFIG.storefront,stored,"READY","QUALITY_REPAIR",0]]);CacheService.getScriptCache().remove("ee-apple-payload-"+String(post.id));return true;
+}
+
+function eeRepairContaminatedReadyPayloads(dryRun) {
+  if(dryRun!==false)return eeAuditContaminatedReadyPayloads();var audit=eeAuditContaminatedReadyPayloads(),registry=eeArtistRegistry_(),sheet=eePayloadSheet_(),values=sheet.getDataRange().getValues(),existingById={},repaired=[];
+  for(var row=1;row<values.length;row+=1){if(String(values[row][5])!=="READY")continue;try{existingById[String(values[row][0])]=eeDecodePayloadCell_(String(values[row][4]||""));}catch(error){}}
+  audit.findings.forEach(function(finding){if(finding.classification!=="CONTAMINATED"||!finding.automaticRepairSafe)return;var existing=existingById[finding.postId];if(!existing)return;
+    try{var post=eeFetchPostById_(finding.postId),candidate=eeGeneratePayload_(post);candidate=eeMergeValidatedRepairItems_(candidate,existing,registry);if(!eePayloadHasRecommendations_(candidate))return;if(eeReadyQualityIssues_(candidate,registry).length)return;eePutReviewedQualityRepair_(post,candidate);repaired.push(finding.postId);}catch(error){console.log(JSON.stringify({qualityRepairPostId:finding.postId,status:"PRESERVED_READY",error:String(error&&error.code||error&&error.message||error)}));}
+  });
+  var result={status:"OK",dryRun:false,counts:audit.counts,findings:audit.findings,repaired:repaired};console.log(JSON.stringify(result));return result;
 }
 
 function eePrimaryArtistIdentityPayload_(artist,post) {
@@ -683,7 +830,7 @@ function eeDiscoverArtistsWorker() {
   if(!eeAcquireWorkerLease_("DISCOVERY",240000))return {status:"BUSY"};
   try{
     var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1));
-    eeSetExecutionDeadline_(Date.now()+180000);
+    eeSetExecutionDeadline_(Math.min(EE_APPLE_EXECUTION_DEADLINE||Date.now()+180000,Date.now()+180000));
     for(var row=cursor;row<values.length&&Date.now()<EE_APPLE_EXECUTION_DEADLINE;row+=1){
       if(String(values[row][7])!=="UNRESOLVED"){
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
@@ -731,9 +878,9 @@ function eeDiscoverArtistsWorker() {
 
 function eeRefreshStaleArtistsWorker() {
   if(!eeAcquireWorkerLease_("STALE_REFRESH",240000))return {status:"BUSY"};
-  try{var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_STALE_REFRESH_INDEX")||1));eeSetExecutionDeadline_(Date.now()+180000);
+  try{var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_STALE_REFRESH_INDEX")||1));eeSetExecutionDeadline_(Math.min(EE_APPLE_EXECUTION_DEADLINE||Date.now()+180000,Date.now()+180000));
   for(var row=cursor;row<values.length;row+=1){
-    var status=String(values[row][7]||""),appleArtistId=String(values[row][4]||""),isVerifiedResolved=!!appleArtistId&&(status==="RESOLVED"||status==="DEFERRED"||String(values[row][6]||"")==="HIGH"),isDeferred=status==="DEFERRED"&&!isVerifiedResolved,isStale=isVerifiedResolved&&values[row][10]&&Date.parse(String(values[row][10]))<=Date.now(),retryAfter=String(values[row][15]||"");
+    var status=String(values[row][7]||""),appleArtistId=String(values[row][4]||""),isVerifiedResolved=!!appleArtistId&&(status==="RESOLVED"||status==="DEFERRED"||String(values[row][6]||"")==="HIGH"),isDeferred=status==="DEFERRED"&&!isVerifiedResolved,storedCatalogue={};try{storedCatalogue=values[row][8]?eeDecodePayloadCell_(String(values[row][8])):{};}catch(decodeError){}var enrichmentStatus=String(((storedCatalogue.enrichment||{}).status)||""),isEnrichmentPending=isVerifiedResolved&&enrichmentStatus!=="FULL",isStale=isVerifiedResolved&&(isEnrichmentPending||(values[row][10]&&Date.parse(String(values[row][10]))<=Date.now())),retryAfter=String(values[row][15]||"");
     var artistKey=String(values[row][0]),canonicalName=String(values[row][1]),representativePostId=String(values[row][11]||""),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
     var isClearIdentityRetry=status==="UNRESOLVED"&&eeArtistClearCanonical_(artist)&&!!retryAfter&&Date.parse(retryAfter)<=Date.now();
     if(!isStale&&!isClearIdentityRetry&&(!isDeferred||!retryAfter||Date.parse(retryAfter)>Date.now())){properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX",String(row+1));continue;}
@@ -806,6 +953,12 @@ def build_code() -> str:
     code = CODE_SOURCE.read_text(encoding="utf-8")
     code = replace_function(code, "eeAppleSearch_", "eeAppleTvHtmlDecode_", APPLE_REQUESTS)
     code = replace_function(code, "eeAppleTvPush_", "eeAppleTvItemsFromHtml_", APPLE_TV_PUSH)
+    code = replace_once(
+        code,
+        "  } catch(error) {\n\n    try {\n      eePutPayload_(",
+        "  } catch(error) {\n\n    if (error && (error.retryable || eeEnrichmentTransient_(error))) throw error;\n\n    try {\n      eePutPayload_(",
+        "transient article failure preservation",
+    )
     code = replace_once(
         code,
         "  categoryLimit: 24,",
@@ -1213,6 +1366,30 @@ def build_code() -> str:
         "function doGet(event) {",
         ARTIST_REGISTRY + "\n\nfunction doGet(event) {",
         "artist registry architecture",
+    )
+    code = replace_once(
+        code,
+        "function eeDiscoverArtistsWorker() {",
+        PRODUCTION_ORCHESTRATOR + "\n\nfunction eeDiscoverArtistsMaintenanceWorker_() {",
+        "live single-trigger production orchestration",
+    )
+    code = replace_once(
+        code,
+        "function eeRefreshStaleArtistsWorker() {",
+        "function eeRefreshStaleArtistsMaintenanceWorker_() {",
+        "internal stale enrichment worker",
+    )
+    code = replace_once(
+        code,
+        "function eeAssembleArticlePayloadsWorker() {",
+        "function eeAssembleArticlePayloadsMaintenanceWorker_() {",
+        "internal assembly worker",
+    )
+    code = replace_once(
+        code,
+        "function eeSeedArtistCataloguesFromGeneration2() {",
+        LEGACY_MAINTENANCE_ENTRY_POINTS + "\n\nfunction eeSeedArtistCataloguesFromGeneration2() {",
+        "idle legacy scheduled entry points",
     )
     debug_start = code.index("function eeRetryBackfillFrom9()")
     code = code[:debug_start].rstrip() + WORKER + "\n"

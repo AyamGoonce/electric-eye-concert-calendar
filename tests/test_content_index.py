@@ -24,6 +24,36 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_editorial_prefix_labels_never_seed_pseudo_artists(self):
+        index = build_index([
+            entry(
+                "Album Review: Alter Bridge - Alter Bridge",
+                ["Album Review", "Alter Bridge"],
+                "2026-01-01",
+            ),
+            entry(
+                "Album Review: Kreator - Krushers Of The World",
+                ["Album Review", "Kreator"],
+                "2026-01-02",
+            ),
+            entry(
+                "Album Review - The Hellacopters - Overdriver",
+                ["Album Review", "The Hellacopters"],
+                "2026-01-03",
+            ),
+            entry(
+                "Concert Review: Example Artist live in Paris",
+                ["Concert Review", "Example Artist"],
+                "2026-01-04",
+            ),
+        ], generated_at="2026-01-05T00:00:00Z")
+
+        self.assertNotIn("album-review", index["artists"])
+        self.assertNotIn("concert-review", index["artists"])
+        self.assertEqual(["alter-bridge"], index["articles"][0]["a"])
+        self.assertEqual(["kreator"], index["articles"][1]["a"])
+        self.assertEqual(["the-hellacopters"], index["articles"][2]["a"])
+
     def test_obituary_category_does_not_create_band_match_without_title_evidence(self):
         index = build_index([
             entry(
