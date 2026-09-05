@@ -1,3 +1,4 @@
+import json
 import re
 import shutil
 import subprocess
@@ -1042,14 +1043,66 @@ JSON.stringify({dryRun:result.dryRun,counts:result.counts,findings:result.findin
         self.assertEqual(
             '{"dryRun":true,"counts":{"totalReadyScanned":2,"CLEAN":1,"CONTAMINATED":1,'
             '"ENRICHMENT_CANDIDATE":0,"AMBIGUOUS":0,"structuralContamination":2,'
-            '"appleIdContradictions":2,"creatorMismatches":1,"lexicalCollisions":0},'
+            '"appleIdContradictions":2,"creatorMismatches":2,"lexicalCollisions":0},'
             '"findings":[["CONTAMINATED","bad",["Alter Bridge"],'
             '["STRUCTURAL_PRIMARY_ARTIST:album review","STRUCTURAL_ARTIST_KEY:album-review",'
+            '"STORED_PRIMARY_ARTISTS_CONFLICT_WITH_CORRECTED_IDENTITY",'
             '"APPLE_ARTIST_ID_CONFLICT:452501576:123","SHEEPDOGS_APPLE_ID_UNRELATED_IDENTITY",'
             '"ALL_RECOMMENDATION_APPLE_IDS_CONFLICT",'
-            '"ALL_RECOMMENDATION_CREATORS_CONFLICT_WITH_PRIMARY"],true]],"writes":0}',
+            '"ALL_RECOMMENDATION_CREATORS_CONFLICT_WITH_PRIMARY",'
+            '"RECOMMENDATION_CREATOR_CONFLICT:The Sheepdogs"],true]],"writes":0}',
             result,
         )
+
+    def test_ready_audit_keeps_joint_articles_isolated_and_shared_ids_advisory(self):
+        result = self.run_apps_script(r'''
+var registry={structuralLabels:["album review","interview","video"],articleOverrides:{},artists:[
+ {canonicalName:"Garbage",slug:"garbage",articleIds:["joint","garbage"],appleArtistId:"10"},
+ {canonicalName:"Skunk Anansie",slug:"skunk-anansie",articleIds:["joint","skunk"],appleArtistId:"20"},
+ {canonicalName:"Carcass",slug:"carcass",articleIds:["carcass"],appleArtistId:"30"},
+ {canonicalName:"Nails",slug:"nails",articleIds:["nails"],appleArtistId:"40",ambiguityClass:"common_word"},
+ {canonicalName:"Drink The Sea",slug:"drink-the-sea",articleIds:["drink"],appleArtistId:"50",members:["Alain Johannes"]},
+ {canonicalName:"Hollywood Vampires",slug:"hollywood-vampires",articleIds:["hollywood"],appleArtistId:"60",members:["Alice Cooper","Joe Perry","Johnny Depp"]},
+ {canonicalName:"Possessed",slug:"possessed",articleIds:["possessed"],appleArtistId:"70",ambiguityClass:"common_word"},
+ {canonicalName:"Alter Bridge",slug:"alter-bridge",articleIds:["alter"],appleArtistId:"80"},
+ {canonicalName:"Kreator",slug:"kreator",articleIds:["kreator"],appleArtistId:"90"}
+]};
+function payload(id,title,names,keys,artistId,creators){return {postId:id,subject:{title:title,primaryArtists:names},identity:{artistId:artistId},diagnostics:{artistKeys:keys},categories:[{category:"LISTEN",items:creators.map(function(name,index){return {stableId:id+index,creator:name,appleArtistId:artistId};})}]};}
+var full={};registry.artists.forEach(function(artist){full[artist.slug]={enrichmentStatus:"FULL"};});
+function finding(value,shared){var item=eeReadyAuditFinding_(value,registry,shared||{},full);return [item.classification,item.correctedPrimaryArtists,item.reasons,item.advisories,item.automaticRepairSafe];}
+JSON.stringify({
+ joint:finding(payload("joint","Garbage and Skunk Anansie in Paris",["Garbage","Skunk Anansie"],["garbage","skunk-anansie"],"10",["Garbage","Skunk Anansie"])),
+ garbage:finding(payload("garbage","Garbage @ Le Zénith",["Garbage","Skunk Anansie"],["garbage","skunk-anansie"],"10",["Garbage","Skunk Anansie"])),
+ skunk:finding(payload("skunk","Skunk Anansie @ Le Zénith",["Garbage","Skunk Anansie"],["garbage","skunk-anansie"],"20",["Garbage","Skunk Anansie"])),
+ carcass:finding(payload("carcass","Carcass @ Le Zénith",["Carcass","Nails"],["carcass","nails"],"30",["Carcass","Nails"])),
+ drink:finding(payload("drink","A Conversation with Drink The Sea - Video Interview (video)",["Drink The Sea","Alain Johannes","Loading Data","Conversation","Interview","Video"],["drink-the-sea","alain-johannes","loading-data","conversation","interview","video"],"50",["Drink The Sea","Alain Johannes"])),
+ hollywood:finding(payload("hollywood","Hollywood Vampires return to Paris",["Hollywood Vampires","Alice Cooper","Joe Perry","Johnny Depp"],["hollywood-vampires","alice-cooper","joe-perry","johnny-depp"],"60",["Hollywood Vampires","Alice Cooper"])),
+ possessed:finding(payload("possessed","Possessed return",["Possessed"],["possessed"],"70",["Possessed"])),
+ shared:finding(payload("garbage","Garbage @ Le Zénith",["Garbage"],["garbage"],"10",["Garbage"]),{"10":["garbage","garbage|skunk anansie"]}),
+ alter:finding(payload("alter","Album Review: Alter Bridge - Alter Bridge",["Album Review","Alter Bridge"],["album-review","alter-bridge"],"452501576",["The Sheepdogs"])),
+ kreator:finding(payload("kreator","Album Review: Kreator - Krushers Of The World",["Album Review","Kreator"],["album-review","kreator"],"452501576",["The Sheepdogs"])),
+ unknown:finding(payload("unknown","An uncertain feature",["Unknown"],["unknown"],"",["Unknown"]))
+});
+''')
+        findings = json.loads(result)
+        self.assertEqual(["Garbage", "Skunk Anansie"], findings["joint"][1])
+        self.assertEqual("CLEAN", findings["joint"][0])
+        for key, expected in (("garbage", ["Garbage"]), ("skunk", ["Skunk Anansie"]), ("carcass", ["Carcass"])):
+            self.assertEqual("CONTAMINATED", findings[key][0])
+            self.assertEqual(expected, findings[key][1])
+        self.assertEqual(["Drink The Sea"], findings["drink"][1])
+        self.assertEqual(["Hollywood Vampires"], findings["hollywood"][1])
+        self.assertEqual("CLEAN", findings["possessed"][0])
+        self.assertEqual([], findings["possessed"][2])
+        self.assertEqual("CLEAN", findings["shared"][0])
+        self.assertFalse(findings["shared"][4])
+        self.assertEqual(["APPLE_ID_SHARED_ACROSS_UNRELATED_ARTISTS:10"], findings["shared"][3])
+        for key in ("alter", "kreator"):
+            self.assertEqual("CONTAMINATED", findings[key][0])
+            self.assertIn("SHEEPDOGS_APPLE_ID_UNRELATED_IDENTITY", findings[key][2])
+            self.assertTrue(findings[key][4])
+        self.assertEqual("AMBIGUOUS", findings["unknown"][0])
+        self.assertTrue(findings["unknown"][2])
 
     def test_quality_repair_can_replace_with_fewer_valid_items_and_preserves_on_error(self):
         result = self.run_apps_script(r'''

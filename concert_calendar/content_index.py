@@ -190,6 +190,14 @@ def _title_artist_candidate(title, article_type):
     if article_type == "album_review":
         candidate = re.sub(r"^album review\s*(?::|[–-])\s*", "", title, flags=re.I)
         return re.split(r"\s+[–-]\s+", candidate, maxsplit=1)[0].strip()
+    if article_type == "interview":
+        interview = re.match(
+            r"^(?:a\s+)?(?:conversation|interview)\s+with\s+(.+?)(?:\s+[–-]\s+|$)",
+            title,
+            re.I,
+        )
+        if interview:
+            return interview.group(1).strip()
     action = re.match(
         r"^(.+?)\s+(?:announce|announces|release|releases|share|shares|"
         r"unveil|unveils|return|returns|perform|performs)\b",
@@ -208,6 +216,15 @@ def _artist_label_allowed(label, title, article_type=None):
         title, article_type or classify_article(title, [label])
     )
     return normalize_artist(label) == normalize_artist(candidate)
+
+
+def _label_is_article_primary(label, title, article_type):
+    """Do not promote billmates or associated people over a titled subject."""
+
+    if not _artist_label_allowed(label, title, article_type):
+        return False
+    candidate = _title_artist_candidate(title, article_type)
+    return not candidate or _label_in_text(label, candidate)
 
 
 def seed_artist_labels(entries):
@@ -285,7 +302,7 @@ def build_index(entries, *, generated_at=None):
         post_id = blogger_post_id(entry)
         article_type = classify_article(title, labels)
         for label in labels:
-            if not _artist_label_allowed(label, title, article_type):
+            if not _label_is_article_primary(label, title, article_type):
                 continue
             canonical = canonical_by_identity.get(normalize_artist(label))
             if canonical and canonical not in matched_names:

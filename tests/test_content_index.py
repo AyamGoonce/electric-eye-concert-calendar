@@ -79,6 +79,23 @@ class ContentIndexTests(unittest.TestCase):
         self.assertIn("beat", beat["artists"])
         self.assertIn("beat", beat["articles"][0]["a"])
 
+    def test_titled_subjects_do_not_inherit_billmates_or_members(self):
+        index = build_index([
+            entry("Garbage @ Le Zénith, Paris - May 25th, 2026", ["Concert Review", "Garbage", "Skunk Anansie"], "2026-01-01"),
+            entry("Skunk Anansie @ Le Zénith, Paris - May 25th, 2026", ["Concert Review", "Garbage", "Skunk Anansie"], "2026-01-02"),
+            entry("Garbage and Skunk Anansie in Paris in May", ["Concert", "Garbage", "Skunk Anansie"], "2026-01-03"),
+            entry("A Conversation with Drink The Sea - Video Interview (video)", ["Interview", "Drink The Sea", "Alain Johannes", "Loading Data"], "2026-01-04"),
+            entry("Loading Data @ Point Éphémère, Paris - December 18, 2014", ["Concert Review", "Loading Data"], "2026-01-05"),
+            entry("Hollywood Vampires return to Paris", ["Hollywood Vampires", "Alice Cooper", "Joe Perry", "Johnny Depp"], "2026-01-06"),
+        ], generated_at="2026-01-07T00:00:00Z")
+
+        self.assertEqual(["garbage"], index["articles"][0]["a"])
+        self.assertEqual(["skunk-anansie"], index["articles"][1]["a"])
+        self.assertEqual({"garbage", "skunk-anansie"}, set(index["articles"][2]["a"]))
+        self.assertEqual(["drink-the-sea"], index["articles"][3]["a"])
+        self.assertEqual(["loading-data"], index["articles"][4]["a"])
+        self.assertEqual(["hollywood-vampires"], index["articles"][5]["a"])
+
     def test_schema_two_identity_record_and_human_exports(self):
         index = build_index([
             entry("BEAT @ Bataclan, Paris - January 1st, 2026", ["Concert Review", "BEAT"]),
