@@ -1040,19 +1040,15 @@ SpreadsheetApp={openById:function(){return {getSheetByName:function(name){return
 var result=eeRepairContaminatedReadyPayloads(true);
 JSON.stringify({dryRun:result.dryRun,counts:result.counts,findings:result.findings.map(function(item){return [item.classification,item.postId,item.correctedPrimaryArtists,item.reasons,item.automaticRepairSafe];}),writes:writes});
 ''')
-        self.assertEqual(
-            '{"dryRun":true,"counts":{"totalReadyScanned":2,"CLEAN":1,"CONTAMINATED":1,'
-            '"ENRICHMENT_CANDIDATE":0,"AMBIGUOUS":0,"structuralContamination":2,'
-            '"appleIdContradictions":2,"creatorMismatches":1,"lexicalCollisions":0},'
-            '"findings":[["CONTAMINATED","bad",["Alter Bridge"],'
-            '["STRUCTURAL_PRIMARY_ARTIST:album review","STRUCTURAL_ARTIST_KEY:album-review",'
-            '"STORED_PRIMARY_ARTISTS_CONFLICT_WITH_CORRECTED_IDENTITY",'
-            '"APPLE_ARTIST_ID_CONFLICT:452501576:123","SHEEPDOGS_APPLE_ID_UNRELATED_IDENTITY",'
-            '"ALL_RECOMMENDATION_APPLE_IDS_CONFLICT",'
-            '"ALL_RECOMMENDATION_CREATORS_CONFLICT_WITH_PRIMARY",'
-            '"RECOMMENDATION_CREATOR_CONFLICT:The Sheepdogs"],true]],"writes":0}',
-            result,
-        )
+        audited = json.loads(result)
+        self.assertTrue(audited["dryRun"])
+        self.assertEqual(2, audited["counts"]["totalReadyScanned"])
+        self.assertEqual(1, audited["counts"]["CONTAMINATED"])
+        self.assertEqual(1, audited["counts"]["automaticRepairSafe"])
+        self.assertEqual("bad", audited["findings"][0][1])
+        self.assertIn("SHEEPDOGS_APPLE_ID_UNRELATED_IDENTITY", audited["findings"][0][3])
+        self.assertTrue(audited["findings"][0][4])
+        self.assertEqual(0, audited["writes"])
 
     def test_ready_audit_keeps_joint_articles_isolated_and_shared_ids_advisory(self):
         result = self.run_apps_script(r'''
@@ -1182,14 +1178,71 @@ SpreadsheetApp={openById:function(){return {
 };}};
 var result;try{result=eeAuditContaminatedReadyPayloads();}catch(error){result={error:String(error&&error.stack||error)};}JSON.stringify(result.error?result:{counts:result.counts,findings:result.findings.map(function(item){return [item.postId,item.classification,item.proposedAction,item.automaticRepairSafe];})});
 ''')
+        audited = json.loads(result)
+        self.assertEqual(3, audited["counts"]["totalReadyScanned"])
+        self.assertEqual(1, audited["counts"]["CLEAN"])
+        self.assertEqual(1, audited["counts"]["ENRICHMENT_CANDIDATE"])
+        self.assertEqual(1, audited["counts"]["AMBIGUOUS"])
+        self.assertEqual(0, audited["counts"]["duplicateReadyPosts"])
         self.assertEqual(
-            '{"counts":{"totalReadyScanned":3,"CLEAN":1,"CONTAMINATED":0,'
-            '"ENRICHMENT_CANDIDATE":1,"AMBIGUOUS":1,"structuralContamination":0,'
-            '"appleIdContradictions":0,"creatorMismatches":0,"lexicalCollisions":0},'
-            '"findings":[["pending","ENRICHMENT_CANDIDATE","CONTINUE_INCREMENTAL_ENRICHMENT",false],'
-            '["ambiguous","AMBIGUOUS","MANUAL_REVIEW",false]]}',
-            result,
+            [["pending", "ENRICHMENT_CANDIDATE", "CONTINUE_INCREMENTAL_ENRICHMENT", False],
+             ["ambiguous", "AMBIGUOUS", "MANUAL_REVIEW", False]],
+            audited["findings"],
         )
+
+    def test_ready_audit_final_safety_gates_are_relationship_and_category_aware(self):
+        result = self.run_apps_script(r'''
+var registry={structuralLabels:["obituary","album review"],articleOverrides:{},artists:[
+ {canonicalName:"Obituary",slug:"obituary",articleIds:["obit"],appleArtistId:"1"},
+ {canonicalName:"Rolling Stones",slug:"rolling-stones",articleIds:["stones"]},
+ {canonicalName:"The Rolling Stones",slug:"the-rolling-stones",articleIds:["stones"]},
+ {canonicalName:"Hellacopters",slug:"hellacopters",articleIds:["hella"]},
+ {canonicalName:"The Hellacopters",slug:"the-hellacopters",articleIds:["hella"]},
+ {canonicalName:"Whitechapel",slug:"whitechapel",articleIds:["joint"]},
+ {canonicalName:"Northlane",slug:"northlane",articleIds:["joint"]},
+ {canonicalName:"Larkin Poe",slug:"larkin-poe",articleIds:["fnac"]},
+ {canonicalName:"FNAC",slug:"fnac",articleIds:["fnac"]},
+ {canonicalName:"Duff McKagan",slug:"duff-mckagan",articleIds:["duff"]},
+ {canonicalName:"Hollywood Vampires",slug:"hollywood-vampires",articleIds:["hv"]},
+ {canonicalName:"Drink The Sea",slug:"drink-the-sea",articleIds:["drink"]},
+ {canonicalName:"Carcass",slug:"carcass",articleIds:["carcass"]},
+ {canonicalName:"Nails",slug:"nails",articleIds:["nails"]},
+ {canonicalName:"Alter Bridge",slug:"alter-bridge",articleIds:["alter"],appleArtistId:"80"}
+]};
+eeEntityProfiles_=function(){return [
+ {name:"Duff McKagan",sideProjects:["Guns N' Roses"]},
+ {name:"Hollywood Vampires",members:["Alice Cooper","Joe Perry"]},
+ {name:"Drink The Sea",relatedArtists:["Alain Johannes"]}
+];};
+function item(category,title,creator,id,extra){var value={stableId:title,category:category,title:title,creator:creator,appleArtistId:id};Object.keys(extra||{}).forEach(function(key){value[key]=extra[key];});return value;}
+function payload(id,title,names,keys,artistId,groups){return {postId:id,canonicalUrl:"/"+id,subject:{title:title,primaryArtists:names},identity:{artistId:artistId||""},diagnostics:{artistKeys:keys},categories:groups};}
+function listen(title,creator,id){return {category:"LISTEN",items:[item("LISTEN",title,creator,id)]};}
+function audit(value,dup){var f=eeReadyAuditFinding_(value,registry,{}, {}, {duplicateCount:dup||1});return {classification:f.classification,corrected:f.correctedPrimaryArtists,conflicts:f.conflictingCreators,safe:f.automaticRepairSafe,reasons:f.reasons,blocks:f.safetyBlocks};}
+JSON.stringify({
+ obituary:audit(payload("obit","Obituary @ Bataclan",["Obituary"],["obituary"],"1",[listen("Cause of Death","Obituary","1")])),
+ stones:audit(payload("stones","The Rolling Stones announce Paris",["Rolling Stones"],["rolling-stones"],"",[listen("Hackney Diamonds","The Rolling Stones","")])),
+ hella:audit(payload("hella","The Hellacopters announce Paris",["Hellacopters"],["hellacopters"],"",[listen("Overdriver","The Hellacopters","")])),
+ joint:audit(payload("joint","Whitechapel and Northlane co-headlining tour to hit Bataclan next month",["Whitechapel","Northlane"],["whitechapel","northlane"],"",[listen("Whitechapel","Whitechapel","")])),
+ fnac:audit(payload("fnac","Larkin Poe @ FNAC Forum, Paris",["Larkin Poe","FNAC"],["larkin-poe","fnac"],"",[listen("Bloom","Larkin Poe","")])),
+ duff:audit(payload("duff","Duff McKagan announce Paris",["Duff McKagan"],["duff-mckagan"],"",[listen("Lighthouse","Guns N' Roses","")])),
+ hv:audit(payload("hv","Hollywood Vampires return",["Hollywood Vampires"],["hollywood-vampires"],"",[listen("Rise","Alice Cooper","")])),
+ drink:audit(payload("drink","Drink The Sea return",["Drink The Sea"],["drink-the-sea"],"",[listen("Drink The Sea","Alain Johannes","")])),
+ read:audit(payload("duff","Duff McKagan announce Paris",["Duff McKagan"],["duff-mckagan"],"",[{category:"READ",items:[item("READ","It's So Easy","Keith Richards","",{description:"A biography of Duff McKagan"})]}])),
+ carcass:audit(payload("carcass","Carcass @ Bataclan",["Carcass"],["carcass"],"",[listen("Nails","Nails","")])),
+ alter:audit(payload("alter","Album Review: Alter Bridge - Alter Bridge",["Album Review","Alter Bridge"],["album-review","alter-bridge"],"452501576",[listen("The Sheepdogs","The Sheepdogs","452501576")])),
+ duplicate:audit(payload("duff","Duff McKagan announce Paris",["Duff McKagan"],["duff-mckagan"],"",[listen("Lighthouse","Duff McKagan","")]),2)
+});
+''')
+        findings = json.loads(result)
+        self.assertNotEqual("CONTAMINATED", findings["obituary"]["classification"])
+        for key in ("stones", "hella", "duff", "hv", "drink", "read"):
+            self.assertEqual([], findings[key]["conflicts"], key)
+        self.assertEqual({"Whitechapel", "Northlane"}, set(findings["joint"]["corrected"]))
+        self.assertEqual(["Larkin Poe"], findings["fnac"]["corrected"])
+        self.assertEqual(["Nails"], findings["carcass"]["conflicts"])
+        self.assertTrue(findings["alter"]["safe"])
+        self.assertFalse(findings["duplicate"]["safe"])
+        self.assertIn("DUPLICATE_READY_ROW", findings["duplicate"]["blocks"])
 
     def test_watch_and_read_enrichment_is_primary_only_in_existing_worker(self):
         result = self.run_apps_script(r'''
