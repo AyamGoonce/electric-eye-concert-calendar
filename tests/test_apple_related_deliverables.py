@@ -1043,7 +1043,7 @@ JSON.stringify({dryRun:result.dryRun,counts:result.counts,findings:result.findin
         self.assertEqual(
             '{"dryRun":true,"counts":{"totalReadyScanned":2,"CLEAN":1,"CONTAMINATED":1,'
             '"ENRICHMENT_CANDIDATE":0,"AMBIGUOUS":0,"structuralContamination":2,'
-            '"appleIdContradictions":2,"creatorMismatches":2,"lexicalCollisions":0},'
+            '"appleIdContradictions":2,"creatorMismatches":1,"lexicalCollisions":0},'
             '"findings":[["CONTAMINATED","bad",["Alter Bridge"],'
             '["STRUCTURAL_PRIMARY_ARTIST:album review","STRUCTURAL_ARTIST_KEY:album-review",'
             '"STORED_PRIMARY_ARTISTS_CONFLICT_WITH_CORRECTED_IDENTITY",'
@@ -1103,6 +1103,46 @@ JSON.stringify({
             self.assertTrue(findings[key][4])
         self.assertEqual("AMBIGUOUS", findings["unknown"][0])
         self.assertTrue(findings["unknown"][2])
+
+    def test_ready_audit_allows_verified_secondary_creators_and_repair_preserves_them(self):
+        result = self.run_apps_script(r'''
+var registry={structuralLabels:[],articleOverrides:{},artists:[
+ {canonicalName:"Duff McKagan",slug:"duff-mckagan",articleIds:["duff"],appleArtistId:"10"},
+ {canonicalName:"Guns N' Roses",slug:"guns-n-roses",articleIds:[],appleArtistId:"20",members:["Duff McKagan"]},
+ {canonicalName:"Hollywood Vampires",slug:"hollywood-vampires",articleIds:["hollywood"],appleArtistId:"30",members:["Alice Cooper","Joe Perry"]},
+ {canonicalName:"Drink The Sea",slug:"drink-the-sea",articleIds:["drink"],appleArtistId:"40",associatedActs:["Alain Johannes"]},
+ {canonicalName:"Carcass",slug:"carcass",articleIds:["carcass"],appleArtistId:"50"},
+ {canonicalName:"Nails",slug:"nails",articleIds:["nails"],appleArtistId:"60"},
+ {canonicalName:"Garbage",slug:"garbage",articleIds:["garbage"],appleArtistId:"70"},
+ {canonicalName:"Skunk Anansie",slug:"skunk-anansie",articleIds:["skunk"],appleArtistId:"80"}
+]};
+function item(id,creator,artistId,score){return {stableId:id,title:id,creator:creator,appleArtistId:artistId,relevanceScore:score};}
+function payload(id,title,names,keys,artistId,items){return {postId:id,subject:{title:title,primaryArtists:names},identity:{artistId:artistId},diagnostics:{artistKeys:keys},categories:[{category:"LISTEN",items:items}]};}
+function audit(value){var finding=eeReadyAuditFinding_(value,registry,{},{});return {classification:finding.classification,corrected:finding.correctedPrimaryArtists,conflicts:finding.conflictingCreators,reasons:finding.reasons,safe:finding.automaticRepairSafe};}
+var duff=payload("duff","Duff McKagan announce Paris",["Duff McKagan","Guns N' Roses"],["duff-mckagan","guns-n-roses"],"10",[item("gnr","Guns N' Roses","20",999),item("duff","Duff McKagan","10",10)]);
+var candidate=payload("duff","Duff McKagan announce Paris",["Duff McKagan"],["duff-mckagan"],"10",[item("duff","Duff McKagan","10",10)]);
+var existing=payload("duff","Duff McKagan announce Paris",["Duff McKagan","Guns N' Roses"],["duff-mckagan","guns-n-roses"],"10",[item("gnr","Guns N' Roses","20",999),item("nails","Nails","60",1000)]);
+var merged=eeMergeValidatedRepairItems_(candidate,existing,registry);
+JSON.stringify({
+ duff:audit(duff),
+ hollywood:audit(payload("hollywood","Hollywood Vampires return",["Hollywood Vampires"],["hollywood-vampires"],"30",[item("hv","Hollywood Vampires","30",5),item("alice","Alice Cooper","31",999),item("joe","Joe Perry","32",998)])),
+ drink:audit(payload("drink","Drink The Sea announce an album",["Drink The Sea"],["drink-the-sea"],"40",[item("drink","Drink The Sea","40",5),item("alain","Alain Johannes","41",999)])),
+ carcass:audit(payload("carcass","Carcass @ Le Zénith",["Carcass"],["carcass"],"50",[item("carcass","Carcass","50",5),item("nails","Nails","60",999)])),
+ garbage:audit(payload("garbage","Garbage @ Le Zénith",["Garbage"],["garbage"],"70",[item("garbage","Garbage","70",5),item("skunk","Skunk Anansie","80",999)])),
+ merged:merged.categories[0].items.map(function(value){return value.creator;})
+});
+''')
+        findings = json.loads(result)
+        self.assertEqual(["Duff McKagan"], findings["duff"]["corrected"])
+        self.assertEqual([], findings["duff"]["conflicts"])
+        self.assertEqual("CONTAMINATED", findings["duff"]["classification"])
+        self.assertTrue(findings["duff"]["safe"])
+        self.assertIn("STORED_PRIMARY_ARTISTS_CONFLICT_WITH_CORRECTED_IDENTITY", findings["duff"]["reasons"])
+        self.assertEqual([], findings["hollywood"]["conflicts"])
+        self.assertEqual([], findings["drink"]["conflicts"])
+        self.assertEqual(["Nails"], findings["carcass"]["conflicts"])
+        self.assertEqual(["Skunk Anansie"], findings["garbage"]["conflicts"])
+        self.assertEqual(["Duff McKagan", "Guns N' Roses"], findings["merged"])
 
     def test_quality_repair_can_replace_with_fewer_valid_items_and_preserves_on_error(self):
         result = self.run_apps_script(r'''

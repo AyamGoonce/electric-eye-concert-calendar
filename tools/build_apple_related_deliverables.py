@@ -673,7 +673,12 @@ function eeReadOnlySheet_(name) {var settings=eeAppleSettings_();if(!settings.sp
 
 function eeCorrectedPayloadIdentity_(payload,registry) {var subject=(payload.subject||{}),post={id:String(payload.postId||""),url:String(payload.canonicalUrl||""),title:String(subject.title||""),labels:[],content:""};return eeFastArticleIdentity_(post,registry);}
 
-function eeReadyAuditRelationshipNames_(artists) {var names=[];(artists||[]).forEach(function(artist){names=names.concat([artist.canonicalName].concat(artist.aliases||[],artist.alternateSpellings||[],artist.members||[],artist.formerMembers||[],artist.sideProjects||[]));});return eeUnique_(names.map(eeNorm_).filter(Boolean));}
+function eeReadyAuditRelationshipNames_(artists,registry) {
+  var names=[],primary=eeUnique_((artists||[]).map(function(artist){return eeNorm_(artist.canonicalName);}).filter(Boolean));
+  (artists||[]).forEach(function(artist){names=names.concat([artist.canonicalName].concat(artist.aliases||[],artist.alternateSpellings||[],artist.members||[],artist.formerMembers||[],artist.sideProjects||[],artist.associatedActs||[]));});
+  ((registry||{}).artists||[]).forEach(function(artist){var related=[].concat(artist.members||[],artist.formerMembers||[],artist.sideProjects||[]).map(eeNorm_);if(primary.some(function(name){return related.indexOf(name)!==-1;}))names=names.concat([artist.canonicalName].concat(artist.aliases||[],artist.alternateSpellings||[]));});
+  return eeUnique_(names.map(eeNorm_).filter(Boolean));
+}
 
 function eeReadyAuditFinding_(payload,registry,sharedIds,artistStates) {
   payload=payload||{};var structural={},reasons=[],advisories=[],subject=(payload.subject||{}),storedNames=subject.primaryArtists||[],keys=(payload.diagnostics||{}).artistKeys||[],storedId=String((payload.identity||{}).artistId||""),analysis=eeCorrectedPayloadIdentity_(payload,registry),correctedNames=analysis.primaryArtists||[],correctedKeys=analysis.primaryArtistKeys||[];
@@ -686,7 +691,7 @@ function eeReadyAuditFinding_(payload,registry,sharedIds,artistStates) {
   if(storedId&&reviewedIds.length&&reviewedIds.indexOf(storedId)===-1)reasons.push("APPLE_ARTIST_ID_CONFLICT:"+storedId+":"+reviewedIds.join(","));
   if(storedId&&sharedIds[storedId]&&sharedIds[storedId].length>1)advisories.push("APPLE_ID_SHARED_ACROSS_UNRELATED_ARTISTS:"+storedId);
   if(storedId==="452501576"&&!correctedNames.some(function(name){return eeNorm_(name)==="the sheepdogs";}))reasons.push("SHEEPDOGS_APPLE_ID_UNRELATED_IDENTITY");
-  var items=[];(payload.categories||[]).forEach(function(group){items=items.concat(group.items||[]);});var creators=eeUnique_(items.map(function(item){return String(item.creator||"").trim();}).filter(Boolean)),itemAppleIds=eeUnique_(items.map(function(item){return String(item.appleArtistId||"");}).filter(Boolean)),allowed=eeReadyAuditRelationshipNames_(correctedArtists),conflicts=creators.filter(function(creator){return allowed.indexOf(eeNorm_(creator))===-1;});
+  var items=[];(payload.categories||[]).forEach(function(group){items=items.concat(group.items||[]);});var creators=eeUnique_(items.map(function(item){return String(item.creator||"").trim();}).filter(Boolean)),itemAppleIds=eeUnique_(items.map(function(item){return String(item.appleArtistId||"");}).filter(Boolean)),allowed=eeReadyAuditRelationshipNames_(correctedArtists,registry),conflicts=correctedNames.length?creators.filter(function(creator){return allowed.indexOf(eeNorm_(creator))===-1;}):[];
   if(reviewedIds.length&&itemAppleIds.length&&itemAppleIds.every(function(id){return reviewedIds.indexOf(id)===-1;}))reasons.push("ALL_RECOMMENDATION_APPLE_IDS_CONFLICT");
   if(creators.length&&conflicts.length===creators.length&&correctedNames.length)reasons.push("ALL_RECOMMENDATION_CREATORS_CONFLICT_WITH_PRIMARY");
   if(correctedNames.length)conflicts.forEach(function(creator){reasons.push("RECOMMENDATION_CREATOR_CONFLICT:"+creator);});
@@ -700,22 +705,23 @@ function eeAuditContaminatedReadyPayloads() {
   var registry=eeArtistRegistry_(),payloadValues=eeReadOnlySheet_("Apple Payloads").getDataRange().getValues(),artistSheet=SpreadsheetApp.openById(eeAppleSettings_().spreadsheetId).getSheetByName("Apple Artists"),artistValues=artistSheet?artistSheet.getDataRange().getValues():[],decoded=[],shared={},artistStates={};
   for(var artistRow=1;artistRow<artistValues.length;artistRow+=1){var catalogue={};try{catalogue=artistValues[artistRow][8]?eeDecodePayloadCell_(String(artistValues[artistRow][8])):{};}catch(error){}artistStates[String(artistValues[artistRow][0])]={enrichmentStatus:String(((catalogue.enrichment||{}).status)||"")};}
   for(var row=1;row<payloadValues.length;row+=1){if(String(payloadValues[row][5])!=="READY")continue;try{var payload=eeDecodePayloadCell_(String(payloadValues[row][4]||""));decoded.push(payload);var id=String((payload.identity||{}).artistId||""),identitySignature=eeUnique_(((payload.subject||{}).primaryArtists||[]).map(eeNorm_)).sort().join("|");if(id&&identitySignature){shared[id]=shared[id]||[];if(shared[id].indexOf(identitySignature)===-1)shared[id].push(identitySignature);}}catch(error){}}
-  var findings=[],counts={totalReadyScanned:decoded.length,CLEAN:0,CONTAMINATED:0,ENRICHMENT_CANDIDATE:0,AMBIGUOUS:0,structuralContamination:0,appleIdContradictions:0,creatorMismatches:0,lexicalCollisions:0};decoded.forEach(function(payload){var finding=eeReadyAuditFinding_(payload,registry,shared,artistStates);counts[finding.classification]+=1;finding.reasons.forEach(function(reason){if(reason.indexOf("STRUCTURAL_")===0)counts.structuralContamination+=1;if(reason.indexOf("APPLE_")===0||reason.indexOf("SHEEPDOGS_")===0)counts.appleIdContradictions+=1;if(reason.indexOf("CREATOR")!==-1)counts.creatorMismatches+=1;if(reason.indexOf("LEXICAL_")===0)counts.lexicalCollisions+=1;});if(finding.classification!=="CLEAN")findings.push(finding);});var result={status:"OK",dryRun:true,counts:counts,findings:findings};console.log(JSON.stringify(result));return result;
+  var findings=[],counts={totalReadyScanned:decoded.length,CLEAN:0,CONTAMINATED:0,ENRICHMENT_CANDIDATE:0,AMBIGUOUS:0,structuralContamination:0,appleIdContradictions:0,creatorMismatches:0,lexicalCollisions:0};decoded.forEach(function(payload){var finding=eeReadyAuditFinding_(payload,registry,shared,artistStates);counts[finding.classification]+=1;counts.creatorMismatches+=finding.conflictingCreators.length;finding.reasons.forEach(function(reason){if(reason.indexOf("STRUCTURAL_")===0)counts.structuralContamination+=1;if(reason.indexOf("APPLE_")===0||reason.indexOf("SHEEPDOGS_")===0)counts.appleIdContradictions+=1;if(reason.indexOf("LEXICAL_")===0)counts.lexicalCollisions+=1;});if(finding.classification!=="CLEAN")findings.push(finding);});var result={status:"OK",dryRun:true,counts:counts,findings:findings};console.log(JSON.stringify(result));return result;
 }
 
 function eeReadyQualityIssues_(payload,registry) {var finding=eeReadyAuditFinding_(payload,registry||eeArtistRegistry_(),{},{});return finding.classification==="CONTAMINATED"?finding.reasons:[];}
 
-function eeQualityRepairItemValid_(item,primaryNames,primaryIds) {
+function eeQualityRepairItemValid_(item,allowedNames,allowedIds) {
   var creator=eeNorm_((item||{}).creator||""),artistId=String((item||{}).appleArtistId||"");
-  return !!((artistId&&primaryIds.indexOf(artistId)!==-1)||(creator&&primaryNames.indexOf(creator)!==-1));
+  return !!((artistId&&allowedIds.indexOf(artistId)!==-1)||(creator&&allowedNames.indexOf(creator)!==-1));
 }
 
 function eeMergeValidatedRepairItems_(candidate,existing,registry) {
-  var names=((candidate.subject||{}).primaryArtists||[]).map(eeNorm_),ids=[];
-  (registry.artists||[]).forEach(function(artist){if(names.indexOf(eeNorm_(artist.canonicalName))!==-1&&artist.appleArtistId)ids.push(String(artist.appleArtistId));});
+  var names=((candidate.subject||{}).primaryArtists||[]).map(eeNorm_),primaryArtists=(registry.artists||[]).filter(function(artist){return names.indexOf(eeNorm_(artist.canonicalName))!==-1;}),allowed=eeReadyAuditRelationshipNames_(primaryArtists,registry),ids=[];
+  (registry.artists||[]).forEach(function(artist){if(allowed.indexOf(eeNorm_(artist.canonicalName))!==-1&&artist.appleArtistId)ids.push(String(artist.appleArtistId));});
   if((candidate.identity||{}).artistId)ids.push(String(candidate.identity.artistId));ids=eeUnique_(ids);
   var groups={};(candidate.categories||[]).forEach(function(group){groups[group.category]=group;});
-  (existing.categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){if(!eeQualityRepairItemValid_(item,names,ids))return;var target=groups[group.category]||(groups[group.category]={category:group.category,items:[]}),key=String(item.stableId||item.url||item.title||"");if(!(target.items||[]).some(function(value){return String(value.stableId||value.url||value.title||"")===key;}))target.items.push(item);});});
+  (existing.categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){if(!eeQualityRepairItemValid_(item,allowed,ids))return;var target=groups[group.category]||(groups[group.category]={category:group.category,items:[]}),key=String(item.stableId||item.url||item.title||"");if(!(target.items||[]).some(function(value){return String(value.stableId||value.url||value.title||"")===key;}))target.items.push(item);});});
+  Object.keys(groups).forEach(function(category){groups[category].items.sort(function(a,b){return eePrimaryRecommendationRank_(a,names,[String((candidate.identity||{}).artistId||"")])-eePrimaryRecommendationRank_(b,names,[String((candidate.identity||{}).artistId||"")])||Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title||"").localeCompare(String(b.title||""));});});
   candidate.categories=["LISTEN","WATCH","READ"].map(function(category){return groups[category];}).filter(function(group){return group&&(group.items||[]).length;});return candidate;
 }
 
