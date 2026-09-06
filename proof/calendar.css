@@ -95,6 +95,9 @@
 }
 
 .ee-calendar-page #ee-concert-calendar .ee-calendar-new-control input {
+  appearance: auto;
+  -webkit-appearance: checkbox;
+  accent-color: var(--ee-calendar-accent);
   width: 18px;
   min-height: 18px;
   margin: 0;
