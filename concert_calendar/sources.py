@@ -77,6 +77,7 @@ class PipelineReport:
     unresolved_deduplication_candidates: list[dict]
     suspicious_near_duplicate_candidates: list[dict]
     genre_report: dict
+    source_diagnostics: list[dict]
 
 
 def normalize_text_for_matching(text):
@@ -221,6 +222,7 @@ def load_events_with_report(
     source_health = []
     source_counts = {}
     source_failures = {}
+    source_diagnostics = []
     scrapers, registration_failures = discover_scrapers_with_issues()
 
     for scraper in scrapers:
@@ -266,6 +268,20 @@ def load_events_with_report(
                     "raw": event.genre,
                     "source": scraper.SOURCE_NAME,
                 }]
+
+        get_diagnostics = getattr(scraper, "get_diagnostics", None)
+        if callable(get_diagnostics):
+            try:
+                for diagnostic in get_diagnostics()[:200]:
+                    source_diagnostics.append({
+                        "source_name": scraper.SOURCE_NAME,
+                        **diagnostic,
+                    })
+            except Exception as error:
+                source_diagnostics.append({
+                    "source_name": scraper.SOURCE_NAME,
+                    "diagnostic_error": f"{type(error).__name__}: {error}",
+                })
 
         print(f"→ {len(scraper_events)} events loaded")
         print()
@@ -385,6 +401,7 @@ def load_events_with_report(
             "suspicious_near_duplicates", []
         ),
         genre_report=genre_report,
+        source_diagnostics=source_diagnostics[:1000],
     )
 
     return deduplicated_events, report

@@ -15,6 +15,8 @@ EVENTS_API_URL = (
 )
 REQUEST_TIMEOUT = 30
 PAGE_SIZE = 200
+MAX_DIAGNOSTICS = 200
+_DIAGNOSTICS = []
 
 HEADERS = {
     "User-Agent": (
@@ -168,6 +170,8 @@ def event_key(event):
 
 
 def load_events():
+    global _DIAGNOSTICS
+    _DIAGNOSTICS = []
     session = requests.Session()
     events_by_key = {}
 
@@ -196,7 +200,28 @@ def load_events():
         new_events = 0
 
         for item in items:
-            for event in parse_item(item):
+            meta = item.get("meta") or {}
+            if len(_DIAGNOSTICS) < MAX_DIAGNOSTICS:
+                _DIAGNOSTICS.append({
+                    "source_name": SOURCE_NAME,
+                    "raw_event_title": clean_text(item.get("post_title")),
+                    "source_url": clean_text(item.get("permalink")),
+                    "source_event_id": str(item.get("ID") or item.get("id") or ""),
+                    "raw_begin_date": meta.get("begin_date_ymd"),
+                    "raw_end_date": meta.get("end_date_ymd"),
+                    "exclude_dates": meta.get("exclude_dates"),
+                    "show_statuses": meta.get("show_statuses") or [],
+                    "raw_venue": meta.get("venue") or meta.get("venue_name") or "",
+                    "relocation_text": meta.get("infos_text_status") or "",
+                    "parsed_dates": [d.isoformat() for d in performance_dates(meta)],
+                })
+            parsed_events = parse_item(item)
+            if _DIAGNOSTICS and _DIAGNOSTICS[-1].get("source_url") == clean_text(item.get("permalink")):
+                _DIAGNOSTICS[-1]["parsed_events"] = [
+                    {"date": event.date, "headliner": event.headliner, "venue": event.venue}
+                    for event in parsed_events
+                ]
+            for event in parsed_events:
                 key = event_key(event)
 
                 if key not in events_by_key:
@@ -214,3 +239,9 @@ def load_events():
     print(f"Created {len(events)} L’Olympia ConcertEvent records")
 
     return discard_repeated_generic_images(events)
+
+
+def get_diagnostics():
+    """Return bounded, non-public source diagnostics from the last load."""
+
+    return list(_DIAGNOSTICS)
