@@ -169,10 +169,6 @@ REVIEWED_EVENT_TITLES = {
 # listings.  The key is deliberately date + artist + old/new canonical venue.
 REVIEWED_EVENT_MOVES = (
     ("2026-10-06", "father of peace", "L'Alhambra", "La Maroquinerie"),
-    (
-        "2026-10-06", "humanity's last breath",
-        "Petit Bain", "La Machine du Moulin Rouge",
-    ),
     ("2026-10-10", "paris jackson", "L'Alhambra", "La Bellevilloise"),
     ("2026-10-19", "my new band believe", "Point Éphémère", "La Maroquinerie"),
     ("2026-11-20", "zebrahead", "La Maroquinerie", "L'Alhambra"),

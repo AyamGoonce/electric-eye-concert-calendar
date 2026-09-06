@@ -612,22 +612,6 @@ class PersistentEventStateTests(unittest.TestCase):
 
         self.assertEqual(old.first_seen, moved.first_seen)
 
-    def test_humanity_last_breath_move_preserves_predecessor_first_seen(self):
-        old = self.make_event(
-            headliner="HUMANITY'S LAST BREATH", venue="Petit Bain"
-        )
-        old.date = "2026-10-06"
-        state = reconcile_state([old], None, now=self.NOW)
-        moved = self.make_event(
-            headliner="HUMANITY’S LAST BREATH",
-            venue="La Machine du Moulin Rouge",
-        )
-        moved.date = "2026-10-06"
-
-        reconcile_state([moved], state, now=self.NOW + timedelta(hours=6))
-
-        self.assertEqual(old.first_seen, moved.first_seen)
-
     def test_new_reviewed_moves_preserve_predecessor_first_seen(self):
         cases = (
             ("2026-10-30", "Clawfinger", "Élysée Montmartre", "Le Trabendo"),

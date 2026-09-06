@@ -762,10 +762,6 @@ class ReviewedMoveTests(unittest.TestCase):
     def test_confirmed_moves_resolve_only_reviewed_date_artist_pairs(self):
         cases = [
             ("2026-10-06", "Father of Peace", "L'Alhambra", "La Maroquinerie"),
-            (
-                "2026-10-06", "Humanity's Last Breath", "Petit Bain",
-                "La Machine du Moulin Rouge",
-            ),
             ("2026-10-19", "My New Band Believe", "Point Éphémère", "La Maroquinerie"),
             ("2026-11-20", "ZEBRAHEAD", "La Maroquinerie", "L'Alhambra"),
             ("2026-12-10", "Blondshell", "La Gaîté Lyrique", "Élysée Montmartre"),
@@ -1462,6 +1458,17 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
             initialement prévu à Petit Bain aura finalement lieu à
             La Machine du Moulin Rouge.</p></div>
             """,
+            "html.parser",
+        )
+        self.assertEqual("La Machine du Moulin Rouge", find_relocated_venue(soup))
+
+    def test_petit_bain_relocation_parser_is_artist_and_date_agnostic(self):
+        self.assertEqual(
+            "Synthetic Performer",
+            strip_relocation_notice("CHANGEMENT DE SALLE _ Synthetic Performer"),
+        )
+        soup = BeautifulSoup(
+            "<div id='compinfotar'><p>Changement de salle : ce concert aura finalement lieu à La Machine du Moulin Rouge.</p></div>",
             "html.parser",
         )
         self.assertEqual("La Machine du Moulin Rouge", find_relocated_venue(soup))
