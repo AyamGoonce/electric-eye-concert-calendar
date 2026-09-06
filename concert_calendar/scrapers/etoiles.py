@@ -47,7 +47,8 @@ def parse_card(card, *, today=None):
         ticket_status="tickets", start_time=time_label, image_url=image,
         image_source=SOURCE_NAME if image else None)
 
-def load_events():
+def load_events(today=None):
+    today = today or date.today()
     session=requests.Session(); events={}; url=PROGRAMME_URL; visited=set()
     for _ in range(MAX_PAGES):
         if not url or url in visited: break
@@ -56,7 +57,7 @@ def load_events():
         soup=BeautifulSoup(response.text,"html.parser"); cards=soup.select("a.component-card-event")
         if not cards: break
         for card in cards:
-            event=parse_card(card)
+            event=parse_card(card, today=today)
             if event: events.setdefault((event.date,fold(event.headliner)),event)
         link=soup.select_one("link[rel='next'][href], a.next[href]")
         url=urljoin(url,link.get("href")) if link else None

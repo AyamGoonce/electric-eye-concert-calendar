@@ -17,5 +17,5 @@ class EtoilesTests(TestCase):
         for name in ("programme.html","page-2.html"):
             response=Mock(text=(FIX/name).read_text()); response.raise_for_status=Mock(); responses.append(response)
         session=Mock(); session.get.side_effect=responses
-        with patch("concert_calendar.scrapers.etoiles.requests.Session",return_value=session): events=etoiles.load_events()
+        with patch("concert_calendar.scrapers.etoiles.requests.Session",return_value=session): events=etoiles.load_events(today=date(2026,9,1))
         self.assertEqual(2,len(events)); self.assertEqual(2,session.get.call_count)
