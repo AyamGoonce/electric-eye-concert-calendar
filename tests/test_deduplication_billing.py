@@ -100,6 +100,41 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
                     ])),
                 )
 
+    def test_city_year_promotional_suffix_merges_same_concert(self):
+        for date in ("2026-09-12", "2026-09-16"):
+            with self.subTest(date=date):
+                clean = event("Celine Dion", source="Venue", date=date, venue="Plénitude Arena")
+                decorated = event("Céline Dion Paris 2026", source="Promoter", date=date, venue="Plénitude Arena")
+                result = deduplicate_events([clean, decorated])
+                self.assertEqual(1, len(result))
+                self.assertEqual("Celine Dion", result[0].headliner)
+                self.assertEqual({"Venue", "Promoter"}, set(result[0].source_names))
+
+    def test_distinct_explicit_times_never_merge_after_title_normalization(self):
+        early = event("Hommage à Ernestine Anderson avec Cecil L. Recchia + Jam Vocale – 19h00", venue="Sunset/Sunside — Sunside", date="2026-09-06", source="Sunset")
+        late = event("Hommage à Ernestine Anderson avec Cecil L. Recchia + Jam Vocale – 21h00", venue="Sunset/Sunside — Sunside", date="2026-09-06", source="Venue")
+        early.start_time = "19:00"
+        late.start_time = "21:00"
+        self.assertEqual(2, len(deduplicate_events([early, late])))
+
+    def test_time_only_on_one_title_does_not_block_duplicate_merge(self):
+        timed = event("Artist – 19h00", source="Venue")
+        plain = event("Artist", source="Promoter")
+        self.assertEqual(1, len(deduplicate_events([timed, plain])))
+
+    def test_time_only_on_one_record_does_not_block_duplicate_merge(self):
+        timed = event("Artist", source="Venue")
+        timed.start_time = "19:00"
+        plain = event("Artist", source="Promoter")
+        self.assertEqual(1, len(deduplicate_events([timed, plain])))
+
+    def test_equal_explicit_times_merge(self):
+        left = event("Artist – 19h00", source="Venue")
+        left.start_time = "19:00"
+        right = event("Artist – 19h00", source="Promoter")
+        right.start_time = "19:00"
+        self.assertEqual(1, len(deduplicate_events([left, right])))
+
     def test_reviewed_truncation_and_typo_variants_merge(self):
         variants = (
             ("The Afghan Wigs", "The Afghan Whigs"),

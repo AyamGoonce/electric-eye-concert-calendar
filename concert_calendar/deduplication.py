@@ -241,6 +241,11 @@ GENERIC_GUEST_RE = re.compile(
 )
 TIME_SUFFIX_RE = re.compile(r"\s+[–-]\s*(\d{1,2})\s*h(?:\s*(\d{2}))?\s*$", re.IGNORECASE)
 SET_SUFFIX_RE = re.compile(r"\s+-\s+(?:1er|2e)\s+set\s*$", re.IGNORECASE)
+PERFORMANCE_TIME_RE = re.compile(r"(?<!\w)\d{1,2}\s*h(?:\s*\d{2})?(?!\w)", re.IGNORECASE)
+PROMOTIONAL_CITY_RE = re.compile(
+    r"\s+(?:paris|nanterre|boulogne(?:-billancourt)?|saint[- ]denis|montreuil)\s+20\d{2}\s*$",
+    re.IGNORECASE,
+)
 
 
 def normalize_headliner(name: str) -> str:
@@ -471,6 +476,8 @@ def _split_full_bill(value: str) -> list[str]:
 def _normalized_billing_component(value: str) -> str:
     """Normalize punctuation only inside an explicitly parsed artist bill."""
 
+    value = PROMOTIONAL_CITY_RE.sub("", value or "")
+    value = TIME_SUFFIX_RE.sub("", value)
     value = re.sub(
         r"\s*(?:\((?:live|uk|fr|us|usa)\)|(?:\s+|:\s*)20\d{2})\s*$",
         "",
@@ -550,6 +557,8 @@ def _cross_source_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
 
 
 def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
+    if left.start_time and right.start_time and left.start_time != right.start_time:
+        return True
     if left.festival_name or right.festival_name:
         if (
             not left.authoritative_billing
@@ -558,8 +567,16 @@ def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> b
         ):
             return False
         return True
-    for event in (left, right):
-        if TIME_SUFFIX_RE.search(event.headliner) or SET_SUFFIX_RE.search(event.headliner):
+    if SET_SUFFIX_RE.search(left.headliner) or SET_SUFFIX_RE.search(right.headliner):
+        return True
+    left_title_time = PERFORMANCE_TIME_RE.search(left.headliner)
+    right_title_time = PERFORMANCE_TIME_RE.search(right.headliner)
+    if left_title_time and right_title_time:
+        def title_minutes(match):
+            text = match.group(0).replace(" ", "").lower()
+            hours, _, minutes = text.partition("h")
+            return int(hours) * 60 + int(minutes or 0)
+        if title_minutes(left_title_time) != title_minutes(right_title_time):
             return True
     return False
 
