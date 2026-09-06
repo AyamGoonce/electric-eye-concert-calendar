@@ -489,6 +489,24 @@ def _normalized_billing_component(value: str) -> str:
     return re.sub(r"\s+", " ", value).strip()
 
 
+def _promotional_city_year_base(value: str) -> str | None:
+    """Return the display artist with only the reviewed city/year suffix removed."""
+
+    base = PROMOTIONAL_CITY_RE.sub("", value or "").strip()
+    return base if base != (value or "").strip() else None
+
+
+def _prefer_canonical_display_headliner(left: ConcertEvent, right: ConcertEvent) -> str | None:
+    candidates = []
+    for value in (left.headliner, right.headliner):
+        base = _promotional_city_year_base(value)
+        if base:
+            candidates.append(base)
+    if not candidates:
+        return None
+    return max(candidates, key=lambda value: (sum(ord(char) > 127 for char in value), -len(value)))
+
+
 def _primary_billing_set(event: ConcertEvent) -> frozenset[str]:
     wrapped = _festival_event_billing(event)
     if wrapped:
@@ -680,7 +698,10 @@ def _reconcile_cross_source_billing_variants(
             preferred, incoming = sorted(
                 (left, right), key=_billing_richness, reverse=True
             )
+            canonical_display = _prefer_canonical_display_headliner(preferred, incoming)
             merge_events(preferred, incoming)
+            if canonical_display:
+                preferred.headliner = canonical_display
             _remove_billed_artists_from_support(preferred)
             removed.add(id(incoming))
             merged_count += 1

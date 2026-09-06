@@ -107,7 +107,7 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
                 decorated = event("Céline Dion Paris 2026", source="Promoter", date=date, venue="Plénitude Arena")
                 result = deduplicate_events([clean, decorated])
                 self.assertEqual(1, len(result))
-                self.assertEqual("Celine Dion", result[0].headliner)
+                self.assertEqual("Céline Dion", result[0].headliner)
                 self.assertEqual({"Venue", "Promoter"}, set(result[0].source_names))
 
     def test_distinct_explicit_times_never_merge_after_title_normalization(self):
