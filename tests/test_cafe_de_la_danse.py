@@ -1,5 +1,5 @@
 from pathlib import Path
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 import unittest
 from unittest.mock import patch
 
@@ -113,7 +113,7 @@ class CafeDeLaDanseTests(unittest.TestCase):
             "concert_calendar.scrapers.cafe_de_la_danse.requests.Session.get",
             side_effect=responses,
         ) as get:
-            events = load_events()
+            events = load_events(today=date(2026, 9, 1))
         self.assertEqual(2, get.call_count)
         self.assertEqual(4, len(events))
         self.assertEqual(

@@ -102,7 +102,8 @@ def next_page_url(soup, current_url):
     return urljoin(current_url, clean_text(link.get("href"))) if link else None
 
 
-def load_events():
+def load_events(today=None):
+    today = today or date.today()
     session = requests.Session()
     events = {}
     visited = set()
@@ -120,7 +121,7 @@ def load_events():
         if not cards:
             break
         for card in cards:
-            event = parse_card(card)
+            event = parse_card(card, today=today)
             if event is not None:
                 key = (event.date, folded(event.headliner), folded(event.venue))
                 events.setdefault(key, event)

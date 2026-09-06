@@ -62,7 +62,8 @@ def parse_card(card, *, today=None):
     )
 
 
-def load_events():
+def load_events(today=None):
+    today = today or date.today()
     session = requests.Session()
     print(f"Downloading Glazart concert programme: {PROGRAMME_URL}")
     response = session.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
@@ -70,7 +71,7 @@ def load_events():
     soup = BeautifulSoup(response.text, "html.parser")
     events = {}
     for card in soup.select(".portfolio-item[data-terms~='concert']"):
-        event = parse_card(card)
+        event = parse_card(card, today=today)
         if event is not None:
             events.setdefault((event.date, event.headliner.casefold()), event)
     result = discard_repeated_generic_images(list(events.values()))

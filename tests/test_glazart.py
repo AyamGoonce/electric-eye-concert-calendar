@@ -29,6 +29,6 @@ class GlazartTests(TestCase):
         session = Mock()
         session.get.return_value = response
         with patch("concert_calendar.scrapers.glazart.requests.Session", return_value=session):
-            events = glazart.load_events()
+            events = glazart.load_events(today=date(2026, 9, 1))
         self.assertEqual(2, len(events))
         self.assertNotIn("DJ NAME", [event.headliner for event in events])

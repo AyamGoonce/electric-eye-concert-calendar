@@ -53,7 +53,7 @@ class BackstageByTheMillTests(TestCase):
         session = Mock()
         session.get.side_effect = responses
         with patch("concert_calendar.scrapers.backstage_btm.requests.Session", return_value=session):
-            events = backstage_btm.load_events()
+            events = backstage_btm.load_events(today=date(2026, 9, 1))
         self.assertEqual(3, len(events))
         self.assertEqual(2, session.get.call_count)
         session.get.assert_any_call(

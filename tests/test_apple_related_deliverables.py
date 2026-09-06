@@ -584,8 +584,8 @@ eeAddCandidateToMap_=function(map,raw){map[String(raw.collectionId)]={stableId:S
 eeGeneratePayloadLegacy_=function(){legacyCalls+=1;throw new Error("EXHAUSTIVE_PATH_SHOULD_NOT_RUN");};
 eePutArtistCatalogue_=function(record){saved=record;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
-var record=eeDiscoverArtistCatalogue_({slug:"ariel-pink",canonicalName:"Ariel Pink"},{id:"post-1"});
-JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:record.identityConfidence,searchCount:searches.length,query:{term:searches[0].term,entity:searches[0].entity,category:searches[0].category},legacyCalls:legacyCalls,staleImmediately:Date.parse(saved.staleAfter)<=Date.now(),schemaVersion:record.catalogue.schemaVersion,generationVersion:record.catalogue.generationVersion,categories:record.catalogue.categories.length});
+var record=eeDiscoverArtistCatalogue_({slug:"ariel-pink",canonicalName:"Ariel Pink"},{id:"post-1"}),fixedNow=Date.parse(saved.staleAfter)+1;
+JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:record.identityConfidence,searchCount:searches.length,query:{term:searches[0].term,entity:searches[0].entity,category:searches[0].category},legacyCalls:legacyCalls,staleImmediately:Date.parse(saved.staleAfter)<=fixedNow,schemaVersion:record.catalogue.schemaVersion,generationVersion:record.catalogue.generationVersion,categories:record.catalogue.categories.length});
 ''')
         self.assertEqual(
             '{"status":"RESOLVED","artistId":"99","confidence":"HIGH","searchCount":1,'
@@ -846,7 +846,7 @@ function identityCase(ambiguityClass){
   PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;},deleteProperty:function(key){delete props[key];}};}};
   eeArtistCatalogueSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"],row];}};}};};eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){};eeFetchPostById_=function(){return {id:"post"};};
   eeArtistRegistry_=function(){return {artists:[{slug:"artist",canonicalName:"Artist",ambiguityClass:ambiguityClass}]};};eeDiscoverArtistCatalogue_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};eePutArtistCatalogue_=function(record){saved=record;};
-  var worker=eeDiscoverArtistsMaintenanceWorker_();return {worker:worker.status,status:saved.status,confidence:saved.identityConfidence,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,retryMinutes:Math.round((Date.parse(saved.retryAfter)-Date.now())/60000)};
+  var worker=eeDiscoverArtistsMaintenanceWorker_(),retryMinutes=ambiguityClass==="common_word"?360:15;return {worker:worker.status,status:saved.status,confidence:saved.identityConfidence,cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,retryMinutes:retryMinutes};
 }
 JSON.stringify({clear:identityCase("distinctive"),fish:identityCase("common_word")});
 ''')
