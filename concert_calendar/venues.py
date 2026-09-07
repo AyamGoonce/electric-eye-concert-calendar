@@ -125,6 +125,8 @@ VENUE_ALIASES = {
 # Only verified venue identities belong here.  These values correct stale or
 # missing source geography; they are not guesses based on the venue spelling.
 VENUE_GEOGRAPHY = {
+    # Official Stade de France scraper supplies Saint-Denis, not Paris.
+    "Stade de France": ("Saint-Denis", "93"),
     "La Marbrerie": ("Montreuil", "93"),
     "La Seine Musicale": ("Boulogne-Billancourt", "92"),
     "L’Accord Parfait": ("Paris", "75"),
