@@ -34,3 +34,4 @@ class ConcertEvent:
     electric_eye_links: Optional[list[dict]] = None
     source_names: Optional[list[str]] = None
     identity_aliases: Optional[list[str]] = None
+    genres_public: Optional[list[str]] = None

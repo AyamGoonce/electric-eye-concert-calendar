@@ -176,9 +176,9 @@ def validate_events(events: list[dict]) -> None:
             raise ProductionValidationError(f"Event {index} has malformed lists")
         if any(genre not in allowed_genres for genre in event["x"]):
             raise ProductionValidationError(f"Event {index} has unknown public genre")
-        if len(event["x"]) > 1:
+        if len(event["x"]) != len(set(event["x"])):
             raise ProductionValidationError(
-                f"Event {index} has more than one public genre"
+                f"Event {index} has duplicate public genres"
             )
         if event["t"] is not None and safe_ticket_url(event["t"]) is None:
             raise ProductionValidationError(f"Event {index} has an unsafe ticket URL")

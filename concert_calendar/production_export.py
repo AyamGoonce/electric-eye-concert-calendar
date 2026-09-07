@@ -12,7 +12,7 @@ from urllib.parse import urlparse
 
 from concert_calendar.models import ConcertEvent
 from concert_calendar.event_images import repeated_generic_image_urls
-from concert_calendar.genres import PUBLIC_GENRES, map_raw_genre
+from concert_calendar.genres import PUBLIC_GENRES, map_raw_genre, map_raw_genres
 from concert_calendar.event_state import canonical_event_identity
 
 
@@ -97,8 +97,7 @@ def safe_image_url(value: str | None) -> str | None:
 
 
 def genre_categories(value: str | None) -> list[str]:
-    mapped = map_raw_genre(value)
-    return [mapped] if mapped else []
+    return map_raw_genres(value)
 
 
 def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None) -> dict:
@@ -116,6 +115,7 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None) 
         "v": event.venue,
         "c": event.city,
         "x": (
+            event.genres_public if event.genres_public else
             [event.genre_public] if event.genre_public else
             ([] if event.genre_evidence is not None or event.festival_name else genre_categories(event.genre))
         ),

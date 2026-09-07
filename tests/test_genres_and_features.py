@@ -30,9 +30,37 @@ def event(**changes):
 
 
 class GenreEnrichmentTests(unittest.TestCase):
+    def test_historical_taxonomy_aliases(self):
+        for raw in ("Comedy", "Spoken Word", "Comedy / Spoken Word", "stand-up", "humour"):
+            self.assertEqual("Comedy / Spoken Word", map_raw_genre(raw))
+        for raw in ("French chanson", "Chanson française", "Variétés", "Variété française", "French Variety", "Chanson Française / Variétés"):
+            self.assertEqual("Chanson Française / Variétés", map_raw_genre(raw))
+        for raw in ("Pop", "Metal / Hard Rock", "Electronic"):
+            self.assertEqual(raw, map_raw_genre(raw))
+        for raw in ("grapefruit", "metallic object", "French artist", "metalcoreography", "hiphopopotamus"):
+            self.assertIsNone(map_raw_genre(raw))
+
+    def test_explicit_compounds_preserved_without_unioning_conflicts(self):
+        for raw, expected in (
+            ("Rock / Metal", {"Rock / Indie / Punk", "Metal / Hard Rock"}),
+            ("Jazz / Funk", {"Jazz / Blues", "R&B / Soul / Funk"}),
+            ("Pop, Rock", {"Pop", "Rock / Indie / Punk"}),
+            ("Jazz funk", {"Jazz / Blues", "R&B / Soul / Funk"}),
+        ):
+            item = event(headliner="Unmapped artist", genre=raw)
+            enrich_event_genres([item])
+            self.assertEqual(expected, set(event_to_data(item)["x"]))
+            self.assertEqual(len(expected), len(event_to_data(item)["x"]))
+
+    def test_compound_unknown_components_do_not_supply_guessed_genres(self):
+        from concert_calendar.genres import map_raw_genres
+        self.assertEqual([], map_raw_genres("Pop, unknown style"))
+        self.assertEqual(["Pop"], map_raw_genres("Pop, Pop"))
+        self.assertEqual([], map_raw_genres("POP ROCK FOLK"))
+
     def test_public_vocabulary_is_exactly_closed(self):
         self.assertEqual((
-            "Comedy", "Electronic", "Folk / Country", "French chanson",
+            "Comedy / Spoken Word", "Electronic", "Folk / Country", "Chanson Française / Variétés",
             "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
             "R&B / Soul / Funk", "Reggae / Dub / Ska",
             "Rock / Indie / Punk", "World / Latin",
@@ -101,7 +129,7 @@ class GenreEnrichmentTests(unittest.TestCase):
         ambiguous = event(headliner="Ambiguous", genre="Pop, Rock", genre_evidence=[{"raw": "Pop, Rock", "source": "Official"}])
         conflict = event(headliner="Conflict", genre="Pop", genre_evidence=[{"raw": "Pop", "source": "A"}, {"raw": "Metal / Hard Rock", "source": "B"}])
         report = enrich_event_genres([ambiguous, conflict])
-        self.assertIsNone(ambiguous.genre_public)
+        self.assertEqual({"Pop", "Rock / Indie / Punk"}, set(event_to_data(ambiguous)["x"]))
         self.assertIsNone(conflict.genre_public)
         self.assertEqual(1, report["conflict_count"])
         self.assertEqual([], event_to_data(conflict)["x"])
@@ -290,7 +318,7 @@ class RendererFeatureContractTests(unittest.TestCase):
         renderer = read_renderer()
         for required in (
             'p.getAll("genre")', 'p.append("genre",g)',
-            'e.x.length&&e.x[0]===g', 'g==="Unsorted"?!e.x.length',
+            'e.x.includes(g)', 'g==="Unsorted"?!e.x.length',
             '"Copy link"', 'navigator.share', '"Add to calendar"', "buildICS",
             'localStorage.getItem("ee-calendar-sort")', 'venueCounts.get',
             '"Clear genres"', '"Clear date"', '"Clear venue"', '"Show all concerts"',

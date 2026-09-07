@@ -24,6 +24,34 @@ def event(
 
 
 class CrossSourceBillingDeduplicationTests(unittest.TestCase):
+    def test_reviewed_jay_z_event_branding_preserves_metadata(self):
+        plain = event("JAŸ-Z", date="2026-09-10", venue="Stade de France", source="Live Nation")
+        branded = event("JAŸ-Z 30", date="2026-09-10", venue="Stade de France", source="Stade de France")
+        plain.first_seen = "2026-08-20T11:02:59Z"
+        branded.first_seen = "2026-09-03T12:50:16Z"
+        plain.promoters = ["Live Nation"]
+        plain.ticket_url = "https://tickets.example/jay-z"
+        branded.image_url = "https://venue.example/jay-z.jpg"
+        branded.image_source = "Stade de France"
+        branded.openers = ["Explicit support"]
+        result = deduplicate_events([plain, branded])
+        self.assertEqual(1, len(result))
+        merged = result[0]
+        self.assertEqual("JAŸ-Z", merged.headliner)
+        self.assertEqual({"Live Nation", "Stade de France"}, set(merged.source_names))
+        self.assertEqual(plain.first_seen, merged.first_seen)
+        self.assertEqual(plain.ticket_url, merged.ticket_url)
+        self.assertEqual(["Live Nation"], merged.promoters)
+        self.assertEqual(branded.image_url, merged.image_url)
+        self.assertEqual(["Explicit support"], merged.openers)
+
+    def test_reviewed_branding_does_not_strip_numeric_artist_identities(self):
+        names = ["Blink-182", "Sum 41", "U2", "UB40", "30 Seconds to Mars"]
+        result = deduplicate_events([event(name) for name in names])
+        self.assertEqual({name.casefold() for name in names}, {e.headliner.casefold() for e in result})
+        unreviewed = event("JAŸ-Z 30", date="2027-09-10", venue="Stade de France")
+        self.assertEqual("JAŸ-Z 30", deduplicate_events([unreviewed])[0].headliner)
+
     def test_behemoth_separator_variant_merges_and_keeps_dark_funeral(self):
         rich = event("Behemoth & Dimmu Borgir", source="Live Nation")
         rich.openers = ["Behemoth", "Dimmu Borgir", "Dark Funeral"]

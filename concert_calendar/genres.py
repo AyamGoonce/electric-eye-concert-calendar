@@ -11,13 +11,59 @@ from concert_calendar.models import ConcertEvent
 
 
 PUBLIC_GENRES = (
-    "Comedy", "Electronic", "Folk / Country", "French chanson",
+    "Comedy / Spoken Word", "Electronic", "Folk / Country", "Chanson Française / Variétés",
     "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
     "R&B / Soul / Funk", "Reggae / Dub / Ska", "Rock / Indie / Punk",
     "World / Latin",
 )
 
 EXACT_RAW_MAPPINGS = {
+    # Structured source taxonomy observed 2026-09-07 (GDP, Alhambra,
+    # Café de la Danse, Backstage). Exact labels only, not title substrings.
+    "blues": "Jazz / Blues",
+    "metal": "Metal / Hard Rock",
+    "black metal": "Metal / Hard Rock",
+    "progressive metal": "Metal / Hard Rock",
+    "symphonic metal": "Metal / Hard Rock",
+    "post hardcore": "Rock / Indie / Punk",
+    "alt/indie": "Rock / Indie / Punk",
+    "alt rock": "Rock / Indie / Punk",
+    "stoner rock": "Rock / Indie / Punk",
+    "grunge": "Rock / Indie / Punk",
+    "musique alternative / inde": "Rock / Indie / Punk",
+    "rap / hip hop": "Hip-hop / Rap",
+    "r&b / soul": "R&B / Soul / Funk",
+    "chanson": "Chanson Française / Variétés",
+    "world": "World / Latin",
+    "musique du monde": "World / Latin",
+    "soul funk": "R&B / Soul / Funk",
+    "rythm'n'blues": "R&B / Soul / Funk",
+    "jazz and blues": "Jazz / Blues",
+    "rnb": "R&B / Soul / Funk",
+    "r'n'b/soul": "R&B / Soul / Funk",
+    "funk": "R&B / Soul / Funk",
+    "indie-pop": "Pop",
+    "indie pop": "Pop",
+    "hyperpop": "Pop",
+    "punk-rock": "Rock / Indie / Punk",
+    "punk rock": "Rock / Indie / Punk",
+    "pop-punk": "Rock / Indie / Punk",
+    "pop punk": "Rock / Indie / Punk",
+    "post punk": "Rock / Indie / Punk",
+    "alternative-rock": "Rock / Indie / Punk",
+    "indie-rock": "Rock / Indie / Punk",
+    "heavy-metal": "Metal / Hard Rock",
+    "hard rock": "Metal / Hard Rock",
+    "metal symphonique": "Metal / Hard Rock",
+    "musiques du monde": "World / Latin",
+    "latino": "World / Latin",
+    "indie folk": "Folk / Country",
+    "french chanson": "Chanson Française / Variétés",
+    "french variety": "Chanson Française / Variétés",
+    "varietes": "Chanson Française / Variétés",
+    "spoken word": "Comedy / Spoken Word",
+    "stand-up": "Comedy / Spoken Word",
+    "humour": "Comedy / Spoken Word",
     "afrobeats": "World / Latin",
     "afropop": "World / Latin",
     "afropop, afrobeats, zouk": "World / Latin",
@@ -25,8 +71,8 @@ EXACT_RAW_MAPPINGS = {
     "alternative and indie, other": "Rock / Indie / Punk",
     "alternative and indie, rock": "Rock / Indie / Punk",
     "bossa nova": "World / Latin",
-    "chanson francaise": "French chanson",
-    "comedy": "Comedy",
+    "chanson francaise": "Chanson Française / Variétés",
+    "comedy": "Comedy / Spoken Word",
     "country": "Folk / Country",
     "cumbia": "World / Latin",
     "dark / metal": "Metal / Hard Rock",
@@ -57,7 +103,7 @@ EXACT_RAW_MAPPINGS = {
     "musiques electroniques": "Electronic",
     "musique electronique": "Electronic",
     "musiques traditionnelles": "World / Latin",
-    "one man show": "Comedy",
+    "one man show": "Comedy / Spoken Word",
     "other, pop": "Pop",
     "pop": "Pop",
     "pop rock": "Rock / Indie / Punk",
@@ -107,9 +153,9 @@ EXACT_RAW_MAPPINGS = {
     "concert - minimal experimental pop": "Pop",
     "concert - grime, hip-hop, spoken word": "Hip-hop / Rap",
     "musique du monde, latino": "World / Latin",
-    "variete / chanson / pop francaise": "French chanson",
-    "variete francaise": "French chanson",
-    "variete et chanson francaise": "French chanson",
+    "variete / chanson / pop francaise": "Chanson Française / Variétés",
+    "variete francaise": "Chanson Française / Variétés",
+    "variete et chanson francaise": "Chanson Française / Variétés",
     "variete internationale": "Pop",
     "#altpop #electropop #pop": "Pop",
     "rap hip hop": "Hip-hop / Rap",
@@ -152,9 +198,49 @@ def map_raw_genre(value: str | None) -> str | None:
         return "Jazz / Blues"
     matches = {
         genre for genre, tokens in SAFE_TOKEN_RULES
-        if any(token in normalized for token in tokens)
+        if any(re.search(r"(?<!\w)" + re.escape(token) + r"(?!\w)", normalized) for token in tokens)
     }
     return next(iter(matches)) if len(matches) == 1 else None
+
+
+def map_raw_genres(value: str | None) -> list[str]:
+    """Preserve reviewed explicit compound taxonomies, not cross-source guesses."""
+    compounds = {
+        "rock / metal": ("Rock / Indie / Punk", "Metal / Hard Rock"),
+        "metal, rock": ("Rock / Indie / Punk", "Metal / Hard Rock"),
+        "hard rock / metal / punk": ("Rock / Indie / Punk", "Metal / Hard Rock"),
+        "pop/rock": ("Pop", "Rock / Indie / Punk"),
+        "pop / indie": ("Pop", "Rock / Indie / Punk"),
+        "chanson, pop": ("Chanson Française / Variétés", "Pop"),
+        "pop electro": ("Pop", "Electronic"),
+        "pop/electro": ("Pop", "Electronic"),
+        "rnb / pop": ("R&B / Soul / Funk", "Pop"),
+        "blues rock": ("Jazz / Blues", "Rock / Indie / Punk"),
+        "blues country": ("Jazz / Blues", "Folk / Country"),
+        "jazz / funk": ("Jazz / Blues", "R&B / Soul / Funk"),
+        "jazz funk": ("Jazz / Blues", "R&B / Soul / Funk"),
+        "jazz soul": ("Jazz / Blues", "R&B / Soul / Funk"),
+        "jazz rock": ("Jazz / Blues", "Rock / Indie / Punk"),
+        "jazz chanson": ("Jazz / Blues", "Chanson Française / Variétés"),
+        "jazz & chanson": ("Jazz / Blues", "Chanson Française / Variétés"),
+        "jazz folk": ("Jazz / Blues", "Folk / Country"),
+        "jazz pop": ("Jazz / Blues", "Pop"),
+        "world pop": ("World / Latin", "Pop"),
+        "world electronique": ("World / Latin", "Electronic"),
+        "hip hop / rap, rnb / soul": ("Hip-hop / Rap", "R&B / Soul / Funk"),
+    }
+    if normalize_raw(value or "") in compounds:
+        return list(compounds[normalize_raw(value or "")])
+    # Explicit comma-separated source categories, only when EVERY component is
+    # itself an exact reviewed/public label. Never mine prose or unknown tags.
+    parts = [part.strip() for part in normalize_raw(value or "").split(",")]
+    exact = {normalize_raw(label): label for label in PUBLIC_GENRES}
+    exact.update(EXACT_RAW_MAPPINGS)
+    if len(parts) > 1 and all(exact.get(part) for part in parts):
+        labels = {exact[part] for part in parts}
+        return [label for label in PUBLIC_GENRES if label in labels]
+    mapped = map_raw_genre(value)
+    return [mapped] if mapped else []
 
 
 CONTEXT_GENRE_RULES = (
@@ -216,7 +302,7 @@ CONTEXT_GENRE_RULES = (
         r"\bafrobeats\b",
         r"\bbossa nova\b",
     )),
-    ("French chanson", (
+    ("Chanson Française / Variétés", (
         r"\bchanson\b",
         r"\bvariete francaise\b",
     )),
@@ -353,6 +439,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
 
     for event in events:
         event.genre_public = None
+        event.genres_public = None
         evidence = event.genre_evidence or []
         if event.genre and not evidence:
             evidence = [{"raw": event.genre, "source": event.genre_source or "unknown"}]
@@ -362,10 +449,11 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
                 raw_inventory[item["raw"]] += 1
                 raw_sources[item["raw"]].add(item.get("source") or "unknown")
 
-        mapped = {
-            map_raw_genre(item.get("raw")) for item in evidence
-            if map_raw_genre(item.get("raw"))
-        }
+        source_sets = [set(map_raw_genres(item.get("raw"))) for item in evidence]
+        mapped = set().union(*source_sets) if source_sets else set()
+        # A single explicit source must support the entire compound. Merely
+        # combining incompatible labels from independent sources is not evidence.
+        explicit_compound = len(mapped) > 1 and mapped in source_sets
         artist_id = normalize_artist_component(event.headliner)
         mapped_artist_id = REVIEWED_MAPPING_ALIASES.get(artist_id, artist_id)
         override = mappings["overrides"].get(mapped_artist_id)
@@ -391,6 +479,11 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             exact_public = any(normalize_raw(item.get("raw", "")) == normalize_raw(event.genre_public) for item in evidence)
             event.genre_method = "source_explicit" if exact_public else "source_mapping"
             stats[event.genre_method] += 1
+        elif explicit_compound:
+            event.genres_public = [g for g in PUBLIC_GENRES if g in mapped]
+            event.genre_public = event.genres_public[0]
+            event.genre_method = "source_mapping"
+            stats["source_mapping"] += 1
         elif override and not event.co_headliners:
             event.genre_public = override["genre"]
             event.genre_method = "manual_override"
@@ -447,6 +540,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         "raw_sources": {raw: sorted(sources) for raw, sources in sorted(raw_sources.items())},
         "raw_genres": [
             {"raw": raw, "frequency": frequency, "mapped_target": map_raw_genre(raw),
+             "mapped_targets": map_raw_genres(raw),
              "sources": sorted(raw_sources[raw])}
             for raw, frequency in raw_inventory.most_common()
         ],

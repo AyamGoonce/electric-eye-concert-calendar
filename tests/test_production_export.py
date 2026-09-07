@@ -160,13 +160,13 @@ class ProductionDataTests(unittest.TestCase):
             genre_categories("Rock / Indie / Punk"),
         )
         self.assertEqual(["Jazz / Blues"], genre_categories("Jazz actuel"))
-        self.assertEqual(["Jazz / Blues"], genre_categories("Jazz funk"))
+        self.assertEqual(["Jazz / Blues", "R&B / Soul / Funk"], genre_categories("Jazz funk"))
         self.assertEqual([], genre_categories(None))
 
-    def test_ambiguous_genre_does_not_combine_public_categories(self):
-        self.assertEqual([], genre_categories("Pop, Rock"))
-        self.assertEqual([], genre_categories("Jazz / Funk"))
-        self.assertEqual([], genre_categories("Jazz, Musiques du monde"))
+    def test_explicit_compound_genres_preserve_public_categories(self):
+        self.assertEqual(["Pop", "Rock / Indie / Punk"], genre_categories("Pop, Rock"))
+        self.assertEqual(["Jazz / Blues", "R&B / Soul / Funk"], genre_categories("Jazz / Funk"))
+        self.assertEqual(["Jazz / Blues", "World / Latin"], genre_categories("Jazz, Musiques du monde"))
 
     def test_exact_public_genre_is_preserved_as_one_label(self):
         self.assertEqual(
@@ -323,7 +323,7 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn("e.d.startsWith(month)", html)
         self.assertIn("venueId(e.v)===venueId(venue)", html)
         self.assertIn('g==="Unsorted"?!e.x.length', html)
-        self.assertIn('e.x.length&&e.x[0]===g', html)
+        self.assertIn('e.x.includes(g)', html)
         self.assertIn('order==="date-desc"', html)
         self.assertIn('order==="artist-asc"', html)
         self.assertIn('order==="venue-asc"', html)
@@ -333,7 +333,7 @@ class ProductionHTMLTests(unittest.TestCase):
         self.assertIn('e.c.toLocaleLowerCase()==="paris"?e.v:e.v+" ("+e.c+")"', html)
         self.assertIn('ticket.target="_blank"', html)
         self.assertIn('ticket.rel="noopener noreferrer"', html)
-        self.assertIn('e.x[0]', html)
+        self.assertIn('e.x.forEach', html)
         self.assertNotIn('addText(metadata, "ee-calendar-promoter"', html)
         self.assertIn("ee-calendar-lineup-toggle", html)
         self.assertIn('setAttribute("aria-expanded"', html)
@@ -351,14 +351,14 @@ class ProductionHTMLTests(unittest.TestCase):
         renderer = read_renderer()
 
         for genre in PUBLIC_GENRES:
-            self.assertEqual(1, renderer.count(f'"{genre}"'))
+            self.assertGreaterEqual(renderer.count(f'"{genre}"'), 1)
         self.assertIn('publicGenres.concat(["Unsorted"]).map', renderer)
         self.assertNotIn("genreValues.forEach", renderer)
 
     def test_event_genre_label_uses_existing_filter_state(self):
         renderer = read_renderer()
 
-        self.assertIn('genreButton(e.x[0])', renderer)
+        self.assertIn('genreButton(g)', renderer)
         self.assertIn('c.value===genre', renderer)
         self.assertIn('check.checked=true', renderer)
         self.assertIn('updateGenreSummary();updateURL(true);render()', renderer)
@@ -376,7 +376,7 @@ class ProductionHTMLTests(unittest.TestCase):
     def test_blank_event_has_no_unsorted_badge(self):
         renderer = read_renderer()
 
-        self.assertIn('if(e.x.length)metadata.append(genreButton(e.x[0]))', renderer)
+        self.assertIn('e.x.forEach(function(g){metadata.append(genreButton(g));})', renderer)
         self.assertIn('g==="Unsorted"?!e.x.length', renderer)
         self.assertNotIn('genreButton("Unsorted")', renderer)
 
@@ -397,7 +397,7 @@ class ProductionHTMLTests(unittest.TestCase):
             'manualCollapsedMonths.delete(linkedMonth)',
             'autoCollapsedMonths.delete(linkedMonth)',
             'list.append(daySection(day,dayItems))',
-            'genreButton(e.x[0])',
+            'genreButton(g)',
             'ticket.href=e.t',
             'function autoCollapseOnUpwardScroll()',
             'y<lastScrollY-4',

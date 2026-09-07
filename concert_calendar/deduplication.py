@@ -100,6 +100,12 @@ DESCRIPTIVE_ARTIST_ALIASES = {
 # Reviewed event-level equivalences.  They intentionally do not generalize to
 # other artists, dates, venues, or editorial phrases.
 REVIEWED_EVENT_TITLES = {
+    # Stade de France's artist heading identifies JAŸ-Z; the event row uses
+    # JAŸ-Z 30 as branding. Reviewed 2026-09-07 against the official listing:
+    # https://www.stadefrance.com/fr/billetterie/jay-z-30
+    # Deliberately event-scoped: numbers remain valid parts of artist names.
+    ("2026-09-10", "stade de france", "jay-z"): "JAŸ-Z",
+    ("2026-09-10", "stade de france", "jay-z 30"): "JAŸ-Z",
     (
         "2026-10-13", "cafe de la danse", "the brooks",
     ): "The Brooks",
