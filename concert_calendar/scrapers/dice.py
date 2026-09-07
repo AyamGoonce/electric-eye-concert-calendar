@@ -18,6 +18,8 @@ API_URL = "https://api.dice.fm/unified_search"
 REQUEST_TIMEOUT = 30
 PAGE_SIZE = 24
 MAX_PAGES = 100
+MAX_DIAGNOSTICS = 200
+_DIAGNOSTICS = []
 
 HEADERS = {
     "User-Agent": (
@@ -183,6 +185,10 @@ def extract_events(payload):
     return events
 
 
+def get_diagnostics():
+    return list(_DIAGNOSTICS)
+
+
 def fetch_dice_detail_description(event_id):
     url = f"https://dice.fm/event/{event_id}"
 
@@ -267,6 +273,22 @@ def parse_event(data):
     if not openers:
         headliner, co_headliners = parse_neutral_cobill(headliner)
 
+    if openers or co_headliners or re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", event_name, re.I):
+        _DIAGNOSTICS.append({
+            "source_event_id": event_id,
+            "listing_url": EVENTS_URL,
+            "detail_url": f"https://dice.fm/event/{event_id}",
+            "raw_event_title": event_name,
+            "raw_performer_array": data.get("artists") or data.get("performers"),
+            "parser_billing_path": "explicit_title_billing" if openers else "neutral_cobill",
+            "parsed_headliner": headliner,
+            "parsed_co_headliners": co_headliners,
+            "parsed_openers": openers,
+            "final_date": event_date,
+            "final_venue": venue,
+        })
+        del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
+
     images = data.get("images") or {}
     image_url = clean_text(images.get("square")) or None
 
@@ -314,6 +336,7 @@ def event_key(event):
 
 
 def load_events():
+    _DIAGNOSTICS.clear()
     session = requests.Session()
     session.headers.update(HEADERS)
     events_by_key = {}

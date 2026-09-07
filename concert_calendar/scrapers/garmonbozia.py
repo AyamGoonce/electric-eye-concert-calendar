@@ -13,6 +13,8 @@ EVENTS_URL = (
     "index.php?site=garmonbozia"
 )
 REQUEST_TIMEOUT = 30
+MAX_DIAGNOSTICS = 200
+_DIAGNOSTICS = []
 
 HEADERS = {
     "User-Agent": (
@@ -83,6 +85,9 @@ def parse_card(card):
         else ""
     )
     headliner, openers = parse_lineup(title)
+    if re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", title, re.I) or openers:
+        _DIAGNOSTICS.append({"source_event_id": clean_text(card.get("data-id") or card.get("id")) or None, "listing_url": EVENTS_URL, "raw_event_title": title, "parser_billing_path": "plus_title_split" if "+" in title else "plain_compound_title", "parsed_headliner": headliner, "parsed_co_headliners": None, "parsed_openers": openers})
+        del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
     event_date = (
         clean_text(date_element.get("datetime"))[:10]
         if date_element
@@ -151,6 +156,7 @@ def event_key(event):
 
 
 def load_events():
+    _DIAGNOSTICS.clear()
     session = requests.Session()
 
     print(f"Downloading {EVENTS_URL}...")
@@ -186,3 +192,7 @@ def load_events():
     )
 
     return events
+
+
+def get_diagnostics():
+    return list(_DIAGNOSTICS)
