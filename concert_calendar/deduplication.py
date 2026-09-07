@@ -189,6 +189,22 @@ REVIEWED_EVENT_MOVES = (
 # date, canonical venue, and the complete set of source-card artist identities.
 REVIEWED_EVENT_BILLS = (
     {
+        "date": "2027-03-09",
+        "venue": "Élysée Montmartre",
+        "artists": ("graveyard and blues pills",),
+        "headliner": "GRAVEYARD",
+        "co_headliners": ["BLUES PILLS"],
+        "openers": ["SPIDERS"],
+    },
+    {
+        "date": "2027-03-21",
+        "venue": "Petit Bain",
+        "artists": ("evil invaders and exhorder and heathen",),
+        "headliner": "EVIL INVADERS",
+        "co_headliners": ["EXHORDER", "HEATHEN"],
+        "openers": ["WARFIELD"],
+    },
+    {
         "date": "2026-11-16",
         "venue": "Le Zénith Paris – La Villette",
         "artists": ("bloc party", "interpol"),
@@ -914,8 +930,12 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
                 merge_events(base, event)
                 removed.add(id(event))
         base.headliner = rule["headliner"]
-        base.openers = list(rule.get("openers", [])) or None
-        base.co_headliners = list(rule.get("co_headliners", [])) or None
+        base.openers = _stable_unique([
+            *(base.openers or []), *(rule.get("openers", [])),
+        ]) or None
+        base.co_headliners = _stable_unique([
+            *(base.co_headliners or []), *(rule.get("co_headliners", [])),
+        ]) or None
 
     return [event for event in events if id(event) not in removed]
 

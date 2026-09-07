@@ -24,6 +24,22 @@ def event(
 
 
 class CrossSourceBillingDeduplicationTests(unittest.TestCase):
+    def test_reviewed_graveyard_bill_roles(self):
+        item = event("GRAVEYARD & BLUES PILLS", venue="Élysée Montmartre", date="2027-03-09")
+        result = deduplicate_events([item])
+        self.assertEqual(1, len(result))
+        self.assertEqual("GRAVEYARD", result[0].headliner)
+        self.assertEqual(["BLUES PILLS"], result[0].co_headliners)
+        self.assertEqual(["SPIDERS"], result[0].openers)
+
+    def test_reviewed_evil_invaders_bill_roles(self):
+        item = event("EVIL INVADERS & EXHORDER & HEATHEN", venue="Petit Bain", date="2027-03-21")
+        result = deduplicate_events([item])
+        self.assertEqual(1, len(result))
+        self.assertEqual("EVIL INVADERS", result[0].headliner)
+        self.assertEqual(["EXHORDER", "HEATHEN"], result[0].co_headliners)
+        self.assertEqual(["WARFIELD"], result[0].openers)
+
     def test_reviewed_jay_z_event_branding_preserves_metadata(self):
         plain = event("JAŸ-Z", date="2026-09-10", venue="Stade de France", source="Live Nation")
         branded = event("JAŸ-Z 30", date="2026-09-10", venue="Stade de France", source="Stade de France")
