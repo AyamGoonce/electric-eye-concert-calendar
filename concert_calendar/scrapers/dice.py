@@ -21,6 +21,23 @@ MAX_PAGES = 100
 MAX_DIAGNOSTICS = 200
 _DIAGNOSTICS = []
 
+
+def _diagnostic_priority(*, title, series_name, venue_data, co_headliners, openers):
+    venue_text = clean_text((venue_data or {}).get("name"))
+    haystack = f"{title} {series_name or ''} {venue_text}".casefold()
+    priority = 0
+    if series_name:
+        priority += 5
+    if re.search(r"\b(?:festival|programme|series)\b", haystack):
+        priority += 4
+    if re.search(r"\b(?:main room|grande salle|petite salle|club|hall|room\s*\d*|stage|double show|\d(?:er|e|nd|st)\s+set)\b", haystack):
+        priority += 4
+    if co_headliners or openers:
+        priority += 2
+    if re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", title, re.I):
+        priority += 1
+    return priority
+
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -247,7 +264,11 @@ def extract_events(payload):
 
 
 def get_diagnostics():
-    return list(_DIAGNOSTICS)
+    ranked = sorted(
+        enumerate(_DIAGNOSTICS),
+        key=lambda item: (-item[1].get("diagnostic_priority", 0), item[0]),
+    )
+    return [item[1] for item in ranked[:MAX_DIAGNOSTICS]]
 
 
 def fetch_dice_detail_description(event_id):
@@ -339,21 +360,36 @@ def parse_event(data):
     if not openers:
         headliner, co_headliners = parse_neutral_cobill(headliner)
 
-    if openers or co_headliners or re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", event_name, re.I):
+    diagnostic_priority = _diagnostic_priority(
+        title=event_name,
+        series_name=series_name,
+        venue_data=venue_data,
+        co_headliners=co_headliners,
+        openers=openers,
+    )
+    if diagnostic_priority:
         _DIAGNOSTICS.append({
             "source_event_id": event_id,
             "listing_url": EVENTS_URL,
             "detail_url": f"https://dice.fm/event/{event_id}",
             "raw_event_title": event_name,
             "raw_performer_array": data.get("artists") or data.get("performers"),
+            "raw_venue": venue,
+            "raw_venue_id": venue_data.get("id"),
+            "raw_room": venue_data.get("room") or venue_data.get("space") or venue_data.get("stage"),
+            "raw_parent_venue": venue_data.get("parent_name") or venue_data.get("parentVenue"),
+            "raw_address": venue_data.get("address"),
+            "raw_city": city,
+            "series_name": series_name,
             "parser_billing_path": "explicit_title_billing" if openers else "neutral_cobill",
             "parsed_headliner": headliner,
             "parsed_co_headliners": co_headliners,
             "parsed_openers": openers,
             "final_date": event_date,
             "final_venue": venue,
+            "start_time": start_date.split("T", 1)[1][:5] if "T" in start_date else None,
+            "diagnostic_priority": diagnostic_priority,
         })
-        del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
 
     images = data.get("images") or {}
     image_url = clean_text(images.get("square")) or None

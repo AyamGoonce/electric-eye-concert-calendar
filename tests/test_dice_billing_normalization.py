@@ -1,5 +1,6 @@
 from unittest import TestCase
 
+from concert_calendar.scrapers import dice
 from concert_calendar.scrapers.dice import parse_event
 
 
@@ -76,3 +77,25 @@ class DiceBillingNormalizationTests(TestCase):
         self.assertEqual("Artist, en concert à Lyon", event("Artist, en concert à Lyon").headliner)
         self.assertEqual("Tabber : Modern Goth Paris", event("Tabber : Modern Goth Paris").headliner)
         self.assertEqual("Passionate Artist", event("Passionate Artist").headliner)
+
+    def test_high_value_diagnostics_are_prioritized_within_cap(self):
+        dice._DIAGNOSTICS.clear()
+        for index in range(205):
+            parse_event({
+                "id": str(index),
+                "name": f"Artist {index} + Support {index}",
+                "dates": {"event_start_date": "2027-01-02T20:00:00+00:00"},
+                "venues": [{"name": "Ordinary Room", "id": "v1", "city": {"name": "Paris"}}],
+            })
+        parse_event({
+            "id": "priority",
+            "name": "Iceage (Double show) — Pitchfork Music Festival Paris 2026",
+            "dates": {"event_start_date": "2026-11-02T20:00:00+00:00"},
+            "venues": [{"name": "Main Room", "id": "main", "room": "Main Room", "city": {"name": "Paris"}}],
+        })
+        diagnostics = dice.get_diagnostics()
+        self.assertEqual(200, len(diagnostics))
+        selected = next(item for item in diagnostics if item["source_event_id"] == "priority")
+        self.assertEqual("Main Room", selected["raw_venue"])
+        self.assertEqual("Main Room", selected["raw_room"])
+        self.assertEqual("Pitchfork Music Festival Paris 2026", selected["series_name"])
