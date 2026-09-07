@@ -64,6 +64,57 @@ SERIES_PREFIXES = {
     "le beau dimanche",
 }
 
+FESTIVAL_SUFFIX_RE = re.compile(
+    r"\s+—\s+(?P<series>(?=[^—]*(?:\b20\d{2}\b|\bparis\b|\bpitchfork\b))"
+    r"[^—]+\b(?:festival|programme|series)\b[^—]*)\s*$",
+    re.IGNORECASE,
+)
+NAMED_GUEST_RE = re.compile(
+    r"\s*\+\s*(?:very\s+)?special\s+guests?\s*:\s*(?P<name>.+?)\s*$|"
+    r"\s*\+\s*guest\s*:\s*(?P<guest>.+?)\s*$",
+    re.IGNORECASE,
+)
+PARIS_PRESENTATION_SUFFIX_RE = re.compile(
+    r",\s*en\s+concert\s+à\s+Paris\s*!?\s*$",
+    re.IGNORECASE,
+)
+PASS_PREFIX_RE = re.compile(
+    r"^pass\s+(?:1|2)\s+jours?\s+[^:]+:\s*",
+    re.IGNORECASE,
+)
+
+
+def normalize_presentation_wrapper(title):
+    """Remove only the reviewed DICE presentation/pass wrapper structures."""
+
+    title = clean_text(title)
+    title = PARIS_PRESENTATION_SUFFIX_RE.sub("", title).strip()
+    return PASS_PREFIX_RE.sub("", title).strip()
+
+
+def split_festival_suffix(title):
+    """Separate a recognized DICE festival/programme suffix from performers."""
+
+    match = FESTIVAL_SUFFIX_RE.search(clean_text(title))
+    if not match:
+        return clean_text(title), None
+    performer_title = clean_text(title[:match.start()])
+    series_name = clean_text(match.group("series"))
+    if not performer_title or not series_name:
+        return clean_text(title), None
+    return performer_title, series_name
+
+
+def parse_named_guest(title):
+    """Parse only explicitly labelled named guests as support acts."""
+
+    match = NAMED_GUEST_RE.search(clean_text(title))
+    if not match:
+        return clean_text(title), None
+    guest = clean_text(match.group("name") or match.group("guest"))
+    performer = clean_text(title[:match.start()])
+    return performer, [guest] if performer and guest else None
+
 
 def parse_explicit_billing(title):
     """Return reviewed title-embedded billing without guessing arbitrary titles."""
@@ -120,14 +171,24 @@ def parse_neutral_cobill(title):
         r"^(?:special guest|special guests)$",
         r"^(?:opening act|opening acts)$",
         r"^(?:tba|to be announced)$",
+        r"^guests?\s+(?:surprise|suprise)$",
     )
 
-    for component in components:
-        if any(
+    # Preserve the existing explicit "1ère partie" representation; it is
+    # descriptive billing metadata, not an artist placeholder to rewrite.
+    if any(re.fullmatch(non_artist_patterns[0], component, flags=re.IGNORECASE) for component in components):
+        return title, None
+
+    components = [
+        component for component in components
+        if not any(
             re.fullmatch(pattern, component, flags=re.IGNORECASE)
             for pattern in non_artist_patterns
-        ):
-            return title, None
+        )
+    ]
+
+    if len(components) < 2:
+        return components[0] if components else title, None
 
     return components[0], components[1:]
 
@@ -253,9 +314,14 @@ def parse_event(data):
         return None
 
     event_name = headliner
-    headliner, openers = parse_explicit_billing(headliner)
+    performer_title, series_name = split_festival_suffix(event_name)
+    performer_title = normalize_presentation_wrapper(performer_title)
+    performer_title, named_guest_openers = parse_named_guest(performer_title)
+    performer_title = normalize_presentation_wrapper(performer_title)
+    headliner, openers = parse_explicit_billing(performer_title)
 
-    series_name = None
+    if named_guest_openers:
+        openers = named_guest_openers
 
     if event_name.casefold() == "mardi jazz!":
         try:
