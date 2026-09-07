@@ -14,6 +14,8 @@ SOURCE_NAME = "Élysée Montmartre"
 PROGRAMME_URL = "https://www.elyseemontmartre.com/fr/programmation/"
 REQUEST_TIMEOUT = 30
 MAX_PAGES = 6
+MAX_DIAGNOSTICS = 200
+_DIAGNOSTICS = []
 HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Safari/537.36"}
 MONTHS = {"janvier": 1, "fevrier": 2, "mars": 3, "avril": 4, "mai": 5, "juin": 6, "juillet": 7, "aout": 8, "septembre": 9, "octobre": 10, "novembre": 11, "decembre": 12}
 
@@ -47,10 +49,29 @@ def parse_card(card):
     image_url = element_image_url(card.select_one(".visuel img"), base_url=PROGRAMME_URL)
     if not title or not headliner:
         return []
-    return [ConcertEvent(date=d.isoformat(), headliner=headliner, venue=SOURCE_NAME, city="Paris", department="75", ticket_url=clean(title.get("href")), image_url=image_url, image_source=SOURCE_NAME if image_url else None) for d in dates if d >= date.today()]
+    events = [ConcertEvent(date=d.isoformat(), headliner=headliner, venue=SOURCE_NAME, city="Paris", department="75", ticket_url=clean(title.get("href")), image_url=image_url, image_source=SOURCE_NAME if image_url else None) for d in dates if d >= date.today()]
+    if events and (re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", headliner, re.I) or len(events) > 1):
+        for event in events:
+            _DIAGNOSTICS.append({
+                "source_event_id": clean(title.get("data-id") or card.get("data-id")) or None,
+                "listing_url": PROGRAMME_URL,
+                "detail_url": clean(title.get("href")),
+                "raw_event_title": headliner,
+                "raw_date": clean((card.select_one(".date") or card).get_text(" ", strip=True)),
+                "final_date": event.date,
+                "raw_venue": SOURCE_NAME,
+                "final_venue": event.venue,
+                "parser_billing_path": "plain_title",
+                "parsed_headliner": event.headliner,
+                "parsed_co_headliners": event.co_headliners,
+                "parsed_openers": event.openers,
+            })
+        del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
+    return events
 
 
 def load_events():
+    _DIAGNOSTICS.clear()
     events = {}
     session = requests.Session()
     for page in range(1, MAX_PAGES + 1):
@@ -67,3 +88,7 @@ def load_events():
         if not soup.select_one("link[rel='next']"):
             break
     return discard_repeated_generic_images(list(events.values()))
+
+
+def get_diagnostics():
+    return list(_DIAGNOSTICS)

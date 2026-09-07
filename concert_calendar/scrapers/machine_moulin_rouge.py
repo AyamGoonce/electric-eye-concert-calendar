@@ -11,6 +11,8 @@ from concert_calendar.models import ConcertEvent
 SOURCE_NAME = "La Machine du Moulin Rouge"
 PROGRAMME_URL = "https://www.lamachinedumoulinrouge.com/agenda/"
 REQUEST_TIMEOUT = 30
+MAX_DIAGNOSTICS = 200
+_DIAGNOSTICS = []
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -66,10 +68,27 @@ def parse_events(soup, *, today=None):
                 image_source=SOURCE_NAME if image else None,
             )
         )
+        if re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", headliner, re.I):
+            _DIAGNOSTICS.append({
+                "source_event_id": _clean(detail_link.get("data-id") or "") or None,
+                "listing_url": PROGRAMME_URL,
+                "detail_url": detail_link.get("href"),
+                "raw_event_title": headliner,
+                "raw_date": time_node.get("datetime"),
+                "final_date": starts_at.date().isoformat(),
+                "raw_venue": SOURCE_NAME,
+                "final_venue": SOURCE_NAME,
+                "parser_billing_path": "plain_title",
+                "parsed_headliner": headliner,
+                "parsed_co_headliners": None,
+                "parsed_openers": None,
+            })
+            del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
     return events
 
 
 def load_events():
+    _DIAGNOSTICS.clear()
     session = requests.Session()
     print(f"Downloading La Machine du Moulin Rouge agenda: {PROGRAMME_URL}")
     response = session.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
@@ -81,3 +100,7 @@ def load_events():
     result = discard_repeated_generic_images(list(unique.values()))
     print(f"Created {len(result)} La Machine du Moulin Rouge ConcertEvent records")
     return result
+
+
+def get_diagnostics():
+    return list(_DIAGNOSTICS)

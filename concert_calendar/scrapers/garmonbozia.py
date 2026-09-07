@@ -85,9 +85,6 @@ def parse_card(card):
         else ""
     )
     headliner, openers = parse_lineup(title)
-    if re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", title, re.I) or openers:
-        _DIAGNOSTICS.append({"source_event_id": clean_text(card.get("data-id") or card.get("id")) or None, "listing_url": EVENTS_URL, "raw_event_title": title, "parser_billing_path": "plus_title_split" if "+" in title else "plain_compound_title", "parsed_headliner": headliner, "parsed_co_headliners": None, "parsed_openers": openers})
-        del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
     event_date = (
         clean_text(date_element.get("datetime"))[:10]
         if date_element
@@ -119,6 +116,24 @@ def parse_card(card):
         if ticket_element
         else None
     )
+
+    if re.search(r"\s[+&/]\s|\b(?:with|feat\.?|featuring)\b", title, re.I) or openers:
+        _DIAGNOSTICS.append({
+            "source_event_id": clean_text(card.get("data-id") or card.get("id")) or None,
+            "listing_url": EVENTS_URL,
+            "detail_url": ticket_url or None,
+            "raw_event_title": title,
+            "raw_date": clean_text(date_element.get("datetime")) if date_element else None,
+            "final_date": event_date,
+            "raw_venue": clean_text(venue_element.get_text(" ", strip=True)) if venue_element else None,
+            "final_venue": venue,
+            "final_city": city,
+            "parser_billing_path": "plus_title_split" if "+" in title else "plain_compound_title",
+            "parsed_headliner": headliner,
+            "parsed_co_headliners": None,
+            "parsed_openers": openers,
+        })
+        del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
 
     if not event_date:
         return None
