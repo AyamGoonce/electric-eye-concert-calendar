@@ -83,6 +83,12 @@ def normalize_artist(value):
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
 
 
+def normalize_content_identity(value):
+    """Exact Unicode spelling for article association; never fold accents."""
+    value = unicodedata.normalize("NFC", value or "").casefold().replace("’", "'")
+    return " ".join(value.split())
+
+
 def slugify(value):
     return normalize_artist(value).replace(" ", "-")
 
@@ -433,7 +439,14 @@ def build_index(entries, *, generated_at=None):
 
 def enrich_events(events, index):
     artists = index["artists"]
-    lookup = index["lookup"]
+    # The legacy search lookup folds accents. It must not establish article
+    # ownership, even when only one of two namesakes has indexed content.
+    lookup = {normalize_content_identity(artist["n"]): slug
+              for slug, artist in artists.items()}
+    for alias, canonical in EXPLICIT_ALIASES.items():
+        slug = lookup.get(normalize_content_identity(canonical))
+        if slug:
+            lookup.setdefault(normalize_content_identity(alias), slug)
     for event in events:
         names = [event.headliner, *(event.co_headliners or []), *(event.openers or [])]
         links = []
@@ -445,7 +458,7 @@ def enrich_events(events, index):
             match = TIME_SUFFIX_RE.search(comparable)
             if match:
                 comparable = comparable[:match.start()].strip()
-            slug = lookup.get(normalize_artist(comparable))
+            slug = lookup.get(normalize_content_identity(comparable))
             if not slug or slug in {item["slug"] for item in links}:
                 continue
             links.append({

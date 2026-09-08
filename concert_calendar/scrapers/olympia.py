@@ -74,6 +74,15 @@ def split_support(value):
     return [artist for artist in artists if artist] or None
 
 
+def parse_explicit_support_title(value):
+    title = clean_text(value)
+    match = re.match(
+        r"^(.+?)\s*\|\s*(?:1(?:ère|ere|re|er|e)|première)\s+partie\s*:\s*(.+)$",
+        title, re.IGNORECASE,
+    )
+    return (clean_text(match[1]), split_support(match[2])) if match else (title, None)
+
+
 def item_genres(item):
     return {
         clean_text(term.get("name"))
@@ -117,7 +126,8 @@ def parse_item(item):
     meta = item.get("meta") or {}
     genres = item_genres(item)
     status = clean_text(meta.get("infos_text_status")).casefold()
-    headliner = clean_text(item.get("post_title")).strip(" -")
+    headliner, title_openers = parse_explicit_support_title(item.get("post_title"))
+    headliner = headliner.strip(" -")
 
     if not genres.intersection(MUSIC_GENRES):
         return []
@@ -131,6 +141,7 @@ def parse_item(item):
         return []
 
     openers = split_support(meta.get("artistes_premiere_partie"))
+    openers = list(dict.fromkeys([*(openers or []), *(title_openers or [])])) or None
     genre = ", ".join(sorted(genres.intersection(MUSIC_GENRES))) or None
     ticket_url = clean_text(item.get("permalink")) or None
     image = meta.get("image") or {}
