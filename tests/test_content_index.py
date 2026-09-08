@@ -24,6 +24,15 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_accent_distinct_artist_labels_do_not_share_identity(self):
+        index = build_index([
+            entry("Ambre @ Salle Pleyel, Paris - March 8th, 2027", ["Concert Review", "Ambre"]),
+            entry("Ambré @ Salle Pleyel, Paris - March 9th, 2027", ["Concert Review", "Ambré"]),
+        ], generated_at="2026-01-01T00:00:00Z")
+        self.assertIn("ambre", index["lookup"])
+        self.assertIn("ambré", index["lookup"])
+        self.assertNotEqual(index["lookup"]["ambre"], index["lookup"]["ambré"])
+
     def test_editorial_prefix_labels_never_seed_pseudo_artists(self):
         index = build_index([
             entry(
