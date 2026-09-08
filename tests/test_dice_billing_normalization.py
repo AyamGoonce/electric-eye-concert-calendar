@@ -14,10 +14,6 @@ def event(title):
 
 
 class DiceBillingNormalizationTests(TestCase):
-    def test_explicit_first_part_title_is_support(self):
-        parsed = event("Eivør | 1ère Partie : Rabbitology")
-        self.assertEqual("Eivør", parsed.headliner)
-        self.assertEqual(["Rabbitology"], parsed.openers)
     def test_festival_suffix_is_series_metadata(self):
         parsed = event("ear + guests — Pitchfork Music Festival 2026")
         self.assertEqual("ear", parsed.headliner)

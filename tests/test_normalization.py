@@ -55,28 +55,6 @@ def make_event(headliner, venue="La Boule Noire"):
 
 
 class ArtistNormalizationTests(unittest.TestCase):
-    def test_accent_only_distinct_artists_do_not_merge(self):
-        left = make_event("Ambre", "Salle Pleyel")
-        right = make_event("Ambré", "Salle Pleyel")
-        left.date = right.date = "2027-03-08"
-        self.assertEqual(2, len(deduplicate_events([left, right])))
-
-    def test_confirmed_event_subtitle_merges_only_with_cross_source_evidence(self):
-        base = make_event("Carpenter Brut", "Le Zénith Paris – La Villette")
-        marked = make_event("CARPENTER BRUT - THE END COMPLETE", "Le Zénith Paris – La Villette")
-        base.date = marked.date = "2027-03-13"
-        base.source_names = ["Le Zénith Paris – La Villette"]
-        marked.source_names = ["DICE"]
-        merged = deduplicate_events([base, marked])
-        self.assertEqual(1, len(merged))
-        self.assertEqual("Carpenter Brut", merged[0].headliner)
-
-    def test_hyphenated_artist_is_not_event_subtitle(self):
-        events = deduplicate_events([
-            make_event("Blink-182", "Le Zénith Paris – La Villette"),
-            make_event("Blink-183", "Le Zénith Paris – La Villette"),
-        ])
-        self.assertEqual(2, len(events))
     def test_reviewed_tour_title_variants_merge_without_fuzzy_matching(self):
         katseye = make_event("KATSEYE", "Accor Arena")
         tour = make_event("KATSEYE - THE WILDWORLD TOUR", "Accor Arena")

@@ -223,6 +223,8 @@ def load_events_with_report(
     source_counts = {}
     source_failures = {}
     source_diagnostics = []
+    source_phase_started = time.perf_counter()
+    print("PHASE START | source_loading", flush=True)
     scrapers, registration_failures = discover_scrapers_with_issues()
 
     for scraper in scrapers:
@@ -231,13 +233,29 @@ def load_events_with_report(
         scraper_events = None
         last_error = None
         attempts_made = 0
+        source_started = time.perf_counter()
 
         for attempt in range(1, scraper_attempts + 1):
             attempts_made = attempt
+            attempt_started = time.perf_counter()
             try:
                 scraper_events = scraper.load_events()
                 if scraper_events or attempt == scraper_attempts:
+                    elapsed = max(0.0, time.perf_counter() - attempt_started)
+                    print(
+                        f"SOURCE ATTEMPT | {scraper.SOURCE_NAME} | attempt={attempt} | "
+                        f"status={'success' if scraper_events else 'empty'} | "
+                        f"records={len(scraper_events or [])} | elapsed={elapsed:.2f}s",
+                        flush=True,
+                    )
                     break
+                elapsed = max(0.0, time.perf_counter() - attempt_started)
+                print(
+                    f"SOURCE ATTEMPT | {scraper.SOURCE_NAME} | attempt={attempt} | "
+                    f"status=empty | records=0 | elapsed={elapsed:.2f}s | "
+                    "reason=unexpected_empty",
+                    flush=True,
+                )
                 print(
                     f"Attempt {attempt}/{scraper_attempts} returned zero events "
                     f"for {scraper.SOURCE_NAME}"
@@ -246,6 +264,13 @@ def load_events_with_report(
                     time.sleep(retry_delay_seconds * attempt)
             except Exception as error:  # Individual sources must not hide the run report.
                 last_error = error
+                elapsed = max(0.0, time.perf_counter() - attempt_started)
+                print(
+                    f"SOURCE ATTEMPT | {scraper.SOURCE_NAME} | attempt={attempt} | "
+                    f"status=exception | elapsed={elapsed:.2f}s | "
+                    f"reason={type(error).__name__}: {error}",
+                    flush=True,
+                )
                 print(
                     f"Attempt {attempt}/{scraper_attempts} failed for "
                     f"{scraper.SOURCE_NAME}: {error}"
@@ -262,7 +287,7 @@ def load_events_with_report(
 
         for event in scraper_events:
             event.source_names = [scraper.SOURCE_NAME]
-            if event.genre and not event.genre_evidence:
+            if event.genre:
                 event.genre_source = scraper.SOURCE_NAME
                 event.genre_evidence = [{
                     "raw": event.genre,
@@ -286,6 +311,17 @@ def load_events_with_report(
         print(f"→ {len(scraper_events)} events loaded")
         print()
 
+        source_status = (
+            "failed" if scraper.SOURCE_NAME in source_failures
+            else "ok" if scraper_events else "empty"
+        )
+        print(
+            f"SOURCE COMPLETE | {scraper.SOURCE_NAME} | status={source_status} | "
+            f"attempts={attempts_made} | records={len(scraper_events)} | "
+            f"elapsed={max(0.0, time.perf_counter() - source_started):.2f}s",
+            flush=True,
+        )
+
         source_counts[scraper.SOURCE_NAME] = len(scraper_events)
         source_health.append({
             "source_name": scraper.SOURCE_NAME,
@@ -305,6 +341,13 @@ def load_events_with_report(
         })
         raw_events.extend(scraper_events)
 
+    print(
+        f"PHASE COMPLETE | source_loading | elapsed={max(0.0, time.perf_counter() - source_phase_started):.2f}s",
+        flush=True,
+    )
+
+    phase_started = time.perf_counter()
+    print("PHASE START | normalization_geography", flush=True)
     geography_normalized_events = []
 
     for event in raw_events:
@@ -334,6 +377,13 @@ def load_events_with_report(
 
         ile_de_france_events.append(event)
 
+    print(
+        f"PHASE COMPLETE | normalization_geography | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s",
+        flush=True,
+    )
+    phase_started = time.perf_counter()
+    print("PHASE START | deduplication", flush=True)
+
     normalized_events = []
 
     for event in ile_de_france_events:
@@ -348,7 +398,17 @@ def load_events_with_report(
         normalized_events,
         diagnostics=deduplication_diagnostics,
     )
+    print(
+        f"PHASE COMPLETE | deduplication | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s",
+        flush=True,
+    )
+    print("PHASE START | genre_processing", flush=True)
+    genre_started = time.perf_counter()
     genre_report = enrich_event_genres(deduplicated_events)
+    print(
+        f"PHASE COMPLETE | genre_processing | elapsed={max(0.0, time.perf_counter() - genre_started):.2f}s",
+        flush=True,
+    )
 
     print()
     print(f"Created {len(raw_events)} raw ConcertEvent records")

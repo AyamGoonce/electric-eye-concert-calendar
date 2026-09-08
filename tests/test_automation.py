@@ -3,6 +3,8 @@ from dataclasses import replace
 from pathlib import Path
 import tempfile
 import unittest
+import io
+import contextlib
 from unittest.mock import Mock, patch
 from datetime import datetime, timedelta, timezone
 import json
@@ -105,6 +107,30 @@ def write_generated_publication(destination, marker="candidate"):
 
 
 class AutomationValidationTests(unittest.TestCase):
+    def test_source_timing_is_streamed_for_attempts_and_completion(self):
+        event = ConcertEvent(
+            date="2027-01-01", headliner="Artist", venue="La CLEF",
+            city="Saint-Germain-en-Laye", department="78",
+        )
+        scraper = type(
+            "StreamingScraper", (), {
+                "SOURCE_NAME": "Streaming source",
+                "load_events": Mock(side_effect=[RuntimeError("temporary"), [event]]),
+            },
+        )
+        output = io.StringIO()
+        with (
+            patch("concert_calendar.sources.discover_scrapers_with_issues", return_value=([scraper], {})),
+            contextlib.redirect_stdout(output),
+        ):
+            load_events_with_report(scraper_attempts=2, retry_delay_seconds=0)
+        text = output.getvalue()
+        self.assertIn("PHASE START | source_loading", text)
+        self.assertIn("SOURCE ATTEMPT | Streaming source | attempt=1 | status=exception", text)
+        self.assertIn("SOURCE ATTEMPT | Streaming source | attempt=2 | status=success | records=1", text)
+        self.assertIn("SOURCE COMPLETE | Streaming source | status=ok | attempts=2 | records=1", text)
+        self.assertIn("PHASE COMPLETE | source_loading", text)
+
     def test_genre_coverage_guard_rejects_catastrophic_collapse(self):
         with self.assertRaises(ProductionValidationError):
             validate_genre_coverage({"total": 1000, "populated": 99})

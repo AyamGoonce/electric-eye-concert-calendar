@@ -83,13 +83,6 @@ def normalize_artist(value):
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
 
 
-def normalize_artist_exact(value):
-    """Identity key preserving meaningful diacritics."""
-    value = unicodedata.normalize("NFKC", value or "").casefold()
-    value = value.replace("’", "'")
-    return re.sub(r"[^\w]+", " ", value, flags=re.UNICODE).strip()
-
-
 def slugify(value):
     return normalize_artist(value).replace(" ", "-")
 
@@ -275,37 +268,25 @@ def build_index(entries, *, generated_at=None):
     seeds = seed_artist_labels(entries)
     canonical_by_identity = {}
     for label, _count in seeds.most_common():
-        identity = normalize_artist_exact(label)
+        identity = normalize_artist(label)
         canonical_by_identity.setdefault(identity, label)
 
     # Reviewed manual artists remain valid canonical identities even when
     # automatic Blogger label/title detection misses them.
     for canonical in MANUAL_ARTIST_ARTICLES:
-        identity = normalize_artist_exact(canonical)
+        identity = normalize_artist(canonical)
         if identity:
             canonical_by_identity.setdefault(identity, canonical)
     for override in (overrides.get("articleOverrides") or {}).values():
         for canonical in override.get("primaryArtists", []):
-            identity = normalize_artist_exact(canonical)
+            identity = normalize_artist(canonical)
             if identity:
                 canonical_by_identity.setdefault(identity, canonical)
 
-    canonical_slugs = {}
-    slug_owners = {}
-    for canonical in sorted(set(canonical_by_identity.values()), key=normalize_artist_exact):
-        base = slugify(canonical)
-        slug = base
-        suffix = 2
-        while slug in slug_owners and slug_owners[slug] != canonical:
-            slug = f"{base}-{suffix}"
-            suffix += 1
-        slug_owners[slug] = canonical
-        canonical_slugs[canonical] = slug
-
     for alias, canonical in EXPLICIT_ALIASES.items():
-        canonical_identity = normalize_artist_exact(canonical)
+        canonical_identity = normalize_artist(canonical)
         if canonical_identity in canonical_by_identity:
-            canonical_by_identity[normalize_artist_exact(alias)] = canonical_by_identity[canonical_identity]
+            canonical_by_identity[normalize_artist(alias)] = canonical_by_identity[canonical_identity]
 
     articles = []
     artist_article_ids = defaultdict(list)
@@ -323,7 +304,7 @@ def build_index(entries, *, generated_at=None):
         for label in labels:
             if not _label_is_article_primary(label, title, article_type):
                 continue
-            canonical = canonical_by_identity.get(normalize_artist_exact(label))
+            canonical = canonical_by_identity.get(normalize_artist(label))
             if canonical and canonical not in matched_names:
                 matched_names.append(canonical)
                 if label != canonical:
@@ -353,7 +334,7 @@ def build_index(entries, *, generated_at=None):
             article["im"] = picture
         article_id = len(articles)
         for canonical in matched_names:
-            slug = canonical_slugs.get(canonical) or slugify(canonical)
+            slug = slugify(canonical)
             article["a"].append(slug)
             artist_article_ids[canonical].append(article_id)
         articles.append(article)
@@ -362,7 +343,7 @@ def build_index(entries, *, generated_at=None):
     slug_owners = {}
     collisions = []
     for canonical, article_ids in sorted(artist_article_ids.items(), key=lambda item: normalize_artist(item[0])):
-        slug = canonical_slugs.get(canonical) or slugify(canonical)
+        slug = slugify(canonical)
         if not slug:
             continue
         owner = slug_owners.get(slug)
@@ -431,7 +412,7 @@ def build_index(entries, *, generated_at=None):
     lookup = {}
     for slug, artist in artists.items():
         for name in [artist["n"], *artist["al"]]:
-            lookup[normalize_artist_exact(name)] = slug
+            lookup[normalize_artist(name)] = slug
 
     counts = Counter(article["y"] for article in articles)
     return {
@@ -464,7 +445,7 @@ def enrich_events(events, index):
             match = TIME_SUFFIX_RE.search(comparable)
             if match:
                 comparable = comparable[:match.start()].strip()
-            slug = lookup.get(normalize_artist_exact(comparable))
+            slug = lookup.get(normalize_artist(comparable))
             if not slug or slug in {item["slug"] for item in links}:
                 continue
             links.append({

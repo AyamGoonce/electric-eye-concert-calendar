@@ -325,14 +325,25 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
 
 
 def build(args) -> int:
+    print("PHASE START | source_and_pipeline_loading", flush=True)
+    phase_started = time.perf_counter()
     events, pipeline_report = load_events_with_report()
+    print(f"PHASE COMPLETE | source_and_pipeline_loading | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     validate_source_report(pipeline_report)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     print("Building Electric Eye editorial content index...")
+    print("PHASE START | blogger_content_retrieval_indexing", flush=True)
+    phase_started = time.perf_counter()
     content_index = build_index(fetch_entries())
+    print(f"PHASE COMPLETE | blogger_content_retrieval_indexing | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
+    print("PHASE START | content_index_enrichment", flush=True)
+    phase_started = time.perf_counter()
     enrich_events(events, content_index)
     content_result = write_assets(output_dir, content_index)
+    print(f"PHASE COMPLETE | content_index_enrichment | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
+    print("PHASE START | state_export", flush=True)
+    phase_started = time.perf_counter()
     now = datetime.now(timezone.utc).replace(microsecond=0)
     try:
         previous_state = load_state(
@@ -350,6 +361,9 @@ def build(args) -> int:
         published_at=published_at,
         state_sha256=state_digest,
     )
+    print(f"PHASE COMPLETE | state_export | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
+    print("PHASE START | render_validation", flush=True)
+    phase_started = time.perf_counter()
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
     route_result = write_clean_routes(output_dir, content_index, events_data)
@@ -359,6 +373,7 @@ def build(args) -> int:
     )
     validate_genre_coverage(pipeline_report.genre_report)
     pointer = validate_assets(output_dir, result)
+    print(f"PHASE COMPLETE | render_validation | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
 
     published_count = None
     if args.published_pointer and Path(args.published_pointer).exists():
