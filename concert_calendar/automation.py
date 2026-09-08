@@ -325,14 +325,23 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
 
 
 def build(args) -> int:
+    build_started = time.perf_counter()
+    phase_timings = {}
+    phase_started = time.perf_counter()
     events, pipeline_report = load_events_with_report()
+    phase_timings["source_and_pipeline_loading"] = max(0.0, time.perf_counter() - phase_started)
     validate_source_report(pipeline_report)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     print("Building Electric Eye editorial content index...")
+    phase_started = time.perf_counter()
     content_index = build_index(fetch_entries())
+    phase_timings["blogger_retrieval_and_content_index"] = max(0.0, time.perf_counter() - phase_started)
+    phase_started = time.perf_counter()
     enrich_events(events, content_index)
     content_result = write_assets(output_dir, content_index)
+    phase_timings["content_enrichment_and_assets"] = max(0.0, time.perf_counter() - phase_started)
+    phase_started = time.perf_counter()
     now = datetime.now(timezone.utc).replace(microsecond=0)
     try:
         previous_state = load_state(
@@ -350,6 +359,8 @@ def build(args) -> int:
         published_at=published_at,
         state_sha256=state_digest,
     )
+    phase_timings["state_and_calendar_export"] = max(0.0, time.perf_counter() - phase_started)
+    phase_started = time.perf_counter()
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
     route_result = write_clean_routes(output_dir, content_index, events_data)
@@ -359,6 +370,7 @@ def build(args) -> int:
     )
     validate_genre_coverage(pipeline_report.genre_report)
     pointer = validate_assets(output_dir, result)
+    phase_timings["render_and_validation"] = max(0.0, time.perf_counter() - phase_started)
 
     published_count = None
     if args.published_pointer and Path(args.published_pointer).exists():
@@ -386,6 +398,14 @@ def build(args) -> int:
             "diagnostics": content_index["diagnostics"],
             "compact_bytes": (output_dir / "electric-eye-artist-lookup.js").stat().st_size,
             "full_bytes": (output_dir / content_result["filename"]).stat().st_size,
+        },
+        "performance": {
+            **pipeline_report.performance,
+            "phases": {
+                **pipeline_report.performance.get("phases", {}),
+                **phase_timings,
+                "total_build": max(0.0, time.perf_counter() - build_started),
+            },
         },
     }
     report_path = output_dir / "automation-report.json"

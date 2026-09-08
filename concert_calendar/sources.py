@@ -78,6 +78,7 @@ class PipelineReport:
     suspicious_near_duplicate_candidates: list[dict]
     genre_report: dict
     source_diagnostics: list[dict]
+    performance: dict
 
 
 def normalize_text_for_matching(text):
@@ -223,10 +224,13 @@ def load_events_with_report(
     source_counts = {}
     source_failures = {}
     source_diagnostics = []
+    source_timings = []
     scrapers, registration_failures = discover_scrapers_with_issues()
 
     for scraper in scrapers:
         print(f"Loading {scraper.SOURCE_NAME}...")
+        source_started = time.perf_counter()
+        attempt_timings = []
 
         scraper_events = None
         last_error = None
@@ -234,10 +238,23 @@ def load_events_with_report(
 
         for attempt in range(1, scraper_attempts + 1):
             attempts_made = attempt
+            attempt_started = time.perf_counter()
             try:
                 scraper_events = scraper.load_events()
                 if scraper_events or attempt == scraper_attempts:
+                    attempt_timings.append({
+                        "attempt": attempt,
+                        "elapsed_seconds": max(0.0, time.perf_counter() - attempt_started),
+                        "result": "success" if scraper_events else "empty",
+                        "record_count": len(scraper_events),
+                    })
                     break
+                attempt_timings.append({
+                    "attempt": attempt,
+                    "elapsed_seconds": max(0.0, time.perf_counter() - attempt_started),
+                    "result": "empty",
+                    "record_count": 0,
+                })
                 print(
                     f"Attempt {attempt}/{scraper_attempts} returned zero events "
                     f"for {scraper.SOURCE_NAME}"
@@ -246,6 +263,13 @@ def load_events_with_report(
                     time.sleep(retry_delay_seconds * attempt)
             except Exception as error:  # Individual sources must not hide the run report.
                 last_error = error
+                attempt_timings.append({
+                    "attempt": attempt,
+                    "elapsed_seconds": max(0.0, time.perf_counter() - attempt_started),
+                    "result": "exception",
+                    "record_count": 0,
+                    "exception": f"{type(error).__name__}: {error}",
+                })
                 print(
                     f"Attempt {attempt}/{scraper_attempts} failed for "
                     f"{scraper.SOURCE_NAME}: {error}"
@@ -287,6 +311,18 @@ def load_events_with_report(
         print()
 
         source_counts[scraper.SOURCE_NAME] = len(scraper_events)
+        source_timings.append({
+            "source_name": scraper.SOURCE_NAME,
+            "elapsed_seconds": max(0.0, time.perf_counter() - source_started),
+            "record_count": len(scraper_events),
+            "attempts": attempts_made,
+            "retries": max(0, attempts_made - 1),
+            "status": (
+                "failed" if scraper.SOURCE_NAME in source_failures
+                else "ok" if scraper_events else "empty"
+            ),
+            "attempts_detail": attempt_timings,
+        })
         source_health.append({
             "source_name": scraper.SOURCE_NAME,
             "module": scraper.__name__,
@@ -305,12 +341,15 @@ def load_events_with_report(
         })
         raw_events.extend(scraper_events)
 
+    geography_started = time.perf_counter()
     geography_normalized_events = []
 
     for event in raw_events:
         normalize_event_geography(event)
         geography_normalized_events.append(event)
 
+    geography_elapsed = max(0.0, time.perf_counter() - geography_started)
+    geography_filter_started = time.perf_counter()
     ile_de_france_events = []
     package_product_count = 0
 
@@ -334,6 +373,8 @@ def load_events_with_report(
 
         ile_de_france_events.append(event)
 
+    geography_filter_elapsed = max(0.0, time.perf_counter() - geography_filter_started)
+    normalization_started = time.perf_counter()
     normalized_events = []
 
     for event in ile_de_france_events:
@@ -343,12 +384,17 @@ def load_events_with_report(
 
     enrich_official_venue_images(normalized_events)
 
+    normalization_elapsed = max(0.0, time.perf_counter() - normalization_started)
+    deduplication_started = time.perf_counter()
     deduplication_diagnostics = {}
     deduplicated_events = deduplicate_events(
         normalized_events,
         diagnostics=deduplication_diagnostics,
     )
+    deduplication_elapsed = max(0.0, time.perf_counter() - deduplication_started)
+    genre_started = time.perf_counter()
     genre_report = enrich_event_genres(deduplicated_events)
+    genre_elapsed = max(0.0, time.perf_counter() - genre_started)
 
     print()
     print(f"Created {len(raw_events)} raw ConcertEvent records")
@@ -402,6 +448,17 @@ def load_events_with_report(
         ),
         genre_report=genre_report,
         source_diagnostics=source_diagnostics[:1000],
+        performance={
+            "phases": {
+                "source_loading": sum(item["elapsed_seconds"] for item in source_timings),
+                "geography_normalization": geography_elapsed,
+                "geography_filtering": geography_filter_elapsed,
+                "venue_promoter_normalization": normalization_elapsed,
+                "deduplication_reconciliation": deduplication_elapsed,
+                "genre_processing": genre_elapsed,
+            },
+            "sources": source_timings,
+        },
     )
 
     return deduplicated_events, report
