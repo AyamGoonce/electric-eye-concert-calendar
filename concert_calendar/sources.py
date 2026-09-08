@@ -2,6 +2,7 @@ import re
 import time
 import unicodedata
 from dataclasses import dataclass
+from concurrent.futures import ThreadPoolExecutor
 
 from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.deduplication import normalize_headliner
@@ -17,6 +18,7 @@ from concert_calendar.venues import normalize_venue_key
 
 
 IMAGE_ENRICHMENT_MODULES = ()
+SOURCE_WORKERS = 4
 
 
 def enrich_official_venue_images(events):
@@ -227,7 +229,13 @@ def load_events_with_report(
     print("PHASE START | source_loading", flush=True)
     scrapers, registration_failures = discover_scrapers_with_issues()
 
-    for scraper in scrapers:
+    def fetch_source(scraper):
+        # Each worker owns its records, health, and diagnostic snapshot.
+        raw_events = []
+        source_health = []
+        source_counts = {}
+        source_failures = {}
+        source_diagnostics = []
         print(f"Loading {scraper.SOURCE_NAME}...")
 
         scraper_events = None
@@ -341,6 +349,16 @@ def load_events_with_report(
         })
         raw_events.extend(scraper_events)
 
+        return raw_events, source_health, source_counts, source_failures, source_diagnostics
+
+    # map yields in configured order, regardless of completion order.
+    with ThreadPoolExecutor(max_workers=SOURCE_WORKERS) as executor:
+        for records, health, counts, failures, diagnostics in executor.map(fetch_source, scrapers):
+            raw_events.extend(records)
+            source_health.extend(health)
+            source_counts.update(counts)
+            source_failures.update(failures)
+            source_diagnostics.extend(diagnostics)
     print(
         f"PHASE COMPLETE | source_loading | elapsed={max(0.0, time.perf_counter() - source_phase_started):.2f}s",
         flush=True,
