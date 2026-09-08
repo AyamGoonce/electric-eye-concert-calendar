@@ -292,6 +292,15 @@ def normalize_artist_component(name: str) -> str:
     return re.sub(r"\s+", " ", normalized).strip()
 
 
+def normalize_artist_component_exact(name: str) -> str:
+    """Normalize typography without treating accents as aliases."""
+    value = unescape(name or "").lower().strip()
+    value = re.sub(r"\s+", " ", value)
+    value = ARTIST_ALIASES.get(value, value)
+    value = DESCRIPTIVE_ARTIST_ALIASES.get(value, value)
+    return value.replace("’", "'")
+
+
 def build_event_key(event: ConcertEvent) -> tuple:
     """Build the stable date/headliner/venue exact-match key."""
 
@@ -739,6 +748,23 @@ def _matches_structured_bill(
     if not structured_artists or full_bill.openers or full_bill.co_headliners:
         return False
 
+    reconstructed = " + ".join([
+        structured.headliner,
+        *(structured.co_headliners or []),
+        *(structured.openers or []),
+    ])
+    if (
+        structured.event_title
+        and structured.start_time
+        and structured.start_time == full_bill.start_time
+        and not _distinct_performance_evidence(structured, full_bill)
+        and _cross_source_evidence(structured, full_bill)
+        and normalize_artist_component(reconstructed)
+        == normalize_artist_component(structured.event_title)
+        == normalize_artist_component(full_bill.headliner)
+    ):
+        return True
+
     components = _split_full_bill(full_bill.headliner)
 
     if not components:
@@ -893,8 +919,22 @@ def _apply_display_capitalization(
 def _deduplicate_exact(events: list[ConcertEvent]) -> list[ConcertEvent]:
     deduplicated: dict[tuple, ConcertEvent] = {}
 
+    exact_by_folded = defaultdict(set)
     for event in events:
-        key = build_event_key(event)
+        exact_by_folded[(event.date, event.venue.casefold(), normalize_artist_component(event.headliner))].add(
+            normalize_artist_component_exact(event.headliner)
+        )
+
+    for event in events:
+        folded_key = build_event_key(event)
+        collision_key = (event.date, event.venue.casefold(), folded_key[1])
+        exact_names = exact_by_folded[collision_key]
+        key = (
+            folded_key[0],
+            normalize_artist_component_exact(event.headliner)
+            if len(exact_names) > 1 else folded_key[1],
+            folded_key[2],
+        )
         if key in deduplicated:
             merge_events(deduplicated[key], event)
         else:
@@ -937,6 +977,38 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
             *(base.co_headliners or []), *(rule.get("co_headliners", [])),
         ]) or None
 
+    return [event for event in events if id(event) not in removed]
+
+
+EVENT_SUBTITLE_RE = re.compile(r"^(.+?)\s+[–-]\s+(.+)$|^(.+?)\s*:\s+(.+)$")
+
+
+def _reconcile_confirmed_event_subtitles(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Reconcile a plain artist with a positively corroborated event subtitle."""
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+    removed = set()
+    for group in grouped.values():
+        for marked in group:
+            match = EVENT_SUBTITLE_RE.match(marked.headliner)
+            if not match or id(marked) in removed:
+                continue
+            base = (match.group(1) or match.group(3) or "").strip()
+            if not base or any(not part.strip() for part in (match.group(2), match.group(4)) if part is not None):
+                continue
+            for plain in group:
+                if plain is marked or id(plain) in removed:
+                    continue
+                if normalize_artist_component(plain.headliner) != normalize_artist_component(base):
+                    continue
+                if marked.start_time and plain.start_time and marked.start_time != plain.start_time:
+                    continue
+                if not _official_and_aggregator_corroboration(plain, marked):
+                    continue
+                merge_events(plain, marked)
+                removed.add(id(marked))
+                break
     return [event for event in events if id(event) not in removed]
 
 
@@ -1173,6 +1245,7 @@ def deduplicate_events(
     _apply_verified_support_relationships(reconciled)
     reconciled = _reconcile_full_bills(reconciled)
     reconciled = _reconcile_generic_guest_titles(reconciled)
+    reconciled = _reconcile_confirmed_event_subtitles(reconciled)
     reconciled = _reconcile_cross_source_billing_variants(
         reconciled, diagnostics
     )

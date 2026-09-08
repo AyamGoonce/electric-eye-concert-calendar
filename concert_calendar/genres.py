@@ -449,7 +449,10 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
                 raw_inventory[item["raw"]] += 1
                 raw_sources[item["raw"]].add(item.get("source") or "unknown")
 
-        source_sets = [set(map_raw_genres(item.get("raw"))) for item in evidence]
+        source_sets = [
+            set(map_raw_genres(item.get("public_raw") or item.get("raw")))
+            for item in evidence
+        ]
         mapped = set().union(*source_sets) if source_sets else set()
         # A single explicit source must support the entire compound. Merely
         # combining incompatible labels from independent sources is not evidence.

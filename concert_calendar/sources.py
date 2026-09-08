@@ -262,7 +262,7 @@ def load_events_with_report(
 
         for event in scraper_events:
             event.source_names = [scraper.SOURCE_NAME]
-            if event.genre:
+            if event.genre and not event.genre_evidence:
                 event.genre_source = scraper.SOURCE_NAME
                 event.genre_evidence = [{
                     "raw": event.genre,

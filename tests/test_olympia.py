@@ -5,6 +5,18 @@ from concert_calendar.scrapers import olympia
 
 
 class OlympiaDiagnosticsTests(unittest.TestCase):
+    def test_explicit_first_part_title_is_structured_billing(self):
+        headliner, openers = olympia.parse_explicit_support_title(
+            "Eivør | 1ère Partie : Rabbitology"
+        )
+        self.assertEqual("Eivør", headliner)
+        self.assertEqual(["Rabbitology"], openers)
+
+    def test_unrelated_pipe_title_is_unchanged(self):
+        self.assertEqual(
+            ("Artist | Live Session", None),
+            olympia.parse_explicit_support_title("Artist | Live Session"),
+        )
     def test_raw_item_diagnostics_do_not_change_parsed_events(self):
         item = {
             "ID": 123,

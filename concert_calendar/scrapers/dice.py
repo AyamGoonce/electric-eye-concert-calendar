@@ -133,6 +133,20 @@ def parse_named_guest(title):
     return performer, [guest] if performer and guest else None
 
 
+EXPLICIT_SUPPORT_RE = re.compile(
+    r"^(.+?)\s*\|\s*(?:1(?:er|re|ère|e)\s+partie|première\s+partie|en\s+première\s+partie)\s*:\s*(.+)$",
+    re.IGNORECASE,
+)
+
+
+def parse_explicit_support_title(title):
+    match = EXPLICIT_SUPPORT_RE.match(clean_text(title))
+    if not match:
+        return clean_text(title), None
+    support = clean_text(match.group(2))
+    return clean_text(match.group(1)), [support] if support else None
+
+
 def parse_explicit_billing(title):
     """Return reviewed title-embedded billing without guessing arbitrary titles."""
 
@@ -339,9 +353,12 @@ def parse_event(data):
     performer_title = normalize_presentation_wrapper(performer_title)
     performer_title, named_guest_openers = parse_named_guest(performer_title)
     performer_title = normalize_presentation_wrapper(performer_title)
+    performer_title, explicit_support = parse_explicit_support_title(performer_title)
     headliner, openers = parse_explicit_billing(performer_title)
 
-    if named_guest_openers:
+    if explicit_support:
+        openers = explicit_support
+    elif named_guest_openers:
         openers = named_guest_openers
 
     if event_name.casefold() == "mardi jazz!":
