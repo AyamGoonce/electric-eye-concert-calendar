@@ -199,6 +199,7 @@ ILE_DE_FRANCE_CITIES = {
     "sarcelles": ("Sarcelles", "95"),
     "soisy sous montmorency": ("Soisy-sous-Montmorency", "95"),
     "taverny": ("Taverny", "95"),
+    "vaureal": ("Vauréal", "95"),
 }
 
 

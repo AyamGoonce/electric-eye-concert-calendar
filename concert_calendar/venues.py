@@ -6,6 +6,10 @@ from concert_calendar.models import ConcertEvent
 
 
 VENUE_ALIASES = {
+    "l empreinte": "L’Empreinte",
+    "le plan": "Le Plan",
+    "le forum de vaureal": "Le Forum",
+    "le forum vaureal": "Le Forum",
     "accor arena": "Accor Arena",
     "adidas arena": "Adidas Arena",
     "adidas arena paris": "Adidas Arena",
@@ -125,6 +129,8 @@ VENUE_ALIASES = {
 # Only verified venue identities belong here.  These values correct stale or
 # missing source geography; they are not guesses based on the venue spelling.
 VENUE_GEOGRAPHY = {
+    "L’Empreinte": ("Savigny-le-Temple", "77"),
+    "Le Plan": ("Ris-Orangis", "91"),
     # Official Stade de France scraper supplies Saint-Denis, not Paris.
     "Stade de France": ("Saint-Denis", "93"),
     "La Marbrerie": ("Montreuil", "93"),

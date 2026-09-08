@@ -20,6 +20,7 @@ TARGET_VENUE_IMAGE_SOURCES = {
     "Le Hasard Ludique", "Le Zénith Paris – La Villette", "Petit Bain",
     "La Boule Noire", "Salle Pleyel", "Élysée Montmartre",
     "Café de la Danse",
+    "L’Empreinte", "Le Plan", "Le Forum (Vauréal)",
 }
 
 
@@ -738,6 +739,26 @@ def _matches_structured_bill(
     ]
     if not structured_artists or full_bill.openers or full_bill.co_headliners:
         return False
+
+    # A source may already have parsed a complete bill while preserving its raw
+    # title. Compare the whole reconstruction, not separators inside artist names
+    # (e.g. an ampersand). Require corroboration and equal explicit times.
+    reconstructed = " + ".join([
+        structured.headliner,
+        *(structured.co_headliners or []),
+        *(structured.openers or []),
+    ])
+    if (
+        structured.event_title
+        and structured.start_time
+        and structured.start_time == full_bill.start_time
+        and not _distinct_performance_evidence(structured, full_bill)
+        and _cross_source_evidence(structured, full_bill)
+        and normalize_artist_component(reconstructed)
+        == normalize_artist_component(structured.event_title)
+        == normalize_artist_component(full_bill.headliner)
+    ):
+        return True
 
     components = _split_full_bill(full_bill.headliner)
 
