@@ -93,8 +93,8 @@ jobs:
             exit 1
           fi
 
-          echo "Build/validation failed; retrying once in 15 minutes."
-          sleep 900
+          echo "Build/validation failed; retrying once in 60 seconds."
+          sleep 60
           build_calendar
 
       - name: Check out Pages publication workspace

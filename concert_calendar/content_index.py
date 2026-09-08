@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import time
 import unicodedata
 from urllib.parse import urlparse
 
@@ -158,12 +159,19 @@ def fetch_entries(session=None):
     start = 1
     expected_total = None
     while start <= MAX_POSTS:
-        response = session.get(
-            FEED_URL,
-            params={"alt": "json", "max-results": 500, "start-index": start},
-            headers=HEADERS,
-            timeout=REQUEST_TIMEOUT,
-        )
+        for attempt in range(3):
+            try:
+                response = session.get(
+                    FEED_URL,
+                    params={"alt": "json", "max-results": 500, "start-index": start},
+                    headers=HEADERS,
+                    timeout=REQUEST_TIMEOUT,
+                )
+                break
+            except (requests.Timeout, requests.ConnectionError):
+                if attempt == 2:
+                    raise
+                time.sleep(2)
         response.raise_for_status()
         feed = response.json().get("feed") or {}
         if expected_total is None:
