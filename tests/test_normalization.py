@@ -694,6 +694,47 @@ class VenueNormalizationTests(unittest.TestCase):
         self.assertEqual("La Seine Musicale", event.venue)
         self.assertTrue(event.authoritative_billing)
 
+    def test_veryshow_preserves_ordered_special_guest_and_opening_support(self):
+        event = parse_veryshow_post({
+            "artists_titles": ["IMMINENCE", "AUGUST BURNS RED"],
+            "first_part_artists": [{"name": "House Of Protection"}],
+            "date": "16/01/2027",
+            "city": "PARIS (75)",
+            "concert_hall": "Zénith Paris - La Villette",
+            "link": "https://example.test/imminence",
+        })
+        self.assertEqual("IMMINENCE", event.headliner)
+        self.assertEqual(
+            ["AUGUST BURNS RED", "House Of Protection"],
+            event.openers,
+        )
+
+    def test_veryshow_support_survives_merge_with_official_venue_record(self):
+        official = ConcertEvent(
+            date="2027-01-16",
+            headliner="Imminence",
+            venue="Le Zénith Paris – La Villette",
+            city="Paris",
+            department="75",
+            ticket_url="https://le-zenith.com/shows/Imminence-21969",
+        )
+        veryshow = parse_veryshow_post({
+            "artists_titles": ["IMMINENCE", "AUGUST BURNS RED"],
+            "first_part_artists": [{"name": "House Of Protection"}],
+            "date": "16/01/2027",
+            "city": "PARIS (75)",
+            "concert_hall": "Zénith Paris - La Villette",
+            "link": "https://bit.ly/Imminence_Paris27",
+        })
+        normalize_event_venue(official)
+        normalize_event_venue(veryshow)
+        result = deduplicate_events([official, veryshow])
+        self.assertEqual(1, len(result))
+        self.assertEqual(
+            ["AUGUST BURNS RED", "House Of Protection"],
+            result[0].openers,
+        )
+
     def test_seine_detail_parses_bireli_and_spiritbox_billing(self):
         bireli = parse_seine_detail(
             '<script type="application/ld+json">'

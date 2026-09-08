@@ -175,6 +175,31 @@ def get_openers(post):
     return openers[:5] or None
 
 
+def get_ordered_support_artists(post):
+    """Return the explicitly ordered support bill when VeryShow supplies it.
+
+    VeryShow's ``first_part_artists`` field identifies the opening support.
+    When it is present alongside an ordered ``artists_titles`` list, entries
+    after the headliner are authoritative special-guest/support metadata, not
+    a punctuation-based interpretation of the title.
+    """
+
+    first_parts = get_openers(post) or []
+    artist_titles = post.get("artists_titles") or []
+    if not first_parts or not isinstance(artist_titles, list):
+        return first_parts or None
+
+    ordered = []
+    for value in artist_titles[1:]:
+        name = clean_text(value)
+        if name and name not in ordered:
+            ordered.append(name)
+    for name in first_parts:
+        if name not in ordered:
+            ordered.append(name)
+    return ordered or None
+
+
 def parse_support_venue(value):
     """Split VeryShow support copy from the actual venue name."""
 
@@ -204,7 +229,7 @@ def post_to_event(post):
     event_date = parse_date(post.get("date"))
     city = parse_city(post.get("city"))
     venue = clean_text(post.get("concert_hall"))
-    openers = get_openers(post)
+    openers = get_ordered_support_artists(post)
     authoritative_billing = False
     support_venue = parse_support_venue(venue)
 
