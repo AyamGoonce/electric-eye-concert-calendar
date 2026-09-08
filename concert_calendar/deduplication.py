@@ -12,7 +12,7 @@ import unicodedata
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
-from concert_calendar.venues import normalize_event_venue, normalize_venue_key
+from concert_calendar.venues import normalize_event_venue, normalize_venue_key, VENUE_ALIASES
 
 
 TARGET_VENUE_IMAGE_SOURCES = {
@@ -969,6 +969,67 @@ def _reconcile_generic_guest_titles(events: list[ConcertEvent]) -> list[ConcertE
     return [event for event in events if id(event) not in removed]
 
 
+def _reconcile_constituent_festival_wrappers(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Consolidate generic day-pass listings at explicitly named member venues."""
+    def venue_key(value):
+        key = normalize_venue_key(value)
+        return normalize_venue_key(VENUE_ALIASES.get(key, value))
+
+    groups = defaultdict(list)
+    for event in events:
+        groups[event.date].append(event)
+    removed = set()
+    for group in groups.values():
+        for parent in group:
+            venues = re.fullmatch(r"multi[- ]lieux\s*:\s*(.+)", parent.venue, re.I)
+            day = re.fullmatch(r"(?:jour\s+\d+|day\s+\d+|pass\s+1\s+jour)\s*[-–:]\s*(.+)", parent.headliner, re.I)
+            if not venues or not day or parent.openers or parent.co_headliners:
+                continue
+            identity = normalize_headliner(re.sub(r"\s+20\d{2}$", "", day[1]).strip())
+            constituents = {venue_key(v.strip()) for v in venues[1].split(",")}
+            if len(constituents) < 2:
+                continue
+            for child in group:
+                if child is parent or id(child) in removed or child.openers or child.co_headliners:
+                    continue
+                # Exact generic wrapper identity only: artist bills and subtitles
+                # do not qualify, even if they mention the same festival.
+                if normalize_headliner(child.headliner) != identity:
+                    continue
+                if venue_key(child.venue) not in constituents:
+                    continue
+                if (parent.start_time and child.start_time and parent.start_time != child.start_time
+                        or _distinct_performance_evidence(parent, child)):
+                    continue
+                merge_events(parent, child)
+                removed.add(id(child))
+    return [event for event in events if id(event) not in removed]
+
+
+def _reconcile_confirmed_event_subtitles(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Match corroborated branding to a plain identity within one venue/day."""
+    groups = defaultdict(list)
+    for event in events:
+        groups[(event.date, normalize_venue_key(event.venue))].append(event)
+    removed = set()
+    for group in groups.values():
+        for marked in group:
+            match = re.fullmatch(r"(.+?)\s+[–-]\s+(.+)", marked.headliner)
+            if not match or id(marked) in removed:
+                continue
+            candidates = [plain for plain in group
+                          if plain is not marked and id(plain) not in removed
+                          and normalize_artist_component(plain.headliner) == normalize_artist_component(match[1])
+                          and not _distinct_performance_evidence(plain, marked)
+                          and not (plain.start_time and marked.start_time and plain.start_time != marked.start_time)
+                          and _official_and_aggregator_corroboration(plain, marked)]
+            if len(candidates) == 1:
+                plain = candidates[0]
+                merge_events(plain, marked)
+                removed.add(id(marked))
+    return [event for event in events if id(event) not in removed]
+
+
 def _reconcile_time_labeled_titles(events: list[ConcertEvent]) -> list[ConcertEvent]:
     """Attach a plain source card only to an explicitly matching timed show."""
 
@@ -1173,6 +1234,8 @@ def deduplicate_events(
     _apply_verified_support_relationships(reconciled)
     reconciled = _reconcile_full_bills(reconciled)
     reconciled = _reconcile_generic_guest_titles(reconciled)
+    reconciled = _reconcile_constituent_festival_wrappers(reconciled)
+    reconciled = _reconcile_confirmed_event_subtitles(reconciled)
     reconciled = _reconcile_cross_source_billing_variants(
         reconciled, diagnostics
     )

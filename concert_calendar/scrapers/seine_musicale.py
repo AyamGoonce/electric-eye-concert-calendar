@@ -128,6 +128,11 @@ def parse_detail(html, detail_url, raw_genres):
                 department="92",
                 openers=openers,
                 genre=genre,
+                genre_evidence=([{
+                    "raw": genre,
+                    "source": SOURCE_NAME,
+                    "classification": "official_multi_select_taxonomy",
+                }] if genre else None),
                 ticket_url=meeting_url,
                 start_time=start_time,
                 image_url=image_url,

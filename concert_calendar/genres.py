@@ -449,7 +449,16 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
                 raw_inventory[item["raw"]] += 1
                 raw_sources[item["raw"]].add(item.get("source") or "unknown")
 
-        source_sets = [set(map_raw_genres(item.get("raw"))) for item in evidence]
+        source_sets = []
+        unresolved_taxonomy = False
+        for item in evidence:
+            mapped_source = set(map_raw_genres(item.get("raw")))
+            unordered = item.get("classification") == "official_multi_select_taxonomy"
+            # Existing loader evidence retains the source name even when it
+            # rebuilds the evidence record from the raw genre string.
+            unordered = unordered or item.get("source") == "La Seine Musicale"
+            unresolved_taxonomy = unresolved_taxonomy or (unordered and len(mapped_source) >= 3)
+            source_sets.append(set() if unordered and len(mapped_source) >= 3 else mapped_source)
         mapped = set().union(*source_sets) if source_sets else set()
         # A single explicit source must support the entire compound. Merely
         # combining incompatible labels from independent sources is not evidence.
@@ -469,6 +478,10 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             event.genre_method = None
             event.genre_source = None
             stats["blank_festival"] += 1
+        elif unresolved_taxonomy and not mapped:
+            event.genre_method = None
+            event.genre_source = None
+            stats["blank_unresolved_taxonomy"] += 1
         elif artist and len(mapped) == 1 and weak_source_evidence:
             event.genre_public = artist["genre"]
             event.genre_method = "artist_mapping"
