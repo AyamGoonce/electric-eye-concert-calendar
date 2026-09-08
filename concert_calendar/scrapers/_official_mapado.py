@@ -1,6 +1,7 @@
 """Public embedded Mapado data for venue-owned ticket offices only."""
 import json
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
@@ -12,6 +13,7 @@ from concert_calendar.models import ConcertEvent
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; ConcertCalendar/1.0)"}
 MAX_DETAILS = 100
+DETAIL_WORKERS = 4
 NON_CONCERT_CATEGORIES = {"atelier", "conférence", "exposition", "stage", "visite"}
 
 
@@ -71,6 +73,8 @@ def load_official(base_url, venue, city, department, venue_ids, today=None):
         if len(listings) > MAX_DETAILS:
             raise ValueError("Official ticket office exceeds bounded programme size")
         output = {}
+        detail_requests = []
+        seen_detail_urls = set()
         for item in listings:
             if item.get("type") != "dated_events":
                 continue
@@ -79,7 +83,23 @@ def load_official(base_url, venue, city, department, venue_ids, today=None):
                 continue
             if (item.get("ticketingCategory") or {}).get("name", "").casefold() in NON_CONCERT_CATEGORIES:
                 continue
-            detail = get(urljoin(base_url, "event/" + item["slug"]))
+            detail_url = urljoin(base_url, "event/" + item["slug"])
+            if detail_url in seen_detail_urls:
+                continue
+            seen_detail_urls.add(detail_url)
+            detail_requests.append((detail_url, item))
+
+        # Detail pages are independent. Fetch a small bounded batch in
+        # parallel, while collecting results in listing order for deterministic
+        # output. Any failure is re-raised so source health still fails visibly.
+        def fetch_detail(request):
+            detail_url, item = request
+            return item, get(detail_url)
+
+        with ThreadPoolExecutor(max_workers=DETAIL_WORKERS) as executor:
+            details = list(executor.map(fetch_detail, detail_requests))
+
+        for item, detail in details:
             for event in parse_detail(detail, item, base_url=base_url, venue=venue, city=city, department=department, today=today):
                 output.setdefault((event.date, event.start_time, event.headliner), event)
     return discard_repeated_generic_images(list(output.values()))

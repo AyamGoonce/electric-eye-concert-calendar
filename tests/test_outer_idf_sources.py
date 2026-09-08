@@ -14,6 +14,7 @@ from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.models import ConcertEvent
 from concert_calendar.scraper_loader import discover_scrapers_with_issues
 from concert_calendar.scrapers import empreinte, le_plan, forum_vaureal
+from concert_calendar.scrapers import _official_mapado
 from concert_calendar.scrapers._official_mapado import entities, parse_detail, complete_members
 from concert_calendar.sources import load_events_with_report
 from concert_calendar.venues import normalize_event_venue
@@ -63,6 +64,27 @@ class OuterIdfTests(TestCase):
                     self.assertTrue(event.image_url.startswith('https://'))
                     self.assertTrue(event.ticket_url.startswith('https://'))
                     self.assertFalse(event.promoters)
+
+    def test_mapado_duplicate_detail_urls_are_fetched_once(self):
+        listing, detail = self.mapado()
+        listing_page = {"ticketings": {"hydra:member": [listing, copy.deepcopy(listing)], "hydra:totalItems": 2}}
+        calls = []
+
+        def fake_entities(marker):
+            return listing_page if marker == "listing" else detail
+
+        def fake_get(_session, url, **kwargs):
+            calls.append(url)
+            return Mock(text="listing" if url == empreinte.PROGRAMME_URL else "detail",
+                        raise_for_status=lambda: None)
+
+        with patch.object(_official_mapado, "entities", side_effect=fake_entities), \
+             patch("requests.Session.get", autospec=True, side_effect=fake_get):
+            events = empreinte.load_events(today=TODAY)
+
+        detail_urls = [url for url in calls if "/event/" in url]
+        self.assertEqual(1, len(detail_urls))
+        self.assertEqual(1, len(events))
 
     def test_flat_billing_not_invented(self):
         listing, detail = self.mapado()

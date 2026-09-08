@@ -1,6 +1,7 @@
 """Le Forum, Vauréal: official Cergy-Pontoise agenda and Event JSON-LD."""
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from datetime import datetime
 from html import unescape
@@ -17,6 +18,7 @@ from concert_calendar.models import ConcertEvent
 SOURCE_NAME = "Le Forum (Vauréal)"
 PROGRAMME_URL = "https://leforum.cergypontoise.fr/agenda"
 MAX_DETAILS = 100
+DETAIL_WORKERS = 4
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; ConcertCalendar/1.0)"}
 MONTHS = {name: number for number, name in enumerate(
     ("janvier", "fevrier", "mars", "avril", "mai", "juin", "juillet", "aout",
@@ -124,8 +126,23 @@ def load_events(today=None):
         if len(cards) > MAX_DETAILS or soup.select('.pager a[rel="next"], .pager__item--next a'):
             raise ValueError("Le Forum: programme exceeds captured complete agenda")
         output = {}
+        requests_to_fetch = []
+        seen_urls = set()
         for card in cards:
             url = urljoin(PROGRAMME_URL, card["href"])
-            for event in parse_detail(get(url), card, today):
+            if url in seen_urls:
+                continue
+            seen_urls.add(url)
+            requests_to_fetch.append((url, card))
+
+        def fetch_detail(request):
+            url, card = request
+            return card, get(url)
+
+        with ThreadPoolExecutor(max_workers=DETAIL_WORKERS) as executor:
+            details = list(executor.map(fetch_detail, requests_to_fetch))
+
+        for card, html in details:
+            for event in parse_detail(html, card, today):
                 output.setdefault((event.date, event.start_time, event.venue, event.headliner), event)
     return discard_repeated_generic_images(list(output.values()))
