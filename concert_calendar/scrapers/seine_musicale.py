@@ -34,6 +34,16 @@ INCLUDED_GENRES = {
     "151": "Variété internationale",
 }
 
+def select_taxonomy_genres(raw_genres):
+    """Return only an unambiguous one/two-tag taxonomy selection.
+
+    The programme endpoint exposes an unordered multi-select set.  Three or
+    more tags therefore have no defensible primary/secondary ordering and are
+    intentionally left unresolved rather than capped arbitrarily.
+    """
+    values = sorted(raw_genres)
+    return values if len(values) <= 2 else []
+
 
 def clean_text(value):
     return re.sub(r"\s+", " ", value or "").strip()
@@ -113,7 +123,8 @@ def parse_detail(html, detail_url, raw_genres):
         if match:
             meetings[(match.group(1), match.group(2))] = ticket_url
 
-    genre = ", ".join(sorted(raw_genres)) or None
+    selected_genres = select_taxonomy_genres(raw_genres)
+    genre = ", ".join(selected_genres) or None
     openers = extract_special_guests(soup, headliner)
     events = []
     for (event_date, start_time), meeting_url in meetings.items():
@@ -128,6 +139,12 @@ def parse_detail(html, detail_url, raw_genres):
                 department="92",
                 openers=openers,
                 genre=genre,
+                genre_evidence=([{
+                    "raw": ", ".join(sorted(raw_genres)),
+                    "public_raw": genre,
+                    "source": SOURCE_NAME,
+                    "classification": "official_multi_select_taxonomy",
+                }] if raw_genres else None),
                 ticket_url=meeting_url,
                 start_time=start_time,
                 image_url=image_url,
