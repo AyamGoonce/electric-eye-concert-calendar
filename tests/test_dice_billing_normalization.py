@@ -40,11 +40,6 @@ class DiceBillingNormalizationTests(TestCase):
             self.assertEqual(name, parsed.openers[0])
             self.assertIsNone(parsed.co_headliners)
 
-    def test_explicit_first_part_title_is_support(self):
-        parsed = event("Eivør | 1ère Partie : Rabbitology")
-        self.assertEqual("Eivør", parsed.headliner)
-        self.assertEqual(["Rabbitology"], parsed.openers)
-
     def test_anonymous_guests_are_not_artists(self):
         for title in (
             "ear + guests — Pitchfork Music Festival 2026",

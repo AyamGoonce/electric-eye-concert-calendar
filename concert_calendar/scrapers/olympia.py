@@ -74,21 +74,6 @@ def split_support(value):
     return [artist for artist in artists if artist] or None
 
 
-SUPPORT_TITLE_RE = re.compile(
-    r"^(.+?)\s*\|\s*(?:1(?:er|re|ère|e)\s+partie|première\s+partie|en\s+première\s+partie)\s*:\s*(.+)$",
-    re.IGNORECASE,
-)
-
-
-def parse_explicit_support_title(value):
-    match = SUPPORT_TITLE_RE.match(clean_text(value))
-    if not match:
-        return clean_text(value), None
-    headliner = clean_text(match.group(1))
-    support = clean_text(match.group(2))
-    return headliner, [support] if support else None
-
-
 def item_genres(item):
     return {
         clean_text(term.get("name"))
@@ -132,8 +117,7 @@ def parse_item(item):
     meta = item.get("meta") or {}
     genres = item_genres(item)
     status = clean_text(meta.get("infos_text_status")).casefold()
-    headliner, title_openers = parse_explicit_support_title(item.get("post_title"))
-    headliner = headliner.strip(" -")
+    headliner = clean_text(item.get("post_title")).strip(" -")
 
     if not genres.intersection(MUSIC_GENRES):
         return []
@@ -146,7 +130,7 @@ def parse_item(item):
     if not dates:
         return []
 
-    openers = title_openers or split_support(meta.get("artistes_premiere_partie"))
+    openers = split_support(meta.get("artistes_premiere_partie"))
     genre = ", ".join(sorted(genres.intersection(MUSIC_GENRES))) or None
     ticket_url = clean_text(item.get("permalink")) or None
     image = meta.get("image") or {}

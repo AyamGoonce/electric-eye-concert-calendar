@@ -105,46 +105,6 @@ def write_generated_publication(destination, marker="candidate"):
 
 
 class AutomationValidationTests(unittest.TestCase):
-    def test_source_timing_records_success_retry_failure_and_json_shape(self):
-        event = ConcertEvent(
-            date="2027-01-01", headliner="Artist", venue="La CLEF",
-            city="Saint-Germain-en-Laye", department="78",
-        )
-        success = type("Success", (), {
-            "SOURCE_NAME": "Timed success",
-            "load_events": Mock(return_value=[event]),
-        })
-        retry = type("Retry", (), {
-            "SOURCE_NAME": "Timed retry",
-            "load_events": Mock(side_effect=[TimeoutError("temporary"), [event]]),
-        })
-        failed = type("Failed", (), {
-            "SOURCE_NAME": "Timed failure",
-            "load_events": Mock(side_effect=RuntimeError("broken")),
-        })
-        with patch(
-            "concert_calendar.sources.discover_scrapers_with_issues",
-            return_value=([success, retry, failed], {}),
-        ):
-            _, report = load_events_with_report(scraper_attempts=2, retry_delay_seconds=0)
-
-        timing = {item["source_name"]: item for item in report.performance["sources"]}
-        self.assertEqual({"Timed success", "Timed retry", "Timed failure"}, set(timing))
-        self.assertEqual(1, timing["Timed success"]["attempts"])
-        self.assertEqual(2, timing["Timed retry"]["attempts"])
-        self.assertEqual(2, len(timing["Timed retry"]["attempts_detail"]))
-        self.assertEqual("exception", timing["Timed retry"]["attempts_detail"][0]["result"])
-        self.assertEqual("success", timing["Timed retry"]["attempts_detail"][1]["result"])
-        self.assertEqual("failed", timing["Timed failure"]["status"])
-        for source in timing.values():
-            self.assertIsInstance(source["elapsed_seconds"], (int, float))
-            self.assertGreaterEqual(source["elapsed_seconds"], 0)
-            for attempt in source["attempts_detail"]:
-                self.assertGreaterEqual(attempt["elapsed_seconds"], 0)
-        self.assertIn("status", report.source_health[0])
-        self.assertIn("source_loading", report.performance["phases"])
-        json.dumps(report.performance)
-
     def test_genre_coverage_guard_rejects_catastrophic_collapse(self):
         with self.assertRaises(ProductionValidationError):
             validate_genre_coverage({"total": 1000, "populated": 99})

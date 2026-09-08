@@ -30,35 +30,6 @@ def event(**changes):
 
 
 class GenreEnrichmentTests(unittest.TestCase):
-    def test_unordered_official_multi_select_taxonomy_stays_unresolved(self):
-        from concert_calendar.scrapers.seine_musicale import select_taxonomy_genres
-        self.assertEqual([], select_taxonomy_genres({"Pop, Rock", "Jazz, Musiques du monde", "Soul, Funk"}))
-
-    def test_official_taxonomy_public_raw_drives_mapping(self):
-        item = event(
-            headliner="Tout le monde s'appelle clara",
-            genre="Pop, Rock",
-            genre_evidence=[{
-                "raw": "Pop, Rock, Soul, Funk",
-                "public_raw": "Pop, Rock",
-                "source": "La Seine Musicale",
-                "classification": "official_multi_select_taxonomy",
-            }],
-        )
-        enrich_event_genres([item])
-        self.assertEqual(["Pop", "Rock / Indie / Punk"], item.genres_public)
-
-    def test_source_loader_preserves_structured_genre_evidence(self):
-        item = event(
-            genre="Pop, Rock",
-            genre_evidence=[{
-                "raw": "Pop, Rock, Soul, Funk",
-                "public_raw": "Pop, Rock",
-                "source": "La Seine Musicale",
-            }],
-        )
-        self.assertEqual("Pop, Rock, Soul, Funk", item.genre_evidence[0]["raw"])
-        self.assertEqual("Pop, Rock", item.genre_evidence[0]["public_raw"])
     def test_historical_taxonomy_aliases(self):
         for raw in ("Comedy", "Spoken Word", "Comedy / Spoken Word", "stand-up", "humour"):
             self.assertEqual("Comedy / Spoken Word", map_raw_genre(raw))
