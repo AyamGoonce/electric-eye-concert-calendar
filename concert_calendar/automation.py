@@ -131,7 +131,7 @@ def validate_events(events: list[dict]) -> None:
 
     allowed_genres = set(PUBLIC_GENRES)
     fingerprints = set()
-    public_ids = set()
+    public_ids = {}
 
     for index, event in enumerate(events):
         event_keys = set(event)
@@ -190,9 +190,25 @@ def validate_events(events: list[dict]) -> None:
             raise ProductionValidationError(
                 f"Event {index} has malformed first_seen"
             ) from error
-        if not re.fullmatch(r"[0-9a-f]{16}", event["i"] or "") or event["i"] in public_ids:
-            raise ProductionValidationError(f"Event {index} has an invalid or duplicate public ID")
-        public_ids.add(event["i"])
+        public_id = event["i"]
+        if not re.fullmatch(r"[0-9a-f]{16}", public_id or ""):
+            raise ProductionValidationError(
+                f"Event {index} has invalid public ID {public_id!r}: "
+                f"{event['d']} | {event['h']} | {event['v']} | "
+                f"start={event.get('st')!r} | title={event.get('et')!r}"
+            )
+        if public_id in public_ids:
+            previous_index, previous_event = public_ids[public_id]
+            raise ProductionValidationError(
+                f"Event {index} has duplicate public ID {public_id}; "
+                f"current={event['d']} | {event['h']} | {event['v']} | "
+                f"start={event.get('st')!r} | title={event.get('et')!r}; "
+                f"previous_event={previous_index}: "
+                f"{previous_event['d']} | {previous_event['h']} | "
+                f"{previous_event['v']} | start={previous_event.get('st')!r} | "
+                f"title={previous_event.get('et')!r}"
+            )
+        public_ids[public_id] = (index, event)
         if event["ts"] not in {None, "tickets", "sold_out", "free", "not_on_sale", "cancelled", "postponed"}:
             raise ProductionValidationError(f"Event {index} has an invalid ticket status")
         if event["st"] is not None and not re.fullmatch(r"(?:[01]\d|2[0-3]):[0-5]\d", event["st"]):
