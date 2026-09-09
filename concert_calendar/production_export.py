@@ -169,23 +169,51 @@ def prepare_upcoming_events(
     for event in upcoming_events:
         base_groups[canonical_event_identity(event)[:16]].append(event)
     assigned = {}
+    used_public_ids = set()
+
     for base, group in base_groups.items():
         ordered = sorted(group, key=lambda event: (
             0 if getattr(event, "_public_id", None) == base else 1,
-            event.first_seen or "9999", event.start_time or "", event.event_title or "",
-            event.ticket_url or "", event.source_names or [],
+            event.first_seen or "9999",
+            event.start_time or "",
+            event.event_title or "",
+            event.ticket_url or "",
+            event.source_names or [],
         ))
+
         for index, event in enumerate(ordered):
             preserved = getattr(event, "_public_id", None)
-            if preserved:
-                assigned[id(event)] = preserved
-                continue
-            if index == 0:
-                assigned[id(event)] = base
-                continue
-            discriminator = "\x1f".join((event.start_time or "", event.event_title or "", event.ticket_url or "", ",".join(event.source_names or [])))
-            assigned[id(event)] = hashlib.sha256((base + "\x1f" + discriminator).encode("utf-8")).hexdigest()[:16]
-    return [event_to_data(event, rejected_images, assigned[id(event)]) for event in upcoming_events]
+
+            if preserved and preserved not in used_public_ids:
+                public_id = preserved
+            elif index == 0 and base not in used_public_ids:
+                public_id = base
+            else:
+                discriminator = "\x1f".join((
+                    event.start_time or "",
+                    event.event_title or "",
+                    event.ticket_url or "",
+                    ",".join(event.source_names or []),
+                ))
+                seed = base + "\x1f" + discriminator
+                public_id = hashlib.sha256(
+                    seed.encode("utf-8")
+                ).hexdigest()[:16]
+
+                salt = 1
+                while public_id in used_public_ids:
+                    public_id = hashlib.sha256(
+                        (seed + "\x1f" + str(salt)).encode("utf-8")
+                    ).hexdigest()[:16]
+                    salt += 1
+
+            assigned[id(event)] = public_id
+            used_public_ids.add(public_id)
+
+    return [
+        event_to_data(event, rejected_images, assigned[id(event)])
+        for event in upcoming_events
+    ]
 
 
 def serialize_data(value: object) -> str:
