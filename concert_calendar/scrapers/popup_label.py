@@ -40,6 +40,25 @@ def _explicit_openers(card):
     return [name for name in names if name] or None
 
 
+def _structured_metadata(card):
+    """Read eligibility metadata when the agenda embeds it on a card."""
+    attrs = card.attrs
+    event_type = attrs.get("data-event-type") or attrs.get("data-type")
+    category = attrs.get("data-category") or attrs.get("data-programme")
+    raw_tags = attrs.get("data-tags", "")
+    tags = [part.strip() for part in re.split(r"[,|]", raw_tags) if part.strip()] or None
+    performer_nodes = card.select("[data-performer], .performer, .artist")
+    performers = [
+        _clean(node.get("data-performer") or node.get_text(" ", strip=True))
+        for node in performer_nodes
+    ] or None
+    description_node = card.select_one("[data-description], .description, .desc")
+    description = _clean(
+        description_node.get("data-description") or description_node.get_text(" ", strip=True)
+    ) if description_node else None
+    return event_type, category, tags, performers, description
+
+
 def parse_events(soup, *, today=None):
     cutoff = today or date.today()
     events = []
@@ -87,6 +106,7 @@ def parse_events(soup, *, today=None):
         facebook = next((link for link in links if "facebook" in _clean(link.get_text()).casefold()), None)
         sold_out = bool(re.search(r"\bsold\s*out\b|\bcomplet\b", info_text, re.I))
         image_url = _background_image(card)
+        event_type, category, tags, performers, description = _structured_metadata(card)
 
         events.append(
             ConcertEvent(
@@ -102,6 +122,11 @@ def parse_events(soup, *, today=None):
                 sold_out=sold_out,
                 image_url=image_url,
                 image_source=SOURCE_NAME if image_url else None,
+                event_type=event_type,
+                category=category,
+                tags=tags,
+                performers=performers,
+                description=description,
             )
         )
     return events

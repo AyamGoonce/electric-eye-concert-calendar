@@ -71,7 +71,7 @@ def parse_events(soup, *, today=None):
         image = element_image_url(card.select_one(".photo img"), base_url=PROGRAMME_URL)
         events.append(ConcertEvent(
             date=event_date.isoformat(), headliner=headliner, venue=SOURCE_NAME,
-            city="Paris", department="75", genre=category,
+            city="Paris", department="75", genre=category, category=category,
             ticket_url=urljoin(PROGRAMME_URL, title_link["href"]),
             ticket_status="sold_out" if sold_out else "tickets", sold_out=sold_out,
             image_url=image, image_source=SOURCE_NAME if image else None,

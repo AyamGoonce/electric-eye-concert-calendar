@@ -195,7 +195,8 @@ def is_supported_event(event):
     ):
         return False
 
-    if is_non_supported_event(event.headliner):
+    eligible, _ = classify_event_eligibility(event)
+    if not eligible:
         return False
 
     normalized_title = normalize_text_for_matching(event.headliner)
@@ -213,6 +214,37 @@ def is_supported_event(event):
         re.search(pattern, combined_text)
         for pattern in excluded_scope_patterns
     )
+
+
+NON_CONCERT_TYPES = {
+    "listening party", "listening session", "workshop", "masterclass",
+    "conference", "talk", "lecture", "screening", "exhibition",
+    "market", "fair", "quiz", "game", "open house", "meet and greet",
+}
+
+
+def classify_event_eligibility(event):
+    """Return ``(eligible, reason)`` using structured evidence first.
+
+    This deliberately does not treat words such as DJ, party, vinyl, night,
+    session, release, or festival as exclusions by themselves.
+    """
+    values = [event.category, *(event.tags or [])]
+    normalized = {normalize_text_for_matching(value) for value in values if value}
+    for value in normalized:
+        if value in NON_CONCERT_TYPES:
+            has_performer = bool(event.performers or event.openers or event.co_headliners)
+            if not has_performer:
+                return False, "non_concert_category"
+    event_type = normalize_text_for_matching(event.event_type or "")
+    if event_type in {"screening", "exhibition", "workshop", "conference", "talk", "lecture", "listening session", "listening party"}:
+        if not (event.performers or event.openers or event.co_headliners):
+            return False, "non_performance_event_type"
+    if event_type in {"live performance", "concert", "live music", "dj performance", "live set"} and event.performers:
+        return True, None
+    if is_non_supported_event(event.headliner):
+        return False, "legacy_title_exclusion"
+    return True, None
 
 
 def load_events_with_report(
@@ -379,10 +411,11 @@ def load_events_with_report(
         if is_ticket_product_title(event.headliner):
             package_product_count += 1
 
-        if not is_supported_event(event):
+        eligible, eligibility_reason = classify_event_eligibility(event)
+        if not eligible:
             print(
                 "Excluded unsupported event: "
-                f"{event.headliner}"
+                f"{event.headliner} (reason={eligibility_reason})"
             )
             continue
 

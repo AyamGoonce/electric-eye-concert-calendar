@@ -30,3 +30,18 @@ class PopupLabelTests(TestCase):
             today=date(2026, 9, 1),
         )
         self.assertNotIn("Club Night", [event.headliner for event in events])
+
+    def test_propagates_structured_eligibility_metadata(self):
+        soup = BeautifulSoup(
+            '<div class="concerts_mois"><div id="Septembre2026" class="concert mois"></div>'
+            '<div class="concert" data-event-type="listening session" data-category="record event" '
+            'data-tags="vinyl, listening" data-description="A listening event">'
+            '<div class="jour">17.09</div><div class="titre">The Vinyl Hour</div>'
+            '<div class="description" data-description="A listening event"></div></div></div>',
+            "html.parser",
+        )
+        event = parse_events(soup, today=date(2026, 9, 1))[0]
+        self.assertEqual("listening session", event.event_type)
+        self.assertEqual("record event", event.category)
+        self.assertEqual(["vinyl", "listening"], event.tags)
+        self.assertEqual("A listening event", event.description)

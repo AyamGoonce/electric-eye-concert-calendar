@@ -163,6 +163,7 @@ def parse_card(card, *, today=None):
         city="Paris",
         department="75",
         genre=", ".join(categories) or None,
+        category=", ".join(categories) or None,
         ticket_url=ticket_url,
         ticket_status=ticket_status,
         sold_out=ticket_status == "sold_out",

@@ -89,6 +89,7 @@ def parse_card(card, *, today=None):
         city="Paris",
         department="75",
         genre=event_type or None,
+        event_type=event_type or None,
         ticket_url=detail_url,
         ticket_status=ticket_status,
         sold_out=ticket_status == "sold_out",

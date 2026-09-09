@@ -35,3 +35,10 @@ class ConcertEvent:
     source_names: Optional[list[str]] = None
     identity_aliases: Optional[list[str]] = None
     genres_public: Optional[list[str]] = None
+    # Optional source-provided eligibility evidence.  Scrapers may populate
+    # these when the upstream exposes structured programme metadata.
+    event_type: Optional[str] = None
+    category: Optional[str] = None
+    tags: Optional[list[str]] = None
+    performers: Optional[list[str]] = None
+    description: Optional[str] = None

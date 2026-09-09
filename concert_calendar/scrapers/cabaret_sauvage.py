@@ -57,6 +57,7 @@ def parse_events(soup, *, today=None):
                 venue=SOURCE_NAME,
                 city="Paris",
                 department="75",
+                category="concert",
                 ticket_url=detail_url,
                 ticket_status="sold_out" if sold_out else None,
                 sold_out=sold_out,
