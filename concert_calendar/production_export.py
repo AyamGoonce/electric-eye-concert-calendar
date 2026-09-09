@@ -101,6 +101,22 @@ def genre_categories(value: str | None) -> list[str]:
     return map_raw_genres(value)
 
 
+def _display_title_parts(event: ConcertEvent) -> tuple[str, str | None]:
+    """Normalize public denomination without changing event identity."""
+    headliner = event.headliner
+    event_title = event.event_title
+
+    tour = re.fullmatch(
+        r"(.+?)\s+[–—:-]\s+(.+\b(?:tour|tourn[ée]e|anniversary)\b.*)",
+        headliner,
+        re.IGNORECASE,
+    )
+    if tour:
+        return tour[1].strip(), event_title or headliner
+
+    return headliner, event_title
+
+
 def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, public_id: str | None = None) -> dict:
     # Aggregator artwork is not an official event/venue fallback.  DICE remains
     # useful for gap-filling event data, but its images are not published.
@@ -108,9 +124,11 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
         None if event.image_source == "DICE" or event.image_url in (rejected_images or set())
         else safe_image_url(event.image_url)
     )
+    display_headliner, display_event_title = _display_title_parts(event)
+
     return {
         "d": event.date[:10],
-        "h": event.headliner,
+        "h": display_headliner,
         "o": event.openers or [],
         **({"ch": event.co_headliners} if event.co_headliners else {}),
         "v": event.venue,
@@ -129,7 +147,7 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
         "ts": event.ticket_status or ("sold_out" if event.sold_out else ("tickets" if safe_ticket_url(event.ticket_url) else None)),
         "st": event.start_time,
         **({"an": event.announced_at} if event.announced_at else {}),
-        **({"et": event.event_title} if event.event_title else {}),
+        **({"et": display_event_title} if display_event_title else {}),
         **({"sn": event.series_name} if event.series_name else {}),
         **({"im": image} if image else {}),
         **({"is": event.image_source} if image and event.image_source else {}),

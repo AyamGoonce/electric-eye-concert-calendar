@@ -104,6 +104,19 @@ def parse_events(soup, *, today=None):
         links = card.select(".liens a[href]")
         ticket = next((link for link in links if "ticket" in _clean(link.get_text()).casefold()), None)
         facebook = next((link for link in links if "facebook" in _clean(link.get_text()).casefold()), None)
+        # The agenda mixes main-stage concerts with separate upstairs
+        # programming. An upstairs item without its own ticket link is not
+        # concert inventory and must not inherit the generic agenda URL.
+        upstairs_programme = bool(
+            re.search(
+                r"(?:^|\s)[àa]\s+l['’]étage\b",
+                info_text,
+                re.I,
+            )
+        )
+        if upstairs_programme and ticket is None:
+            continue
+
         sold_out = bool(re.search(r"\bsold\s*out\b|\bcomplet\b", info_text, re.I))
         image_url = _background_image(card)
         event_type, category, tags, performers, description = _structured_metadata(card)

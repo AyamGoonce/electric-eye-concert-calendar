@@ -1267,6 +1267,7 @@ def _normalize_event_title_wrappers(events):
     reviewed_displays = set(REVIEWED_EVENT_TITLES.values())
     for event in events:
         original = event.headliner
+
         if original in reviewed_displays:
             continue
         contextual, series = contextual_title_parts(event, series_prefixes)
@@ -1294,7 +1295,22 @@ def _normalize_event_title_wrappers(events):
         candidates = [other for other in retained
                       if event.date == other.date
                       and normalize_venue_key(event.venue) == normalize_venue_key(other.venue)
-                      and title_identity(event.headliner) == title_identity(other.headliner)
+                      and (
+                          title_identity(event.headliner)
+                          == title_identity(other.headliner)
+                          or (
+                              (id(event) in changed or id(other) in changed)
+                              and title_identity(
+                                  event.headliner,
+                                  fold_accents=True,
+                              )
+                              == title_identity(
+                                  other.headliner,
+                                  fold_accents=True,
+                              )
+                              and _cross_source_evidence(event, other)
+                          )
+                      )
                       and [title_identity(n) for n in (event.co_headliners or [])]
                           == [title_identity(n) for n in (other.co_headliners or [])]
                       and not _distinct_performance_evidence(event, other)

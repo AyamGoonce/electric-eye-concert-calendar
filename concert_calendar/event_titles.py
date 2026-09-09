@@ -6,10 +6,20 @@ from collections import defaultdict
 from html import unescape
 
 
-def title_identity(value):
-    """Exact Unicode spelling, with typographic apostrophe equivalence only."""
-    return " ".join(unicodedata.normalize("NFC", unescape(value or ""))
-                    .replace("’", "'").casefold().split())
+def title_identity(value, *, fold_accents=False):
+    """Normalize title spelling; accent folding is opt-in for corroborated wrappers."""
+    normalized = unicodedata.normalize(
+        "NFC", unescape(value or "")
+    ).replace("’", "'")
+
+    if fold_accents:
+        normalized = "".join(
+            character
+            for character in unicodedata.normalize("NFKD", normalized)
+            if not unicodedata.combining(character)
+        )
+
+    return " ".join(normalized.casefold().split())
 
 
 def split_series_prefix(value):
@@ -74,6 +84,7 @@ def artist_title_parts(value):
     title = unescape(value or "").strip()
     title = CONCERT_WRAPPER.sub("", title).strip()
     title = DESCRIPTOR.sub("", title).strip()
+
     featured = re.fullmatch(r"(.+?)\s+(?:ft\.|feat\.|featuring)\s+(.+)", title, re.I)
     if (featured and not any(c in featured[2] for c in "()&+•|⎥:«»\"–")
             and not re.search(r"\b\d{1,2}\s*h|\b(?:1er|2e)\s+set\b", title, re.I)):
