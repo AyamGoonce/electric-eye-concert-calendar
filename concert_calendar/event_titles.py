@@ -1,7 +1,55 @@
 """Conservative event prose extraction, independent of artist aliases."""
 
 import re
+import unicodedata
+from collections import defaultdict
 from html import unescape
+
+
+def title_identity(value):
+    """Exact Unicode spelling, with typographic apostrophe equivalence only."""
+    return " ".join(unicodedata.normalize("NFC", unescape(value or ""))
+                    .replace("’", "'").casefold().split())
+
+
+def split_series_prefix(value):
+    match = re.fullmatch(r"(.+?)\s*:\s+(.+)", value)
+    return match.groups() if match else None
+
+
+def separate_performance_marker(event):
+    """Do not erase explicit set/session evidence carried in the raw title."""
+    return bool(re.search(
+        r"\b(?:(?:1er|2e|first|second)\s+(?:set|show)|matin[ée]e|evening|early show|late show)\b",
+        f"{event.headliner} {event.event_title or ''}", re.I))
+
+
+def evidenced_series_prefixes(events):
+    """Require recurring programme grammar AND distinct bills from one source."""
+    bills = defaultdict(set)
+    for event in events:
+        parts = split_series_prefix(event.event_title or event.headliner)
+        if not parts or not re.search(r"\bfestival\b|\bnights?$", parts[0], re.I):
+            continue
+        for source in event.source_names or []:
+            bills[(source, title_identity(parts[0]))].add(title_identity(parts[1]))
+    return {key for key, values in bills.items() if len(values) >= 2}
+
+
+def contextual_title_parts(event, series_prefixes):
+    """Separate only source-evidenced series and corroborated artist branding."""
+    parts = split_series_prefix(event.headliner)
+    if parts and (title_identity(parts[0]) == "café-concert" or any(
+            (source, title_identity(parts[0])) in series_prefixes
+            for source in event.source_names or [])):
+        return parts[1], parts[0]
+    # A prior merged plain source identity is evidence; punctuation alone is not.
+    if len(set(event.source_names or [])) >= 2:
+        branding = re.fullmatch(r"(.+?)(?:\s+[-–:]\s+.+|\s+[“«][^”»]+[”»])", event.headliner)
+        if branding and any(title_identity(alias) == title_identity(branding[1])
+                            for alias in event.identity_aliases or []):
+            return branding[1], None
+    return event.headliner, None
 
 
 CONCERT_WRAPPER = re.compile(

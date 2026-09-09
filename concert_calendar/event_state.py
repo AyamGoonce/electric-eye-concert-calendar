@@ -136,12 +136,14 @@ def validate_state(value: object) -> dict:
         if value["version"] == 1 and set(record) != required:
             raise EventStateError("Malformed version-1 event-state record")
         if value["version"] == STATE_VERSION:
-            if set(record) != required | {"openers", "genre", "ticket_status"}:
+            if not set(record).issubset(required | {"openers", "genre", "ticket_status", "public_id"}):
                 raise EventStateError("Malformed version-2 event-state record")
             if not isinstance(record["openers"], list) or not all(isinstance(x, str) for x in record["openers"]):
                 raise EventStateError("Malformed event-state openers")
             if not isinstance(record["genre"], str) or record["ticket_status"] not in {None, "tickets", "sold_out", "free", "not_on_sale", "cancelled", "postponed"}:
                 raise EventStateError("Malformed event-state metadata")
+            if "public_id" in record and (not isinstance(record["public_id"], str) or not __import__("re").fullmatch(r"[0-9a-f]{16}", record["public_id"])):
+                raise EventStateError("Malformed event-state public ID")
         try:
             date.fromisoformat(record["date"])
         except (TypeError, ValueError) as error:
@@ -202,6 +204,15 @@ def reconcile_state(
             now_text if previous is not None else bootstrap_text
         )
         event.first_seen = first_seen
+        prior_public_id = existing.get("public_id") if existing else None
+        if prior_public_id is None:
+            predecessors = _reviewed_predecessor_identities(event)
+            predecessor_records = [records[key] for key in predecessors if key in records]
+            prior_public_id = next((record.get("public_id") for record in predecessor_records if record.get("public_id")), None)
+            if prior_public_id is None and predecessor_records:
+                prior_public_id = next((key[:16] for key in predecessors if key in records), None)
+        if prior_public_id:
+            event._public_id = prior_public_id
         records[identity] = {
             "date": event.date[:10],
             "first_seen": first_seen,
@@ -211,6 +222,7 @@ def reconcile_state(
             "ticket_status": event.ticket_status or (
                 "sold_out" if event.sold_out else ("tickets" if event.ticket_url else None)
             ),
+            **({"public_id": prior_public_id} if prior_public_id else {}),
         }
 
     cutoff = (now.date() - PAST_RETENTION).isoformat()

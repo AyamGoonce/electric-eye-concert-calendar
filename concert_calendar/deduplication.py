@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from copy import deepcopy
 from difflib import SequenceMatcher
 from html import unescape
 from itertools import combinations
@@ -12,7 +13,10 @@ import unicodedata
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
-from concert_calendar.event_titles import artist_title_parts
+from concert_calendar.event_titles import (
+    artist_title_parts, contextual_title_parts, evidenced_series_prefixes, title_identity,
+    separate_performance_marker,
+)
 from concert_calendar.venues import normalize_event_venue, normalize_venue_key, VENUE_ALIASES
 
 
@@ -594,7 +598,7 @@ def _cross_source_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
 
 
 def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
-    if left.start_time and right.start_time and left.start_time != right.start_time:
+    if _performance_conflict(left, right):
         return True
     if left.festival_name or right.festival_name:
         if (
@@ -892,16 +896,44 @@ def _apply_display_capitalization(
 
 
 def _deduplicate_exact(events: list[ConcertEvent]) -> list[ConcertEvent]:
-    deduplicated: dict[tuple, ConcertEvent] = {}
-
+    # Keep original members: merged metadata must not manufacture evidence for
+    # a later record (especially an untimed bridge between separate sets).
+    buckets = defaultdict(list)
+    retained = []
     for event in events:
         key = build_event_key(event)
-        if key in deduplicated:
-            merge_events(deduplicated[key], event)
+        matches = [group for group in buckets[key]
+                   if all(_same_exact_performance(member, event) for member in group[1])]
+        if len(matches) == 1:
+            matches[0][1].append(deepcopy(event))
+            merge_events(matches[0][0], event)
         else:
-            deduplicated[key] = event
+            buckets[key].append((event, [deepcopy(event)]))
+            retained.append(event)
 
-    return list(deduplicated.values())
+    return retained
+
+
+def _performance_times(event: ConcertEvent) -> set[int]:
+    values = [event.start_time or "", event.headliner, event.event_title or ""]
+    return {int(m[1]) * 60 + int(m[2] or 0)
+            for value in values
+            for m in re.finditer(r"(?<!\w)([01]?\d|2[0-3])\s*[:h]\s*([0-5]\d)?(?!\d)", value)}
+
+
+def _performance_conflict(left: ConcertEvent, right: ConcertEvent) -> bool:
+    a, b = _performance_times(left), _performance_times(right)
+    if a and b and (a != b or len(a) != 1):
+        return True
+    # Compare discriminators, rather than treating a single marker as a conflict.
+    marker = r"\b(?:(?:1er|1re|2e|2ème|first|second)\s+(?:set|show|performance|séance)|matin[ée]e|evening|early show|late show)\b"
+    markers = [set(re.findall(marker, f"{event.headliner} {event.event_title or ''}".casefold()))
+               for event in (left, right)]
+    return bool(markers[0] and markers[1] and markers[0] != markers[1])
+
+
+def _same_exact_performance(left: ConcertEvent, right: ConcertEvent) -> bool:
+    return not _performance_conflict(left, right)
 
 
 def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
@@ -927,7 +959,7 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
             matches[0],
         )
         for event in matches:
-            if event is not base:
+            if event is not base and not _performance_conflict(base, event):
                 merge_events(base, event)
                 removed.add(id(event))
         base.headliner = rule["headliner"]
@@ -963,6 +995,8 @@ def _reconcile_generic_guest_titles(events: list[ConcertEvent]) -> list[ConcertE
                     or _shared_promoter(plain, marked)
                     or _official_and_aggregator_corroboration(plain, marked)
                 ):
+                    continue
+                if _performance_conflict(plain, marked):
                     continue
                 merge_events(plain, marked)
                 removed.add(id(marked))
@@ -1054,6 +1088,8 @@ def _reconcile_time_labeled_titles(events: list[ConcertEvent]) -> list[ConcertEv
                     continue
                 if plain.start_time != expected_time:
                     continue
+                if _performance_conflict(labeled, plain):
+                    continue
                 merge_events(labeled, plain)
                 removed.add(id(plain))
                 break
@@ -1088,6 +1124,8 @@ def _reconcile_multi_set_parent_cards(events: list[ConcertEvent]) -> list[Concer
             )
             if parent is None:
                 continue
+            if any(_performance_conflict(performance, parent) for performance in labeled):
+                continue
             for performance in labeled:
                 merge_events(performance, parent)
             removed.add(id(parent))
@@ -1116,7 +1154,7 @@ def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
                 if id(full_bill) in removed:
                     continue
 
-                if _matches_structured_bill(structured, full_bill):
+                if not _performance_conflict(structured, full_bill) and _matches_structured_bill(structured, full_bill):
                     merge_events(structured, full_bill)
                     removed.add(id(full_bill))
 
@@ -1156,6 +1194,8 @@ def _collapse_explicit_support_cards(
                 ):
                     continue
 
+                if _performance_conflict(parent, candidate):
+                    continue
                 merge_events(parent, candidate)
                 removed.add(id(candidate))
 
@@ -1204,6 +1244,8 @@ def _consolidate_authoritative_festivals(
             if normalize_artist_component(candidate.headliner) not in lineup_identities:
                 continue
 
+            if _performance_conflict(parent, candidate):
+                continue
             merge_events(parent, candidate)
             removed.add(id(candidate))
             collapsed_here += 1
@@ -1221,12 +1263,14 @@ def _consolidate_authoritative_festivals(
 def _normalize_event_title_wrappers(events):
     """Separate explicit prose, then reconcile compatible normalized identities."""
     changed = set()
+    series_prefixes = evidenced_series_prefixes(events)
     reviewed_displays = set(REVIEWED_EVENT_TITLES.values())
     for event in events:
         original = event.headliner
         if original in reviewed_displays:
             continue
-        primary, featured = artist_title_parts(original)
+        contextual, series = contextual_title_parts(event, series_prefixes)
+        primary, featured = artist_title_parts(contextual)
         bare_concert = re.fullmatch(r"(.+?)\s+en concert", original, re.I)
         if primary == original and bare_concert:
             corroborated = [other for other in events if other is not event
@@ -1240,6 +1284,7 @@ def _normalize_event_title_wrappers(events):
         if primary == original and not featured:
             continue
         event.event_title = event.event_title or original
+        event.series_name = event.series_name or series
         event.identity_aliases = _stable_unique([*(event.identity_aliases or []), original])
         event.headliner = primary
         event.co_headliners = _stable_unique([*(event.co_headliners or []), *featured]) or None
@@ -1247,18 +1292,35 @@ def _normalize_event_title_wrappers(events):
     retained = []
     for event in events:
         candidates = [other for other in retained
-                      if (id(event) in changed or id(other) in changed)
-                      and event.date == other.date
+                      if event.date == other.date
                       and normalize_venue_key(event.venue) == normalize_venue_key(other.venue)
-                      and normalize_headliner(event.headliner) == normalize_headliner(other.headliner)
-                      and event.co_headliners == other.co_headliners
-                      and not _distinct_performance_evidence(event, other)]
+                      and title_identity(event.headliner) == title_identity(other.headliner)
+                      and [title_identity(n) for n in (event.co_headliners or [])]
+                          == [title_identity(n) for n in (other.co_headliners or [])]
+                      and not _distinct_performance_evidence(event, other)
+                      and not separate_performance_marker(event)
+                      and not separate_performance_marker(other)
+                      and (_same_event_specific_ticket(event, other)
+                           or ((id(event) in changed or id(other) in changed)
+                               and _cross_source_evidence(event, other))
+                           or _wrapper_identity_evidence(event)
+                           or _wrapper_identity_evidence(other))]
         if len(candidates) == 1:
             merge_events(candidates[0], event)
             changed.add(id(candidates[0]))
         else:
             retained.append(event)
     return retained
+
+
+def _wrapper_identity_evidence(event):
+    """Persisted decorated source title proves an alternate representation."""
+    for raw in [event.event_title or "", *(event.identity_aliases or [])]:
+        primary, featured = artist_title_parts(raw)
+        if primary != raw and title_identity(primary) == title_identity(event.headliner):
+            if [title_identity(n) for n in featured] == [title_identity(n) for n in (event.co_headliners or [])]:
+                return True
+    return False
 
 
 def deduplicate_events(

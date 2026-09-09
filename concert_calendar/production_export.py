@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import date, datetime, timezone
 import hashlib
+from collections import defaultdict
 import html
 import json
 from pathlib import Path
@@ -100,7 +101,7 @@ def genre_categories(value: str | None) -> list[str]:
     return map_raw_genres(value)
 
 
-def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None) -> dict:
+def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, public_id: str | None = None) -> dict:
     # Aggregator artwork is not an official event/venue fallback.  DICE remains
     # useful for gap-filling event data, but its images are not published.
     image = (
@@ -124,7 +125,7 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None) 
         "f": bool(event.festival_name),
         "so": bool(event.sold_out),
         "fs": event.first_seen or "1970-01-01T00:00:00Z",
-        "i": canonical_event_identity(event)[:16],
+        "i": public_id or getattr(event, "_public_id", None) or canonical_event_identity(event)[:16],
         "ts": event.ticket_status or ("sold_out" if event.sold_out else ("tickets" if safe_ticket_url(event.ticket_url) else None)),
         "st": event.start_time,
         **({"an": event.announced_at} if event.announced_at else {}),
@@ -164,7 +165,27 @@ def prepare_upcoming_events(
 
     upcoming_events = [event for _, event in upcoming]
     rejected_images = repeated_generic_image_urls(upcoming_events)
-    return [event_to_data(event, rejected_images) for event in upcoming_events]
+    base_groups = defaultdict(list)
+    for event in upcoming_events:
+        base_groups[canonical_event_identity(event)[:16]].append(event)
+    assigned = {}
+    for base, group in base_groups.items():
+        ordered = sorted(group, key=lambda event: (
+            0 if getattr(event, "_public_id", None) == base else 1,
+            event.first_seen or "9999", event.start_time or "", event.event_title or "",
+            event.ticket_url or "", event.source_names or [],
+        ))
+        for index, event in enumerate(ordered):
+            preserved = getattr(event, "_public_id", None)
+            if preserved:
+                assigned[id(event)] = preserved
+                continue
+            if index == 0:
+                assigned[id(event)] = base
+                continue
+            discriminator = "\x1f".join((event.start_time or "", event.event_title or "", event.ticket_url or "", ",".join(event.source_names or [])))
+            assigned[id(event)] = hashlib.sha256((base + "\x1f" + discriminator).encode("utf-8")).hexdigest()[:16]
+    return [event_to_data(event, rejected_images, assigned[id(event)]) for event in upcoming_events]
 
 
 def serialize_data(value: object) -> str:
