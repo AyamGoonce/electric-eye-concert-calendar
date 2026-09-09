@@ -49,7 +49,7 @@ class CafeDeLaDanseTests(unittest.TestCase):
 
     def test_representative_card_fields_and_explicit_billing(self):
         soup = BeautifulSoup(fixture("programme.html"), "html.parser")
-        event = parse_card(soup.select_one(".gt-event-style-4"))
+        event = parse_card(soup.select_one(".gt-event-style-4"), today=date(2026, 9, 1))
         self.assertEqual("2027-09-10", event.date)
         self.assertEqual("20:00", event.start_time)
         self.assertEqual("RAMON PIPIN – Une folle envie de bisser", event.headliner)
@@ -67,7 +67,7 @@ class CafeDeLaDanseTests(unittest.TestCase):
 
     def test_sold_out_and_placeholder_image(self):
         soup = BeautifulSoup(fixture("programme.html"), "html.parser")
-        event = parse_card(soup.select(".gt-event-style-4")[1])
+        event = parse_card(soup.select(".gt-event-style-4")[1], today=date(2026, 9, 1))
         self.assertEqual("THE EVERMINDS – special guest TSUJI", event.headliner)
         self.assertTrue(event.sold_out)
         self.assertEqual("sold_out", event.ticket_status)
@@ -76,7 +76,7 @@ class CafeDeLaDanseTests(unittest.TestCase):
 
     def test_optional_fields_may_be_missing_and_detail_link_is_retained(self):
         soup = BeautifulSoup(fixture("programme.html"), "html.parser")
-        event = parse_card(soup.select(".gt-event-style-4")[2])
+        event = parse_card(soup.select(".gt-event-style-4")[2], today=date(2026, 9, 1))
         self.assertEqual("VALERIA CASTRO", event.headliner)
         self.assertIsNone(event.genre)
         self.assertIsNone(event.start_time)
@@ -90,9 +90,9 @@ class CafeDeLaDanseTests(unittest.TestCase):
         cards = BeautifulSoup(
             fixture("programme.html"), "html.parser"
         ).select(".gt-event-style-4")
-        self.assertIsNone(parse_card(cards[3]))
-        self.assertIsNone(parse_card(cards[4]))
-        self.assertIsNone(parse_card(cards[5]))
+        self.assertIsNone(parse_card(cards[3], today=date(2026, 9, 1)))
+        self.assertIsNone(parse_card(cards[4], today=date(2026, 9, 1)))
+        self.assertIsNone(parse_card(cards[5], today=date(2026, 9, 1)))
 
     def test_hyphenated_release_party_remains_a_supported_concert(self):
         self.assertEqual(

@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from bs4 import BeautifulSoup
+from tests.clock_helpers import freeze_date
 
 from concert_calendar.scrapers import elysee_montmartre, garmonbozia, machine_moulin_rouge
 
@@ -19,6 +20,7 @@ class CompoundDiagnosticsTests(TestCase):
         self.assertEqual(event.ticket_url, diagnostic["detail_url"])
         self.assertEqual(["ABORTED"], diagnostic["parsed_openers"])
 
+    @freeze_date("concert_calendar.scrapers.elysee_montmartre")
     def test_elysee_compound_diagnostic_does_not_change_event(self):
         html = '''<div class="bloc_extrait evenement"><a class="link" title="Emma Ruth Rundle + Cinder Well" href="https://example.test/emma"></a>
           <div class="date">13 avril 2027</div></div>'''

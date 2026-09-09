@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 
 from bs4 import BeautifulSoup
+from tests.clock_helpers import freeze_date
 
 from concert_calendar.deduplication import _unresolved_candidates, deduplicate_events
 from concert_calendar.scrapers.sunset_sunside import (
@@ -12,6 +13,7 @@ from concert_calendar.scrapers.trianon import parse_card
 
 
 class TrianonScraperTests(unittest.TestCase):
+    @freeze_date("concert_calendar.scrapers.trianon")
     def test_billy_cobham_card_retains_official_detail_link_and_time(self):
         card = BeautifulSoup(
             """
@@ -40,6 +42,7 @@ class TrianonScraperTests(unittest.TestCase):
             "https://www.letrianon.fr/fr/programmation/billy-cobham/",
         )
 
+    @freeze_date("concert_calendar.scrapers.trianon")
     def test_reviewed_hasan_ronny_title_preserves_explicit_co_headliner(self):
         card = BeautifulSoup(
             """
@@ -90,6 +93,7 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             programme_items(html)
 
+    @freeze_date("concert_calendar.scrapers.sunset_sunside")
     def test_room_distinction_and_same_day_sets_are_preserved(self):
         sessions = [
             {"startDate": "2026-10-10T19:00:00+02:00", "status": "opened", "onSale": True},
@@ -108,6 +112,7 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         self.assertEqual(_unresolved_candidates(events), [])
         self.assertEqual({event.genre for event in events}, {"Jazz actuel"})
 
+    @freeze_date("concert_calendar.scrapers.sunset_sunside")
     def test_sunside_room_is_not_flattened(self):
         events = parse_detail_payload(
             self.payload([
@@ -117,6 +122,7 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         )
         self.assertEqual(events[0].venue, "Sunset/Sunside — Sunside")
 
+    @freeze_date("concert_calendar.scrapers.sunset_sunside")
     def test_entree_libre_category_is_explicitly_free(self):
         payload = self.payload([
             {"startDate": "2026-10-11T21:30:00+02:00", "status": "opened", "onSale": True},
@@ -127,6 +133,7 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         events = parse_detail_payload(payload, "https://example.test/event")
         self.assertEqual(events[0].ticket_status, "free")
 
+    @freeze_date("concert_calendar.scrapers.sunset_sunside")
     def test_incomplete_detail_pagination_fails_loudly(self):
         payload = self.payload([
             {"startDate": "2026-10-11T21:30:00+02:00", "status": "opened", "onSale": True},

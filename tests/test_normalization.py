@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock, patch
 
 from bs4 import BeautifulSoup
+from tests.clock_helpers import freeze_date
 
 from concert_calendar.deduplication import (
     deduplicate_events,
@@ -735,6 +736,7 @@ class VenueNormalizationTests(unittest.TestCase):
             result[0].openers,
         )
 
+    @freeze_date("concert_calendar.scrapers.seine_musicale")
     def test_seine_detail_parses_bireli_and_spiritbox_billing(self):
         bireli = parse_seine_detail(
             '<script type="application/ld+json">'

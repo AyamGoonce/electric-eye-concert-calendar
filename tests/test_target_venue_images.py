@@ -3,6 +3,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from bs4 import BeautifulSoup
+from tests.clock_helpers import freeze_date
 
 from concert_calendar.event_images import background_image_url, element_image_url
 from concert_calendar.deduplication import deduplicate_events, merge_events
@@ -72,6 +73,7 @@ class TargetVenueImageTests(unittest.TestCase):
             background_image_url("background-image:url('/event.jpg')", base_url="https://venue.example/"),
         )
 
+    @freeze_date("concert_calendar.scrapers.new_morning")
     def test_new_morning_card_image(self):
         card = soup('''<div class="bg-white"><a class="d-block" href="20270911-1-show.html"><img class="img-fluid" src="photos/show.jpg"></a><h3>Artist</h3></div>''').a
         event = parse_new_morning(card)
@@ -86,38 +88,46 @@ class TargetVenueImageTests(unittest.TestCase):
         card = soup('''<a class="event_card concert" href="/concert/show"><div class="image" style="background-image:url('https://images.example/show.jpg')"></div><div class="content"><div><span>#rock</span><h3>Artist</h3><strong>11.09.27</strong></div></div></a>''')
         self.assertEqual("https://images.example/show.jpg", parse_hasard(card).image_url)
 
+    @freeze_date("concert_calendar.scrapers.petit_bain")
     def test_petit_bain_card_image_ignores_badge(self):
         card = soup('''<div class="unevt categorie-concerts"><a href="https://petitbain.org/evenement/show/"><div id="imgunevt"><div id="absr"><img src="https://petitbain.org/logo.svg"></div><div id="contimgunevt"><img src="https://petitbain.org/show.jpg" width="500" height="500"></div></div><div id="ladatevtmin">11 septembre 2027</div><div id="nomsoiree">Artist</div></a></div>''').div
         self.assertEqual("https://petitbain.org/show.jpg", parse_petit_bain(card).image_url)
 
+    @freeze_date("concert_calendar.scrapers.boule_noire")
     def test_boule_noire_card_image(self):
         card = soup('''<div class="elementor-post__card"><a class="elementor-post__thumbnail__link"><div class="elementor-post__thumbnail"><img src="https://laboule-noire.fr/show.jpg" width="800" height="600"></div></a><div class="elementor-post__badge"></div><h2 class="elementor-post__title"><a href="https://laboule-noire.fr/show/">Artist</a></h2><div class="elementor-post__excerpt">11 SEPTEMBRE 2027 – 20H</div></div>''').div
         self.assertEqual("https://laboule-noire.fr/show.jpg", parse_boule(card).image_url)
 
+    @freeze_date("concert_calendar.scrapers.trabendo")
     def test_trabendo_concert_card_image_and_club_rejection(self):
         card = soup('''<a class="event" href="/programmation/artist/"><picture><img data-src="https://www.letrabendo.net/show.jpg"></picture><div class="pastille concert">Concert</div><h2 class="date-event">11 ― septembre 2027</h2><h5 class="style">rock</h5><h3 class="name-event">Artist</h3></a>''').a
         self.assertEqual("https://www.letrabendo.net/show.jpg", parse_trabendo(card).image_url)
         card.select_one(".pastille")["class"] = ["pastille", "club"]
         self.assertIsNone(parse_trabendo(card))
 
+    @freeze_date("concert_calendar.scrapers.gaite_lyrique")
     def test_gaite_music_card_uses_exact_date_group_and_image(self):
         card = soup('''<li class="events-date"><h2 class="events-date-title">Vendredi 11 septembre 2027</h2><article class="event"><h2 class="event-title"><a href="https://www.gaite-lyrique.net/show">Artist</a></h2><ul class="event-categories"><li><a>Musique</a></li></ul><div class="media"><img src="https://images.gaite.example/show.jpg" width="1280" height="720"></div></article></li>''').article
         self.assertEqual("https://images.gaite.example/show.jpg", parse_gaite(card).image_url)
 
+    @freeze_date("concert_calendar.scrapers.zenith_paris")
     def test_zenith_carousel_image(self):
         card = soup('''<div class="swiper-slide"><img src="https://le-zenith.com/show.jpg"><div class="swiper-caption__name">Artist</div><div class="swiper-caption__date">Vendredi 11 sept. 2027</div><a href="/shows/Artist-1">Infos</a></div>''').div
         self.assertEqual("https://le-zenith.com/show.jpg", parse_zenith(card).image_url)
 
+    @freeze_date("concert_calendar.scrapers.salle_pleyel")
     def test_pleyel_card_expands_two_performances_with_one_card_image(self):
         card = soup('''<div class="eventPage__nextEvents-event"><div class="eventPage__nextEvents-eventImageHolder"><img src="https://www.sallepleyel.com/show.jpg"></div><a class="eventPage__nextEvents-eventTitle" href="https://www.sallepleyel.com/show/">Artist</a><div class="eventPage__nextEvents-event-category">Rock</div><div class="eventPage__nextEvents-event-startDate">11 &amp; 12 septembre 2027</div></div>''').div
         events = parse_pleyel(card)
         self.assertEqual(["2027-09-11", "2027-09-12"], [event.date for event in events])
         self.assertTrue(all(event.image_url == "https://www.sallepleyel.com/show.jpg" for event in events))
 
+    @freeze_date("concert_calendar.scrapers.elysee_montmartre")
     def test_elysee_card_image(self):
         card = soup('''<div class="bloc_extrait evenement"><a class="link" href="https://www.elyseemontmartre.com/show/" title="Artist"></a><div class="date">vendredi 11 septembre 2027</div><div class="visuel"><img src="https://www.elyseemontmartre.com/show.jpg" width="700" height="700"></div></div>''').div
         self.assertEqual("https://www.elyseemontmartre.com/show.jpg", parse_elysee(card)[0].image_url)
 
+    @freeze_date("concert_calendar.scrapers.elysee_montmartre")
     def test_elysee_dresden_dolls_regression(self):
         card = soup('''<div class="bloc_extrait evenement"><a class="link" href="https://www.elyseemontmartre.com/fr/programmation/the-dresden-dolls/" title="THE DRESDEN DOLLS"></a><div class="date">mardi 8 septembre 2026</div><div class="visuel"><img src="https://www.elyseemontmartre.com/dresden-dolls.jpg"></div></div>''').div
         event = parse_elysee(card)[0]
