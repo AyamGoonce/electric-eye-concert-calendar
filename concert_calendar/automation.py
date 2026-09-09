@@ -204,6 +204,8 @@ def validate_events(events: list[dict]) -> None:
             tuple(opener.casefold() for opener in event["o"]),
             event["v"].casefold(),
             event["c"].casefold(),
+            event.get("st"),
+            event.get("et"),
         )
         if fingerprint in fingerprints:
             raise ProductionValidationError(
