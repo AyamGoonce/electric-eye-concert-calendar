@@ -12,6 +12,7 @@ import unicodedata
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.event_titles import artist_title_parts
 from concert_calendar.venues import normalize_event_venue, normalize_venue_key, VENUE_ALIASES
 
 
@@ -1014,7 +1015,7 @@ def _reconcile_confirmed_event_subtitles(events: list[ConcertEvent]) -> list[Con
     removed = set()
     for group in groups.values():
         for marked in group:
-            match = re.fullmatch(r"(.+?)\s+[–-]\s+(.+)", marked.headliner)
+            match = re.fullmatch(r"(.+?)\s+(?:[–-]|:)\s+(.+)", marked.headliner)
             if not match or id(marked) in removed:
                 continue
             candidates = [plain for plain in group
@@ -1025,6 +1026,8 @@ def _reconcile_confirmed_event_subtitles(events: list[ConcertEvent]) -> list[Con
                           and _official_and_aggregator_corroboration(plain, marked)]
             if len(candidates) == 1:
                 plain = candidates[0]
+                if not marked.event_title:
+                    marked.event_title = marked.headliner
                 merge_events(plain, marked)
                 removed.add(id(marked))
     return [event for event in events if id(event) not in removed]
@@ -1215,6 +1218,49 @@ def _consolidate_authoritative_festivals(
     return [event for event in events if id(event) not in removed]
 
 
+def _normalize_event_title_wrappers(events):
+    """Separate explicit prose, then reconcile compatible normalized identities."""
+    changed = set()
+    reviewed_displays = set(REVIEWED_EVENT_TITLES.values())
+    for event in events:
+        original = event.headliner
+        if original in reviewed_displays:
+            continue
+        primary, featured = artist_title_parts(original)
+        bare_concert = re.fullmatch(r"(.+?)\s+en concert", original, re.I)
+        if primary == original and bare_concert:
+            corroborated = [other for other in events if other is not event
+                            and other.date == event.date
+                            and normalize_venue_key(other.venue) == normalize_venue_key(event.venue)
+                            and normalize_headliner(other.headliner) == normalize_headliner(bare_concert[1])
+                            and _cross_source_evidence(other, event)
+                            and not _distinct_performance_evidence(other, event)]
+            if len(corroborated) == 1:
+                primary = corroborated[0].headliner
+        if primary == original and not featured:
+            continue
+        event.event_title = event.event_title or original
+        event.identity_aliases = _stable_unique([*(event.identity_aliases or []), original])
+        event.headliner = primary
+        event.co_headliners = _stable_unique([*(event.co_headliners or []), *featured]) or None
+        changed.add(id(event))
+    retained = []
+    for event in events:
+        candidates = [other for other in retained
+                      if (id(event) in changed or id(other) in changed)
+                      and event.date == other.date
+                      and normalize_venue_key(event.venue) == normalize_venue_key(other.venue)
+                      and normalize_headliner(event.headliner) == normalize_headliner(other.headliner)
+                      and event.co_headliners == other.co_headliners
+                      and not _distinct_performance_evidence(event, other)]
+        if len(candidates) == 1:
+            merge_events(candidates[0], event)
+            changed.add(id(candidates[0]))
+        else:
+            retained.append(event)
+    return retained
+
+
 def deduplicate_events(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
@@ -1244,6 +1290,7 @@ def deduplicate_events(
     reconciled = _consolidate_authoritative_festivals(reconciled, diagnostics)
     reconciled = _collapse_explicit_support_cards(reconciled)
     _apply_display_capitalization(reconciled, display_candidates)
+    reconciled = _normalize_event_title_wrappers(reconciled)
 
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(

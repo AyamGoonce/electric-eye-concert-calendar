@@ -182,6 +182,9 @@ def parse_neutral_cobill(title):
     """Split explicit equal-billing artist lists without inventing support hierarchy."""
 
     title = clean_text(title)
+    # A project/description parenthetical is not an explicit flat artist list.
+    if re.search(r"\([^)]*[+•][^)]*\)", title):
+        return title, None
     components = [
         clean_text(value)
         for value in re.split(r"\s+(?:\+|•)\s+", title)
