@@ -135,6 +135,44 @@ class GenreEnrichmentTests(unittest.TestCase):
             all(item.genre_method == "artist_mapping" for item in items)
         )
 
+    def test_sunset_sunside_venue_is_jazz_fallback(self):
+        items = [
+            event(
+                headliner="Unmapped Sunset Artist",
+                venue="Sunset/Sunside — Sunset",
+            ),
+            event(
+                headliner="Unmapped Sunside Artist",
+                venue="Sunset/Sunside — Sunside",
+            ),
+        ]
+
+        enrich_event_genres(items)
+
+        self.assertTrue(
+            all(item.genre_public == "Jazz / Blues" for item in items)
+        )
+        self.assertTrue(
+            all(item.genre_method == "event_context" for item in items)
+        )
+        self.assertTrue(
+            all(item.genre_source == "venue" for item in items)
+        )
+
+    def test_sunset_sunside_fallback_does_not_override_source_genre(self):
+        item = event(
+            headliner="Unmapped Artist",
+            venue="Sunset/Sunside — Sunside",
+            genre="Pop",
+            genre_evidence=[{"raw": "Pop", "source": "Official"}],
+        )
+
+        enrich_event_genres([item])
+
+        self.assertEqual("Pop", item.genre_public)
+        self.assertEqual("source_explicit", item.genre_method)
+        self.assertNotEqual("venue", item.genre_source)
+
     def test_co_headliners_require_shared_mapped_genre(self):
         shared = event(headliner="The Afghan Whigs", co_headliners=["Drug Church"])
         primary_only = event(

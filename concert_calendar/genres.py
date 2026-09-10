@@ -374,6 +374,14 @@ REVIEWED_MAPPING_ALIASES = {
 }
 
 
+def infer_venue_genre(event: ConcertEvent) -> str | None:
+    """Apply only high-confidence venue-level genre fallbacks."""
+    venue = normalize_raw(event.venue or "")
+    if venue == "sunset/sunside" or venue.startswith("sunset/sunside — "):
+        return "Jazz / Blues"
+    return None
+
+
 def infer_context_genre(event: ConcertEvent) -> str | None:
     parts = [
         event.event_title or "",
@@ -551,6 +559,11 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             event.genre_method = "artist_mapping"
             event.genre_source = artist["evidence_source"]
             stats["artist_mapping"] += 1
+        elif venue_genre := infer_venue_genre(event):
+            event.genre_public = venue_genre
+            event.genre_method = "event_context"
+            event.genre_source = "venue"
+            stats["event_context"] += 1
         elif context_genre := infer_context_genre(event):
             event.genre_public = context_genre
             event.genre_method = "event_context"
