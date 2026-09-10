@@ -221,3 +221,25 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — Shared production/research genre identity cleanup
+
+- Added one shared conservative genre lookup identity helper in
+  `concert_calendar/genres.py`.
+- Production genre enrichment and external research now use the same identity
+  normalization logic.
+- Removes only explicit performance/session metadata:
+  - time suffixes such as `– 19h30`
+  - explicit `+ jam`, `+ Jam Vocale`, `+ JAM SESSION`, etc.
+- Arbitrary `+` and `&` artist billing remains untouched.
+- Public event titles, display names, and deduplication semantics are unchanged.
+- This allows the 10 previously cleanup-only Sunset/Sunside jazz rows to use
+  their reviewed artist mappings in production.
+- Targeted tests passed.
+- Full suite: 588 tests passed.
+- Next: commit/push, then recalculate projected coverage using actual production
+  genre enrichment before continuing single-source candidate review.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`

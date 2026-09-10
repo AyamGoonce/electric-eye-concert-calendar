@@ -91,6 +91,50 @@ class GenreEnrichmentTests(unittest.TestCase):
         self.assertEqual("Hip-hop / Rap", item.genre_public)
         self.assertEqual("artist_mapping", item.genre_method)
 
+    def test_genre_lookup_identity_removes_explicit_session_metadata(self):
+        from concert_calendar.genres import genre_lookup_artist_identity
+
+        cases = {
+            "David Sauzay + jam – 19h30": "David Sauzay",
+            "Laurent Courthaliac + JAM SESSION – 21h30": "Laurent Courthaliac",
+            "Fabien Mary + jam – 19h30": "Fabien Mary",
+        }
+
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(
+                    expected,
+                    genre_lookup_artist_identity(raw),
+                )
+
+    def test_genre_lookup_identity_preserves_arbitrary_billing(self):
+        from concert_calendar.genres import genre_lookup_artist_identity
+
+        self.assertEqual(
+            "Artist A + Artist B",
+            genre_lookup_artist_identity("Artist A + Artist B"),
+        )
+        self.assertEqual(
+            "Coco & Clair Clair",
+            genre_lookup_artist_identity("Coco & Clair Clair"),
+        )
+
+    def test_artist_mapping_uses_conservative_genre_lookup_identity(self):
+        items = [
+            event(headliner="David Sauzay + jam – 19h30"),
+            event(headliner="Laurent Courthaliac + JAM SESSION – 21h30"),
+            event(headliner="Fabien Mary + jam – 19h30"),
+        ]
+
+        enrich_event_genres(items)
+
+        self.assertTrue(
+            all(item.genre_public == "Jazz / Blues" for item in items)
+        )
+        self.assertTrue(
+            all(item.genre_method == "artist_mapping" for item in items)
+        )
+
     def test_co_headliners_require_shared_mapped_genre(self):
         shared = event(headliner="The Afghan Whigs", co_headliners=["Drug Church"])
         primary_only = event(

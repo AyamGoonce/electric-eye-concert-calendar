@@ -414,8 +414,39 @@ def load_reviewed_mappings(path: Path | None = None) -> dict:
     return result
 
 
+
+GENRE_LOOKUP_TIME_SUFFIX_RE = re.compile(
+    r"\s+[–—-]\s*\d{1,2}\s*h(?:\s*\d{2})?\s*$",
+    re.IGNORECASE,
+)
+
+GENRE_LOOKUP_JAM_SUFFIX_RE = re.compile(
+    r"\s+\+\s+jam(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ0-9'’.-]+){0,4}\s*$",
+    re.IGNORECASE,
+)
+
+
+def genre_lookup_artist_identity(value: str) -> str:
+    """
+    Return a conservative artist identity used only for genre lookup.
+
+    Explicit performance-time and jam-session suffixes are removed.
+    Arbitrary '+' and '&' billing is deliberately left intact.
+    """
+    artist = (value or "").strip()
+    if not artist:
+        return ""
+
+    artist = GENRE_LOOKUP_TIME_SUFFIX_RE.sub("", artist).strip()
+    artist = GENRE_LOOKUP_JAM_SUFFIX_RE.sub("", artist).strip()
+
+    return artist
+
+
 def mapping_for_artist(name: str, mappings: dict) -> dict | None:
-    identity = normalize_artist_component(name)
+    identity = normalize_artist_component(
+        genre_lookup_artist_identity(name)
+    )
     identity = REVIEWED_MAPPING_ALIASES.get(identity, identity)
     return mappings["overrides"].get(identity) or mappings["artists"].get(identity)
 
@@ -471,7 +502,9 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         # A single explicit source must support the entire compound. Merely
         # combining incompatible labels from independent sources is not evidence.
         explicit_compound = len(mapped) > 1 and mapped in source_sets
-        artist_id = normalize_artist_component(event.headliner)
+        artist_id = normalize_artist_component(
+            genre_lookup_artist_identity(event.headliner)
+        )
         mapped_artist_id = REVIEWED_MAPPING_ALIASES.get(artist_id, artist_id)
         override = mappings["overrides"].get(mapped_artist_id)
         artist = mappings["artists"].get(mapped_artist_id)
@@ -535,7 +568,9 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
                     unresolved_raw[item["raw"]] += 1
 
         if not event.genre_public:
-            identity = normalize_artist_component(event.headliner)
+            identity = normalize_artist_component(
+                genre_lookup_artist_identity(event.headliner)
+            )
             item = unresolved_artists.setdefault(identity, {
                 "artist": event.headliner, "affected_events": 0,
                 "raw_genres": set(), "sources": set(),
