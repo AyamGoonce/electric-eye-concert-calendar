@@ -300,3 +300,21 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+### Cancellation-status fix implemented and validated
+- Accor Arena official `status_code == "H"` now maps systemically to:
+  - `ticket_status="cancelled"`
+- Verified against the live Accor Arena API:
+  - Melanie Martinez — 2026-09-15 — cancelled
+  - NEJ — 2026-11-23 — cancelled
+- No artist-specific hard-coding was added.
+- Existing deduplication already gives `cancelled` highest ticket-status priority.
+- Existing production export already emits `ts="cancelled"`.
+- Existing calendar renderer already displays a muted/disabled `CANCELLED` status control.
+- Renderer now additionally displays presentation-only `(cancelled)` beside cancelled event billing.
+- Canonical headliner/artist identity is unchanged.
+- Genre lookup and deduplication identities are unchanged.
+- Added Accor cancellation regression coverage.
+- Full suite after implementation:
+  - 591 tests
+  - all passing

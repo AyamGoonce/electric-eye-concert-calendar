@@ -120,5 +120,19 @@ class NewlyAddedTests(unittest.TestCase):
         self.assertIn('[controls.venue,controls.newly]', renderer)
 
 
+
+    def test_cancelled_status_is_rendered_in_badge_and_title(self):
+        renderer = RENDERER.read_text(encoding="utf-8")
+
+        self.assertIn(
+            'if(e.ts==="cancelled")text(h,"ee-calendar-cancelled-title"," (cancelled)","span")',
+            renderer,
+        )
+        self.assertIn(
+            'else if(e.ts==="cancelled")text(a,"ee-calendar-cancelled","CANCELLED","span")',
+            renderer,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

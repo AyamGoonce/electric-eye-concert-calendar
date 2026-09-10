@@ -112,6 +112,15 @@ def extract_explicit_support(description, headliner):
     return support or None
 
 
+
+def get_ticket_status(item):
+    """Translate Accor Arena's explicit programme status code."""
+    status_code = clean_text(item.get("status_code")).upper()
+    if status_code == "H":
+        return "cancelled"
+    return None
+
+
 def parse_item(item):
     translation = french_translation(item)
     if not translation or not is_music_event(item, translation):
@@ -156,6 +165,7 @@ def parse_item(item):
             genre=genre,
             facebook_event_url=None,
             ticket_url=ticket_url,
+            ticket_status=get_ticket_status(item),
             authoritative_billing=bool(openers),
             start_time=start_time,
             image_url=image_url,
