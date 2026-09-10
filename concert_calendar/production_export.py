@@ -493,6 +493,11 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
     display_headliner, display_event_title = _display_title_parts(event)
     display_headliner = _artist_display_case(display_headliner)
 
+    display_openers = [
+        _artist_display_case(artist)
+        for artist in (event.openers or [])
+    ]
+
     # The browser renderer appends every `ch` artist after `h`.
     # If display normalization has already expanded `h` into the complete
     # structured bill, do not publish those same artists again in `ch`.
@@ -503,7 +508,7 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
     }
 
     display_co_headliners = [
-        artist
+        _artist_display_case(artist)
         for artist in (event.co_headliners or [])
         if " ".join(artist.casefold().split())
         not in display_bill_components
@@ -512,7 +517,7 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
     return {
         "d": event.date[:10],
         "h": display_headliner,
-        "o": event.openers or [],
+        "o": display_openers,
         **({"ch": display_co_headliners} if display_co_headliners else {}),
         "v": event.venue,
         "c": event.city,

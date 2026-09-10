@@ -27,15 +27,25 @@ class NomenclatureCompletionTests(unittest.TestCase):
     def test_all_caps_falls_back_to_word_initial_capitalization(self):
         item = event("BETWEEN THE BURIED AND ME")
         _apply_display_capitalization([item], {})
+
         self.assertEqual(
             item.headliner,
+            "BETWEEN THE BURIED AND ME",
+        )
+        self.assertEqual(
+            event_to_data(item)["h"],
             "Between The Buried And Me",
         )
 
     def test_all_caps_accented_name_is_normalized(self):
         item = event("AGNÈS OBEL")
         _apply_display_capitalization([item], {})
-        self.assertEqual(item.headliner, "Agnès Obel")
+
+        self.assertEqual(item.headliner, "AGNÈS OBEL")
+        self.assertEqual(
+            event_to_data(item)["h"],
+            "Agnès Obel",
+        )
 
     def test_verified_stylization_wins_over_fallback(self):
         item = event("EXAMPLE")
@@ -180,13 +190,23 @@ class NomenclatureCompletionTests(unittest.TestCase):
         item = event("AGNÈS OBEL")
         candidates = _display_candidates([item])
         _apply_display_capitalization([item], candidates)
-        self.assertEqual(item.headliner, "Agnès Obel")
+
+        self.assertEqual(item.headliner, "AGNÈS OBEL")
+        self.assertEqual(
+            event_to_data(item)["h"],
+            "Agnès Obel",
+        )
 
     def test_genre_mapping_all_caps_is_not_styling_evidence(self):
         item = event("DEFTONES")
         candidates = _display_candidates([item])
         _apply_display_capitalization([item], candidates)
-        self.assertEqual(item.headliner, "Deftones")
+
+        self.assertEqual(item.headliner, "DEFTONES")
+        self.assertEqual(
+            event_to_data(item)["h"],
+            "Deftones",
+        )
 
     def test_verified_all_caps_artist_style_is_preserved(self):
         item = event("KATSEYE")
@@ -215,6 +235,15 @@ class NomenclatureCompletionTests(unittest.TestCase):
             ),
         )
 
+
+
+    def test_chvrches_public_styling_is_preserved(self):
+        item = event("CHVRCHES")
+        candidates = _display_candidates([item])
+        _apply_display_capitalization([item], candidates)
+
+        self.assertEqual(item.headliner, "CHVRCHES")
+        self.assertEqual(event_to_data(item)["h"], "CHVRCHES")
 
 
 if __name__ == "__main__":

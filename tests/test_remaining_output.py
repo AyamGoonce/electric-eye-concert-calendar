@@ -38,8 +38,8 @@ class RemainingOutputTests(unittest.TestCase):
                               "dates": {"event_start_date": "2026-10-30T20:00:00+02:00"},
                               "venues": [{"name": "Le Plan", "city": {"name": "Paris"}}]})
         rows = output(deduplicate_events([parsed]))
-        self.assertEqual("HEAVY LUNGS", rows[0]["h"])
-        self.assertEqual(["JOE & THE SHITBOYS"], rows[0]["ch"])
+        self.assertEqual("Heavy Lungs", rows[0]["h"])
+        self.assertEqual(["Joe & The Shitboys"], rows[0]["ch"])
 
     def test_unordered_taxonomy_retains_raw_without_three_public_genres(self):
         for title, raw in (("Keziah Jones Symphonique", "Jazz, Musiques du monde, Soul, Funk"),

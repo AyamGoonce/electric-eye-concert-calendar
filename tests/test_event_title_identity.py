@@ -64,9 +64,12 @@ class EventTitleIdentityTests(unittest.TestCase):
         plain = event("PETER HOOK & THE LIGHT", source_names=["Casino de Paris"])
         marked = event("PETER HOOK & THE LIGHT : A JOY DIVISION CELEBRATION", source_names=["DICE"])
         row = serialized([plain, marked])[0]
-        self.assertEqual("PETER HOOK & THE LIGHT", row["h"])
+        self.assertEqual("Peter Hook & The Light", row["h"])
         self.assertIn("CELEBRATION", row["et"])
-        self.assertEqual(marked.headliner, serialized([event(marked.headliner)])[0]["h"])
+        self.assertEqual(
+            "Peter Hook & The Light : A Joy Division Celebration",
+            serialized([event(marked.headliner)])[0]["h"],
+        )
 
     def test_no_generic_punctuation_or_project_splitting(self):
         from concert_calendar.scrapers.dice import parse_neutral_cobill

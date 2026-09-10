@@ -247,6 +247,7 @@ VERIFIED_SUPPORT_RELATIONSHIPS = {
 }
 
 VERIFIED_ARTIST_DISPLAY_NAMES = {
+    "chvrches": "CHVRCHES",
     "deep purple": "Deep Purple",
     "eagles of death metal": "Eagles of Death Metal",
     "hollywood vampires": "Hollywood Vampires",
@@ -989,13 +990,11 @@ def _apply_display_capitalization(
     candidates: dict[str, str],
 ) -> None:
     """
-    Normalize source shouting for artist identities.
+    Apply only evidenced artist display spellings to internal records.
 
-    Corroborated mixed-case spellings win. Otherwise a plain ALL-CAPS
-    performer falls back to Unicode-aware word-initial capitalization.
-
-    Complete contextual titles are left lossless here; their performer
-    identity is separated later by the public-display normalization layer.
+    Generic ALL-CAPS normalization belongs to the public export layer.
+    Keeping unsupported source capitalization here preserves source identity,
+    reviewed billing semantics and performance discriminators.
     """
 
     contextual_re = re.compile(
@@ -1023,19 +1022,15 @@ def _apply_display_capitalization(
         if not is_all_caps:
             return name
 
-        # Do not mutate complete event titles internally. Their performer
-        # identity is separated later by the public-display layer.
+        # A complete branded/contextual title must remain untouched
+        # internally even if its artist component has a verified spelling.
         if contextual_re.search(name):
             return name
 
-        identity = normalize_artist_component(name)
-
-        # Evidenced spelling has priority for a plain artist identity,
-        # including deliberate ALL-CAPS/mixed-case styling.
-        if identity in candidates:
-            return candidates[identity]
-
-        return name.title()
+        return candidates.get(
+            normalize_artist_component(name),
+            name,
+        )
 
     for event in events:
         event.headliner = canonicalize(event.headliner)

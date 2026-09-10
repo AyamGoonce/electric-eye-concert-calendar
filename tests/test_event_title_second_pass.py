@@ -21,9 +21,9 @@ class SecondTitlePassTests(unittest.TestCase):
         events = [event("GONZAÏ NIGHT : RUBIN STEINER", co_headliners=["SOCIÉTÉ ÉTRANGE"], source_names=["DICE"]),
                   event("GONZAÏ NIGHT : LES CLOPES", co_headliners=["AKREPTILE"], source_names=["DICE"])]
         rows = output(deduplicate_events(events))
-        self.assertEqual(["LES CLOPES", "RUBIN STEINER"], [r["h"] for r in rows])
+        self.assertEqual(["Les Clopes", "Rubin Steiner"], [r["h"] for r in rows])
         self.assertTrue(all(r["sn"] == "GONZAÏ NIGHT" for r in rows))
-        self.assertEqual(["SOCIÉTÉ ÉTRANGE"], rows[1]["ch"])
+        self.assertEqual(["Société Étrange"], rows[1]["ch"])
 
     def test_generic_recurring_series_requires_same_source_distinct_bills(self):
         first = event("Silver Nights : Artist", source_names=["One"])
