@@ -88,6 +88,12 @@ def parse_card(card, year):
         if title_element
         else ""
     )
+    original_headliner = headliner
+    detail_href = (
+        clean_text(detail_link.get("href"))
+        if detail_link
+        else ""
+    )
     day_month = parse_day_month(
         date_element.get_text(" ", strip=True)
         if date_element
@@ -123,6 +129,17 @@ def parse_card(card, year):
         else ""
     )
     ticket_hostname = (urlparse(ticket_href).hostname or "").casefold()
+
+    sold_out = any(
+        re.search(r"(?<![a-z])complet(?![a-z])", normalize_for_matching(value))
+        for value in (
+            booking_text,
+            original_headliner,
+            detail_href,
+            ticket_href,
+        )
+    )
+
     facebook_event_url = (
         ticket_href
         if ticket_hostname == "facebook.com" or ticket_hostname.endswith(".facebook.com")
@@ -145,6 +162,8 @@ def parse_card(card, year):
         promoters=None,
         genre=None,
         facebook_event_url=facebook_event_url,
+        sold_out=sold_out,
+        ticket_status="sold_out" if sold_out else None,
         ticket_url=(
             urljoin(SITE_URL, clean_text(available_link.get("href")))
             if available_link

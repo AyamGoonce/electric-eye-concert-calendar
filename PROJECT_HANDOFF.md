@@ -365,3 +365,12 @@ Fresh non-publishing production build completed successfully after the Sunset/Su
 - unresolved identities: 444
 
 This supersedes the older 2500-event / 79.56% genre audit for current-code coverage analysis. The dominant remaining gap is now events with no raw genre evidence (418), not unresolved source taxonomy.
+
+## 2026-09-10 — La Maroquinerie sold-out detection
+
+Fixed systemic sold-out status extraction for La Maroquinerie.
+
+- Explicit `COMPLET` is detected from booking text, source title, detail URL, or ticket URL.
+- Matching events now set `sold_out=True` and `ticket_status="sold_out"`.
+- This fixes cases such as Isabel van Gelder without artist-specific logic.
+- Added regression tests for URL-based and visible-text `COMPLET` detection.

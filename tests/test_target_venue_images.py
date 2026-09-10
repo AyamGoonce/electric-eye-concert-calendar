@@ -84,6 +84,42 @@ class TargetVenueImageTests(unittest.TestCase):
         event = parse_maroquinerie(card, 2027)
         self.assertEqual("https://www.lamaroquinerie.fr/files/show.png", event.image_url)
 
+    def test_maroquinerie_complet_status_from_event_url(self):
+        card = soup(
+            """<li class="event">
+            <a href="/fr/agenda/view/2208/isabel-van-gelder-complet/">
+              <div class="thumbnail"><h2>Isabel van Gelder</h2></div>
+            </a>
+            <h3 class="date">10 septembre</h3>
+            <div class="booking">
+              <a href="/fr/agenda/view/2208/isabel-van-gelder-complet/">Billetterie</a>
+            </div>
+            </li>"""
+        ).li
+
+        event = parse_maroquinerie(card, 2026)
+
+        self.assertTrue(event.sold_out)
+        self.assertEqual("sold_out", event.ticket_status)
+        self.assertEqual("Isabel van Gelder", event.headliner)
+
+    def test_maroquinerie_complet_status_from_booking_text(self):
+        card = soup(
+            """<li class="event">
+            <a href="/fr/agenda/view/999/example/">
+              <div class="thumbnail"><h2>Example Artist - COMPLET</h2></div>
+            </a>
+            <h3 class="date">11 septembre</h3>
+            <div class="booking">Complet</div>
+            </li>"""
+        ).li
+
+        event = parse_maroquinerie(card, 2026)
+
+        self.assertTrue(event.sold_out)
+        self.assertEqual("sold_out", event.ticket_status)
+        self.assertEqual("Example Artist", event.headliner)
+
     def test_hasard_ludique_background_image(self):
         card = soup('''<a class="event_card concert" href="/concert/show"><div class="image" style="background-image:url('https://images.example/show.jpg')"></div><div class="content"><div><span>#rock</span><h3>Artist</h3><strong>11.09.27</strong></div></div></a>''')
         self.assertEqual("https://images.example/show.jpg", parse_hasard(card).image_url)
