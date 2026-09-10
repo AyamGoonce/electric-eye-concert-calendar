@@ -243,3 +243,60 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — Emergency cancellation-status bug
+
+### Incident
+- Melanie Martinez at Accor Arena is officially cancelled.
+- Accor Arena reports the cancellation.
+- Live Nation also reports the cancellation.
+- Electric Eye calendar currently fails to reflect it.
+
+### Root cause identified
+- Deduplication is already correct:
+  - `cancelled` has highest ticket-status priority.
+- Production export already supports:
+  - `ticket_status="cancelled"` -> public `ts="cancelled"`.
+- The failure is upstream:
+  - Accor Arena scraper currently creates ConcertEvent records without extracting
+    `ticket_status`.
+  - Live Nation scraper currently creates ConcertEvent records without extracting
+    `ticket_status`.
+- Therefore the cancellation status never enters the event model and cannot be
+  preserved by deduplication.
+
+### Required systemic behavior
+- Do NOT hard-code Melanie Martinez.
+- Extract official cancellation status generically from Accor Arena.
+- Extract official cancellation status generically from Live Nation.
+- If either trusted source supplies `cancelled`, deduplication should preserve it.
+- Public calendar rendering:
+  - greyed/disabled status button reading `CANCELLED`
+  - render `(cancelled)` beside the event name
+- `(cancelled)` must be presentation-only.
+- Do NOT append it to `event.headliner`, canonical identity, deduplication identity,
+  or genre lookup identity.
+
+### Current genre state before emergency
+- Shared production/research genre identity cleanup committed/pushed:
+  - commit `032f41e`
+- Full suite at that checkpoint:
+  - 588 tests passed
+- Fresh local production genre run:
+  - 2513 deduplicated Île-de-France events
+  - 1999 with genre
+  - 514 blank
+  - 79.5% coverage
+- No live deployment of the new genre work yet.
+
+### Next emergency step
+- Inspect raw Melanie Martinez records returned by the Accor Arena and Live Nation
+  APIs to identify the authoritative cancellation fields.
+- Inspect browser renderer handling of public `ts` statuses.
+- Implement source extraction + renderer behavior + regression tests.
+- Run full suite.
+- Commit/push before resuming genre enrichment.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
