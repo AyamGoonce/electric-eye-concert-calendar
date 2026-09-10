@@ -5,6 +5,7 @@ import unicodedata
 import requests
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.event_titles import is_non_artist_event_title
 
 
 SOURCE_NAME = "DICE"
@@ -73,6 +74,12 @@ def is_non_concert_listing(title):
         for character in normalized
         if not unicodedata.combining(character)
     ).casefold()
+
+    return bool(
+        re.search(r"\bviewing(?:s)? parties\b", normalized)
+        or is_non_artist_event_title(title)
+    )
+
 
     return bool(re.search(r"\bviewing(?:s)? parties\b", normalized))
 

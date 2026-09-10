@@ -6,6 +6,60 @@ from collections import defaultdict
 from html import unescape
 
 
+
+def is_non_artist_event_title(value):
+    """
+    Identify event concepts that contain no performer billing.
+
+    Deliberately narrow: do not reject ordinary artists merely because their
+    names contain words such as Night, Festival or Magazine.
+    """
+    normalized = unicodedata.normalize(
+        "NFKD",
+        unescape(value or ""),
+    )
+    normalized = "".join(
+        character
+        for character in normalized
+        if not unicodedata.combining(character)
+    )
+    normalized = " ".join(normalized.casefold().split())
+
+    if not normalized:
+        return False
+
+    # Explicit performer connectors make this unsuitable for concept-only
+    # rejection.
+    if re.search(
+        r"\b(?:with|avec|feat\.?|featuring|ft\.?)\b",
+        normalized,
+    ):
+        return False
+
+    # "Brand / Nuit Indie...", "Brand / Night..."
+    if re.search(
+        r"\s/\s*(?:nuit|soiree|night)\b",
+        normalized,
+    ):
+        return True
+
+    # Genre/theme night rather than a performer.
+    if re.fullmatch(
+        r"(?:emo|indie|rock|metal|punk|pop|disco|synth(?:\s+pop)?)"
+        r"\s+night(?:\s+[a-z0-9'’&+-]+){0,2}",
+        normalized,
+    ):
+        return True
+
+    # Publication/product launch events with no artist billing.
+    if (
+        re.search(r"\bmagazine\b", normalized)
+        and re.search(r"\b(?:launch|release)\b", normalized)
+    ):
+        return True
+
+    return False
+
 def title_identity(value, *, fold_accents=False):
     """Normalize title spelling; accent folding is opt-in for corroborated wrappers."""
     normalized = unicodedata.normalize(

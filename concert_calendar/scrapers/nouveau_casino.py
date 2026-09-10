@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 from concert_calendar.event_images import discard_repeated_generic_images, element_image_url
 from concert_calendar.models import ConcertEvent
+from concert_calendar.event_titles import is_non_artist_event_title
 
 SOURCE_NAME="Nouveau Casino"; PROGRAMME_URL="https://www.nouveaucasino.fr/"; REQUEST_TIMEOUT=30
 HEADERS={"User-Agent":"Mozilla/5.0 AppleWebKit/537.36 Safari/537.36"}
@@ -25,6 +26,7 @@ def parse_items(soup, *, today=None):
             sold=bool(re.search(r"\[(?:sold out|complet)\]",title,re.I))
             title=clean(re.sub(r"\s*\[(?:sold out|complet)\]\s*","",title,flags=re.I))
             if not title or event_date < cutoff: continue
+            if is_non_artist_event_title(title): continue
             start=card.select_one(".event_header p span:not(.timeend)")
             ticket=card.select_one(".event_tickets a[href]")
             genres=[clean(x.get_text(" ",strip=True)) for x in card.select(".genre_list .tag")]

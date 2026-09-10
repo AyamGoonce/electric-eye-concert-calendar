@@ -124,6 +124,40 @@ def _display_subtitle(
     return extracted or current or None
 
 
+
+def _artist_display_case(name: str) -> str:
+    """
+    Return canonical public casing for a performer/bill.
+
+    Mixed-case names are preserved. ALL-CAPS source shouting falls back to
+    word-initial capitalization unless the artist has an explicitly verified
+    display spelling.
+    """
+    letters = [
+        character
+        for character in name
+        if character.isalpha()
+    ]
+    is_all_caps = bool(letters) and all(
+        not character.islower()
+        for character in letters
+    )
+
+    if not is_all_caps:
+        return name
+
+    # Local import avoids coupling module initialization.
+    from concert_calendar.deduplication import (
+        VERIFIED_ARTIST_DISPLAY_NAMES,
+        normalize_artist_component,
+    )
+
+    return VERIFIED_ARTIST_DISPLAY_NAMES.get(
+        normalize_artist_component(name),
+        name.title(),
+    )
+
+
 def _display_title_parts(event: ConcertEvent) -> tuple[str, str | None]:
     """
     Return performer billing for the main public line and event prose below it.
@@ -133,6 +167,145 @@ def _display_title_parts(event: ConcertEvent) -> tuple[str, str | None]:
     """
     headliner = (event.headliner or "").strip()
     event_title = event.event_title
+
+    original_headliner = headliner
+
+    # Country/origin tags are metadata, not performer identity.
+    country_tag = re.search(
+        r"\s+\((?:"
+        r"IT|FR|BE|DE|ES|PT|NL|UK|US|USA|CA|AU|JP|"
+        r"SE|NO|FI|DK|CH"
+        r")\)\s*$",
+        headliner,
+        re.IGNORECASE,
+    )
+    if country_tag:
+        headliner = headliner[:country_tag.start()].strip()
+
+    # Parenthetical release markers belong to event context.
+    release_marker = re.search(
+        r"\s+\((?P<context>"
+        r"(?:album\s+)?release\s+party|"
+        r"launch\s+party|record\s+release"
+        r")\)\s*$",
+        headliner,
+        re.IGNORECASE,
+    )
+    if release_marker:
+        artist = headliner[:release_marker.start()].strip()
+        context = release_marker.group("context").strip().title()
+
+        subtitle = _display_subtitle(
+            event_title,
+            original_headliner,
+            context,
+        )
+
+        # A richer event_title that merely repeats this same structured
+        # bill is not independent programme prose.
+        if event_title and event.co_headliners:
+            current_key = " ".join(event_title.casefold().split())
+            original_key = " ".join(
+                original_headliner.casefold().split()
+            )
+            if current_key.startswith(original_key + " + "):
+                subtitle = context
+
+        return artist, subtitle
+
+    # Reversed tribute syntax:
+    # "Hommage à X avec Artist A + Artist B"
+    reversed_tribute = re.fullmatch(
+        r"((?:hommage\s+[àa]|tribute\s+to)\s+.+?)"
+        r"\s+(?:avec|with)\s+(.+)",
+        headliner,
+        re.IGNORECASE,
+    )
+    if reversed_tribute:
+        programme = reversed_tribute.group(1).strip()
+        artists = reversed_tribute.group(2).strip()
+        return artists, _display_subtitle(
+            event_title,
+            original_headliner,
+            programme,
+        )
+
+    # Explicit album/performance title after a separator.
+    album_or_live = re.fullmatch(
+        r"(.+?)\s+[-–—]\s+("
+        r"(?:nouvel\s+album|nouveau\s+album|new\s+album|"
+        r"album\s+release|record\s+release)\b.+"
+        r"|.+\(\s*live\s*\)\s*"
+        r")",
+        headliner,
+        re.IGNORECASE,
+    )
+    if album_or_live:
+        programme = album_or_live.group(2).strip()
+        return (
+            album_or_live.group(1).strip(),
+            _display_subtitle(
+                event_title,
+                original_headliner,
+                programme,
+            ),
+        )
+
+    # Artist followed directly by a quoted programme/show title.
+    quoted_programme = re.fullmatch(
+        r"(.+?)\s+[“«\"]([^”»\"]+)[”»\"]\s*",
+        headliner,
+    )
+    if quoted_programme:
+        programme = quoted_programme.group(2).strip()
+        words = re.findall(
+            r"[A-Za-zÀ-ÖØ-öø-ÿ0-9'’]+",
+            programme,
+        )
+        if len(words) >= 3:
+            return (
+                quoted_programme.group(1).strip(),
+                _display_subtitle(
+                    event_title,
+                    original_headliner,
+                    programme,
+                ),
+            )
+
+    # Programme syntax such as:
+    # "Deadbeat Dubtechno Special: Artist live, Artist live, Artist"
+    special_programme = re.fullmatch(
+        r"(.+\bspecial)\s*:\s*(.+)",
+        headliner,
+        re.IGNORECASE,
+    )
+    if special_programme:
+        programme = special_programme.group(1).strip()
+        parts = [
+            part.strip()
+            for part in special_programme.group(2).split(",")
+            if part.strip()
+        ]
+        live_count = sum(
+            bool(re.search(r"\s+live\s*$", part, re.IGNORECASE))
+            for part in parts
+        )
+
+        if len(parts) >= 2 and live_count >= 2:
+            artists = " + ".join(
+                re.sub(
+                    r"\s+live\s*$",
+                    "",
+                    part,
+                    flags=re.IGNORECASE,
+                ).strip()
+                for part in parts
+            )
+            return artists, _display_subtitle(
+                event_title,
+                original_headliner,
+                programme,
+            )
 
     # "Series/Promoter presents Artist"
     presentation = re.fullmatch(
@@ -318,12 +491,29 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
         else safe_image_url(event.image_url)
     )
     display_headliner, display_event_title = _display_title_parts(event)
+    display_headliner = _artist_display_case(display_headliner)
+
+    # The browser renderer appends every `ch` artist after `h`.
+    # If display normalization has already expanded `h` into the complete
+    # structured bill, do not publish those same artists again in `ch`.
+    display_bill_components = {
+        " ".join(part.casefold().split())
+        for part in re.split(r"\s+\+\s+", display_headliner)
+        if part.strip()
+    }
+
+    display_co_headliners = [
+        artist
+        for artist in (event.co_headliners or [])
+        if " ".join(artist.casefold().split())
+        not in display_bill_components
+    ]
 
     return {
         "d": event.date[:10],
         "h": display_headliner,
         "o": event.openers or [],
-        **({"ch": event.co_headliners} if event.co_headliners else {}),
+        **({"ch": display_co_headliners} if display_co_headliners else {}),
         "v": event.venue,
         "c": event.city,
         "x": (

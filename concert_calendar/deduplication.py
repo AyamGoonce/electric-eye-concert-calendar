@@ -252,6 +252,12 @@ VERIFIED_ARTIST_DISPLAY_NAMES = {
     "hollywood vampires": "Hollywood Vampires",
     "the last internationale": "The Last Internationale",
     "uriah heep": "Uriah Heep",
+    "6lack": "6LACK",
+    "diiv": "DIIV",
+    "fkj": "FKJ",
+    "katseye": "KATSEYE",
+    "mnek": "MNEK",
+    "muna": "MUNA",
 }
 
 BILL_SEPARATOR_RE = re.compile(
@@ -959,7 +965,11 @@ def _display_candidates(events: list[ConcertEvent]) -> dict[str, str]:
     candidates: dict[str, str] = {}
 
     for event in events:
-        for name in [event.headliner, *(event.openers or [])]:
+        for name in [
+            event.headliner,
+            *(event.openers or []),
+            *(event.co_headliners or []),
+        ]:
             identity = normalize_artist_component(name)
             letters = [character for character in name if character.isalpha()]
             is_mixed_case = (
@@ -970,18 +980,6 @@ def _display_candidates(events: list[ConcertEvent]) -> dict[str, str]:
             if identity and is_mixed_case and identity not in candidates:
                 candidates[identity] = name
 
-    mapping_path = Path(__file__).with_name("genre_mappings.json")
-    try:
-        mapping_data = json.loads(mapping_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        mapping_data = {}
-
-    for section in ("artists", "overrides"):
-        for record in mapping_data.get(section, []):
-            artist = (record.get("artist") or "").strip()
-            if artist:
-                candidates[normalize_artist_component(artist)] = artist
-
     candidates.update(VERIFIED_ARTIST_DISPLAY_NAMES)
     return candidates
 
@@ -990,8 +988,33 @@ def _apply_display_capitalization(
     events: list[ConcertEvent],
     candidates: dict[str, str],
 ) -> None:
+    """
+    Normalize source shouting for artist identities.
+
+    Corroborated mixed-case spellings win. Otherwise a plain ALL-CAPS
+    performer falls back to Unicode-aware word-initial capitalization.
+
+    Complete contextual titles are left lossless here; their performer
+    identity is separated later by the public-display normalization layer.
+    """
+
+    contextual_re = re.compile(
+        r"\b(?:"
+        r"tour|tourn[ée]e|anniversary|"
+        r"release\s+party|launch\s+party|"
+        r"nouvel\s+album|nouveau\s+album|new\s+album|"
+        r"hommage\s+[àa]|tribute\s+to|festival|"
+        r"spectacle|programme|program"
+        r")\b",
+        re.IGNORECASE,
+    )
+
     def canonicalize(name: str) -> str:
-        letters = [character for character in name if character.isalpha()]
+        letters = [
+            character
+            for character in name
+            if character.isalpha()
+        ]
         is_all_caps = bool(letters) and all(
             not character.islower()
             for character in letters
@@ -1000,7 +1023,19 @@ def _apply_display_capitalization(
         if not is_all_caps:
             return name
 
-        return candidates.get(normalize_artist_component(name), name)
+        # Do not mutate complete event titles internally. Their performer
+        # identity is separated later by the public-display layer.
+        if contextual_re.search(name):
+            return name
+
+        identity = normalize_artist_component(name)
+
+        # Evidenced spelling has priority for a plain artist identity,
+        # including deliberate ALL-CAPS/mixed-case styling.
+        if identity in candidates:
+            return candidates[identity]
+
+        return name.title()
 
     for event in events:
         event.headliner = canonicalize(event.headliner)
@@ -1012,7 +1047,6 @@ def _apply_display_capitalization(
             canonicalize(artist)
             for artist in (event.co_headliners or [])
         ] or None
-
 
 def _deduplicate_exact(events: list[ConcertEvent]) -> list[ConcertEvent]:
     # Keep original members: merged metadata must not manufacture evidence for
