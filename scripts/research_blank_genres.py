@@ -23,17 +23,17 @@ USER_AGENT = "ElectricEyeGenreAudit/1.0 (https://github.com/AyamGoonce/electric-
 
 RULES = (
     ("Metal / Hard Rock", ("metal", "hard rock", "deathcore", "metalcore")),
-    ("Hip-hop / Rap", ("hip hop", "rap", "trap music", "drill music")),
+    ("Hip-hop / Rap", ("hip hop", "hip-hop", "rap", "trap music", "drill music")),
     ("Reggae / Dub / Ska", ("reggae", "dub music", "ska", "dancehall")),
     ("Jazz / Blues", ("jazz", "blues", "bebop")),
     ("R&B / Soul / Funk", ("rhythm and blues", "neo soul", "soul music", "funk")),
     ("Folk / Country", ("folk", "country music", "americana", "bluegrass")),
-    ("French chanson", ("chanson", "variété française")),
+    ("Chanson Française / Variétés", ("chanson", "variété française")),
     ("Electronic", ("electronic", "electronica", "house music", "techno", "ambient music", "synth-pop", "trance music", "drum and bass")),
     ("World / Latin", ("world music", "latin music", "cumbia", "salsa music", "afrobeat", "afropop", "bossa nova")),
     ("Rock / Indie / Punk", ("rock", "punk", "shoegaze", "grunge", "new wave", "post-punk")),
     ("Pop", ("pop music", "art pop", "indie pop", "dream pop", "hyperpop", "k-pop")),
-    ("Comedy", ("comedy",)),
+    ("Comedy / Spoken Word", ("comedy",)),
 )
 
 
@@ -45,7 +45,13 @@ def public_category(genres: list[str]) -> str | None:
         matches = {
             public
             for public, terms in RULES
-            if any(term in value for term in terms)
+            if any(
+                re.search(
+                    r"(?<!\w)" + re.escape(term) + r"(?!\w)",
+                    value,
+                )
+                for term in terms
+            )
         }
 
         if len(matches) == 1:

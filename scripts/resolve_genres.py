@@ -192,7 +192,11 @@ def resolve_calendar_asset(
             found = musicbrainz_batch(batch)
         except requests.RequestException as error:
             print(f"MusicBrainz batch failed: {error}", file=sys.stderr)
-            found = {}
+            # A transport/server failure says nothing about artist identity.
+            # Never persist a failed request as an "unresolved" artist result.
+            if offset + batch_size < len(pending):
+                time.sleep(1.05)
+            continue
         for name in batch:
             identity = normalize_artist_component(name)
             cache[identity] = found.get(identity, {"artist": name, "genre": None, "status": "unresolved", "scores": {}, "evidence": []})

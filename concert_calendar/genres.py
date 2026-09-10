@@ -162,6 +162,14 @@ EXACT_RAW_MAPPINGS = {
     "bedroom punk / emo pop": "Rock / Indie / Punk",
     "electro, techno": "Electronic",
     "other, rnb / soul": "R&B / Soul / Funk",
+    "psych-rock": "Rock / Indie / Punk",
+    "afrobeats, afropop, rumba": "World / Latin",
+    "rap, trap, hip hop": "Hip-hop / Rap",
+    "concert / hip hop": "Hip-hop / Rap",
+    "french pop - indie pop": "Pop",
+    "musique orientale": "World / Latin",
+    "musique celtique": "World / Latin",
+    "zouk": "World / Latin",
 }
 
 WEAK_RAW_GENRES = {
