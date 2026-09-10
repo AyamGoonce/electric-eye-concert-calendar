@@ -191,3 +191,33 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — First Apple + Bandcamp consensus promotion batch
+
+- Full external research pass completed across 489 blank research identities / 541 rows.
+- Provider reliability after pacing/backoff:
+  - unavailable provider calls: 0
+- Two-source consensus:
+  - 54 identities
+  - 62 event rows
+- Reviewed identity safety before promotion.
+- Promoted 49 identities to `concert_calendar/genre_mappings.json`.
+- These mappings affect 57 currently blank calendar rows.
+- Evidence provenance:
+  - Apple Music + Bandcamp
+  - evidence_type: multi_source_genre_consensus
+- Explicitly held out because identity/taxonomy evidence was unsafe or ambiguous:
+  - Big D
+  - Ekaterina Shelehova
+  - Ozzy
+  - Roomer
+  - Sombr
+- Mapping count increased from 1161 to 1210.
+- Full suite after promotion: 585 tests passed.
+- Live calendar has NOT yet been updated with this batch.
+- Next: measure projected genre coverage with the new mappings, then continue
+  reviewing high-confidence single-source candidates to build a larger deployment.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
