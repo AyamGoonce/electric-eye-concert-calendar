@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 import re
 import unicodedata
-from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+from urllib.parse import parse_qsl, unquote, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
 from concert_calendar.event_titles import (
@@ -734,32 +734,120 @@ def _reconcile_cross_source_billing_variants(
     return [event for event in events if id(event) not in removed]
 
 
+def _billing_evidence_key(value: str | None) -> str:
+    """Normalize source text for corroborating already-known bill artists."""
+
+    normalized = unicodedata.normalize(
+        "NFKD",
+        unquote(unescape(value or "")),
+    )
+    normalized = "".join(
+        character
+        for character in normalized
+        if not unicodedata.combining(character)
+    )
+    normalized = normalized.casefold()
+    normalized = re.sub(r"[^a-z0-9]+", " ", normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _evidence_contains_artist(evidence: str, artist: str) -> bool:
+    artist_key = _billing_evidence_key(artist)
+    if not artist_key:
+        return False
+
+    return bool(
+        re.search(
+            rf"(?<![a-z0-9]){re.escape(artist_key)}(?![a-z0-9])",
+            evidence,
+        )
+    )
+
+
 def _matches_structured_bill(
     structured: ConcertEvent,
     full_bill: ConcertEvent,
 ) -> bool:
+    """
+    Match a structured artist bill to another source representation.
+
+    Arbitrary '+'/'&' artist names are never globally split.  Separator or
+    source-text interpretation is used only when a second record already
+    supplies the explicit structured artist identities being corroborated.
+    """
+
     structured_artists = [
-        *(structured.openers or []), *(structured.co_headliners or [])
+        *(structured.openers or []),
+        *(structured.co_headliners or []),
     ]
-    if not structured_artists or full_bill.openers or full_bill.co_headliners:
+
+    if (
+        not structured_artists
+        or full_bill.openers
+        or full_bill.co_headliners
+    ):
         return False
 
+    expected_artists = [
+        structured.headliner,
+        *structured_artists,
+    ]
+    expected_normalized = [
+        normalize_artist_component(value)
+        for value in expected_artists
+    ]
+
+    # Existing strict path: an explicitly separable complete bill.
     components = _split_full_bill(full_bill.headliner)
 
-    if not components:
-        return False
+    if components:
+        normalized_bill = [
+            normalize_artist_component(value)
+            for value in components
+        ]
 
-    normalized_bill = [normalize_artist_component(value) for value in components]
-    normalized_structured = [
-        normalize_artist_component(value)
-        for value in [structured.headliner, *structured_artists]
+        if (
+            normalized_bill[0] == expected_normalized[0]
+            and sorted(normalized_bill) == sorted(expected_normalized)
+        ):
+            return True
+
+    # Corroboration path.  Another source has already told us exactly which
+    # artists form the bill, so look for those identities in explicit source
+    # evidence rather than inventing artists by splitting arbitrary names.
+    evidence_values = [
+        full_bill.headliner,
+        full_bill.event_title or "",
+        *(full_bill.identity_aliases or []),
+        full_bill.ticket_url or "",
     ]
 
-    return (
-        normalized_bill[0] == normalized_structured[0]
-        and sorted(normalized_bill) == sorted(normalized_structured)
+    evidence = " ".join(
+        value
+        for value in (
+            _billing_evidence_key(item)
+            for item in evidence_values
+        )
+        if value
     )
 
+    if not evidence:
+        return False
+
+    # At least one structured artist must be represented by the source's
+    # actual headliner field; a URL alone is not sufficient evidence.
+    headliner_evidence = _billing_evidence_key(full_bill.headliner)
+
+    if not any(
+        _evidence_contains_artist(headliner_evidence, artist)
+        for artist in expected_artists
+    ):
+        return False
+
+    return all(
+        _evidence_contains_artist(evidence, artist)
+        for artist in expected_artists
+    )
 
 def _same_event_specific_ticket(
     left: ConcertEvent,
@@ -774,16 +862,47 @@ def _same_event_specific_ticket(
     def normalized(value: str) -> str | None:
         parsed = urlparse(value)
         path = re.sub(r"/+", "/", parsed.path).rstrip("/")
-        generic_paths = {"", "/agenda", "/events", "/event", "/billetterie", "/tickets"}
+
+        # Tracking and presentation-only parameters carry no event identity.
+        ignored_query_keys = {
+            "lang", "language", "locale", "hl",
+        }
         query = [
-            (key, item) for key, item in parse_qsl(parsed.query, keep_blank_values=True)
-            if not key.casefold().startswith("utm_")
+            (key, item)
+            for key, item in parse_qsl(parsed.query, keep_blank_values=True)
+            if (
+                not key.casefold().startswith("utm_")
+                and key.casefold() not in ignored_query_keys
+            )
         ]
-        if path.casefold() in generic_paths and not query:
+
+        generic_leaf_names = {
+            "",
+            "agenda",
+            "events",
+            "event",
+            "billetterie",
+            "tickets",
+            "ticketing",
+            "programme",
+            "programmation",
+        }
+
+        leaf = path.rsplit("/", 1)[-1].casefold() if path else ""
+
+        # A generic ticketing/programme landing page is not made
+        # event-specific merely by being nested under another path.
+        # An identifying query such as ?event=123 still makes it specific.
+        if leaf in generic_leaf_names and not query:
             return None
+
         return urlunparse((
-            parsed.scheme.casefold(), parsed.netloc.casefold(), path,
-            "", urlencode(sorted(query)), "",
+            parsed.scheme.casefold(),
+            parsed.netloc.casefold(),
+            path,
+            "",
+            urlencode(sorted(query)),
+            "",
         ))
 
     return normalized(left.ticket_url) == normalized(right.ticket_url) is not None
@@ -937,7 +1056,7 @@ def _same_exact_performance(left: ConcertEvent, right: ConcertEvent) -> bool:
 
 
 def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
-    """Apply only the four manually reviewed event-level billing decisions."""
+    """Apply manually reviewed event-level billing decisions."""
 
     removed = set()
     for rule in REVIEWED_EVENT_BILLS:
@@ -1132,11 +1251,65 @@ def _reconcile_multi_set_parent_cards(events: list[ConcertEvent]) -> list[Concer
     return [event for event in events if id(event) not in removed]
 
 
+def _has_official_venue_source(event: ConcertEvent) -> bool:
+    """Return True when a record comes from the venue it describes."""
+    venue_key = normalize_venue_key(event.venue)
+    if not venue_key:
+        return False
+
+    return any(
+        normalize_venue_key(source) == venue_key
+        for source in (event.source_names or [])
+    )
+
+
+def _has_explicit_performance_discriminator(event: ConcertEvent) -> bool:
+    """Protect records explicitly identified as separate sets or performances."""
+    value = f"{event.headliner} {event.event_title or ''}"
+
+    if SET_SUFFIX_RE.search(value) or PERFORMANCE_TIME_RE.search(value):
+        return True
+
+    marker = (
+        r"\b(?:(?:1er|1re|2e|2ème|first|second)\s+"
+        r"(?:set|show|performance|séance)|"
+        r"matin[ée]e|evening|early show|late show)\b"
+    )
+    return bool(re.search(marker, value.casefold()))
+
+
+def _official_venue_time_disagreement(
+    left: ConcertEvent,
+    right: ConcertEvent,
+) -> bool:
+    """
+    Treat a venue-vs-external time disagreement as source semantics,
+    not automatic proof of two performances.
+    """
+    if (
+        not left.start_time
+        or not right.start_time
+        or left.start_time == right.start_time
+    ):
+        return False
+
+    if (
+        _has_explicit_performance_discriminator(left)
+        or _has_explicit_performance_discriminator(right)
+    ):
+        return False
+
+    left_official = _has_official_venue_source(left)
+    right_official = _has_official_venue_source(right)
+
+    # Exactly one record must originate from the venue itself.
+    return left_official != right_official
+
+
 def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
     grouped = defaultdict(list)
-
     for event in events:
-        grouped[(event.date, (event.venue or "").casefold().strip())].append(event)
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
 
     removed = set()
 
@@ -1154,12 +1327,38 @@ def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
                 if id(full_bill) in removed:
                     continue
 
-                if not _performance_conflict(structured, full_bill) and _matches_structured_bill(structured, full_bill):
-                    merge_events(structured, full_bill)
-                    removed.add(id(full_bill))
+                if not _matches_structured_bill(structured, full_bill):
+                    continue
+
+                venue_time_disagreement = _official_venue_time_disagreement(
+                    structured,
+                    full_bill,
+                )
+
+                if (
+                    _performance_conflict(structured, full_bill)
+                    and not venue_time_disagreement
+                ):
+                    continue
+
+                # Once the bill has independently matched, prefer the venue's
+                # own stated time over an external ticketing-source time.
+                if venue_time_disagreement:
+                    if (
+                        _has_official_venue_source(full_bill)
+                        and full_bill.start_time
+                    ):
+                        structured.start_time = full_bill.start_time
+                    elif (
+                        _has_official_venue_source(structured)
+                        and structured.start_time
+                    ):
+                        pass
+
+                merge_events(structured, full_bill)
+                removed.add(id(full_bill))
 
     return [event for event in events if id(event) not in removed]
-
 
 def _collapse_explicit_support_cards(
     events: list[ConcertEvent],
@@ -1370,6 +1569,12 @@ def deduplicate_events(
     _apply_display_capitalization(reconciled, display_candidates)
     reconciled = _normalize_event_title_wrappers(reconciled)
 
+    # Title normalization can expose artist identities that were previously
+    # hidden behind programme/series presentation wrappers. Give the existing
+    # structured/full-bill reconciler one final opportunity to merge those
+    # now-comparable cross-source records.
+    reconciled = _reconcile_full_bills(reconciled)
+
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(
             diagnostics.get("festival_artist_rows_collapsed", 0),
@@ -1466,11 +1671,30 @@ def _unresolved_candidates(events: list[ConcertEvent], limit: int = 50) -> list[
 
     for (date, artist), group in by_date_artist.items():
         venues = {event.venue for event in group}
+
         if len(venues) > 1:
+            # Different official venues independently listing the same
+            # artist/date are not, by themselves, contradictory evidence.
+            # Preserve them and require some non-venue source disagreement
+            # before raising a venue-conflict diagnostic.
+            independently_official = all(
+                _has_official_venue_source(event)
+                for event in group
+            )
+
+            if independently_official:
+                continue
+
             candidates.append({
-                "kind": "venue_conflict", "date": date, "artist": artist,
+                "kind": "venue_conflict",
+                "date": date,
+                "artist": artist,
                 "venues": sorted(venues),
-                "sources": sorted({s for event in group for s in (event.source_names or [])}),
+                "sources": sorted({
+                    source
+                    for event in group
+                    for source in (event.source_names or [])
+                }),
             })
 
     for url, group in by_ticket.items():

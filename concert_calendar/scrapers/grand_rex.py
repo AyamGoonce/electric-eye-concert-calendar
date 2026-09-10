@@ -26,6 +26,24 @@ def _start_time(value):
     return f"{int(match.group(1)):02d}:{match.group(2) or '00'}"
 
 
+def _is_cine_concert(card):
+    """
+    Exclude cinema-first events explicitly identified by the venue as
+    ciné-concerts. Ordinary concerts and orchestral concerts are retained.
+    """
+    info = card.select_one(".infos")
+    if not info:
+        return False
+
+    text = _clean(info.get_text(" ", strip=True))
+
+    return bool(re.search(
+        r"\bcin[ée][\s\-‐-‒–—]*concerts?\b|#cineconcert\b",
+        text,
+        re.IGNORECASE,
+    ))
+
+
 def _explicit_concert_title(card, title):
     """Use a fuller title only when the card copy explicitly quotes it."""
     info = card.select_one(".infos")
@@ -51,6 +69,10 @@ def parse_events(soup, *, today=None):
         title_link = card.select_one("h3.title-movie-tout a[href]")
         if not title_link:
             continue
+
+        if _is_cine_concert(card):
+            continue
+
         headliner = _clean(title_link.get_text(" ", strip=True))
         if not headliner:
             continue

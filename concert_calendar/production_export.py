@@ -101,21 +101,214 @@ def genre_categories(value: str | None) -> list[str]:
     return map_raw_genres(value)
 
 
+def _display_subtitle(
+    event_title: str | None,
+    original: str,
+    extracted: str | None,
+) -> str | None:
+    """
+    Prefer an independently supplied event title.
+
+    If event_title merely repeats the raw headliner, use the cleaner
+    extracted programme/theme text instead.
+    """
+    current = (event_title or "").strip()
+    extracted = (extracted or "").strip()
+
+    def key(value: str) -> str:
+        return " ".join(value.casefold().split())
+
+    if current and key(current) != key(original):
+        return current
+
+    return extracted or current or None
+
+
 def _display_title_parts(event: ConcertEvent) -> tuple[str, str | None]:
-    """Normalize public denomination without changing event identity."""
-    headliner = event.headliner
+    """
+    Return performer billing for the main public line and event prose below it.
+
+    This is display normalization only: it does not mutate artist identity or
+    invent performers from arbitrary punctuation.
+    """
+    headliner = (event.headliner or "").strip()
     event_title = event.event_title
 
+    # "Series/Promoter presents Artist"
+    presentation = re.fullmatch(
+        r"(.+?)\s+"
+        r"(?:présente|présentent|presente|presentent|presents?|presented\s+by)"
+        r"\s+(.+)",
+        headliner,
+        re.IGNORECASE,
+    )
+    if presentation:
+        programme = presentation.group(1).strip()
+        artists = presentation.group(2).strip()
+        return artists, _display_subtitle(
+            event_title,
+            headliner,
+            programme,
+        )
+
+    # "Release Party [theme] - Artist"
+    release_party = re.fullmatch(
+        r"((?:(?:album\s+)?release|launch)\s+party\b.*?)"
+        r"\s+[-–—:]\s+(.+)",
+        headliner,
+        re.IGNORECASE,
+    )
+    if release_party:
+        programme = release_party.group(1).strip()
+        artists = release_party.group(2).strip()
+        return artists, _display_subtitle(
+            event_title,
+            headliner,
+            programme,
+        )
+
+    # Programme/series prefix before a colon. A multi-artist RHS is strong
+    # evidence that the left side is contextual prose rather than a performer.
+    colon = re.fullmatch(r"(.+?)\s*:\s*(.+)", headliner)
+    if colon:
+        prefix = colon.group(1).strip()
+        artists = colon.group(2).strip()
+
+        programme_prefix = bool(re.search(
+            r"\b(?:festival|nights?|nuits?|soir[ée]e|showcase|session|"
+            r"series|s[ée]rie|programme|program|release\s+party|women|"
+            r"présente|présentent|presents?)\b",
+            prefix,
+            re.IGNORECASE,
+        ))
+        explicit_bill = bool(re.search(
+            r"\s(?:\+|&|/)\s",
+            artists,
+        ))
+
+        # A richer event_title from the same contextual programme is
+        # corroborating source data, not an inferred artist split.
+        #
+        # Example grammar:
+        #   Programme : Artist
+        #   Programme : Artist + Artist B + Artist C
+        #
+        # If both share the same prefix and the fuller RHS explicitly
+        # contains the current performer identity, publish that fuller bill.
+        richer_bill = None
+
+        if event_title:
+            title_colon = re.fullmatch(
+                r"(.+?)\s*:\s*(.+)",
+                event_title.strip(),
+            )
+
+            if title_colon:
+                title_prefix = title_colon.group(1).strip()
+                title_artists = title_colon.group(2).strip()
+
+                same_prefix = (
+                    " ".join(title_prefix.casefold().split())
+                    == " ".join(prefix.casefold().split())
+                )
+
+                current_artist_key = " ".join(
+                    artists.casefold().split()
+                )
+                title_artist_key = " ".join(
+                    title_artists.casefold().split()
+                )
+
+                fuller_explicit_bill = bool(re.search(
+                    r"\s(?:\+|&|/)\s",
+                    title_artists,
+                ))
+
+                if (
+                    same_prefix
+                    and fuller_explicit_bill
+                    and current_artist_key
+                    and current_artist_key in title_artist_key
+                    and len(title_artist_key) > len(current_artist_key)
+                ):
+                    richer_bill = title_artists
+
+        if programme_prefix or explicit_bill or richer_bill:
+            public_artists = richer_bill or artists
+
+            # If event_title was used only to recover the fuller bill,
+            # the subtitle should be the contextual prefix rather than
+            # repeating the complete raw title.
+            if richer_bill:
+                subtitle = prefix
+            else:
+                subtitle = _display_subtitle(
+                    event_title,
+                    headliner,
+                    prefix,
+                )
+
+            return public_artists, subtitle
+
+    # Explicit tour / anniversary branding.
     tour = re.fullmatch(
-        r"(.+?)\s+[–—:-]\s+(.+\b(?:tour|tourn[ée]e|anniversary)\b.*)",
+        r"(.+?)\s+[–—:-]\s+"
+        r"(.+\b(?:tour|tourn[ée]e|anniversary)\b.*)",
         headliner,
         re.IGNORECASE,
     )
     if tour:
-        return tour[1].strip(), event_title or headliner
+        artists = tour.group(1).strip()
+        # Preserve the established public contract: the secondary field keeps
+        # the complete original branded title, while the main line contains
+        # only the performer identity.
+        return artists, event_title or headliner
+
+    # Explicit tribute / performance concepts.
+    theme = re.fullmatch(
+        r"(.+?)\s+[-–—]\s+"
+        r"((?:hommage\s+[àa]|tribute\s+to|live\s+at|live\s+in|"
+        r"spectacle\b|show\b).+)",
+        headliner,
+        re.IGNORECASE,
+    )
+    if theme:
+        artists = theme.group(1).strip()
+        programme = theme.group(2).strip()
+        return artists, _display_subtitle(
+            event_title,
+            headliner,
+            programme,
+        )
+
+    # Editorial en/em-dash followed by unmistakably sentence-like prose.
+    # Require at least four words and at least three lower-case-leading words;
+    # this deliberately avoids treating ordinary artist/co-bill names as prose.
+    editorial = re.fullmatch(
+        r"(.+?)\s+[–—]\s+(.+)",
+        headliner,
+    )
+    if editorial:
+        artists = editorial.group(1).strip()
+        programme = editorial.group(2).strip()
+        words = re.findall(
+            r"[A-Za-zÀ-ÖØ-öø-ÿ0-9'’]+",
+            programme,
+        )
+        lowercase_leading = sum(
+            1
+            for word in words
+            if word and word[0].islower()
+        )
+
+        if len(words) >= 4 and lowercase_leading >= 3:
+            return artists, _display_subtitle(
+                event_title,
+                headliner,
+                programme,
+            )
 
     return headliner, event_title
-
 
 def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, public_id: str | None = None) -> dict:
     # Aggregator artwork is not an official event/venue fallback.  DICE remains

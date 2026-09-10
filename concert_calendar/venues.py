@@ -90,6 +90,7 @@ VENUE_ALIASES = {
     "paris la defense arena": "Plénitude Arena",
     "plenitude arena": "Plénitude Arena",
     "petit bain": "Petit Bain",
+    "pavillon baltard": "Pavillon Baltard",
     "point ephemere": "Point Éphémère",
     "le point ephemere": "Point Éphémère",
     "philarmonie de paris": "Philharmonie de Paris",
@@ -112,6 +113,7 @@ VENUE_ALIASES = {
         "Théâtre du Casino Barrière d'Enghien-les-Bains"
     ),
     "theatre de rungis": "Théâtre de Rungis",
+    "theatre claude debussy": "Théâtre Claude Debussy",
     "theatre alexandre dumas": "Théâtre Alexandre Dumas",
     "theatre de l europeen": "L'Européen",
     "trabendo": "Le Trabendo",
@@ -131,6 +133,7 @@ VENUE_GEOGRAPHY = {
     "La Seine Musicale": ("Boulogne-Billancourt", "92"),
     "L’Accord Parfait": ("Paris", "75"),
     "Plénitude Arena": ("Nanterre", "92"),
+    "Théâtre Claude Debussy": ("Maisons-Alfort", "94"),
 }
 
 
@@ -155,6 +158,34 @@ def normalize_venue_key(value: str) -> str:
     normalized = re.sub(r"\s+", " ", normalized)
 
     return normalized.strip()
+
+
+def _wrapped_known_venue(value: str) -> str | None:
+    """
+    Resolve a known venue embedded after promotional/contextual copy.
+
+    Prefixes are discarded only when a suffix independently resolves
+    through VENUE_ALIASES. Unknown wrapped venue strings remain intact.
+    """
+    parts = [
+        part.strip()
+        for part in re.split(
+            r"\s+(?:[-–—]|:)\s+",
+            unescape(value or ""),
+        )
+        if part.strip()
+    ]
+
+    if len(parts) < 2:
+        return None
+
+    for index in range(1, len(parts)):
+        candidate = " ".join(parts[index:])
+        normalized = VENUE_ALIASES.get(normalize_venue_key(candidate))
+        if normalized is not None:
+            return normalized
+
+    return None
 
 
 def clean_unknown_venue_name(value: str) -> str:
@@ -183,7 +214,10 @@ def normalize_event_venue(event: ConcertEvent) -> ConcertEvent:
 
     original_venue = event.venue or ""
     venue_key = normalize_venue_key(original_venue)
-    normalized_venue = VENUE_ALIASES.get(venue_key)
+    normalized_venue = (
+        VENUE_ALIASES.get(venue_key)
+        or _wrapped_known_venue(original_venue)
+    )
 
     if normalized_venue is not None:
         event.venue = normalized_venue
