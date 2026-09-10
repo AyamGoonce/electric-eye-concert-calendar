@@ -62,6 +62,39 @@ class GenreResolverTests(unittest.TestCase):
         )
         self.assertNotIn("resolve_genres", production_text)
 
+    def test_resolver_uses_current_public_taxonomy(self):
+        self.assertIn(
+            "Chanson Française / Variétés",
+            resolver.GENRE_RULES,
+        )
+        self.assertIn(
+            "Comedy / Spoken Word",
+            resolver.GENRE_RULES,
+        )
+        self.assertNotIn("French chanson", resolver.GENRE_RULES)
+        self.assertNotIn("Comedy", resolver.GENRE_RULES)
+
+    def test_genre_terms_use_token_boundaries(self):
+        self.assertFalse(
+            resolver._genre_term_matches(
+                "biographical film",
+                "rap",
+            )
+        )
+        self.assertTrue(
+            resolver._genre_term_matches(
+                "French hip-hop",
+                "hip-hop",
+            )
+        )
+        self.assertTrue(
+            resolver._genre_term_matches(
+                "synth-pop",
+                "pop",
+            )
+        )
+
+
 
 if __name__ == "__main__":
     unittest.main()

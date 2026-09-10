@@ -51,13 +51,23 @@ GENRE_RULES = {
     "Jazz / Blues": ("jazz", "bebop", "bop", "blues"),
     "R&B / Soul / Funk": ("r&b", "rnb", "soul", "funk", "motown"),
     "Folk / Country": ("folk", "country", "americana", "bluegrass"),
-    "French chanson": ("chanson", "variété française"),
+    "Chanson Française / Variétés": ("chanson", "variété française"),
     "Electronic": ("electronic", "electronica", "techno", "house", "ambient", "synthpop", "synth-pop", "trance", "drum and bass"),
     "World / Latin": ("world", "latin", "merengue", "salsa", "cumbia", "afrobeat", "afrobeats", "bossa nova"),
     "Rock / Indie / Punk": ("rock", "punk", "indie", "shoegaze", "grunge", "new wave", "goth"),
     "Pop": ("pop", "hyperpop", "k-pop"),
-    "Comedy": ("comedy",),
+    "Comedy / Spoken Word": ("comedy",),
 }
+
+
+def _genre_term_matches(value: str, term: str) -> bool:
+    """Match genre terms as tokens/phrases, never as arbitrary substrings."""
+    return bool(
+        re.search(
+            r"(?<!\w)" + re.escape(term.casefold()) + r"(?!\w)",
+            value.casefold(),
+        )
+    )
 
 
 def select_musicbrainz_candidate(payload: dict, artist: str) -> tuple[dict | None, str]:
@@ -93,7 +103,7 @@ def musicbrainz_lookup(artist: str) -> dict:
         name = (tag.get("name") or "").casefold()
         weight = max(int(tag.get("count") or 0), 1)
         for public, terms in GENRE_RULES.items():
-            if any(term in name for term in terms):
+            if any(_genre_term_matches(name, term) for term in terms):
                 scores[public] = scores.get(public, 0) + weight
                 evidence.append({"tag": tag.get("name"), "count": weight, "genre": public})
                 break
@@ -254,7 +264,7 @@ def bandcamp_lookup(artist: str) -> dict | None:
     for value in raw:
         low = value.casefold()
         for public, terms in GENRE_RULES.items():
-            if any(term in low for term in terms):
+            if any(_genre_term_matches(low, term) for term in terms):
                 scores[public] = scores.get(public, 0) + 1
                 evidence.append({"tag": value, "genre": public})
                 break
@@ -499,7 +509,7 @@ def wikidata_lookup(artist: str) -> dict | None:
     for value in values:
         low = value.casefold()
         for public, terms in GENRE_RULES.items():
-            if any(term in low for term in terms):
+            if any(_genre_term_matches(low, term) for term in terms):
                 scores[public] = scores.get(public, 0) + 1
                 break
     genre = next(iter(scores)) if len(scores) == 1 else None

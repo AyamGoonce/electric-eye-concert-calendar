@@ -78,3 +78,22 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — Resolver hardening checkpoint
+
+- Added reviewed Odezenne genre mapping: Hip-hop / Rap.
+- Confirmed artist mapping lookup is case-insensitive for Odezenne/ODEZENNE.
+- Hardened `scripts/resolve_genres.py` genre vocabulary to current public taxonomy:
+  - Chanson Française / Variétés
+  - Comedy / Spoken Word
+- Replaced unsafe substring genre matching with token/phrase-boundary matching.
+  - Prevents `rap` from matching inside words such as `biographical`.
+  - Still recognizes legitimate forms such as `French hip-hop` and `synth-pop`.
+- Full suite after changes: 567 tests passed.
+- Next task: turn existing MusicBrainz, Wikidata, Apple/iTunes and Bandcamp
+  resolvers into a multi-source consensus enrichment engine, with controlled
+  occupation/type evidence and without hard-coding individual performers.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
