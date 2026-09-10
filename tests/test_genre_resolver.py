@@ -74,6 +74,19 @@ class GenreResolverTests(unittest.TestCase):
         self.assertNotIn("French chanson", resolver.GENRE_RULES)
         self.assertNotIn("Comedy", resolver.GENRE_RULES)
 
+        self.assertEqual(
+            "Chanson Française / Variétés",
+            resolver.ITUNES_GENRE_MAP["chanson française"],
+        )
+        self.assertEqual(
+            "Chanson Française / Variétés",
+            resolver.ITUNES_GENRE_MAP["variété française"],
+        )
+        self.assertNotIn(
+            "French chanson",
+            resolver.ITUNES_GENRE_MAP.values(),
+        )
+
     def test_genre_terms_use_token_boundaries(self):
         self.assertFalse(
             resolver._genre_term_matches(

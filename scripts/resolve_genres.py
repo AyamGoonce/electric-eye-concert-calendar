@@ -432,8 +432,8 @@ ITUNES_GENRE_MAP = {
     "musiques du monde": "World / Latin",
     "world": "World / Latin",
     "latin": "World / Latin",
-    "chanson française": "French chanson",
-    "variété française": "French chanson",
+    "chanson française": "Chanson Française / Variétés",
+    "variété française": "Chanson Française / Variétés",
 }
 
 def itunes_lookup(artist: str) -> dict | None:

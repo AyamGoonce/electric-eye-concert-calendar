@@ -136,3 +136,16 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — Apple/iTunes taxonomy correction
+
+- Corrected stale Apple/iTunes mappings:
+  - `chanson française`
+  - `variété française`
+- Both now normalize to the current public category:
+  `Chanson Française / Variétés`
+- Added regression coverage ensuring `French chanson` cannot re-enter the
+  Apple/iTunes genre mapping.
+- Full suite: 578 tests passed.
+- Next: address event-title/composite-billing strings being treated as artist
+  identities before expanding the multi-source genre audit.
