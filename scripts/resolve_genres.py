@@ -725,6 +725,36 @@ def resolve_artist_consensus(
 
 
 
+
+RESEARCH_TIME_SUFFIX_RE = re.compile(
+    r"\s+[–—-]\s*\d{1,2}\s*h(?:\s*\d{2})?\s*$",
+    re.IGNORECASE,
+)
+
+RESEARCH_JAM_SUFFIX_RE = re.compile(
+    r"\s+\+\s+jam(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ0-9'’.-]+){0,4}\s*$",
+    re.IGNORECASE,
+)
+
+
+def research_artist_identity(value: str) -> str:
+    """
+    Return a conservative artist identity for external genre research.
+
+    Only remove explicit performance/session metadata. Arbitrary '+' and '&'
+    billing is deliberately left intact unless the suffix explicitly describes
+    a jam session.
+    """
+    artist = (value or "").strip()
+    if not artist:
+        return ""
+
+    artist = RESEARCH_TIME_SUFFIX_RE.sub("", artist).strip()
+    artist = RESEARCH_JAM_SUFFIX_RE.sub("", artist).strip()
+
+    return artist
+
+
 def resolve_calendar_consensus(
     path: Path,
     *,
@@ -750,7 +780,7 @@ def resolve_calendar_consensus(
     counts = {}
 
     for event in events:
-        artist = (event.get("h") or "").strip()
+        artist = research_artist_identity(event.get("h") or "")
         if not artist:
             continue
 

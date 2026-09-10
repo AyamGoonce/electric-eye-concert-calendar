@@ -149,3 +149,21 @@ Counts changed slightly between measurements because source data was live.
 - Full suite: 578 tests passed.
 - Next: address event-title/composite-billing strings being treated as artist
   identities before expanding the multi-source genre audit.
+
+## 2026-09-10 — Conservative genre research identity cleanup
+
+- Added `research_artist_identity()` for external genre research only.
+- Removes explicit performance-time suffixes such as `– 19h00`.
+- Removes explicit jam-session suffixes such as:
+  - `+ Jam Vocale`
+  - `+ Jam blues`
+  - `+ jam`
+- Examples now consolidate to stable research identities:
+  - `Cecil L. Recchia + Jam Vocale – 19h00` -> `Cecil L. Recchia`
+  - `Big Dez + Jam blues` -> `Big Dez`
+  - `David Sauzay + jam – 21h30` -> `David Sauzay`
+- Arbitrary `+` and `&` artist names are deliberately not split.
+- Public calendar display and deduplication semantics are unchanged.
+- Full suite: 581 tests passed.
+- Next: inspect the top 25 blank research identities after cleanup without
+  making external provider calls.

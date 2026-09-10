@@ -377,6 +377,50 @@ class GenreResolverTests(unittest.TestCase):
                 [row["affected_events"] for row in report["review_candidates"]],
             )
 
+    def test_research_identity_removes_performance_time(self):
+        self.assertEqual(
+            "Artist",
+            resolver.research_artist_identity(
+                "Artist – 19h00"
+            ),
+        )
+
+    def test_research_identity_removes_named_jam_context(self):
+        cases = {
+            "Cecil L. Recchia + Jam Vocale – 19h00":
+                "Cecil L. Recchia",
+            "Cecil L. Recchia + Jam Vocale – 21h00":
+                "Cecil L. Recchia",
+            "Big Dez + Jam blues":
+                "Big Dez",
+            "David Sauzay + jam – 19h30":
+                "David Sauzay",
+            "David Sauzay + jam – 21h30":
+                "David Sauzay",
+        }
+
+        for raw, expected in cases.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(
+                    expected,
+                    resolver.research_artist_identity(raw),
+                )
+
+    def test_research_identity_does_not_split_arbitrary_billing(self):
+        self.assertEqual(
+            "Artist A + Artist B",
+            resolver.research_artist_identity(
+                "Artist A + Artist B"
+            ),
+        )
+        self.assertEqual(
+            "Coco & Clair Clair",
+            resolver.research_artist_identity(
+                "Coco & Clair Clair"
+            ),
+        )
+
+
 
 if __name__ == "__main__":
     unittest.main()
