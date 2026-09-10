@@ -670,6 +670,13 @@
   min-height: 1px;
 }
 
+.ee-calendar-page #ee-concert-calendar .ee-calendar-cancelled-title {
+  color: var(--ee-calendar-text-soft);
+  font-size: .72em;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .ee-calendar-page #ee-concert-calendar .ee-calendar-sold-out {
   display: inline-flex;
   justify-content: center;
