@@ -266,6 +266,104 @@ class GenreResolverTests(unittest.TestCase):
         self.assertIsNone(result["genre"])
 
 
+    def test_explicit_none_disables_provider_cache(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temporary:
+            default_cache = Path(temporary) / "default.json"
+            old = resolver.PROVIDER_CACHE_PATHS["apple"]
+            resolver.PROVIDER_CACHE_PATHS["apple"] = default_cache
+
+            try:
+                result = resolver.provider_result(
+                    "apple",
+                    "Example Artist",
+                    lookup=lambda _artist: {
+                        "status": "resolved",
+                        "genre": "Pop",
+                    },
+                    cache_path=None,
+                )
+            finally:
+                resolver.PROVIDER_CACHE_PATHS["apple"] = old
+
+            self.assertEqual("resolved", result["status"])
+            self.assertFalse(default_cache.exists())
+
+    def test_provider_list_parser(self):
+        self.assertEqual(
+            ("apple", "wikidata", "bandcamp"),
+            resolver.parse_provider_list(
+                "apple, wikidata, bandcamp"
+            ),
+        )
+
+        with self.assertRaises(ValueError):
+            resolver.parse_provider_list(
+                "apple,definitely-not-a-provider"
+            )
+
+    def test_bulk_consensus_ranks_high_impact_identities_first(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temporary:
+            asset = Path(temporary) / "calendar.js"
+
+            asset.write_text(
+                "window.ElectricEyeConcertData = Object.freeze(" +
+                json.dumps([
+                    {"h": "One Off", "x": [], "f": None},
+                    {"h": "High Impact", "x": [], "f": None},
+                    {"h": "High Impact", "x": [], "f": None},
+                    {"h": "Already Classified", "x": ["Pop"], "f": None},
+                    {"h": "Festival Act", "x": [], "f": "Festival"},
+                ]) +
+                ");",
+                encoding="utf-8",
+            )
+
+            with patch(
+                "concert_calendar.genres.load_reviewed_mappings",
+                return_value={"artists": [], "overrides": []},
+            ), patch(
+                "concert_calendar.genres.mapping_for_artist",
+                return_value=None,
+            ), patch.object(
+                resolver,
+                "resolve_artist_consensus",
+                side_effect=lambda artist, **kwargs: {
+                    "artist": artist,
+                    "status": "review_candidate",
+                    "genre": "Pop",
+                    "providers": ["apple"],
+                    "votes": {"Pop": ["apple"]},
+                    "provider_results": {
+                        "apple": {
+                            "status": "resolved",
+                            "genre": "Pop",
+                        }
+                    },
+                },
+            ):
+                report = resolver.resolve_calendar_consensus(
+                    asset,
+                    providers=("apple",),
+                    cache_dir=None,
+                )
+
+            self.assertEqual(2, report["research_identities"])
+            self.assertEqual(3, report["research_rows"])
+
+            self.assertEqual(
+                ["High Impact", "One Off"],
+                [row["artist"] for row in report["review_candidates"]],
+            )
+
+            self.assertEqual(
+                [2, 1],
+                [row["affected_events"] for row in report["review_candidates"]],
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

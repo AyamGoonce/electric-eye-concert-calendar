@@ -622,12 +622,15 @@ def _save_provider_cache(path: Path, cache: dict) -> None:
     )
 
 
+_DEFAULT_PROVIDER_CACHE = object()
+
+
 def provider_result(
     provider: str,
     artist: str,
     *,
     lookup=None,
-    cache_path: Path | None = None,
+    cache_path=_DEFAULT_PROVIDER_CACHE,
 ) -> dict:
     """
     Resolve one artist through one provider.
@@ -640,7 +643,9 @@ def provider_result(
         raise ValueError(f"Unknown genre provider: {provider}")
 
     lookup = lookup or PROVIDER_LOOKUPS[provider]
-    cache_path = cache_path or PROVIDER_CACHE_PATHS.get(provider)
+
+    if cache_path is _DEFAULT_PROVIDER_CACHE:
+        cache_path = PROVIDER_CACHE_PATHS.get(provider)
 
     identity = normalize_artist_component(artist)
     cache = _load_provider_cache(cache_path) if cache_path else {}
@@ -719,6 +724,161 @@ def resolve_artist_consensus(
     }
 
 
+
+def resolve_calendar_consensus(
+    path: Path,
+    *,
+    providers: tuple[str, ...],
+    cache_dir: Path | None = None,
+    limit: int | None = None,
+) -> dict:
+    """Research blank non-festival identities through multiple providers."""
+    from concert_calendar.genres import (
+        load_reviewed_mappings,
+        mapping_for_artist,
+    )
+
+    events = [
+        event
+        for event in load_calendar_events(path)
+        if not event.get("x") and not event.get("f")
+    ]
+
+    mappings = load_reviewed_mappings()
+
+    names = {}
+    counts = {}
+
+    for event in events:
+        artist = (event.get("h") or "").strip()
+        if not artist:
+            continue
+
+        # A reviewed mapping means this is not an unresolved research identity.
+        if mapping_for_artist(artist, mappings):
+            continue
+
+        identity = normalize_artist_component(artist)
+        if not identity:
+            continue
+
+        names.setdefault(identity, artist)
+        counts[identity] = counts.get(identity, 0) + 1
+
+    ordered = sorted(
+        names,
+        key=lambda identity: (
+            -counts[identity],
+            names[identity].casefold(),
+        ),
+    )
+
+    if limit is not None:
+        ordered = ordered[:limit]
+
+    cache_paths = None
+    if cache_dir is not None:
+        cache_paths = {
+            provider: cache_dir / f"{provider}.json"
+            for provider in providers
+        }
+
+    rows = []
+
+    for index, identity in enumerate(ordered, 1):
+        artist = names[identity]
+
+        print(
+            f"Consensus: {index}/{len(ordered)} | "
+            f"{counts[identity]} rows | {artist}",
+            file=sys.stderr,
+        )
+
+        result = resolve_artist_consensus(
+            artist,
+            providers=providers,
+            cache_paths=cache_paths,
+        )
+        result["affected_events"] = counts[identity]
+        rows.append(result)
+
+    def bucket(status):
+        return [
+            row for row in rows
+            if row.get("status") == status
+        ]
+
+    resolved = bucket("resolved")
+    review_candidates = bucket("review_candidate")
+    ambiguous = bucket("ambiguous")
+    unresolved = bucket("unresolved")
+
+    unavailable_provider_calls = sum(
+        1
+        for row in rows
+        for result in row.get("provider_results", {}).values()
+        if result.get("status") == "unavailable"
+    )
+
+    return {
+        "blank_rows_before_reviewed_filter": len(events),
+        "research_identities": len(ordered),
+        "research_rows": sum(counts[i] for i in ordered),
+        "providers": list(providers),
+
+        "resolved_artists": len(resolved),
+        "resolved_events": sum(
+            row["affected_events"] for row in resolved
+        ),
+
+        "review_candidate_artists": len(review_candidates),
+        "review_candidate_events": sum(
+            row["affected_events"] for row in review_candidates
+        ),
+
+        "ambiguous_artists": len(ambiguous),
+        "ambiguous_events": sum(
+            row["affected_events"] for row in ambiguous
+        ),
+
+        "unresolved_artists": len(unresolved),
+        "unresolved_events": sum(
+            row["affected_events"] for row in unresolved
+        ),
+
+        "unavailable_provider_calls": unavailable_provider_calls,
+
+        "resolved": resolved,
+        "review_candidates": review_candidates,
+        "ambiguous": ambiguous,
+        "unresolved": unresolved,
+    }
+
+
+def parse_provider_list(value: str) -> tuple[str, ...]:
+    providers = tuple(
+        item.strip().casefold()
+        for item in value.split(",")
+        if item.strip()
+    )
+
+    if not providers:
+        raise ValueError("At least one provider is required")
+
+    unknown = [
+        provider
+        for provider in providers
+        if provider not in PROVIDER_LOOKUPS
+    ]
+
+    if unknown:
+        raise ValueError(
+            "Unknown provider(s): " + ", ".join(unknown)
+        )
+
+    return providers
+
+
 def fnac_search(artist: str) -> dict | None:
     url = FNAC_SEARCH_URL.format(query=quote(artist, safe=""))
     r = requests.get(
@@ -740,24 +900,70 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Manual, offline-only review helper for blank calendar genres."
     )
+
     parser.add_argument("calendar_asset", type=Path)
     parser.add_argument("--batch-size", type=int, default=10)
+
     parser.add_argument(
         "--output", type=Path,
         help="Explicitly write the review report; the default is a dry run to stdout.",
     )
+
     parser.add_argument(
         "--cache", type=Path,
         help="Explicitly enable a persistent MusicBrainz response cache.",
     )
+
+    parser.add_argument(
+        "--consensus",
+        action="store_true",
+        help="Run the multi-source blank-identity consensus audit.",
+    )
+
+    parser.add_argument(
+        "--providers",
+        default="apple,wikidata,bandcamp,musicbrainz",
+        help="Comma-separated providers used by --consensus.",
+    )
+
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        help="Provider-cache directory used by --consensus.",
+    )
+
+    parser.add_argument(
+        "--limit",
+        type=int,
+        help="Limit --consensus to the highest-impact blank identities.",
+    )
+
     args = parser.parse_args(argv)
-    result = resolve_calendar_asset(args.calendar_asset, args.batch_size, args.cache)
+
+    if args.consensus:
+        providers = parse_provider_list(args.providers)
+
+        result = resolve_calendar_consensus(
+            args.calendar_asset,
+            providers=providers,
+            cache_dir=args.cache_dir,
+            limit=args.limit,
+        )
+    else:
+        result = resolve_calendar_asset(
+            args.calendar_asset,
+            args.batch_size,
+            args.cache,
+        )
+
     body = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(body, encoding="utf-8")
     else:
         print(body, end="")
+
     return 0
 
 
