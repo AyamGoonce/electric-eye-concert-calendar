@@ -95,6 +95,71 @@ class GenreResolverTests(unittest.TestCase):
         )
 
 
+    def test_two_independent_sources_can_resolve_genre(self):
+        result = resolver.combine_provider_results({
+            "musicbrainz": {
+                "status": "resolved",
+                "genre": "R&B / Soul / Funk",
+            },
+            "apple": {
+                "status": "resolved",
+                "genre": "R&B / Soul / Funk",
+            },
+        })
+        self.assertEqual("resolved", result["status"])
+        self.assertEqual("R&B / Soul / Funk", result["genre"])
+        self.assertEqual(["apple", "musicbrainz"], result["providers"])
+
+    def test_single_source_requires_review(self):
+        result = resolver.combine_provider_results({
+            "apple": {
+                "status": "resolved",
+                "genre": "Pop",
+            },
+        })
+        self.assertEqual("review_candidate", result["status"])
+        self.assertEqual("Pop", result["genre"])
+
+    def test_conflicting_sources_remain_ambiguous(self):
+        result = resolver.combine_provider_results({
+            "musicbrainz": {
+                "status": "resolved",
+                "genre": "Rock / Indie / Punk",
+            },
+            "apple": {
+                "status": "resolved",
+                "genre": "Pop",
+            },
+        })
+        self.assertEqual("ambiguous", result["status"])
+        self.assertIsNone(result["genre"])
+        self.assertEqual(
+            {
+                "Pop": ["apple"],
+                "Rock / Indie / Punk": ["musicbrainz"],
+            },
+            result["votes"],
+        )
+
+    def test_unresolved_provider_does_not_block_consensus(self):
+        result = resolver.combine_provider_results({
+            "musicbrainz": {
+                "status": "resolved",
+                "genre": "Jazz / Blues",
+            },
+            "apple": {
+                "status": "resolved",
+                "genre": "Jazz / Blues",
+            },
+            "bandcamp": {
+                "status": "unresolved",
+                "genre": None,
+            },
+        })
+        self.assertEqual("resolved", result["status"])
+        self.assertEqual("Jazz / Blues", result["genre"])
+
+
 
 if __name__ == "__main__":
     unittest.main()

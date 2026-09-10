@@ -41,6 +41,79 @@ def save_cache(cache: dict) -> None:
     )
 
 
+def combine_provider_results(provider_results: dict[str, dict | None]) -> dict:
+    """
+    Combine independent external genre results conservatively.
+
+    Rules:
+    - no usable resolved evidence -> unresolved
+    - one provider only -> review_candidate
+    - two or more independent providers agreeing -> resolved
+    - any disagreement between resolved providers -> ambiguous
+    """
+    votes: dict[str, list[str]] = {}
+    evidence = []
+
+    for provider, result in provider_results.items():
+        if not isinstance(result, dict):
+            continue
+
+        if result.get("status") != "resolved":
+            continue
+
+        genre = result.get("genre")
+        if not genre or genre not in GENRE_RULES:
+            continue
+
+        votes.setdefault(genre, []).append(provider)
+        evidence.append({
+            "provider": provider,
+            "genre": genre,
+            "result": result,
+        })
+
+    if not votes:
+        return {
+            "genre": None,
+            "status": "unresolved",
+            "providers": [],
+            "votes": {},
+            "evidence": evidence,
+        }
+
+    if len(votes) > 1:
+        return {
+            "genre": None,
+            "status": "ambiguous",
+            "providers": sorted({
+                provider
+                for providers in votes.values()
+                for provider in providers
+            }),
+            "votes": {
+                genre: sorted(providers)
+                for genre, providers in sorted(votes.items())
+            },
+            "evidence": evidence,
+        }
+
+    genre, providers = next(iter(votes.items()))
+    providers = sorted(set(providers))
+
+    if len(providers) >= 2:
+        status = "resolved"
+    else:
+        status = "review_candidate"
+
+    return {
+        "genre": genre,
+        "status": status,
+        "providers": providers,
+        "votes": {genre: providers},
+        "evidence": evidence,
+    }
+
+
 MUSICBRAINZ_URL = "https://musicbrainz.org/ws/2/artist/"
 MUSICAL_ARTIST_TYPES = {"Person", "Group", "Orchestra", "Choir", "Character"}
 

@@ -97,3 +97,20 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — Multi-source consensus core
+
+- Added deterministic `combine_provider_results()` to the offline genre resolver.
+- Consensus policy:
+  - no usable provider result -> unresolved
+  - one resolved provider -> review_candidate
+  - two or more independent providers agreeing -> resolved
+  - conflicting resolved providers -> ambiguous
+- Unresolved providers do not veto agreement between other providers.
+- This remains maintenance/research tooling only; production does not query external genre services.
+- Targeted resolver suite: 11 tests passed.
+- Next: wire MusicBrainz, Apple/iTunes, Bandcamp and Wikidata into one bulk consensus report, then add controlled occupation/type evidence.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
