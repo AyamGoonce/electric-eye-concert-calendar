@@ -167,3 +167,27 @@ Counts changed slightly between measurements because source data was live.
 - Full suite: 581 tests passed.
 - Next: inspect the top 25 blank research identities after cleanup without
   making external provider calls.
+
+## 2026-09-10 — Provider pacing and retry/backoff
+
+- Added shared provider pacing for external genre research.
+- Added transient retry handling for:
+  - HTTP 429
+  - HTTP 500
+  - HTTP 502
+  - HTTP 503
+  - HTTP 504
+  - connection errors
+  - timeouts
+- `Retry-After` is honored when supplied.
+- HTTP 403 is deliberately not retried.
+- Exhausted provider failures remain `unavailable` and are not cached as unresolved.
+- The same policy now applies through the shared provider runner rather than
+  provider-specific ad-hoc sleeps.
+- Full suite: 585 tests passed.
+- Next: rerun a controlled live provider sample using the new pacing/backoff
+  before attempting another full 489-identity audit.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`

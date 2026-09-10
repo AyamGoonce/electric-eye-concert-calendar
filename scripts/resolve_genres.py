@@ -622,6 +622,107 @@ def _save_provider_cache(path: Path, cache: dict) -> None:
     )
 
 
+
+PROVIDER_MIN_INTERVAL_SECONDS = {
+    # These are maintenance/research calls, not production traffic.
+    "apple": 1.0,
+    "bandcamp": 1.25,
+    "wikidata": 1.0,
+    "musicbrainz": 1.1,
+}
+
+PROVIDER_MAX_ATTEMPTS = 4
+
+TRANSIENT_HTTP_STATUS = {
+    429,
+    500,
+    502,
+    503,
+    504,
+}
+
+_PROVIDER_LAST_CALL: dict[str, float] = {}
+
+
+def _provider_retry_delay(error: requests.RequestException, attempt: int) -> float | None:
+    """
+    Return a retry delay for transient provider failures.
+
+    HTTP 403 is deliberately not retried. 429 honors Retry-After when
+    available; other transient failures use conservative exponential backoff.
+    """
+    response = getattr(error, "response", None)
+    status = getattr(response, "status_code", None)
+
+    if isinstance(error, (requests.Timeout, requests.ConnectionError)):
+        return min(2 ** (attempt - 1), 8)
+
+    if status not in TRANSIENT_HTTP_STATUS:
+        return None
+
+    retry_after = None
+    if response is not None:
+        retry_after = response.headers.get("Retry-After")
+
+    if retry_after:
+        try:
+            return max(float(retry_after), 0.0)
+        except (TypeError, ValueError):
+            pass
+
+    return min(2 ** (attempt - 1), 8)
+
+
+def _pace_provider(provider: str) -> None:
+    interval = PROVIDER_MIN_INTERVAL_SECONDS.get(provider, 0.0)
+    if interval <= 0:
+        return
+
+    now = time.monotonic()
+    previous = _PROVIDER_LAST_CALL.get(provider)
+
+    if previous is not None:
+        remaining = interval - (now - previous)
+        if remaining > 0:
+            time.sleep(remaining)
+
+    _PROVIDER_LAST_CALL[provider] = time.monotonic()
+
+
+def _call_provider_with_retry(provider: str, lookup, artist: str):
+    last_error = None
+
+    for attempt in range(1, PROVIDER_MAX_ATTEMPTS + 1):
+        _pace_provider(provider)
+
+        try:
+            return lookup(artist)
+        except requests.RequestException as error:
+            last_error = error
+
+            if attempt >= PROVIDER_MAX_ATTEMPTS:
+                raise
+
+            delay = _provider_retry_delay(error, attempt)
+            if delay is None:
+                raise
+
+            print(
+                f"{provider}: transient failure for {artist!r}; "
+                f"retry {attempt + 1}/{PROVIDER_MAX_ATTEMPTS} "
+                f"in {delay:g}s",
+                file=sys.stderr,
+            )
+
+            if delay > 0:
+                time.sleep(delay)
+
+    # Defensive fallback; the loop either returns or raises.
+    if last_error is not None:
+        raise last_error
+    return None
+
+
 _DEFAULT_PROVIDER_CACHE = object()
 
 
@@ -654,7 +755,11 @@ def provider_result(
         return cache[identity]
 
     try:
-        result = lookup(artist)
+        result = _call_provider_with_retry(
+            provider,
+            lookup,
+            artist,
+        )
     except requests.RequestException as error:
         return {
             "artist": artist,

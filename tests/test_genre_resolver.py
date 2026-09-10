@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import requests
 from pathlib import Path
 import tempfile
 import unittest
@@ -418,6 +419,124 @@ class GenreResolverTests(unittest.TestCase):
             resolver.research_artist_identity(
                 "Coco & Clair Clair"
             ),
+        )
+
+
+    def test_provider_retries_429_then_succeeds(self):
+        response = requests.Response()
+        response.status_code = 429
+        response.headers["Retry-After"] = "3"
+
+        error = requests.HTTPError(
+            "429 Too Many Requests",
+            response=response,
+        )
+
+        calls = []
+
+        def lookup(_artist):
+            calls.append(1)
+            if len(calls) == 1:
+                raise error
+            return {
+                "status": "resolved",
+                "genre": "Pop",
+            }
+
+        with patch.object(
+            resolver,
+            "_pace_provider",
+        ), patch.object(
+            resolver.time,
+            "sleep",
+        ) as sleep:
+            result = resolver.provider_result(
+                "apple",
+                "Example Artist",
+                lookup=lookup,
+                cache_path=None,
+            )
+
+        self.assertEqual("resolved", result["status"])
+        self.assertEqual(2, len(calls))
+        sleep.assert_called_once_with(3.0)
+
+    def test_provider_does_not_retry_403(self):
+        response = requests.Response()
+        response.status_code = 403
+
+        error = requests.HTTPError(
+            "403 Forbidden",
+            response=response,
+        )
+
+        calls = []
+
+        def lookup(_artist):
+            calls.append(1)
+            raise error
+
+        with patch.object(
+            resolver,
+            "_pace_provider",
+        ), patch.object(
+            resolver.time,
+            "sleep",
+        ):
+            result = resolver.provider_result(
+                "apple",
+                "Example Artist",
+                lookup=lookup,
+                cache_path=None,
+            )
+
+        self.assertEqual("unavailable", result["status"])
+        self.assertEqual(1, len(calls))
+
+    def test_exhausted_transient_failure_stays_unavailable_and_uncached(self):
+        import tempfile
+
+        response = requests.Response()
+        response.status_code = 503
+
+        error = requests.HTTPError(
+            "503 Service Unavailable",
+            response=response,
+        )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            cache = Path(temporary) / "provider.json"
+
+            with patch.object(
+                resolver,
+                "_pace_provider",
+            ), patch.object(
+                resolver.time,
+                "sleep",
+            ):
+                result = resolver.provider_result(
+                    "bandcamp",
+                    "Example Artist",
+                    lookup=lambda _artist: (_ for _ in ()).throw(error),
+                    cache_path=cache,
+                )
+
+            self.assertEqual("unavailable", result["status"])
+            self.assertFalse(cache.exists())
+
+    def test_retry_after_header_controls_delay(self):
+        response = requests.Response()
+        response.status_code = 429
+        response.headers["Retry-After"] = "7"
+
+        error = requests.HTTPError(
+            "429 Too Many Requests",
+            response=response,
+        )
+
+        self.assertEqual(
+            7.0,
+            resolver._provider_retry_delay(error, 1),
         )
 
 
