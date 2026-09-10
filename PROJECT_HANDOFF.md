@@ -341,3 +341,27 @@ Production deployment completed and verified.
 - Live pointer verification passed after promotion.
 
 Next planned work: resume genre coverage/enrichment from the last production audit rather than reopening the cancellation issue.
+
+## 2026-09-10 — Fresh post-enrichment genre audit
+
+Fresh non-publishing production build completed successfully after the Sunset/Sunside fallback and reviewed raw-taxonomy mappings.
+
+- Build exit code: 0
+- Total events: 2508
+- Populated genres: 2032
+- Blank genres: 476
+- Coverage: 81.02%
+- source_explicit: 68
+- source_mapping: 865
+- artist_mapping: 951
+- manual overrides: 2
+- event_context: 36
+- bill_consensus: 110
+- blank_no_raw: 418
+- blank_unresolved_raw: 39
+- blank_festival: 5
+- conflicts: 12
+- unresolved raw occurrences: 41
+- unresolved identities: 444
+
+This supersedes the older 2500-event / 79.56% genre audit for current-code coverage analysis. The dominant remaining gap is now events with no raw genre evidence (418), not unresolved source taxonomy.
