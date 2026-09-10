@@ -318,3 +318,26 @@ Counts changed slightly between measurements because source data was live.
 - Full suite after implementation:
   - 591 tests
   - all passing
+
+## 2026-09-10 — Accor cancellation fix deployed to production
+
+Production deployment completed and verified.
+
+- Code fix commit: 54ef195 — Handle Accor Arena cancellations
+- Accor status_code H is translated systemically to ticket_status="cancelled"
+- No performer-specific cancellation hardcoding
+- Renderer displays "(cancelled)" beside the event name and a muted CANCELLED status control
+- Full test suite: 591 tests, OK
+- Production candidate event count: 2495
+- Production data SHA-256: 2943e18bbf263cd496309b088ff69526b0428ef9a807d2b2924e062b05e1611f
+- Production data asset: calendar-data.2943e18bbf263cd4.js
+- Candidate staging gh-pages commit: 9464dca
+- Live promotion gh-pages commit: 0d55397
+- Live publishedAt: 2026-09-10T17:57:03Z
+- Live verification confirmed:
+  - Melanie Martinez | 2026-09-15 | Accor Arena | ticket_status=cancelled
+  - Nej | 2026-11-23 | Accor Arena | ticket_status=cancelled
+- Hosted candidate verification passed before promotion.
+- Live pointer verification passed after promotion.
+
+Next planned work: resume genre coverage/enrichment from the last production audit rather than reopening the cancellation issue.
