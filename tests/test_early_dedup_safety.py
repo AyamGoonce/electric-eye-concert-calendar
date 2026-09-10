@@ -18,6 +18,59 @@ class EarlyDedupSafetyTests(unittest.TestCase):
         for run in (_deduplicate_exact, deduplicate_events):
             self.assertEqual(2, len(run([event(start_time='19:00'), event(start_time='21:00')])))
 
+    def test_official_venue_external_time_disagreement_merges_rich_metadata(self):
+        from copy import deepcopy
+
+        official = event(
+            start_time="18:30",
+            source_names=["Example Venue"],
+            image_url="https://venue.example/show.jpg",
+            image_source="Example Venue",
+            ticket_url="https://venue.example/show",
+        )
+        external = event(
+            start_time="20:00",
+            source_names=["DICE"],
+            genre="Rap",
+            genre_evidence=[{"raw": "Rap", "source": "DICE"}],
+            sold_out=True,
+            ticket_status="sold_out",
+            ticket_url="https://dice.fm/event/example",
+        )
+
+        for records in (
+            [official, external],
+            [external, official],
+        ):
+            result = deduplicate_events(
+                [deepcopy(item) for item in records]
+            )
+
+            self.assertEqual(1, len(result))
+            merged = result[0]
+
+            self.assertEqual("18:30", merged.start_time)
+            self.assertEqual(
+                "https://venue.example/show",
+                merged.ticket_url,
+            )
+            self.assertEqual(
+                "https://venue.example/show.jpg",
+                merged.image_url,
+            )
+            self.assertEqual("Example Venue", merged.image_source)
+            self.assertEqual("Rap", merged.genre)
+            self.assertEqual(
+                [{"raw": "Rap", "source": "DICE"}],
+                merged.genre_evidence,
+            )
+            self.assertTrue(merged.sold_out)
+            self.assertEqual("sold_out", merged.ticket_status)
+            self.assertEqual(
+                {"Example Venue", "DICE"},
+                set(merged.source_names or []),
+            )
+
     def test_untimed_independent_sources_keep_established_merging(self):
         for run in (_deduplicate_exact, deduplicate_events):
             self.assertEqual(1, len(run([event(source_names=['One']), event(source_names=['Two'])])))

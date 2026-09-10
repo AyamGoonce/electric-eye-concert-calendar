@@ -374,3 +374,16 @@ Fixed systemic sold-out status extraction for La Maroquinerie.
 - Matching events now set `sold_out=True` and `ticket_status="sold_out"`.
 - This fixes cases such as Isabel van Gelder without artist-specific logic.
 - Added regression tests for URL-based and visible-text `COMPLET` detection.
+
+## 2026-09-10 — Deterministic cross-source duplicate merging
+
+Improved systemic deduplication for exact artist/date/venue matches when an official venue source and an external source report different times.
+
+- A venue-vs-external time disagreement alone no longer creates a duplicate when there is no explicit evidence of separate performances.
+- Official venue provenance is captured before source metadata is merged, preventing load-order-dependent decisions.
+- The official venue time is retained when the discrepancy is attributable to differing source time semantics.
+- The official venue event URL is preferred over an external listing URL when merging an otherwise confirmed duplicate.
+- Compatible metadata is unioned rather than discarded, including image, genre evidence, sold-out status, promoters, sources, openers and other fields.
+- Result is deterministic regardless of scraper load order.
+- Explicitly distinct performances and independently timed non-venue records remain protected.
+- Verified against a 63Kluf-shaped La Machine du Moulin Rouge / DICE pair in both source orders.

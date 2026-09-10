@@ -391,6 +391,15 @@ def merge_events(
 ) -> ConcertEvent:
     """Add safe missing metadata while retaining the preferred base record."""
 
+    # Capture provenance before source_names are combined. Otherwise an
+    # external record can inherit the venue source name during this merge
+    # and subsequently appear to be an official venue record itself.
+    existing_official_venue = _has_official_venue_source(existing)
+    incoming_official_venue = _has_official_venue_source(incoming)
+    venue_time_disagreement = _official_venue_time_disagreement(
+        existing, incoming
+    )
+
     existing.openers = _stable_unique(
         [*(existing.openers or []), *(incoming.openers or [])]
     )
@@ -440,6 +449,15 @@ def merge_events(
 
     if incoming.authoritative_billing and _valid_http_url(incoming.ticket_url):
         existing.ticket_url = incoming.ticket_url
+    elif (
+        incoming_official_venue
+        and not existing_official_venue
+        and not existing.authoritative_billing
+        and _valid_http_url(incoming.ticket_url)
+    ):
+        # Prefer the venue's own event page over an external listing when
+        # both records have already been accepted as the same concert.
+        existing.ticket_url = incoming.ticket_url
     elif not existing.ticket_url and _valid_http_url(incoming.ticket_url):
         existing.ticket_url = incoming.ticket_url
 
@@ -454,7 +472,13 @@ def merge_events(
     }
     if status_priority.get(incoming.ticket_status, 0) > status_priority.get(existing.ticket_status, 0):
         existing.ticket_status = incoming.ticket_status
-    if not existing.start_time and incoming.start_time:
+    if venue_time_disagreement:
+        # The venue's own clock time wins over an external ticketing/listing
+        # time once the two records have independently been accepted as one
+        # concert.
+        if incoming_official_venue and incoming.start_time:
+            existing.start_time = incoming.start_time
+    elif not existing.start_time and incoming.start_time:
         existing.start_time = incoming.start_time
 
     if not existing.event_title and incoming.event_title:
@@ -1081,6 +1105,13 @@ def _performance_conflict(left: ConcertEvent, right: ConcertEvent) -> bool:
 
 
 def _same_exact_performance(left: ConcertEvent, right: ConcertEvent) -> bool:
+    # Venue pages and external ticketing services frequently describe the
+    # same concert using different clock semantics (for example doors vs
+    # performance time). Once date, normalized artist and normalized venue
+    # are an exact identity match, that disagreement alone is not evidence
+    # of a second performance when exactly one source is the venue itself.
+    if _official_venue_time_disagreement(left, right):
+        return True
     return not _performance_conflict(left, right)
 
 
