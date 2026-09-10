@@ -169,6 +169,8 @@ EXACT_RAW_MAPPINGS = {
     "french pop - indie pop": "Pop",
     "musique orientale": "World / Latin",
     "musique celtique": "World / Latin",
+    "jewish music": "World / Latin",
+    "guitare espagnole": "World / Latin",
     "zouk": "World / Latin",
 }
 
@@ -374,11 +376,26 @@ REVIEWED_MAPPING_ALIASES = {
 }
 
 
-def infer_venue_genre(event: ConcertEvent) -> str | None:
+def infer_venue_genre(event: ConcertEvent, evidence: list[dict] | None = None) -> str | None:
     """Apply only high-confidence venue-level genre fallbacks."""
     venue = normalize_raw(event.venue or "")
-    if venue == "sunset/sunside" or venue.startswith("sunset/sunside — "):
+    if not (
+        venue == "sunset/sunside"
+        or venue.startswith("sunset/sunside — ")
+    ):
+        return None
+
+    raw_genres = {
+        normalize_raw(item.get("raw", ""))
+        for item in (evidence or [])
+        if item.get("raw")
+    }
+
+    # Sunset/Sunside is a jazz venue, but preserve meaningful unresolved
+    # source taxonomy instead of overwriting it solely from the venue.
+    if not raw_genres or raw_genres == {normalize_raw("Entrée libre⎥jam session")}:
         return "Jazz / Blues"
+
     return None
 
 
@@ -559,7 +576,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             event.genre_method = "artist_mapping"
             event.genre_source = artist["evidence_source"]
             stats["artist_mapping"] += 1
-        elif venue_genre := infer_venue_genre(event):
+        elif venue_genre := infer_venue_genre(event, evidence):
             event.genre_public = venue_genre
             event.genre_method = "event_context"
             event.genre_source = "venue"

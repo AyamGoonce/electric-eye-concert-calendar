@@ -37,6 +37,8 @@ class GenreEnrichmentTests(unittest.TestCase):
             self.assertEqual("Chanson Française / Variétés", map_raw_genre(raw))
         for raw in ("Pop", "Metal / Hard Rock", "Electronic"):
             self.assertEqual(raw, map_raw_genre(raw))
+        for raw in ("Jewish music", "Guitare espagnole"):
+            self.assertEqual("World / Latin", map_raw_genre(raw))
         for raw in ("grapefruit", "metallic object", "French artist", "metalcoreography", "hiphopopotamus"):
             self.assertIsNone(map_raw_genre(raw))
 
@@ -172,6 +174,36 @@ class GenreEnrichmentTests(unittest.TestCase):
         self.assertEqual("Pop", item.genre_public)
         self.assertEqual("source_explicit", item.genre_method)
         self.assertNotEqual("venue", item.genre_source)
+
+    def test_sunset_sunside_jam_taxonomy_is_jazz_fallback(self):
+        item = event(
+            headliner="Unmapped Jam Artist",
+            venue="Sunset/Sunside — Sunside",
+            genre="Entrée libre⎥jam session",
+            genre_evidence=[
+                {"raw": "Entrée libre⎥jam session", "source": "Sunset/Sunside"}
+            ],
+        )
+
+        enrich_event_genres([item])
+
+        self.assertEqual("Jazz / Blues", item.genre_public)
+        self.assertEqual("event_context", item.genre_method)
+        self.assertEqual("venue", item.genre_source)
+
+    def test_sunset_sunside_does_not_override_unresolved_specific_raw_genre(self):
+        item = event(
+            headliner="Unmapped Artist",
+            venue="Sunset/Sunside — Sunside",
+            genre="Unclassified specialist programme",
+            genre_evidence=[
+                {"raw": "Unclassified specialist programme", "source": "Sunset/Sunside"}
+            ],
+        )
+
+        enrich_event_genres([item])
+
+        self.assertIsNone(item.genre_public)
 
     def test_co_headliners_require_shared_mapped_genre(self):
         shared = event(headliner="The Afghan Whigs", co_headliners=["Drug Church"])
