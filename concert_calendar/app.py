@@ -9,6 +9,3 @@ def run() -> None:
     output_file = export_events_to_html(events)
 
     print(f"\nHTML calendar written to: {output_file.resolve()}")
-
-    for event in events:
-        print(event)

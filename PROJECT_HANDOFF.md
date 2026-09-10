@@ -387,3 +387,11 @@ Improved systemic deduplication for exact artist/date/venue matches when an offi
 - Result is deterministic regardless of scraper load order.
 - Explicitly distinct performances and independently timed non-venue records remain protected.
 - Verified against a 63Kluf-shaped La Machine du Moulin Rouge / DICE pair in both source orders.
+
+## 2026-09-10 — Remove full ConcertEvent console logging
+
+Resolved GitHub CodeQL alert #2: clear-text logging of sensitive information.
+
+- Removed the debug loop in `concert_calendar/app.py` that printed every complete ConcertEvent object.
+- The useful message reporting the generated HTML calendar path remains.
+- No calendar data or production behavior was otherwise changed.
