@@ -160,6 +160,112 @@ class GenreResolverTests(unittest.TestCase):
         self.assertEqual("Jazz / Blues", result["genre"])
 
 
+    def test_provider_transport_failure_is_not_cached(self):
+        import requests
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temporary:
+            cache = Path(temporary) / "provider.json"
+
+            def broken(_artist):
+                raise requests.RequestException("503")
+
+            result = resolver.provider_result(
+                "apple",
+                "Example Artist",
+                lookup=broken,
+                cache_path=cache,
+            )
+
+            self.assertEqual("unavailable", result["status"])
+            self.assertFalse(cache.exists())
+
+    def test_genuine_unresolved_provider_result_can_be_cached(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as temporary:
+            cache = Path(temporary) / "provider.json"
+
+            result = resolver.provider_result(
+                "apple",
+                "Unknown Artist",
+                lookup=lambda _artist: None,
+                cache_path=cache,
+            )
+
+            self.assertEqual("unresolved", result["status"])
+            self.assertTrue(cache.exists())
+
+            stored = json.loads(cache.read_text(encoding="utf-8"))
+            self.assertEqual(
+                "unresolved",
+                stored["unknown artist"]["status"],
+            )
+
+    def test_artist_consensus_combines_independent_provider_results(self):
+        lookups = {
+            "musicbrainz": lambda _artist: {
+                "status": "resolved",
+                "genre": "R&B / Soul / Funk",
+            },
+            "apple": lambda _artist: {
+                "status": "resolved",
+                "genre": "R&B / Soul / Funk",
+            },
+            "bandcamp": lambda _artist: {
+                "status": "unresolved",
+                "genre": None,
+            },
+            "wikidata": lambda _artist: {
+                "status": "resolved",
+                "genre": "R&B / Soul / Funk",
+            },
+        }
+
+        result = resolver.resolve_artist_consensus(
+            "Lee Fields",
+            lookups=lookups,
+            cache_paths={
+                "musicbrainz": None,
+                "apple": None,
+                "bandcamp": None,
+                "wikidata": None,
+            },
+        )
+
+        self.assertEqual("resolved", result["status"])
+        self.assertEqual("R&B / Soul / Funk", result["genre"])
+        self.assertEqual(
+            ["apple", "musicbrainz", "wikidata"],
+            result["providers"],
+        )
+
+    def test_artist_consensus_preserves_provider_conflict(self):
+        lookups = {
+            "musicbrainz": lambda _artist: {
+                "status": "resolved",
+                "genre": "Rock / Indie / Punk",
+            },
+            "apple": lambda _artist: {
+                "status": "resolved",
+                "genre": "Pop",
+            },
+        }
+
+        result = resolver.resolve_artist_consensus(
+            "Example",
+            providers=("musicbrainz", "apple"),
+            lookups=lookups,
+            cache_paths={
+                "musicbrainz": None,
+                "apple": None,
+            },
+        )
+
+        self.assertEqual("ambiguous", result["status"])
+        self.assertIsNone(result["genre"])
+
+
 
 if __name__ == "__main__":
     unittest.main()

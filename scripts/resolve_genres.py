@@ -589,6 +589,136 @@ def wikidata_lookup(artist: str) -> dict | None:
     return {"artist":artist,"genre":genre,"status":"resolved" if genre else ("ambiguous" if len(scores)>1 else "unresolved"),"wikidata_id":qid,"label":entity.get("label"),"description":entity.get("description"),"genres":values,"scores":scores}
 
 
+PROVIDER_LOOKUPS = {
+    "musicbrainz": musicbrainz_lookup,
+    "apple": itunes_lookup,
+    "bandcamp": bandcamp_lookup,
+    "wikidata": wikidata_lookup,
+}
+
+PROVIDER_CACHE_PATHS = {
+    "musicbrainz": MUSICBRAINZ_CACHE,
+    "apple": ITUNES_CACHE,
+    "bandcamp": BANDCAMP_CACHE,
+    "wikidata": WIKIDATA_CACHE,
+}
+
+
+def _load_provider_cache(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _save_provider_cache(path: Path, cache: dict) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(cache, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def provider_result(
+    provider: str,
+    artist: str,
+    *,
+    lookup=None,
+    cache_path: Path | None = None,
+) -> dict:
+    """
+    Resolve one artist through one provider.
+
+    Successful provider responses, including genuine unresolved identities,
+    may be cached. Transport/server failures are returned as unavailable and
+    are never persisted as artist-level unresolved results.
+    """
+    if provider not in PROVIDER_LOOKUPS and lookup is None:
+        raise ValueError(f"Unknown genre provider: {provider}")
+
+    lookup = lookup or PROVIDER_LOOKUPS[provider]
+    cache_path = cache_path or PROVIDER_CACHE_PATHS.get(provider)
+
+    identity = normalize_artist_component(artist)
+    cache = _load_provider_cache(cache_path) if cache_path else {}
+
+    if identity in cache:
+        return cache[identity]
+
+    try:
+        result = lookup(artist)
+    except requests.RequestException as error:
+        return {
+            "artist": artist,
+            "genre": None,
+            "status": "unavailable",
+            "provider": provider,
+            "error": f"{type(error).__name__}: {error}",
+        }
+
+    if result is None:
+        result = {
+            "artist": artist,
+            "genre": None,
+            "status": "unresolved",
+        }
+    else:
+        result = dict(result)
+
+    result.setdefault("artist", artist)
+    result["provider"] = provider
+
+    if cache_path:
+        cache[identity] = result
+        _save_provider_cache(cache_path, cache)
+
+    return result
+
+
+def resolve_artist_consensus(
+    artist: str,
+    *,
+    providers: tuple[str, ...] = (
+        "musicbrainz",
+        "apple",
+        "bandcamp",
+        "wikidata",
+    ),
+    lookups: dict[str, object] | None = None,
+    cache_paths: dict[str, Path | None] | None = None,
+) -> dict:
+    results = {}
+
+    for provider in providers:
+        lookup = (lookups or {}).get(provider)
+        cache_path = (
+            cache_paths.get(provider)
+            if cache_paths is not None
+            else PROVIDER_CACHE_PATHS.get(provider)
+        )
+
+        results[provider] = provider_result(
+            provider,
+            artist,
+            lookup=lookup,
+            cache_path=cache_path,
+        )
+
+    consensus = combine_provider_results(results)
+
+    return {
+        "artist": artist,
+        "status": consensus["status"],
+        "genre": consensus["genre"],
+        "providers": consensus["providers"],
+        "votes": consensus["votes"],
+        "provider_results": results,
+    }
+
+
 def fnac_search(artist: str) -> dict | None:
     url = FNAC_SEARCH_URL.format(query=quote(artist, safe=""))
     r = requests.get(

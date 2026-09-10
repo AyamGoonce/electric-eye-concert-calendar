@@ -114,3 +114,25 @@ Counts changed slightly between measurements because source data was live.
 ### Unrelated files — DO NOT stage/delete
 - `.github/workflows/update-calendar.yml.save`
 - `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
+
+## 2026-09-10 — Failure-safe provider orchestration
+
+- Added shared `provider_result()` wrapper for external genre providers.
+- Added `resolve_artist_consensus()` for one canonical artist identity.
+- Existing providers now available through common orchestration:
+  - MusicBrainz
+  - Apple/iTunes
+  - Bandcamp
+  - Wikidata
+- Transport/server failures return `unavailable` and are never cached as
+  artist-level unresolved results.
+- Genuine successful "not found" responses may still be cached as unresolved.
+- Multi-provider agreement feeds the previously added conservative consensus layer.
+- Conflicting providers remain ambiguous.
+- This remains offline/research tooling only; production does not query these services.
+- Full suite: 575 tests passed.
+- Next: bulk consensus audit of all remaining blank calendar identities.
+
+### Unrelated files — DO NOT stage/delete
+- `.github/workflows/update-calendar.yml.save`
+- `Electric-Eye-READY-audit-safety-gate-2026-09-05.json`
