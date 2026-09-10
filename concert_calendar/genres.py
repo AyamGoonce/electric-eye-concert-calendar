@@ -171,6 +171,8 @@ EXACT_RAW_MAPPINGS = {
     "musique celtique": "World / Latin",
     "jewish music": "World / Latin",
     "guitare espagnole": "World / Latin",
+    "rap, hip hop": "Hip-hop / Rap",
+    "concert rock": "Rock / Indie / Punk",
     "zouk": "World / Latin",
 }
 
@@ -238,6 +240,11 @@ def map_raw_genres(value: str | None) -> list[str]:
         "world pop": ("World / Latin", "Pop"),
         "world electronique": ("World / Latin", "Electronic"),
         "hip hop / rap, rnb / soul": ("Hip-hop / Rap", "R&B / Soul / Funk"),
+        "electro pop": ("Pop", "Electronic"),
+        "afropop, rumba, reggae": ("World / Latin", "Reggae / Dub / Ska"),
+        "jazz, blues, groove, funk & musiques improvisees": ("Jazz / Blues", "R&B / Soul / Funk"),
+        "#rock #postpunk #heavymetal": ("Rock / Indie / Punk", "Metal / Hard Rock"),
+        "##indiepop #pop #electro #house": ("Pop", "Electronic"),
     }
     if normalize_raw(value or "") in compounds:
         return list(compounds[normalize_raw(value or "")])

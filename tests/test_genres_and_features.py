@@ -60,6 +60,34 @@ class GenreEnrichmentTests(unittest.TestCase):
         self.assertEqual(["Pop"], map_raw_genres("Pop, Pop"))
         self.assertEqual([], map_raw_genres("POP ROCK FOLK"))
 
+    def test_reviewed_raw_gap_taxonomies(self):
+        from concert_calendar.genres import map_raw_genres
+
+        singles = {
+            "Rap, Hip Hop": ["Hip-hop / Rap"],
+            "concert rock": ["Rock / Indie / Punk"],
+        }
+        for raw, expected in singles.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(expected, map_raw_genres(raw))
+
+        compounds = {
+            "Electro Pop": {"Pop", "Electronic"},
+            "Afropop, Rumba, Reggae": {"World / Latin", "Reggae / Dub / Ska"},
+            "Jazz, Blues, Groove, Funk & Musiques improvisées": {
+                "Jazz / Blues", "R&B / Soul / Funk"
+            },
+            "#rock #postpunk #heavymetal": {
+                "Rock / Indie / Punk", "Metal / Hard Rock"
+            },
+            "##indiepop #pop #electro #house": {
+                "Pop", "Electronic"
+            },
+        }
+        for raw, expected in compounds.items():
+            with self.subTest(raw=raw):
+                self.assertEqual(expected, set(map_raw_genres(raw)))
+
     def test_public_vocabulary_is_exactly_closed(self):
         self.assertEqual((
             "Comedy / Spoken Word", "Electronic", "Folk / Country", "Chanson Française / Variétés",
