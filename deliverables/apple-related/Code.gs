@@ -2151,7 +2151,13 @@ function eeDiscoverArtistsWorker() {return eeAppleRecommendationsProductionWorke
 function eeDiscoverArtistsMaintenanceWorker_() {
   if(!eeAcquireWorkerLease_("DISCOVERY",240000))return {status:"BUSY"};
   try{
-    var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1));
+    var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties();
+    var resolverVersion=String(EE_APPLE_IDENTITY_RESOLVER_VERSION);
+    if(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_RESOLVER_VERSION")!==resolverVersion){
+      properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_RESOLVER_VERSION",resolverVersion);
+      properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX","1");
+    }
+    var cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1));
     eeSetExecutionDeadline_(Math.min(EE_APPLE_EXECUTION_DEADLINE||Date.now()+180000,Date.now()+180000));
     for(var row=cursor;row<values.length&&Date.now()<EE_APPLE_EXECUTION_DEADLINE;row+=1){
       var rowStatus=String(values[row][7]||""),rowResolverVersion=Math.max(0,Number(values[row][16]||0));

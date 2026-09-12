@@ -780,3 +780,41 @@ Validation:
 Next step:
 Install the rebuilt Code.gs in the existing Apps Script editor and run
 `eeArchitectureStatus()` once to measure the stale identity backlog.
+
+## 2026-09-12 — Resolver-version change now restarts artist discovery sweep once
+
+Added automatic discovery-cursor migration for Apple artist resolver changes.
+
+Problem found:
+- Apple Artists contained 161 stale ERROR / AMBIGUOUS rows eligible for
+  resolver-v1 retry.
+- `EE_APPLE_ARTIST_DISCOVERY_INDEX` was already at 849, beyond the 848 current
+  artist rows.
+- Therefore the maintenance worker would not naturally revisit those older
+  rows even though the new eligibility rules allowed them.
+
+Fix:
+- `eeDiscoverArtistsMaintenanceWorker_()` now compares
+  `EE_APPLE_ARTIST_DISCOVERY_RESOLVER_VERSION` with
+  `EE_APPLE_IDENTITY_RESOLVER_VERSION`.
+- On a resolver-version change only:
+  - records the new resolver version;
+  - resets `EE_APPLE_ARTIST_DISCOVERY_INDEX` to 1.
+- Subsequent runs do not reset again for the same resolver version.
+- The normal discovery worker then scans the sheet and processes only rows
+  actually eligible under `eeArtistNeedsIdentityResolution_()`.
+
+Current measured backlog before enabling this migration:
+- canonicalArtists: 848
+- staleIdentityRetriesPending: 161
+- artistDiscoveryCursor: 849
+
+Validation:
+- two consecutive generated builds were identical:
+  `51068a5d2e1ee69e2447bc9ea7d6182967cc2cc992e2c6757c9a345835b00816`
+- Apps Script JavaScript syntax check passed;
+- git diff --check passed.
+
+The 161 stale identities do not need manual retries. Once this version is
+installed, normal production maintenance can drain them incrementally under
+the existing Apple throttle and execution limits.
