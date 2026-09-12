@@ -1780,6 +1780,14 @@ function eeDiagnoseAppleArtistResolution(names) {
   return summary;
 }
 
+
+function eeDiagnoseSparseExactArtistExamples() {
+  return eeDiagnoseAppleArtistResolution([
+    "The Crimson ProjeKct",
+    "Jessica Hernandez"
+  ]);
+}
+
 function eeRetryBackfillFrom9() {
   PropertiesService.getScriptProperties()
     .setProperty("EE_APPLE_BACKFILL_INDEX", "9");

@@ -877,3 +877,26 @@ This confirms:
 
 The stale identity backlog can therefore drain incrementally through normal
 maintenance runs.
+
+## 2026-09-12 — Sparse exact-name artist diagnostic wrapper
+
+Added `eeDiagnoseSparseExactArtistExamples()` as a read-only diagnostic wrapper.
+
+Current regression cases:
+- The Crimson ProjeKct
+- Jessica Hernandez
+
+Purpose:
+- determine whether The Crimson ProjeKct fails for the same reason already
+  observed with Jessica Hernandez;
+- specifically test the sparse-catalogue case where Apple may return one
+  unique exact-name artist identity but too few release rows to reach the
+  current score threshold.
+
+Validation:
+- two consecutive generated builds were identical:
+  `68fb5d7fb371307a0957c77caac93fe7a69cedf2a8f7872618fb877a13ae0fe0`
+- Apps Script JavaScript syntax check passed;
+- git diff --check passed.
+
+No resolver behavior has been changed yet.

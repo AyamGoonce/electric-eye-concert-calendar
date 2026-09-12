@@ -2536,6 +2536,14 @@ function eeDiagnoseAppleArtistResolution(names) {
   return summary;
 }
 
+
+function eeDiagnoseSparseExactArtistExamples() {
+  return eeDiagnoseAppleArtistResolution([
+    "The Crimson ProjeKct",
+    "Jessica Hernandez"
+  ]);
+}
+
 /* Production archive worker. Configure one time-driven trigger manually. */
 function eeBackfillWorker() {
   var settings=eeAppleSettings_();
