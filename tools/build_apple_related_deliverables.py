@@ -887,6 +887,112 @@ function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
   }finally{eeReleaseWorkerLease_(lease);}
 }
 
+
+function eeNextStaleArtistIdentityRetryCandidate_() {
+  var sheet=eeReadOnlySheet_("Apple Artists"),values=sheet.getDataRange().getValues();
+  for(var row=1;row<values.length;row+=1){
+    var status=String(values[row][7]||""),
+        resolverVersion=Math.max(0,Number(values[row][16]||0));
+    if((status==="ERROR"||status==="AMBIGUOUS")&&
+       resolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION){
+      return {
+        row:row+1,
+        artistKey:String(values[row][0]||""),
+        canonicalName:String(values[row][1]||""),
+        representativePostId:String(values[row][11]||""),
+        previousStatus:status,
+        previousResolverVersion:resolverVersion,
+        error:String(values[row][12]||"")
+      };
+    }
+  }
+  return null;
+}
+
+function eePreviewNextStaleArtistIdentityRetry() {
+  var candidate=eeNextStaleArtistIdentityRetryCandidate_();
+  var result=candidate?{
+    status:"ELIGIBLE",
+    resolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION,
+    candidate:candidate
+  }:{
+    status:"NONE",
+    resolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION
+  };
+  console.log(JSON.stringify(result));
+  return result;
+}
+
+function eeRetryNextStaleArtistIdentity() {
+  if(!eeAcquireWorkerLease_("MANUAL_IDENTITY_RETRY",240000))return {status:"BUSY"};
+  var candidate=null;
+  try{
+    eeSetExecutionDeadline_(Date.now()+240000);
+    candidate=eeNextStaleArtistIdentityRetryCandidate_();
+    if(!candidate){
+      var none={status:"NONE",resolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION};
+      console.log(JSON.stringify(none));
+      return none;
+    }
+    if(!candidate.representativePostId){
+      var missing={
+        status:"NO_REPRESENTATIVE_POST",
+        candidate:candidate
+      };
+      console.log(JSON.stringify(missing));
+      return missing;
+    }
+
+    /* Ensure the new resolver-version column exists before the write. */
+    eeArtistCatalogueSheet_();
+
+    var registry=eeArtistRegistry_(),
+        artist=registry.artists.filter(function(value){
+          return value.slug===candidate.artistKey;
+        })[0]||{
+          slug:candidate.artistKey,
+          canonicalName:candidate.canonicalName,
+          aliases:[],
+          ambiguityClass:"provisional"
+        },
+        post=eeFetchPostById_(candidate.representativePostId),
+        catalogue=eeDiscoverArtistCatalogue_(artist,post),
+        result={
+          status:"RETRIED",
+          row:candidate.row,
+          artistKey:candidate.artistKey,
+          canonicalName:candidate.canonicalName,
+          previousStatus:candidate.previousStatus,
+          previousResolverVersion:candidate.previousResolverVersion,
+          newStatus:String((catalogue||{}).status||""),
+          newResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION,
+          appleArtistId:String((catalogue||{}).appleArtistId||""),
+          identityConfidence:String((catalogue||{}).identityConfidence||""),
+          categoryCounts:((catalogue||{}).categories||[]).map(function(group){
+            return [String(group.category||""),(group.items||[]).length];
+          }),
+          error:String((catalogue||{}).error||"")
+        };
+
+    if(result.newStatus==="RESOLVED")
+      PropertiesService.getScriptProperties().setProperty("EE_APPLE_ASSEMBLY_INDEX","1");
+
+    console.log(JSON.stringify(result));
+    return result;
+  }catch(error){
+    var failed={
+      status:"FAILED",
+      candidate:candidate,
+      error:String(error&&error.code||error&&error.message||error)
+    };
+    console.log(JSON.stringify(failed));
+    return failed;
+  }finally{
+    eeClearExecutionDeadline_();
+    eeReleaseWorkerLease_("MANUAL_IDENTITY_RETRY");
+  }
+}
+
 function eeGeneratePayload_(post) {
   var registry=eeArtistRegistry_(),analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis);
   if(!analysis.primaryArtistKeys.length)return eeAssemblePayloadFromCatalogues_(post,analysis,[]);

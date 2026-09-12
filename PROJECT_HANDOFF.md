@@ -688,3 +688,37 @@ Validation:
 - git diff --check passed.
 
 No production sheet rows have yet been retried with this new logic.
+
+## 2026-09-12 — Controlled single-artist stale identity retry helpers
+
+Added generic manual helpers to the generated Apple Apps Script architecture:
+
+- `eePreviewNextStaleArtistIdentityRetry()`
+- `eeRetryNextStaleArtistIdentity()`
+- internal `eeNextStaleArtistIdentityRetryCandidate_()`
+
+Purpose:
+- inspect the next stale ERROR / AMBIGUOUS Apple Artists row eligible under the
+  resolver-version migration;
+- retry exactly one artist at a time;
+- avoid hard-coded performers and bulk production changes.
+
+Safety behavior:
+- preview performs no artist-row mutation;
+- retry touches only the next eligible stale terminal artist;
+- requires a representative Blogger post;
+- records the current resolver version through the normal catalogue writer;
+- resets the assembly cursor only if the artist becomes RESOLVED;
+- uses its own worker lease and execution deadline.
+
+Validation:
+- two consecutive generated Code.gs builds were identical:
+  `5836e1c705e1bd9bb1e7c23c51040d622a32642a9fcd1ce7ea74913b36cc6c73`
+- Apps Script JavaScript syntax check passed;
+- git diff --check passed.
+
+Next production-validation step:
+1. install the rebuilt Code.gs in the existing Apps Script project;
+2. save without redeploying;
+3. run `eePreviewNextStaleArtistIdentityRetry()` only;
+4. inspect the candidate before allowing the one-row retry.
