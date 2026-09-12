@@ -536,6 +536,10 @@ function eeAppleRecommendationsProductionWorker() {
 
 /* Single installed production trigger. */
 function eeDiscoverArtistsWorker() {return eeAppleRecommendationsProductionWorker();}
+
+function eeRunArtistDiscoveryMaintenanceOnce() {
+  return eeDiscoverArtistsMaintenanceWorker_();
+}
 '''
 
 

@@ -818,3 +818,27 @@ Validation:
 The 161 stale identities do not need manual retries. Once this version is
 installed, normal production maintenance can drain them incrementally under
 the existing Apple throttle and execution limits.
+
+## 2026-09-12 — Public one-run Apple discovery maintenance wrapper
+
+Added:
+
+`eeRunArtistDiscoveryMaintenanceOnce()`
+
+Purpose:
+- expose the internal `eeDiscoverArtistsMaintenanceWorker_()` through a
+  function that appears in the Apps Script function dropdown;
+- allow a controlled manual validation run without invoking the broader
+  production worker.
+
+The wrapper performs no additional logic; it simply calls the existing
+discovery-maintenance implementation once.
+
+Validation:
+- generated Code.gs syntax check passed;
+- git diff --check passed.
+
+Next step:
+Install the rebuilt Code.gs in the existing Apps Script project and run
+`eeRunArtistDiscoveryMaintenanceOnce()` once. This should trigger the one-time
+resolver-version cursor reset and begin draining the stale identity backlog.

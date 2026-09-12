@@ -2147,6 +2147,10 @@ function eeAppleRecommendationsProductionWorker() {
 /* Single installed production trigger. */
 function eeDiscoverArtistsWorker() {return eeAppleRecommendationsProductionWorker();}
 
+function eeRunArtistDiscoveryMaintenanceOnce() {
+  return eeDiscoverArtistsMaintenanceWorker_();
+}
+
 
 function eeDiscoverArtistsMaintenanceWorker_() {
   if(!eeAcquireWorkerLease_("DISCOVERY",240000))return {status:"BUSY"};
