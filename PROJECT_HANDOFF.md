@@ -758,3 +758,25 @@ loop forever because they are marked with the current resolver version.
 
 The Apps Script editor later displayed a lost-connection warning, but the
 execution itself had already produced the successful RETRIED result.
+
+## 2026-09-12 — Added stale Apple identity retry backlog counter
+
+Added `staleIdentityRetriesPending` to `eeArchitectureStatus()`.
+
+It counts Apple Artists rows where:
+- status is ERROR or AMBIGUOUS; and
+- stored identityResolverVersion is older than the current
+  `EE_APPLE_IDENTITY_RESOLVER_VERSION`.
+
+This provides a direct measure of how many old terminal identity failures
+still need their one-time resolver-version retry.
+
+Validation:
+- two consecutive generated Code.gs builds were identical:
+  `a55f4bfe1724acf8075a925e7feebbdb2e169f64b56ca453630c912a9cc11f69`
+- Apps Script JavaScript syntax check passed;
+- git diff --check passed.
+
+Next step:
+Install the rebuilt Code.gs in the existing Apps Script editor and run
+`eeArchitectureStatus()` once to measure the stale identity backlog.
