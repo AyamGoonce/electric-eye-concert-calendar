@@ -1218,3 +1218,27 @@ Read-only Apps Script regression:
 
 The generated Code.gs was manually installed and saved in Apps Script for read-only validation.
 Calendar workflow and calendar scraper code were not touched.
+
+## 2026-09-12 — Generic targeted Apple production refresh
+
+Added public production wrapper:
+- eeRefreshConfiguredPostIds()
+
+Behavior:
+- Reads EE_APPLE_TARGETED_REFRESH_POST_IDS from Apps Script Script Properties.
+- Accepts comma/space/semicolon-separated numeric Blogger post IDs.
+- Maximum 20 posts per run.
+- Uses the normal eeProcessPost_ production path and existing payload write guards.
+- Returns title, status, primary artist, resolved Apple artist ID, identity level, recommendation mode, and LISTEN/WATCH/READ counts for each refreshed article.
+
+Purpose:
+- Allows controlled production rollout of validated Apple changes without running an archive-wide maintenance sweep.
+
+Initial production targets planned:
+- 3362193983174062138 — Wargasm, Nouveau Casino, 2026-06
+- 2542164659318268165 — Wargasm, Le Zénith, 2026-01
+
+Build SHA256:
+d2b026a620c52f6c927b6cb9844183bb0ade4d398e85bce2b83454e8a8f0dcdd
+
+Calendar workflow and scraper code untouched.

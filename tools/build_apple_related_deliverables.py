@@ -233,6 +233,134 @@ function eeRefreshPayloadForPostId(postId) {
   }finally{eeClearExecutionDeadline_();}
 }
 
+function eeRefreshConfiguredPostIds() {
+  var properties=PropertiesService.getScriptProperties(),
+      raw=String(
+        properties.getProperty(
+          "EE_APPLE_TARGETED_REFRESH_POST_IDS"
+        )||""
+      ).trim();
+
+  if(!raw){
+    throw new Error(
+      "EE_APPLE_TARGETED_REFRESH_POST_IDS is not configured"
+    );
+  }
+
+  var ids=eeUnique_(
+    raw.split(/[\s,;]+/).filter(Boolean)
+  ).filter(function(value){
+    return /^[0-9]+$/.test(value);
+  });
+
+  if(!ids.length){
+    throw new Error(
+      "No valid numeric Blogger post IDs configured"
+    );
+  }
+
+  if(ids.length>20){
+    throw new Error(
+      "Targeted refresh is limited to 20 post IDs per run"
+    );
+  }
+
+  var started=Date.now(),
+      cutoff=started+180000,
+      results=[];
+
+  eeSetExecutionDeadline_(cutoff);
+
+  try{
+    for(
+      var index=0;
+      index<ids.length && Date.now()<cutoff;
+      index+=1
+    ){
+      var postId=ids[index];
+
+      try{
+        var post=eeFetchPostById_(postId),
+            payload=eeProcessPost_(post,0),
+            categories={LISTEN:0,WATCH:0,READ:0};
+
+        (payload.categories||[]).forEach(function(group){
+          var key=String(group.category||"").toUpperCase();
+
+          if(
+            Object.prototype.hasOwnProperty.call(
+              categories,
+              key
+            )
+          ){
+            categories[key]=(group.items||[]).length;
+          }
+        });
+
+        results.push({
+          postId:postId,
+          title:String(post.title||""),
+          status:eePayloadHasRecommendations_(payload)
+            ?"READY"
+            :"EMPTY",
+          generationVersion:
+            payload.generationVersion||1,
+          recommendationMode:
+            String(
+              (payload.diagnostics||{}).recommendationMode||
+              ""
+            ),
+          primaryArtists:
+            ((payload.subject||{}).primaryArtists)||[],
+          artistId:
+            String(
+              (payload.identity||{}).artistId||
+              ""
+            )||null,
+          identityLevel:
+            String(
+              (payload.identity||{}).level||
+              ""
+            )||null,
+          categories:categories,
+          emptyClassification:
+            (payload.diagnostics||{}).emptyClassification||
+            null
+        });
+      }catch(error){
+        results.push({
+          postId:postId,
+          status:"ERROR",
+          error:String(
+            error&&error.code||
+            error&&error.message||
+            error
+          )
+        });
+      }
+    }
+  }finally{
+    eeClearExecutionDeadline_();
+  }
+
+  var summary={
+    status:results.some(function(row){
+      return row.status==="ERROR";
+    })?"PARTIAL":"OK",
+    configured:ids.length,
+    processed:results.length,
+    results:results
+  };
+
+  console.log(JSON.stringify({
+    type:"APPLE_TARGETED_REFRESH",
+    summary:summary
+  }));
+
+  return summary;
+}
+
+
 function eeRefreshRowsWorker_(wantedStatus,cursorProperty) {
   var properties=PropertiesService.getScriptProperties(),started=Date.now(),cutoff=started+180000;
   eeSetExecutionDeadline_(cutoff);
