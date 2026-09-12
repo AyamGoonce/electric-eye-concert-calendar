@@ -1743,3 +1743,42 @@ Script `Code.gs` to the existing web app and installing the generated Blogger
 theme, followed by live duplicate-row, fetch/JSONP, pagination, and collapse
 checks. Calendar code, scraper logic, workflows, and READY repair/safety logic
 were not changed.
+
+## 2026-09-12 — Public slice-cache coherency correction
+
+Fixed only the final public `ee-public-v2` cache-coherency blocker; no deployment
+was performed.
+
+Behavior:
+- `eeClearPublicPayloadCache_` now accepts the previous and replacement payloads,
+  derives LISTEN/WATCH/READ offsets from their actual category lengths, always
+  includes the initial `ALL:0:4` response, and removes keys in deterministic
+  batches. The former offset-200 ceiling is gone.
+- normal `eePutPayload_` passes its already-read previous payload and the new
+  payload to invalidation only after `setValues` succeeds.
+- `eePutReviewedQualityRepair_` preserves the prior READY payload before its
+  existing `QUALITY_REPAIR` write and invalidates old/new public page keys only
+  after that write succeeds. Repair eligibility, validation, retries, and
+  last-known-good protections are unchanged.
+- `doGet` canonicalizes category case, nonnegative integer offset, and effective
+  limit (maximum four) before constructing the slice-cache key, so values such as
+  `limit=999` share the four-item cache namespace.
+
+Validation:
+- focused cache and delivery regression set: 14 passed, including proof that a
+  failed quality-repair sheet write performs no cache invalidation.
+- full Apple suite: 83 tests, 77 passed; the remaining six failures exactly match
+  the known pre-existing generation/worker expectation drift.
+- protected non-Apple/calendar suite: 529 passed.
+- two consecutive builds produced identical artifacts; generated theme XML parsed
+  cleanly and `git diff --check` passed.
+- generated Code.gs SHA-256:
+  `1f487a979d12e2301d80fbd5364f42d3782ef28e34c38e2f53cb7ce4a1436159`
+- generated Electric-Eye-Theme.xml SHA-256:
+  `5223bc5cc69ca7f0cbe2dad56ece024e0aac60e17cabdd37df93cb5202f7734a`
+
+When separately approved, this cache fix requires redeploying generated
+`Code.gs`. The theme artifact is byte-identical to the prior audit-correction
+build and needs no UI change for this fix. Calendar, scraper, workflow,
+recommendation-generation, identity, repair-safety, and UI behavior were not
+changed.

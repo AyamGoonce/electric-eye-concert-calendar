@@ -48,10 +48,11 @@ function eePublicPayloadPage_(payload,category,offset,limit) {
   result.categories=groups;return result;
 }
 
-function eeClearPublicPayloadCache_(postId) {
-  var cache=CacheService.getScriptCache(),categories=["ALL","LISTEN","WATCH","READ"],keys=[];
-  categories.forEach(function(category){for(var offset=0;offset<=200;offset+=4)keys.push("ee-public-v2:"+[String(postId),category,String(offset),"4"].join(":"));});
-  if(cache.removeAll)cache.removeAll(keys);else keys.forEach(function(key){cache.remove(key);});
+function eeClearPublicPayloadCache_(postId,previousPayload,nextPayload) {
+  var cache=CacheService.getScriptCache(),lengths={LISTEN:0,WATCH:0,READ:0},keys=["ee-public-v2:"+[String(postId),"ALL","0","4"].join(":")];
+  [previousPayload,nextPayload].forEach(function(payload){((payload||{}).categories||[]).forEach(function(group){var category=String(group.category||"").toUpperCase();if(!Object.prototype.hasOwnProperty.call(lengths,category))return;lengths[category]=Math.max(lengths[category],Array.isArray(group.items)?group.items.length:0);});});
+  Object.keys(lengths).forEach(function(category){for(var offset=0;offset<lengths[category];offset+=4)keys.push("ee-public-v2:"+[String(postId),category,String(offset),"4"].join(":"));});
+  if(cache.removeAll){for(var start=0;start<keys.length;start+=100)cache.removeAll(keys.slice(start,start+100));}else keys.forEach(function(key){cache.remove(key);});
 }
 '''
 
@@ -60,8 +61,10 @@ function doGet(event) {
   var params=(event&&event.parameter)||{},callback=String(params.callback||""),postId=String(params.postId||"");
   var output={schemaVersion:1,postId:postId,categories:[]};
   if(params.action==="payload"&&postId&&eeApplePostAllowed_(postId)){
-    var category=String(params.category||"").toUpperCase(),offset=String(params.offset||"0"),limit=String(params.limit||"4");
-    var cacheKey="ee-public-v2:"+[postId,category||"ALL",offset,limit].join(":");
+    var category=String(params.category||"").toUpperCase(),parsedOffset=Number(params.offset),parsedLimit=Number(params.limit);
+    var offset=Number.isFinite(parsedOffset)&&parsedOffset>=0?Math.floor(parsedOffset):0;
+    var limit=Number.isFinite(parsedLimit)&&parsedLimit>0?Math.min(4,Math.floor(parsedLimit)):4;
+    var cacheKey="ee-public-v2:"+[postId,category||"ALL",String(offset),String(limit)].join(":");
     var cache=CacheService.getScriptCache(),cached=null;try{cached=cache.get(cacheKey);}catch(cacheReadError){}
     if(cached){try{output=JSON.parse(cached);}catch(cacheParseError){cached=null;}}
     if(!cached){output=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit)||output;var text=JSON.stringify(output);if(text.length<90000)try{cache.put(cacheKey,text,EE_APPLE_CONFIG.payloadCacheSeconds);}catch(cacheWriteError){}}
@@ -2594,9 +2597,9 @@ function eeMergeValidatedRepairItems_(candidate,existing,registry) {
 }
 
 function eePutReviewedQualityRepair_(post,payload) {
-  var sheet=eePayloadSheet_(),stored=eeEncodePayloadCell_(payload),values=sheet.getDataRange().getValues(),target=values.length+1;
+  var previous=eeGetPayload_(post.id),sheet=eePayloadSheet_(),stored=eeEncodePayloadCell_(payload),values=sheet.getDataRange().getValues(),target=values.length+1;
   for(var row=1;row<values.length;row+=1)if(String(values[row][0])===String(post.id)){target=row+1;break;}
-  sheet.getRange(target,1,1,8).setValues([[String(post.id),post.url||"",new Date().toISOString(),payload.storefront||EE_APPLE_CONFIG.storefront,stored,"READY","QUALITY_REPAIR",0]]);CacheService.getScriptCache().remove("ee-apple-payload:"+String(post.id));return true;
+  sheet.getRange(target,1,1,8).setValues([[String(post.id),post.url||"",new Date().toISOString(),payload.storefront||EE_APPLE_CONFIG.storefront,stored,"READY","QUALITY_REPAIR",0]]);CacheService.getScriptCache().remove("ee-apple-payload:"+String(post.id));eeClearPublicPayloadCache_(post.id,previous,payload);return true;
 }
 
 function eeRepairContaminatedReadyPayloads(dryRun) {
@@ -4302,7 +4305,7 @@ def build_code() -> str:
     code = replace_once(
         code,
         '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );',
-        '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );\n  eeClearPublicPayloadCache_(post.id);',
+        '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );\n  eeClearPublicPayloadCache_(post.id,existing,payload);',
         "public slice cache invalidation",
     )
     code = replace_function(code, "doGet", "eeDiagnoseAppleArtistResolution", PUBLIC_DO_GET)

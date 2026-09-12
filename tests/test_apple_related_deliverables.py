@@ -1393,6 +1393,67 @@ doGet({parameter:{action:"payload",postId:"42"}}).text;
         self.assertEqual(4, len(parsed["categories"][0]["items"]))
         self.assertTrue(parsed["categories"][0]["hasMore"])
 
+    def test_normal_payload_write_invalidates_old_and_new_public_pages_after_write(self):
+        result = self.run_apps_script(r'''
+function items(count){var rows=[];for(var i=0;i<count;i++)rows.push({stableId:String(i)});return rows;}
+var oldPayload={postId:"42",categories:[{category:"LISTEN",items:items(5)}]},nextPayload={postId:"42",categories:[{category:"LISTEN",items:items(9)},{category:"WATCH",items:items(2)}]},written=false,removed=[],events=[];
+eeGetPayload_=function(){return oldPayload;};eePayloadAtLeastAsUseful_=function(){return true;};eeEncodePayloadCell_=function(){return "stored";};
+eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["postId"]];}};},getRange:function(){return {setValues:function(){written=true;events.push("write");}};}};};
+CacheService={getScriptCache:function(){return {remove:function(key){removed.push(key);},removeAll:function(keys){events.push("invalidate");removed=removed.concat(keys);}};}};
+eePutPayload_({id:"42",url:""},nextPayload,"READY","",0);
+JSON.stringify({written:written,events:events,keys:removed.filter(function(key){return key.indexOf("ee-public-v2:")===0;}).sort()});
+''')
+        self.assertEqual(
+            '{"written":true,"events":["write","invalidate"],"keys":["ee-public-v2:42:ALL:0:4","ee-public-v2:42:LISTEN:0:4","ee-public-v2:42:LISTEN:4:4","ee-public-v2:42:LISTEN:8:4","ee-public-v2:42:WATCH:0:4"]}',
+            result,
+        )
+
+    def test_quality_repair_write_invalidates_public_pages_after_success(self):
+        result = self.run_apps_script(r'''
+function items(count){var rows=[];for(var i=0;i<count;i++)rows.push({stableId:String(i)});return rows;}
+var oldPayload={postId:"42",categories:[{category:"READ",items:items(5)}]},nextPayload={postId:"42",categories:[{category:"READ",items:items(9)}]},removed=[],writtenStatus="",events=[];
+eeGetPayload_=function(){return oldPayload;};eeEncodePayloadCell_=function(){return "stored";};
+eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["postId"],["42"]];}};},getRange:function(){return {setValues:function(values){writtenStatus=values[0][6];events.push("write");}};}};};
+CacheService={getScriptCache:function(){return {remove:function(key){removed.push(key);},removeAll:function(keys){events.push("invalidate");removed=removed.concat(keys);}};}};
+var ok=eePutReviewedQualityRepair_({id:"42",url:""},nextPayload);
+JSON.stringify({ok:ok,status:writtenStatus,events:events,keys:removed.filter(function(key){return key.indexOf("ee-public-v2:")===0;}).sort()});
+''')
+        self.assertEqual(
+            '{"ok":true,"status":"QUALITY_REPAIR","events":["write","invalidate"],"keys":["ee-public-v2:42:ALL:0:4","ee-public-v2:42:READ:0:4","ee-public-v2:42:READ:4:4","ee-public-v2:42:READ:8:4"]}',
+            result,
+        )
+
+    def test_failed_quality_repair_sheet_write_does_not_invalidate_public_pages(self):
+        result = self.run_apps_script(r'''
+var invalidations=0,payload={postId:"42",categories:[{category:"LISTEN",items:[{stableId:"one"}]}]};
+eeGetPayload_=function(){return payload;};eeEncodePayloadCell_=function(){return "stored";};
+eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["postId"],["42"]];}};},getRange:function(){return {setValues:function(){throw new Error("write failed");}};}};};
+CacheService={getScriptCache:function(){return {remove:function(){invalidations+=1;},removeAll:function(){invalidations+=1;}};}};
+try{eePutReviewedQualityRepair_({id:"42",url:""},payload);}catch(error){}
+invalidations;
+''')
+        self.assertEqual("0", result)
+
+    def test_public_cache_invalidation_has_no_200_offset_cap(self):
+        result = self.run_apps_script(r'''
+var items=[];for(var i=0;i<209;i++)items.push({stableId:String(i)});var removed=[];
+CacheService={getScriptCache:function(){return {removeAll:function(keys){removed=removed.concat(keys);}};}};
+eeClearPublicPayloadCache_("42",{categories:[{category:"LISTEN",items:items}]},null);
+JSON.stringify({count:removed.length,has204:removed.indexOf("ee-public-v2:42:LISTEN:204:4")!==-1,has208:removed.indexOf("ee-public-v2:42:LISTEN:208:4")!==-1,last:removed[removed.length-1]});
+''')
+        self.assertEqual('{"count":54,"has204":true,"has208":true,"last":"ee-public-v2:42:LISTEN:208:4"}', result)
+
+    def test_public_endpoint_cache_key_uses_canonical_effective_parameters(self):
+        result = self.run_apps_script(r'''
+var keys=[];eeApplePostAllowed_=function(){return true;};
+CacheService={getScriptCache:function(){return {get:function(key){keys.push(key);return JSON.stringify({schemaVersion:1,postId:"42",categories:[]});},put:function(){}};}};
+ContentService={MimeType:{JAVASCRIPT:"js",JSON:"json"},createTextOutput:function(text){return {text:text,setMimeType:function(){return this;}};}};
+doGet({parameter:{action:"payload",postId:"42",category:"listen",offset:"-2.5",limit:"999"}});
+doGet({parameter:{action:"payload",postId:"42",category:"LISTEN",offset:"4.9",limit:"4.8"}});
+JSON.stringify(keys);
+''')
+        self.assertEqual('["ee-public-v2:42:LISTEN:0:4","ee-public-v2:42:LISTEN:4:4"]', result)
+
     def test_frontend_starts_early_and_uses_async_fetch_without_hidden_preload(self):
         apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
         self.assertIn('document.addEventListener("DOMContentLoaded",start,{once:true})', apple)
