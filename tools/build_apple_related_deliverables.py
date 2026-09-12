@@ -2513,13 +2513,35 @@ function eeResolveDirectArtistIdentity_(
       };
     }
 
+    var sameNameCandidateCount=Number(
+          contextProfile.sameNameCandidateCount||1
+        ),
+        contextualDecision=
+          eeContextualAppleArtistCandidate_(
+            subjectName,
+            artistResults,
+            contextProfile,
+            storefront,
+            rejected
+          );
+
+    /*
+     * A context profile can contain an Apple ID learned by an older
+     * resolver. For same-name identities, freshly score the current Apple
+     * candidates before trusting that stored ID. This prevents stale
+     * identity mappings from bypassing contextual disambiguation.
+     */
+    if(contextualDecision)
+      return contextualDecision;
+
     var contextualAppleId=String(
       contextProfile.appleArtistId||""
     );
 
     if(
       contextualAppleId &&
-      byId[contextualAppleId]
+      byId[contextualAppleId] &&
+      sameNameCandidateCount<=1
     ){
       return {
         level:"HIGH",
@@ -2531,22 +2553,8 @@ function eeResolveDirectArtistIdentity_(
       };
     }
 
-    var contextualDecision=
-      eeContextualAppleArtistCandidate_(
-        subjectName,
-        artistResults,
-        contextProfile,
-        storefront,
-        rejected
-      );
-
-    if(contextualDecision)
-      return contextualDecision;
-
     if(
-      Number(
-        contextProfile.sameNameCandidateCount||1
-      )>1
+      sameNameCandidateCount>1
     ){
       if(!contextProfile.contextDisambiguated){
         return {

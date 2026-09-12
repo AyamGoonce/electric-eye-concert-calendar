@@ -1262,3 +1262,23 @@ Build SHA256:
 f1f25f340067f4fd4ecb17f52386b1c72abb17527008f62c5cbd0e313265cf42
 
 Calendar workflow and scraper code untouched.
+
+## 2026-09-12 — Prefer fresh contextual Apple identity over stale ambiguous ID
+
+Fixed production Apple identity resolution for ambiguous/same-name artists.
+
+Behavior:
+- When contextual disambiguation is required, current Apple candidates are scored contextually before trusting a previously stored Apple artist ID.
+- Stored MusicBrainz-linked Apple IDs remain usable directly for non-ambiguous identities.
+- Prevents an older incorrect Apple mapping from bypassing newer contextual evidence.
+
+Primary regression target:
+- Wargasm UK should resolve to Apple artist 1476730259, not old US Wargasm 22575637.
+
+Build SHA256:
+e71c241e8c41d861a2e6217d7efeba2cb8bd873519bd1483f9062928c8041fca
+
+Calendar workflow and scraper code untouched.
+
+Next queued issue:
+- WATCH recommendations are leaking Charli xcx into unrelated articles after the recent Charli xcx article was published.
