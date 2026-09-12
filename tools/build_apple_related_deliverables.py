@@ -532,9 +532,47 @@ function eePayloadCategoryCounts_(payload) {
   return counts;
 }
 
+function eePayloadIdentityCorrection_(candidate,existing) {
+
+  if(!eePayloadHasRecommendations_(candidate))return false;
+
+  var candidateIdentity=(candidate||{}).identity||{},
+      existingIdentity=(existing||{}).identity||{},
+      candidateId=String(candidateIdentity.artistId||""),
+      existingId=String(existingIdentity.artistId||"");
+
+  if(
+    String(candidateIdentity.level||"")!=="HIGH" ||
+    !candidateId
+  )return false;
+
+  var candidateArtists=eeUnique_(
+        ((candidate||{}).subject||{}).primaryArtists||[]
+      ).map(eeNorm_).sort(),
+      existingArtists=eeUnique_(
+        ((existing||{}).subject||{}).primaryArtists||[]
+      ).map(eeNorm_).sort();
+
+  var identityChanged=
+        candidateId!==existingId,
+      primaryArtistsChanged=
+        candidateArtists.join("|")!==
+        existingArtists.join("|");
+
+  return identityChanged||primaryArtistsChanged;
+}
+
+
 function eePayloadAtLeastAsUseful_(candidate,existing) {
   if(!eePayloadHasRecommendations_(candidate))return false;
   if(!eePayloadHasRecommendations_(existing))return true;
+
+  if(
+    eePayloadIdentityCorrection_(
+      candidate,
+      existing
+    )
+  )return true;
   var next=eePayloadCategoryCounts_(candidate),prior=eePayloadCategoryCounts_(existing);
   var nextItems={};((candidate||{}).categories||[]).forEach(function(group){
     nextItems[group.category]=nextItems[group.category]||{};(group.items||[]).forEach(function(item){nextItems[group.category][String(item.stableId||item.url||item.title||"")]=true;});

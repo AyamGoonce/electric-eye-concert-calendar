@@ -1381,3 +1381,23 @@ The fix is systemic: verified Apple artist IDs now govern catalogue identity eve
 
 Next task:
 - investigate Charli xcx WATCH recommendations leaking into unrelated articles.
+
+## 2026-09-12 — Allow validated identity corrections to replace stale READY payloads
+
+Fixed the last-known-good READY protection so identity corrections are not blocked merely because the corrected payload contains fewer recommendations.
+
+Behavior:
+- Candidate must still contain recommendations.
+- Candidate identity must be HIGH confidence with a non-empty Apple artist ID.
+- If the Apple artist ID changes, or the corrected primary-artist set changes, the candidate may replace the existing READY payload.
+- If identity and primary artists are unchanged, the existing usefulness/item-preservation guard remains in force.
+
+This allows resolver corrections to replace contaminated historical payloads rather than generating the correct candidate and silently preserving the wrong stored result.
+
+Build SHA256:
+06d83da794693e68b9d27c49165e5ebbd9e9e67d0b01b403a8e3ec43d102bb2c
+
+Calendar workflow and scraper code untouched.
+
+Next live validation:
+- rerun the two Wargasm posts and verify the stored payload is actually replaced with Apple artist 1476730259.
