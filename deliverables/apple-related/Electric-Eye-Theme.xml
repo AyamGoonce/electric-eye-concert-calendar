@@ -20662,9 +20662,7 @@ if (!placedNearPlayer) {
   "use strict";
   var CONFIG={enabled:true,endpoint:"https://script.google.com/macros/s/AKfycbyxbAkw_Mcl_iXwV_N-JHS2rTf_KBwZlJKsD1RVECUlXR7WNXBt0eUAEIevZOiHXJpcaA/exec",callbackTimeout:15000,hoverDelay:200,initialPerCategory:4,revealStep:4};
   var CATEGORY_LABEL={LISTEN:"Listen",WATCH:"Watch",READ:"Read"};
-  var context=document.querySelector(".ee-apple-context[data-ee-post-id]");
-  var postBody=document.querySelector(".is-post .post-body");
-  if(!CONFIG.enabled||!context||!postBody)return;
+  var context=null,postBody=null,started=false;
 
   function norm(value){return String(value||"").replace(/\s+/g," ").trim().toLowerCase();}
   function hasAppleLink(node){return !!(node&&node.querySelector&&node.querySelector('a[href*="apple.com"],a[href*="itunes.com"]'));}
@@ -20787,6 +20785,8 @@ if (!placedNearPlayer) {
       }
 
       var renderedCount=Math.min(CONFIG.initialPerCategory,items.length);
+      var total=Math.max(renderedCount,Number(group.total||items.length));
+      var seenIds={};items.forEach(function(item){seenIds[String(item.stableId||item.url||item.canonicalAppleUrl||"")]=true;});
 
       items.slice(0,renderedCount).forEach(function(item){
         appendItem(item);
@@ -20794,12 +20794,13 @@ if (!placedNearPlayer) {
 
       section.appendChild(shelf);
 
-      if(items.length>CONFIG.initialPerCategory){
+      if(total>CONFIG.initialPerCategory){
         var toggle=el("button","ee-apple-toggle","More");
         toggle.type="button";
         toggle.setAttribute("aria-expanded","false");
         toggle.setAttribute("aria-controls",shelfId);
 
+        function updateToggle(visible){toggle.textContent=renderedCount>=total&&visible>=renderedCount?"Show less":"More";toggle.setAttribute("aria-expanded",String(visible>CONFIG.initialPerCategory));}
         toggle.addEventListener("click",function(){
           var cards=shelf.querySelectorAll(".ee-apple-card");
           var visible=Array.prototype.filter.call(
@@ -20807,7 +20808,7 @@ if (!placedNearPlayer) {
             function(card){return !card.hidden;}
           ).length;
 
-          if(renderedCount>=items.length && visible>=items.length){
+          if(renderedCount>=total && visible>=renderedCount){
             Array.prototype.forEach.call(cards,function(card,index){
               card.hidden=index>=CONFIG.initialPerCategory;
             });
@@ -20816,7 +20817,7 @@ if (!placedNearPlayer) {
             return;
           }
 
-          var next=Math.min(items.length,visible+CONFIG.revealStep);
+          var next=Math.min(renderedCount,visible+CONFIG.revealStep);
 
           while(renderedCount<next){
             appendItem(items[renderedCount]);
@@ -20829,11 +20830,14 @@ if (!placedNearPlayer) {
             card.hidden=index>=next;
           });
 
-          toggle.textContent=next>=items.length?"Show less":"More";
-          toggle.setAttribute(
-            "aria-expanded",
-            String(next>CONFIG.initialPerCategory)
-          );
+          if(next>visible){updateToggle(next);return;}
+          toggle.disabled=true;
+          requestPage(group.category,renderedCount).then(function(page){
+            var returned=((page.categories||[])[0]||{});
+            total=Math.max(renderedCount,Number(returned.total||total));
+            (returned.items||[]).forEach(function(item){var id=String(item.stableId||item.url||item.canonicalAppleUrl||"");if(!id||seenIds[id])return;seenIds[id]=true;items.push(item);appendItem(item);renderedCount+=1;});
+            updateToggle(renderedCount);
+          }).catch(function(){}).finally(function(){toggle.disabled=false;});
         });
 
         bar.appendChild(toggle);
@@ -20930,35 +20934,22 @@ if (!placedNearPlayer) {
     window.addEventListener("resize",close);
   }
 
-  function requestPayload(){
-    var callback="eeApplePayload_"+Date.now()+"_"+Math.random().toString(36).slice(2);
-    var script=document.createElement("script");
-    var timeout;
-
-    function cleanup(){
-      window.clearTimeout(timeout);
-      delete window[callback];
-      if(script.parentNode)script.remove();
-    }
-
-    window[callback]=function(payload){
-      cleanup();
-      try{render(payload);}catch(error){}
-    };
-
-    var params=new URLSearchParams({
-      action:"payload",
-      postId:context.getAttribute("data-ee-post-id"),
-      callback:callback
-    });
-    script.src=CONFIG.endpoint+"?"+params.toString();
-    script.async=true;
-    script.onerror=cleanup;
-    timeout=window.setTimeout(cleanup,CONFIG.callbackTimeout);
-    document.head.appendChild(script);
+  function requestPage(category,offset){
+    var params=new URLSearchParams({action:"payload",postId:context.getAttribute("data-ee-post-id"),offset:String(offset||0),limit:String(CONFIG.revealStep)});
+    if(category)params.set("category",category);
+    var controller=typeof AbortController!=="undefined"?new AbortController():null;
+    var timeout=window.setTimeout(function(){if(controller)controller.abort();},CONFIG.callbackTimeout);
+    return fetch(CONFIG.endpoint+"?"+params.toString(),{method:"GET",mode:"cors",credentials:"omit",signal:controller?controller.signal:undefined}).then(function(response){if(!response.ok)throw new Error("Apple payload request failed");return response.json();}).finally(function(){window.clearTimeout(timeout);});
   }
 
-  requestPayload();
+  function start(){
+    if(started)return;started=true;
+    context=document.querySelector(".ee-apple-context[data-ee-post-id]");
+    postBody=document.querySelector(".is-post .post-body");
+    if(!CONFIG.enabled||!context||!postBody||hasExistingSection())return;
+    requestPage("",0).then(function(payload){render(payload);}).catch(function(){});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 }());
 //]]>
 </script>

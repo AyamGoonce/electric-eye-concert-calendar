@@ -186,13 +186,14 @@ class AppleRelatedDeliverableTests(unittest.TestCase):
         ]))
 
     def test_empty_or_disabled_response_leaves_legacy_fallback(self):
-        self.assertRegex(self.theme, r"if\(!CONFIG\.enabled\|\|!context\|\|!postBody\)return")
+        self.assertRegex(self.theme, r"if\(!CONFIG\.enabled\|\|!context\|\|!postBody\|\|hasExistingSection\(\)\)return")
         self.assertRegex(self.theme, r"if\(!categories\.length\)return;\s*removeLegacySafeAffiliate\(\);")
-        self.assertIn('output=eePublicPayload_(eeGetPayload_(params.postId))||output;', self.code)
+        self.assertIn('output=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit)||output;', self.code)
         self.assertIn('settings.enabled && /^[0-9]+$/.test', self.code)
 
     def test_reader_endpoint_only_serves_stored_ready_payloads(self):
-        do_get = self.code[self.code.index("function doGet(") : self.code.index("function eeBackfillWorker(")]
+        start = self.code.index("function doGet(")
+        do_get = self.code[start : self.code.index("function eeDiagnoseAppleArtistResolution", start)]
         self.assertIn("eeGetPayload_", do_get)
         self.assertNotIn("eeAppleSearch_", do_get)
         self.assertNotIn("eeGeneratePayload_", do_get)
@@ -432,7 +433,7 @@ JSON.stringify({empty:empty,error:error,poorer:poorer,writes:writes.length,lastS
     def test_minimal_ready_round_trips_through_existing_reader_boundary(self):
         result = self.run_apps_script(r'''
 var rows=[["postId","canonicalUrl","generatedAt","storefront","payloadJson","status","error","retryCount"]];
-var sheet={getLastRow:function(){return rows.length-1;},getLastColumn:function(){return 8;},getDataRange:function(){return {getValues:function(){return rows;}};},getRange:function(row){return {setValues:function(values){rows[row-1]=values[0];},setValue:function(){}};}};
+var sheet={getLastRow:function(){return rows.length;},getLastColumn:function(){return 8;},getDataRange:function(){return {getValues:function(){return rows;}};},getRange:function(row,column,rowCount,columnCount){if(column===1&&columnCount===1)return {createTextFinder:function(value){return {matchEntireCell:function(){return this;},findNext:function(){for(var i=1;i<rows.length;i++)if(String(rows[i][0])===String(value))return {getRow:function(){return i+1;}};return null;}};}};return {setValues:function(values){rows[row-1]=values[0];},setValue:function(){},getValues:function(){return [rows[row-1]];}};}};
 eePayloadSheet_=function(){return sheet;};eeEncodePayloadCell_=function(value){return JSON.stringify(value);};eeDecodePayloadCell_=function(value){return JSON.parse(value);};
 var cache={};CacheService={getScriptCache:function(){return {get:function(key){return cache[key]||null;},put:function(key,value){cache[key]=value;},remove:function(key){delete cache[key];}};}};
 eeAppleSettings_=function(){return {enabled:true,storefront:"FR"};};eeApplePostAllowed_=function(){return true;};
@@ -1312,8 +1313,9 @@ JSON.stringify({recovered:recovered,slept:sleeps.length>0,classifications:classi
         self.assertNotIn("categoryLimit", self.code)
         self.assertNotIn("maxPerCategory", self.theme)
         self.assertIn("var items=group.items.slice();", self.theme)
-        self.assertIn("var next=Math.min(cards.length,visible+CONFIG.revealStep);", self.theme)
-        self.assertIn('toggle.textContent=next>=cards.length?"Show less":"More";', self.theme)
+        self.assertIn("requestPage(group.category,renderedCount)", self.theme)
+        self.assertIn("var next=Math.min(renderedCount,visible+CONFIG.revealStep);", self.theme)
+        self.assertIn('renderedCount>=total&&visible>=renderedCount?"Show less":"More"', self.theme)
         self.assertIn("card.hidden=index>=CONFIG.initialPerCategory;", self.theme)
 
         result = self.run_apps_script(r'''
@@ -1329,6 +1331,60 @@ var payload=eeGeneratePayloadLegacy_({id:"1",title:"Test Artist",content:"This A
 JSON.stringify({ready:eePayloadHasRecommendations_(payload),count:payload.categories[0].items.length,version:payload.generationVersion});
 ''')
         self.assertEqual('{"ready":true,"count":30,"version":3}', result)
+
+    def test_public_reader_uses_targeted_post_id_lookup_not_full_sheet_scan(self):
+        result = self.run_apps_script(r'''
+var scans=0,ranges=[],payload={postId:"42",categories:[{category:"LISTEN",items:[{stableId:"a"}]}]};
+eePayloadSheet_=function(){return {getLastRow:function(){return 7;},getDataRange:function(){scans+=1;throw new Error("full scan forbidden");},getRange:function(row,column,rows,columns){ranges.push([row,column,rows,columns]);if(column===1&&columns===1)return {createTextFinder:function(value){return {matchEntireCell:function(){return this;},findNext:function(){return {getRow:function(){return 5;}};}};}};return {getValues:function(){return [["42","",new Date().toISOString(),"FR",JSON.stringify(payload),"READY"]];}};}};};
+JSON.stringify({payload:eeGetPayload_("42"),scans:scans,ranges:ranges});
+''')
+        parsed = json.loads(result)
+        self.assertEqual("42", parsed["payload"]["postId"])
+        self.assertEqual(0, parsed["scans"])
+        self.assertEqual([[2, 1, 6, 1], [5, 1, 1, 6]], parsed["ranges"])
+
+    def test_public_reader_preserves_ready_only_and_malformed_payload_protection(self):
+        result = self.run_apps_script(r'''
+var status="EMPTY",stored="{}";
+eePayloadSheet_=function(){return {getLastRow:function(){return 2;},getRange:function(row,column,rows,columns){if(column===1&&columns===1)return {createTextFinder:function(){return {matchEntireCell:function(){return this;},findNext:function(){return {getRow:function(){return 2;}};}};}};return {getValues:function(){return [["42","","","FR",stored,status]];}};}};};
+var empty=eeGetPayload_("42");status="READY";stored="not-json";var malformed=eeGetPayload_("42");
+JSON.stringify({empty:empty,malformed:malformed});
+''')
+        self.assertEqual('{"empty":null,"malformed":null}', result)
+
+    def test_public_payload_initial_page_and_category_pagination(self):
+        result = self.run_apps_script(r'''
+function items(prefix,count){var rows=[];for(var i=0;i<count;i+=1)rows.push({stableId:prefix+i,title:prefix+i,url:"https://music.apple.com/"+prefix+i});return rows;}
+var payload={schemaVersion:1,postId:"42",diagnostics:{private:true},categories:[{category:"LISTEN",items:items("l",30)},{category:"WATCH",items:items("w",10)},{category:"READ",items:[]}]};
+var initial=eePublicPayloadPage_(payload,"",0,4),second=eePublicPayloadPage_(payload,"LISTEN",4,4),bad=eePublicPayloadPage_(payload,"LISTEN","bad",99),all=[],offset=0,page;
+do{page=eePublicPayloadPage_(payload,"LISTEN",offset,4).categories[0];all=all.concat(page.items.map(function(item){return item.stableId;}));offset=page.nextOffset;}while(page.hasMore);
+JSON.stringify({initial:initial.categories.map(function(group){return [group.category,group.items.length,group.total,group.hasMore];}),second:second.categories[0].items.map(function(item){return item.stableId;}),bad:[bad.categories[0].offset,bad.categories[0].limit],allCount:all.length,uniqueCount:Object.keys(all.reduce(function(map,id){map[id]=true;return map;},{})).length,privateDiagnostics:Object.prototype.hasOwnProperty.call(initial,"diagnostics")});
+''')
+        self.assertEqual(
+            '{"initial":[["LISTEN",4,30,true],["WATCH",4,10,true]],"second":["l4","l5","l6","l7"],"bad":[0,4],"allCount":30,"uniqueCount":30,"privateDiagnostics":false}',
+            result,
+        )
+
+    def test_public_endpoint_falls_back_when_slice_cache_fails(self):
+        result = self.run_apps_script(r'''
+var payload={schemaVersion:1,postId:"42",categories:[{category:"LISTEN",items:[1,2,3,4,5].map(function(id){return {stableId:String(id),title:String(id),url:"https://music.apple.com/"+id};})}]};
+eeApplePostAllowed_=function(){return true;};eeGetPayload_=function(){return payload;};
+CacheService={getScriptCache:function(){return {get:function(){throw new Error("cache unavailable");},put:function(){throw new Error("cache unavailable");}};}};
+ContentService={MimeType:{JAVASCRIPT:"js",JSON:"json"},createTextOutput:function(text){return {text:text,setMimeType:function(){return this;}};}};
+doGet({parameter:{action:"payload",postId:"42"}}).text;
+''')
+        parsed = json.loads(result)
+        self.assertEqual(4, len(parsed["categories"][0]["items"]))
+        self.assertTrue(parsed["categories"][0]["hasMore"])
+
+    def test_frontend_starts_early_and_uses_async_fetch_without_hidden_preload(self):
+        apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
+        self.assertIn('document.addEventListener("DOMContentLoaded",start,{once:true})', apple)
+        self.assertIn('else start();', apple)
+        self.assertNotIn('window.addEventListener("load"', apple)
+        self.assertIn('return fetch(CONFIG.endpoint+', apple)
+        self.assertIn('requestPage(group.category,renderedCount)', apple)
+        self.assertNotIn('image.hidden', apple)
 
     def test_selective_refresh_has_independent_cursor_contract(self):
         refresh = self.code[self.code.index("function eeRefreshPayloadForPostId") :]

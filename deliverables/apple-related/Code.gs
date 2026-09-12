@@ -1346,24 +1346,42 @@ function eeDecodePayloadCell_(value) {
   return JSON.parse(stored);
 }
 
+
 function eeGetPayload_(postId) {
-  var key = "ee-apple-payload:" + String(postId);
-  var cached = CacheService.getScriptCache().get(key);
-  if(cached){var cachedPayload=eeDecodePayloadCell_(cached);return eePayloadHasRecommendations_(cachedPayload)?cachedPayload:null;}
+  postId=String(postId||"");
+  if(!/^[0-9]+$/.test(postId))return null;
+  var sheet=eePayloadSheet_(),lastRow=sheet.getLastRow();
+  if(lastRow<2)return null;
+  var match=sheet.getRange(2,1,lastRow-1,1).createTextFinder(postId).matchEntireCell(true).findNext();
+  if(!match)return null;
+  var row=sheet.getRange(match.getRow(),1,1,6).getValues()[0];
+  if(String(row[0])!==postId||String(row[5])!=="READY")return null;
+  var stored=String(row[4]||"");if(!stored)return null;
+  try{var payload=eeDecodePayloadCell_(stored);return eePayloadHasRecommendations_(payload)?payload:null;}catch(error){return null;}
+}
 
-  var values = eePayloadSheet_().getDataRange().getValues();
-  for (var row = 1; row < values.length; row += 1) {
-    if (String(values[row][0]) === String(postId) && values[row][5] === "READY") {
-      var stored = String(values[row][4] || "");
-      if (!stored) return null;
+function eePublicPayloadPage_(payload,category,offset,limit) {
+  if(!eePayloadHasRecommendations_(payload))return null;
+  category=String(category||"").toUpperCase();
+  var allowed={LISTEN:true,WATCH:true,READ:true};
+  var parsedOffset=Number(offset),parsedLimit=Number(limit);
+  parsedOffset=Number.isFinite(parsedOffset)&&parsedOffset>=0?Math.floor(parsedOffset):0;
+  parsedLimit=Number.isFinite(parsedLimit)&&parsedLimit>0?Math.min(4,Math.floor(parsedLimit)):4;
+  if(category&&!allowed[category])return null;
+  var result=eePublicPayload_(payload),groups=[];
+  (result.categories||[]).forEach(function(group){
+    var name=String(group.category||"").toUpperCase();if(!allowed[name]||(category&&name!==category))return;
+    var items=Array.isArray(group.items)?group.items:[],start=category?parsedOffset:0,page=items.slice(start,start+parsedLimit),total=items.length;
+    if(!category&&!page.length)return;
+    groups.push({category:name,items:page,total:total,offset:start,limit:parsedLimit,hasMore:start+page.length<total,nextOffset:Math.min(total,start+page.length)});
+  });
+  result.categories=groups;return result;
+}
 
-      var payload=eeDecodePayloadCell_(stored);
-      if(!eePayloadHasRecommendations_(payload))return null;
-      CacheService.getScriptCache().put(key,stored,EE_APPLE_CONFIG.payloadCacheSeconds);
-      return payload;
-    }
-  }
-  return null;
+function eeClearPublicPayloadCache_(postId) {
+  var cache=CacheService.getScriptCache(),categories=["ALL","LISTEN","WATCH","READ"],keys=[];
+  categories.forEach(function(category){for(var offset=0;offset<=200;offset+=4)keys.push("ee-public-v2:"+[String(postId),category,String(offset),"4"].join(":"));});
+  if(cache.removeAll)cache.removeAll(keys);else keys.forEach(function(key){cache.remove(key);});
 }
 
 function eePutPayload_(post, payload, status, error, retryCount) {
@@ -1396,6 +1414,7 @@ function eePutPayload_(post, payload, status, error, retryCount) {
   CacheService.getScriptCache().remove(
     "ee-apple-payload:" + String(post.id)
   );
+  eeClearPublicPayloadCache_(post.id);
 }
 
 function eeNorm_(value) { return String(value || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9'+]+/g, " ").replace(/\s+/g, " ").trim(); }
@@ -5121,30 +5140,22 @@ function eeArchitectureStatus() {
 }
 
 
+
 function doGet(event) {
-  var params=(event&&event.parameter)||{}, callback=String(params.callback||"");
-  var output={schemaVersion:1,postId:String(params.postId||""),categories:[]};
-
-  if (params.action === "payload" && params.postId && eeApplePostAllowed_(params.postId)) {
-    output=eePublicPayload_(eeGetPayload_(params.postId))||output;
+  var params=(event&&event.parameter)||{},callback=String(params.callback||""),postId=String(params.postId||"");
+  var output={schemaVersion:1,postId:postId,categories:[]};
+  if(params.action==="payload"&&postId&&eeApplePostAllowed_(postId)){
+    var category=String(params.category||"").toUpperCase(),offset=String(params.offset||"0"),limit=String(params.limit||"4");
+    var cacheKey="ee-public-v2:"+[postId,category||"ALL",offset,limit].join(":");
+    var cache=CacheService.getScriptCache(),cached=null;try{cached=cache.get(cacheKey);}catch(cacheReadError){}
+    if(cached){try{output=JSON.parse(cached);}catch(cacheParseError){cached=null;}}
+    if(!cached){output=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit)||output;var text=JSON.stringify(output);if(text.length<90000)try{cache.put(cacheKey,text,EE_APPLE_CONFIG.payloadCacheSeconds);}catch(cacheWriteError){}}
   }
-
   var body=JSON.stringify(output);
-
-  if (callback && /^[A-Za-z_$][0-9A-Za-z_$]{0,80}$/.test(callback)) {
-    return ContentService.createTextOutput(callback+"("+body+");").setMimeType(ContentService.MimeType.JAVASCRIPT);
-  }
-
+  if(callback&&/^[A-Za-z_$][0-9A-Za-z_$]{0,80}$/.test(callback))return ContentService.createTextOutput(callback+"("+body+");").setMimeType(ContentService.MimeType.JAVASCRIPT);
   return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
 }
 
-/**
- * READ-ONLY diagnostic for Apple artist identity resolution.
- *
- * Does not write Artist Catalogue, Article Identity, or Payload rows.
- * It exposes the exact Apple query, candidate artist IDs, release counts,
- * resolver scores, confidence decision, and recommendation-candidate yield.
- */
 function eeDiagnoseAppleArtistResolution(names) {
   names = (names && names.length) ? names : [
     "Prince",

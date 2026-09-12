@@ -8,6 +8,62 @@ OUT = ROOT / "deliverables" / "apple-related"
 THEME_SOURCE = ROOT / "sources" / "apple-related" / "Electric-Eye-Theme.base.xml"
 CODE_SOURCE = ROOT / "sources" / "apple-related" / "Code.base.gs"
 
+PUBLIC_PAYLOAD_READER = r'''
+function eeGetPayload_(postId) {
+  postId=String(postId||"");
+  if(!/^[0-9]+$/.test(postId))return null;
+  var sheet=eePayloadSheet_(),lastRow=sheet.getLastRow();
+  if(lastRow<2)return null;
+  var match=sheet.getRange(2,1,lastRow-1,1).createTextFinder(postId).matchEntireCell(true).findNext();
+  if(!match)return null;
+  var row=sheet.getRange(match.getRow(),1,1,6).getValues()[0];
+  if(String(row[0])!==postId||String(row[5])!=="READY")return null;
+  var stored=String(row[4]||"");if(!stored)return null;
+  try{var payload=eeDecodePayloadCell_(stored);return eePayloadHasRecommendations_(payload)?payload:null;}catch(error){return null;}
+}
+
+function eePublicPayloadPage_(payload,category,offset,limit) {
+  if(!eePayloadHasRecommendations_(payload))return null;
+  category=String(category||"").toUpperCase();
+  var allowed={LISTEN:true,WATCH:true,READ:true};
+  var parsedOffset=Number(offset),parsedLimit=Number(limit);
+  parsedOffset=Number.isFinite(parsedOffset)&&parsedOffset>=0?Math.floor(parsedOffset):0;
+  parsedLimit=Number.isFinite(parsedLimit)&&parsedLimit>0?Math.min(4,Math.floor(parsedLimit)):4;
+  if(category&&!allowed[category])return null;
+  var result=eePublicPayload_(payload),groups=[];
+  (result.categories||[]).forEach(function(group){
+    var name=String(group.category||"").toUpperCase();if(!allowed[name]||(category&&name!==category))return;
+    var items=Array.isArray(group.items)?group.items:[],start=category?parsedOffset:0,page=items.slice(start,start+parsedLimit),total=items.length;
+    if(!category&&!page.length)return;
+    groups.push({category:name,items:page,total:total,offset:start,limit:parsedLimit,hasMore:start+page.length<total,nextOffset:Math.min(total,start+page.length)});
+  });
+  result.categories=groups;return result;
+}
+
+function eeClearPublicPayloadCache_(postId) {
+  var cache=CacheService.getScriptCache(),categories=["ALL","LISTEN","WATCH","READ"],keys=[];
+  categories.forEach(function(category){for(var offset=0;offset<=200;offset+=4)keys.push("ee-public-v2:"+[String(postId),category,String(offset),"4"].join(":"));});
+  if(cache.removeAll)cache.removeAll(keys);else keys.forEach(function(key){cache.remove(key);});
+}
+'''
+
+PUBLIC_DO_GET = r'''
+function doGet(event) {
+  var params=(event&&event.parameter)||{},callback=String(params.callback||""),postId=String(params.postId||"");
+  var output={schemaVersion:1,postId:postId,categories:[]};
+  if(params.action==="payload"&&postId&&eeApplePostAllowed_(postId)){
+    var category=String(params.category||"").toUpperCase(),offset=String(params.offset||"0"),limit=String(params.limit||"4");
+    var cacheKey="ee-public-v2:"+[postId,category||"ALL",offset,limit].join(":");
+    var cache=CacheService.getScriptCache(),cached=null;try{cached=cache.get(cacheKey);}catch(cacheReadError){}
+    if(cached){try{output=JSON.parse(cached);}catch(cacheParseError){cached=null;}}
+    if(!cached){output=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit)||output;var text=JSON.stringify(output);if(text.length<90000)try{cache.put(cacheKey,text,EE_APPLE_CONFIG.payloadCacheSeconds);}catch(cacheWriteError){}}
+  }
+  var body=JSON.stringify(output);
+  if(callback&&/^[A-Za-z_$][0-9A-Za-z_$]{0,80}$/.test(callback))return ContentService.createTextOutput(callback+"("+body+");").setMimeType(ContentService.MimeType.JAVASCRIPT);
+  return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
+}
+'''
+
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
     count = text.count(old)
@@ -4234,6 +4290,14 @@ def build_code() -> str:
         LEGACY_MAINTENANCE_ENTRY_POINTS + "\n\nfunction eeSeedArtistCataloguesFromGeneration2() {",
         "idle legacy scheduled entry points",
     )
+    code = replace_function(code, "eeGetPayload_", "eePutPayload_", PUBLIC_PAYLOAD_READER)
+    code = replace_once(
+        code,
+        '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );',
+        '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );\n  eeClearPublicPayloadCache_(post.id);',
+        "public slice cache invalidation",
+    )
+    code = replace_function(code, "doGet", "eeDiagnoseAppleArtistResolution", PUBLIC_DO_GET)
     debug_start = code.index("function eeRetryBackfillFrom9()")
     code = code[:debug_start].rstrip() + WORKER + "\n"
     marker="function eeReadyAuditReplacementPreview_(finding,existing,registry)"

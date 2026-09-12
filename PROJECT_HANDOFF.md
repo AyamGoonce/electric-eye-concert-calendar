@@ -1649,3 +1649,52 @@ Deterministic generated Code.gs SHA-256:
 90631f0ba76ce61a27c5749952543356db6c6dfc1db098feecde96bc65e2b08a
 
 No calendar files modified.
+
+## 2026-09-12 — Apple recommendation delivery performance rewrite
+
+Reworked only the public Related on Apple delivery path. The previous cache-miss
+path loaded and scanned every row in Apple Payloads, decoded the selected large
+payload, and sent every recommendation to the browser before most were needed.
+
+New behavior:
+- `eeGetPayload_` uses an exact Post ID TextFinder lookup over column A and reads
+  only the six cells in the matching row; READY-only, malformed, and empty-payload
+  protections remain intact.
+- `doGet` remains read-only and slices the stored READY payload at response time.
+  Initial responses contain at most four items per populated LISTEN/WATCH/READ
+  category plus `total`, `hasMore`, and `nextOffset` metadata.
+- category-specific requests return the next four ranked items without resending
+  earlier items; payload storage and ranking are unchanged, so lists longer than
+  24 remain fully reachable.
+- only compact public slices are cached (`ee-public-v2` keys include post,
+  category, offset, and limit). Cache failures fall back to targeted sheet lookup,
+  and payload writes invalidate bounded public page keys.
+- the Blogger renderer creates only returned cards/artwork, fetches subsequent
+  category pages on demand, reuses already-rendered cards after Show less, and
+  starts on DOMContentLoaded or immediately when the DOM is already ready. It
+  does not wait for window.load.
+- duplicate-module protection, legacy replacement, popovers/event delegation,
+  READY repair worker safety, identity/contamination validation, and stored
+  payload format are unchanged.
+
+Validation:
+- focused delivery tests cover targeted lookup without `getDataRange`, READY and
+  malformed protection, 4-item initial slices, pagination/no duplicates through
+  30 items, invalid bounds, cache-failure fallback, lazy DOM rendering, and early
+  startup.
+- full Apple suite: 75 tests, 69 pass; six known pre-existing generation/worker
+  expectation-drift failures remain unrelated to this delivery change.
+- generated Code.gs SHA-256:
+  `7b4d212cc721a0928e7983f54e0d35dffd12f1248ee6b7f155bfd61672284396`
+- generated Electric-Eye-Theme.xml SHA-256:
+  `fdc460050c09e69ebf43df454242b3f8c089e0793a06b2c3b864942156a61d5e`
+- repeat builds produced identical hashes; generated theme XML parsed cleanly.
+
+QOTSA note: the existing READY safety audit records LISTEN items for the Queens
+of the Stone Age article, so the delivery API will expose its first LISTEN slice
+when that stored payload is READY. Its recorded corrected-identity safety issue
+remains a generation-quality concern and was not broadened into this task.
+
+Missing-artist backfill (including Stevie Wonder / Angra-type gaps) remains a
+separate next task. Calendar code, scraper logic, workflows, and tests were not
+modified.
