@@ -2514,6 +2514,7 @@ function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityCla
 function eeArtistNeedsIdentityResolution_(record){
   if(!record)return true;
   var status=String(record.status||"");
+  if(status==="RESOLVED"&&!String(record.appleArtistId||""))return true;
   if(status==="UNRESOLVED")return true;
   return (status==="ERROR"||status==="AMBIGUOUS")&&
     Math.max(0,Number(record.identityResolverVersion||0))<
@@ -4758,10 +4759,11 @@ function eeDiscoverArtistCatalogue_(artist,post,forceRefresh,revalidateIdentity)
     if(!forceRefresh&&!fastResolved&&!fastHardAmbiguity)legacy=eeGeneratePayloadLegacy_(post);
     var identity=legacy.identity||{};
     var categories=(legacy.categories||[]).map(function(group){return {category:group.category,items:(group.items||[]).filter(function(item){return group.category!=="LISTEN"||!item.creator||(identity.artistId&&item.appleArtistId&&String(item.appleArtistId)===String(identity.artistId))||eeNorm_(item.creator)===eeNorm_(artist.canonicalName);})};}).filter(function(group){return group.items.length;});
-    var confidence=String(identity.level||"LOW"),appleArtistId=identity.artistId||artist.appleArtistId||"",status=(appleArtistId||confidence==="HIGH")?"RESOLVED":confidence==="MODERATE"?"AMBIGUOUS":"ERROR",errorReason=status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"";
+    var confidence=String(identity.level||"LOW"),appleArtistId=identity.artistId||artist.appleArtistId||"",status=appleArtistId?"RESOLVED":confidence==="HIGH"?"DEFERRED":confidence==="MODERATE"?"AMBIGUOUS":"ERROR",errorReason=status==="DEFERRED"?"APPLE_ARTIST_ID_UNRESOLVED":status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"";
     if(status==="ERROR")categories=[];
     var enrichment=status==="RESOLVED"?{status:fastResolved?"PENDING":"FULL",completedQueries:[],totalQueries:0,pendingQueries:fastResolved?1:0,lastError:""}:null;
-    var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:appleArtistId,musicBrainzId:artist.musicBrainzId||"",identityConfidence:confidence,status:status,error:errorReason,categories:categories,representativePostId:String(post.id),staleAfter:fastResolved?new Date().toISOString():"",enrichment:enrichment};
+    var retryAfter=status==="DEFERRED"?new Date(Date.now()+(eeArtistClearCanonical_(artist)?EE_APPLE_CLEAR_IDENTITY_RETRY_MS:EE_APPLE_ARTIST_DEFERRED_RETRY_MS)).toISOString():"";
+    var record={artistKey:artist.slug,canonicalName:artist.canonicalName,appleArtistId:appleArtistId,musicBrainzId:artist.musicBrainzId||"",identityConfidence:confidence,status:status,error:errorReason,categories:categories,representativePostId:String(post.id),staleAfter:fastResolved?new Date().toISOString():"",retryAfter:retryAfter,enrichment:enrichment};
     eePutArtistCatalogue_(record);var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT",String(Number(properties.getProperty("EE_APPLE_CATALOGUE_GENERATION_COUNT")||0)+1));record.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories};if(enrichment)record.catalogue.enrichment=enrichment;eeDiscoveryDiagnosticEnrichment_(enrichment);eeDiscoveryDiagnosticFinish_(diagnostic,status,errorReason||(fastResolved?"PRIMARY_IDENTITY_CONFIDENT":status==="RESOLVED"?"CONFIDENT_MATCH":"PLAUSIBLE_MATCH"),null);return record;
   }catch(error){
     if(forceRefresh&&existing&&existing.status==="RESOLVED"&&existing.appleArtistId&&eeEnrichmentTransient_(error)){
@@ -4905,9 +4907,11 @@ function eeDiscoverArtistCatalogueReadOnly_(artist,post) {
       }),
       confidence=String(identity.level||"LOW"),
       appleArtistId=identity.artistId||artist.appleArtistId||"",
-      status=(appleArtistId||confidence==="HIGH")
+      status=appleArtistId
         ?"RESOLVED"
-        :confidence==="MODERATE"
+        :confidence==="HIGH"
+          ?"UNRESOLVED"
+          :confidence==="MODERATE"
           ?"AMBIGUOUS"
           :"ERROR",
       record={
@@ -4917,7 +4921,7 @@ function eeDiscoverArtistCatalogueReadOnly_(artist,post) {
         musicBrainzId:artist.musicBrainzId||"",
         identityConfidence:confidence,
         status:status,
-        error:status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"",
+        error:status==="UNRESOLVED"?"APPLE_ARTIST_ID_UNRESOLVED":status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"",
         categories:status==="ERROR"?[]:categories,
         representativePostId:String(post.id)
       };
@@ -5039,7 +5043,7 @@ function eeDiscoverArtistsMaintenanceWorker_() {
         var post=eeFetchPostById_(representativePostId),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
         var revalidateIdentity=rowStatus==="RESOLVED"&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION;
         var catalogue=eeDiscoverArtistCatalogue_(artist,post,false,revalidateIdentity);
-        if(!catalogue||["RESOLVED","AMBIGUOUS","ERROR"].indexOf(String(catalogue.status))===-1)throw new Error("ARTIST_DISCOVERY_NO_TERMINAL_STATUS");
+        if(!catalogue||["RESOLVED","AMBIGUOUS","DEFERRED","ERROR"].indexOf(String(catalogue.status))===-1)throw new Error("ARTIST_DISCOVERY_NO_TERMINAL_STATUS");
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         if(catalogue.status==="ERROR")console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"ERROR",errorReason:catalogue.error||"APPLE_ARTIST_DISCOVERY_EXHAUSTED",nextCursor:row+1}));
       }catch(error){

@@ -413,6 +413,45 @@ JSON.stringify({discovery:discovery,first:first.categories[0].items.length,secon
 ''')
         self.assertEqual('{"discovery":0,"first":1,"second":1,"version":3}', result)
 
+    def test_resolved_catalogue_requires_nonempty_apple_artist_id(self):
+        result = self.run_apps_script(r'''
+JSON.stringify({
+ blank:eeArtistNeedsIdentityResolution_({status:"RESOLVED",appleArtistId:"",identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION}),
+ verified:eeArtistNeedsIdentityResolution_({status:"RESOLVED",appleArtistId:"123",identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION})
+});
+''')
+        self.assertEqual('{"blank":true,"verified":false}', result)
+
+    def test_high_confidence_without_apple_id_is_deferred_without_immediate_retry(self):
+        result = self.run_apps_script(r'''
+var saved=null,properties={};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};eeGetArtistCatalogue_=function(){return null;};
+eePrimaryArtistIdentityPayload_=function(){return {identity:{level:"HIGH",artistId:""},categories:[{category:"LISTEN",items:[{stableId:"wrong",creator:"Example Artist"}]}],diagnostics:{}};};
+eeGeneratePayloadLegacy_=eePrimaryArtistIdentityPayload_;eePutArtistCatalogue_=function(record){saved=record;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var record=eeDiscoverArtistCatalogue_({slug:"example-artist",canonicalName:"Example Artist"},{id:"post"},false,false);
+JSON.stringify({status:record.status,savedStatus:saved.status,artistId:record.appleArtistId,error:record.error,categories:record.categories.length,retryAfter:!!record.retryAfter,immediateRetry:eeArtistNeedsIdentityResolution_(record)});
+''')
+        self.assertEqual('{"status":"DEFERRED","savedStatus":"DEFERRED","artistId":"","error":"APPLE_ARTIST_ID_UNRESOLVED","categories":1,"retryAfter":true,"immediateRetry":false}', result)
+
+    def test_poisoned_resolved_catalogue_recovers_then_reuses_direct_results(self):
+        result = self.run_apps_script(r'''
+var registry={schemaVersion:1,structuralLabels:[],articleOverrides:{},artists:[{canonicalName:"Example Artist",slug:"example-artist",aliases:[],articleIds:["post"],ambiguityClass:"distinctive"}]};
+var stored={artistKey:"example-artist",canonicalName:"Example Artist",appleArtistId:"",identityConfidence:"HIGH",status:"RESOLVED",identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION,catalogue:{categories:[{category:"LISTEN",items:[{stableId:"fallback",title:"Fallback",creator:"Other"}]}]}};
+var primaryCalls=0,writes=0,properties={};
+eeArtistRegistry_=function(){return registry;};eePutArticleIdentity_=function(){};eeGetArtistCatalogue_=function(){return stored;};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eePrimaryArtistIdentityPayload_=function(){primaryCalls+=1;return {identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"direct",title:"Direct Album",creator:"Example Artist",appleArtistId:"123",relevanceScore:100}]}],diagnostics:{}};};
+eeGeneratePayloadLegacy_=function(){throw new Error("DEEP_DISCOVERY_NOT_REQUIRED");};
+eePutArtistCatalogue_=function(record){writes+=1;record.identityResolverVersion=EE_APPLE_IDENTITY_RESOLVER_VERSION;stored=record;};
+eeAppleSettings_=function(){return {storefront:"FR"};};eeAffiliateUrl_=function(category,url){return url;};
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
+var post={id:"post",title:"Example Artist returns",labels:["Example Artist"],content:"",url:"/post"};
+var first=eeGeneratePayload_(post),second=eeGeneratePayload_(post);
+JSON.stringify({primaryCalls:primaryCalls,writes:writes,storedStatus:stored.status,storedId:stored.appleArtistId,firstMode:first.diagnostics.recommendationMode,firstId:first.identity.artistId,firstItem:first.categories[0].items[0].stableId,secondMode:second.diagnostics.recommendationMode,secondItem:second.categories[0].items[0].stableId});
+''')
+        self.assertEqual('{"primaryCalls":1,"writes":1,"storedStatus":"RESOLVED","storedId":"123","firstMode":"ARTIST_RELATIONSHIP","firstId":"123","firstItem":"direct","secondMode":"ARTIST_RELATIONSHIP","secondItem":"direct"}', result)
+
     def test_minimal_pending_catalogue_is_ready_without_waiting_for_related_artist(self):
         result = self.run_apps_script(r'''
 var puts=[],discoveries=[];

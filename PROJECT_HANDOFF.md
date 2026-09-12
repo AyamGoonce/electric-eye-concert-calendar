@@ -1826,3 +1826,20 @@ Deployment, only when separately approved, requires publishing the corrected
 allowing expiry of the existing artist-registry cache, and then running the
 targeted refresh for post `1518411335735396864`. The Blogger theme does not need
 deployment. No deployment or production worker was run here.
+
+
+## 2026-09-12 — Recover unresolved Apple artist catalogues
+
+- Base commit: `f8ed65b182cce7687865564f6ee853de997d0a0e`.
+- The separate Paris structural-label contamination bug was already fixed in that commit.
+- Live Gyasi post `1518411335735396864` then correctly resolved only `["Gyasi"]`, but still returned `artistId: null` and `GENRE_FALLBACK`.
+- Second root cause: the Apple Artists catalogue could persist `RESOLVED` with a blank `appleArtistId`.
+- New invariant: `RESOLVED` requires a non-empty Apple artist ID.
+- Existing poisoned `RESOLVED`/blank-ID rows self-heal through normal identity discovery.
+- HIGH-confidence/no-ID results are persisted as `DEFERRED` with the existing bounded retry timing, preventing immediate repeated discovery.
+- Focused regressions: 3/3 passed.
+- Full Apple suite: 87 tests, same 6 pre-existing failures, no new failures.
+- Protected calendar/non-Apple suite: 530/530 passed.
+- Deterministic generated `Code.gs` SHA-256: `ad63143cc87efd8957c6f0c1a23c0baae43147cea4c52b36102758e22e2d4bae`.
+- Blogger theme SHA-256 remains unchanged: `5223bc5cc69ca7f0cbe2dad56ece024e0aac60e17cabdd37df93cb5202f7734a`.
+- After deployment, refresh post `1518411335735396864` and require a real Gyasi Apple artist ID plus direct artist recommendations before declaring the production issue fixed.
