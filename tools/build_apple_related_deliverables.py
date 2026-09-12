@@ -2836,10 +2836,54 @@ function eePrimaryArtistIdentityPayload_(artist,post) {
           :eeResolveIdentity_(
             analysis,
             albumResults
-          ),
-      items=Object.keys(map).map(function(key){
-        return map[key];
+          );
+
+  /*
+   * A verified Apple artist ID is authoritative for catalogue identity.
+   * Fetch releases by that ID so qualified or duplicate display names do
+   * not force catalogue discovery back through an ambiguous text search.
+   */
+  if(identity.level==="HIGH"&&identity.artistId){
+    analysis.existingAppleArtistIds=[
+      String(identity.artistId)
+    ];
+
+    var directAlbumRows=[];
+
+    try{
+      var directAlbumResponse=eeAppleLookup_({
+        ids:[identity.artistId],
+        entity:"album",
+        storefront:settings.storefront
       });
+
+      directAlbumRows=(directAlbumResponse.results||[])
+        .filter(function(raw){
+          return raw.collectionId &&
+            String(
+              raw.artistId||
+              raw.collectionArtistId||
+              ""
+            )===String(identity.artistId);
+        });
+    }catch(error){
+      if(error&&error.retryable)throw error;
+      directAlbumRows=[];
+    }
+
+    directAlbumRows.forEach(function(raw){
+      eeAddCandidateToMap_(
+        map,
+        raw,
+        albumQuery,
+        analysis
+      );
+    });
+  }
+
+  var items=Object.keys(map).map(function(key){
+    return map[key];
+  });
 
   if(identity.level==="HIGH"&&identity.artistId){
     items=items.filter(function(item){
@@ -3402,13 +3446,33 @@ def build_code() -> str:
     )
     code = replace_once(
         code,
-        '  var exactPrimaryCreator=eeNorm_(creator)===primary;\n  var relationshipMatch=query.relationshipWeight&&(',
+        '  var exactPrimaryCreator=eeNorm_(creator)===primary;\n'
+        '  var relationshipMatch=query.relationshipWeight&&(',
         '  var exactPrimaryCreator=eeNorm_(creator)===primary;\n'
         '  if((query.category==="WATCH"||query.category==="READ")&&eeNorm_(query.term||"")!==primary)return null;\n'
         '  var verifiedArtistId=String((analysis.existingAppleArtistIds||[])[0]||""),candidateArtistId=String(raw.artistId||raw.collectionArtistId||"");\n'
+        '  var exactPrimaryArtistId=!!(verifiedArtistId&&candidateArtistId&&candidateArtistId===verifiedArtistId);\n'
         '  if(verifiedArtistId&&candidateArtistId&&exactPrimaryCreator&&(query.category==="LISTEN"||query.category==="WATCH")&&candidateArtistId!==verifiedArtistId)return null;\n'
         '  var relationshipMatch=query.relationshipWeight&&(',
         "primary-only WATCH and READ candidates",
+    )
+
+    code = replace_once(
+        code,
+        '    query.category==="LISTEN"\n'
+        '      ? eeNorm_(creator)===eeNorm_(query.term)\n'
+        '      : query.category==="READ"',
+        '    query.category==="LISTEN"\n'
+        '      ? (exactPrimaryArtistId||eeNorm_(creator)===eeNorm_(query.term))\n'
+        '      : query.category==="READ"',
+        "verified Apple ID LISTEN relationship",
+    )
+
+    code = replace_once(
+        code,
+        '  if(query.category==="LISTEN"&&exactPrimaryCreator){',
+        '  if(query.category==="LISTEN"&&(exactPrimaryCreator||exactPrimaryArtistId)){',
+        "verified Apple ID LISTEN scoring",
     )
     code = code.replace(
         "festival|tour|video|playlist|friday'?s playlist",

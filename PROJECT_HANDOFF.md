@@ -1327,3 +1327,22 @@ Calendar workflow and scraper code untouched.
 
 Next queued issue:
 - Charli xcx WATCH recommendations appearing in unrelated articles.
+
+## 2026-09-12 — Verified Apple ID controls catalogue retrieval
+
+Fixed catalogue discovery for artists whose verified Apple identity uses a display name that differs from the site's canonical name.
+
+Behavior:
+- Once a HIGH-confidence Apple artist ID is known, that ID establishes LISTEN identity.
+- Creator display-name equality is no longer required when the Apple artist ID matches.
+- Fast primary discovery retrieves albums directly by verified Apple artist ID.
+- Qualified and duplicate-name identities such as "WARGASM (UK)" can therefore retain their correct catalogue even when the site canonical name is "Wargasm".
+- No Wargasm-specific ID or performer hardcode was added.
+
+Build SHA256:
+d96aebc3bbc52fba279eb8529b0b9187b4e065f54cec4dfaf841c90683ea66de
+
+Calendar workflow and scraper code untouched.
+
+Next queued issue:
+- Charli xcx WATCH recommendations appearing in unrelated articles.

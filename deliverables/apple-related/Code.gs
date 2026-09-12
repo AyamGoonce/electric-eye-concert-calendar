@@ -1524,10 +1524,11 @@ function eeCandidate_(raw, query, analysis) {
   var exactPrimaryCreator=eeNorm_(creator)===primary;
   if((query.category==="WATCH"||query.category==="READ")&&eeNorm_(query.term||"")!==primary)return null;
   var verifiedArtistId=String((analysis.existingAppleArtistIds||[])[0]||""),candidateArtistId=String(raw.artistId||raw.collectionArtistId||"");
+  var exactPrimaryArtistId=!!(verifiedArtistId&&candidateArtistId&&candidateArtistId===verifiedArtistId);
   if(verifiedArtistId&&candidateArtistId&&exactPrimaryCreator&&(query.category==="LISTEN"||query.category==="WATCH")&&candidateArtistId!==verifiedArtistId)return null;
   var relationshipMatch=query.relationshipWeight&&(
     query.category==="LISTEN"
-      ? eeNorm_(creator)===eeNorm_(query.term)
+      ? (exactPrimaryArtistId||eeNorm_(creator)===eeNorm_(query.term))
       : query.category==="READ"
         ? (eeNorm_(creator)===eeNorm_(query.term)||(query.intent==="PERSON"&&eeContains_(title,query.term)))
         : query.category==="WATCH"&&query.entity==="musicVideo"
@@ -1543,7 +1544,7 @@ function eeCandidate_(raw, query, analysis) {
     if(earlyPrimaryPattern&&new RegExp("\\bv\\s+"+earlyPrimaryPattern+"\\b").test(earlyReadTitle))return null;
   }
 
-  if(query.category==="LISTEN"&&exactPrimaryCreator){
+  if(query.category==="LISTEN"&&(exactPrimaryCreator||exactPrimaryArtistId)){
     score=/greatest|compilation|karaoke|tribute/i.test(title)?93:96;
     tier="DIRECT";
     reason="Official release by the primary artist in the configured storefront.";
@@ -4117,10 +4118,54 @@ function eePrimaryArtistIdentityPayload_(artist,post) {
           :eeResolveIdentity_(
             analysis,
             albumResults
-          ),
-      items=Object.keys(map).map(function(key){
-        return map[key];
+          );
+
+  /*
+   * A verified Apple artist ID is authoritative for catalogue identity.
+   * Fetch releases by that ID so qualified or duplicate display names do
+   * not force catalogue discovery back through an ambiguous text search.
+   */
+  if(identity.level==="HIGH"&&identity.artistId){
+    analysis.existingAppleArtistIds=[
+      String(identity.artistId)
+    ];
+
+    var directAlbumRows=[];
+
+    try{
+      var directAlbumResponse=eeAppleLookup_({
+        ids:[identity.artistId],
+        entity:"album",
+        storefront:settings.storefront
       });
+
+      directAlbumRows=(directAlbumResponse.results||[])
+        .filter(function(raw){
+          return raw.collectionId &&
+            String(
+              raw.artistId||
+              raw.collectionArtistId||
+              ""
+            )===String(identity.artistId);
+        });
+    }catch(error){
+      if(error&&error.retryable)throw error;
+      directAlbumRows=[];
+    }
+
+    directAlbumRows.forEach(function(raw){
+      eeAddCandidateToMap_(
+        map,
+        raw,
+        albumQuery,
+        analysis
+      );
+    });
+  }
+
+  var items=Object.keys(map).map(function(key){
+    return map[key];
+  });
 
   if(identity.level==="HIGH"&&identity.artistId){
     items=items.filter(function(item){
