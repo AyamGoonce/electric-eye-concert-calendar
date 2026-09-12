@@ -3374,29 +3374,100 @@ function eeWriteAlterBridgeRepair(){return eeRepairOneReadyPayload_("26004986051
 function eePreviewKreatorRepair(){return eeRepairOneReadyPayload_("475473061760068991",true);}
 function eeWriteKreatorRepair(){return eeRepairOneReadyPayload_("475473061760068991",false);}
 function eeReadyAuditReplacementPreviewLegacy_(finding,existing,registry) {var p={regenerationAttempted:true,regenerationSucceeded:false,correctedPrimaryArtists:[],LISTEN:{creators:[],titles:[]},WATCH:{creators:[],titles:[]},READ:{creators:[],titles:[]},validationPassed:false,validationFailures:[],wouldWrite:false};try{EE_READY_AUDIT_PREVIEW=true;var candidate=eeMergeValidatedRepairItems_(eeGeneratePayload_(eeFetchPostById_(finding.postId)),existing||{},registry);p.regenerationSucceeded=true;p.correctedPrimaryArtists=(candidate.subject||{}).primaryArtists||[];(candidate.categories||[]).forEach(function(g){var k=String(g.category||"").toUpperCase();if(!p[k])return;(g.items||[]).forEach(function(i){p[k].creators.push(String(i.creator||i.publisher||i.narrator||""));p[k].titles.push(String(i.title||""));});});p.validationFailures=eeReadyQualityIssues_(candidate,registry);p.validationPassed=!p.validationFailures.length;p.wouldWrite=p.validationPassed;}catch(e){p.validationFailures=[String(e&&e.code||e&&e.message||e)];}finally{EE_READY_AUDIT_PREVIEW=false;}return p;}
-function eeRepairContaminatedReadyPayloadsBatch_(startIndex,maxCandidates) {startIndex=Math.max(0,Number(startIndex||0));maxCandidates=Math.max(1,Number(maxCandidates||10));EE_APPLE_AUDIT_SKIP_PREVIEW=true;var audit;try{audit=eeAuditContaminatedReadyPayloads();}finally{EE_APPLE_AUDIT_SKIP_PREVIEW=false;}var candidates=audit.findings.filter(function(value){return value.classification==="CONTAMINATED"&&value.automaticRepairSafe;}),slice=candidates.slice(startIndex,startIndex+maxCandidates),rows=[],wouldWrite=0,failures=0,registry=eeArtistRegistry_();slice.forEach(function(finding){var preview=eeReadyAuditReplacementPreview_(finding,finding,registry);rows.push({postId:finding.postId,title:finding.title,correctedPrimaryArtists:preview.correctedPrimaryArtists,LISTEN:preview.LISTEN,WATCH:preview.WATCH,READ:preview.READ,validationPassed:preview.validationPassed,wouldWrite:preview.wouldWrite,regenerationFailure:preview.validationFailures});if(preview.wouldWrite)wouldWrite+=1;if(!preview.regenerationSucceeded)failures+=1;});var result={startIndex:startIndex,processed:slice.length,nextIndex:startIndex+slice.length,hasMore:startIndex+slice.length<candidates.length,batchSize:maxCandidates,wouldWrite:wouldWrite,regenerationFailures:failures,rows:rows};console.log(JSON.stringify(result));return result;}
-function eeRepairReadyPreviewBatch01(){return eeRepairContaminatedReadyPayloadsBatch_(0,10);}
-function eeRepairReadyPreviewBatch02(){return eeRepairContaminatedReadyPayloadsBatch_(10,10);}
-function eeRepairReadyPreviewBatch03(){return eeRepairContaminatedReadyPayloadsBatch_(20,10);}
-function eeRepairReadyPreviewBatch04(){return eeRepairContaminatedReadyPayloadsBatch_(30,10);}
-function eeRepairReadyPreviewBatch05(){return eeRepairContaminatedReadyPayloadsBatch_(40,10);}
-function eeRepairReadyPreviewBatch06(){return eeRepairContaminatedReadyPayloadsBatch_(50,10);}
-function eeRepairReadyPreviewBatch07(){return eeRepairContaminatedReadyPayloadsBatch_(60,10);}
-function eeRepairReadyPreviewBatch08(){return eeRepairContaminatedReadyPayloadsBatch_(70,10);}
-function eeRepairReadyPreviewBatch09(){return eeRepairContaminatedReadyPayloadsBatch_(80,10);}
-function eeRepairReadyPreviewBatch10(){return eeRepairContaminatedReadyPayloadsBatch_(90,10);}
-function eeRepairReadyPreviewBatch11(){return eeRepairContaminatedReadyPayloadsBatch_(100,10);}
-function eeRepairReadyPreviewBatch12(){return eeRepairContaminatedReadyPayloadsBatch_(110,10);}
-function eeRepairReadyPreviewBatch13(){return eeRepairContaminatedReadyPayloadsBatch_(120,10);}
-function eeRepairReadyPreviewBatch14(){return eeRepairContaminatedReadyPayloadsBatch_(130,10);}
-function eeRepairReadyPreviewBatch15(){return eeRepairContaminatedReadyPayloadsBatch_(140,10);}
+function eeRepairContaminatedReadyPayloadsBatch_(startIndex,maxCandidates) {
+  startIndex=Math.max(0,Number(startIndex||0));
+  maxCandidates=Math.max(1,Math.min(1,Number(maxCandidates||1)));
+
+  EE_APPLE_AUDIT_SKIP_PREVIEW=true;
+  var audit;
+  try{
+    audit=eeAuditContaminatedReadyPayloads();
+  }finally{
+    EE_APPLE_AUDIT_SKIP_PREVIEW=false;
+  }
+
+  var candidates=audit.findings.filter(function(value){
+        return value.classification==="CONTAMINATED" &&
+          value.automaticRepairSafe;
+      }),
+      slice=candidates.slice(startIndex,startIndex+maxCandidates),
+      rows=[],
+      wouldWrite=0,
+      failures=0,
+      registry=eeArtistRegistry_();
+
+  slice.forEach(function(finding){
+    var preview=eeReadyAuditReplacementPreview_(
+          finding,
+          finding,
+          registry
+        ),
+        summary={
+          postId:finding.postId,
+          title:finding.title,
+          correctedPrimaryArtists:preview.correctedPrimaryArtists,
+          categories:{
+            LISTEN:{
+              count:(preview.LISTEN.titles||[]).length,
+              creators:eeUnique_(preview.LISTEN.creators||[]).slice(0,12)
+            },
+            WATCH:{
+              count:(preview.WATCH.titles||[]).length,
+              creators:eeUnique_(preview.WATCH.creators||[]).slice(0,12)
+            },
+            READ:{
+              count:(preview.READ.titles||[]).length,
+              creators:eeUnique_(preview.READ.creators||[]).slice(0,12)
+            }
+          },
+          validationPassed:preview.validationPassed,
+          wouldWrite:preview.wouldWrite,
+          regenerationFailure:preview.validationFailures
+        };
+
+    rows.push(summary);
+
+    if(preview.wouldWrite)wouldWrite+=1;
+    if(!preview.regenerationSucceeded)failures+=1;
+  });
+
+  var result={
+    startIndex:startIndex,
+    processed:slice.length,
+    nextIndex:startIndex+slice.length,
+    hasMore:startIndex+slice.length<candidates.length,
+    totalCandidates:candidates.length,
+    batchSize:maxCandidates,
+    wouldWrite:wouldWrite,
+    regenerationFailures:failures,
+    rows:rows
+  };
+
+  console.log(JSON.stringify(result));
+  return result;
+}
+function eeRepairReadyPreviewBatch01(){return eeRepairContaminatedReadyPayloadsBatch_(0,1);}
+function eeRepairReadyPreviewBatch02(){return eeRepairContaminatedReadyPayloadsBatch_(1,1);}
+function eeRepairReadyPreviewBatch03(){return eeRepairContaminatedReadyPayloadsBatch_(2,1);}
+function eeRepairReadyPreviewBatch04(){return eeRepairContaminatedReadyPayloadsBatch_(3,1);}
+function eeRepairReadyPreviewBatch05(){return eeRepairContaminatedReadyPayloadsBatch_(4,1);}
+function eeRepairReadyPreviewBatch06(){return eeRepairContaminatedReadyPayloadsBatch_(5,1);}
+function eeRepairReadyPreviewBatch07(){return eeRepairContaminatedReadyPayloadsBatch_(6,1);}
+function eeRepairReadyPreviewBatch08(){return eeRepairContaminatedReadyPayloadsBatch_(7,1);}
+function eeRepairReadyPreviewBatch09(){return eeRepairContaminatedReadyPayloadsBatch_(8,1);}
+function eeRepairReadyPreviewBatch10(){return eeRepairContaminatedReadyPayloadsBatch_(9,1);}
+function eeRepairReadyPreviewBatch11(){return eeRepairContaminatedReadyPayloadsBatch_(10,1);}
+function eeRepairReadyPreviewBatch12(){return eeRepairContaminatedReadyPayloadsBatch_(11,1);}
+function eeRepairReadyPreviewBatch13(){return eeRepairContaminatedReadyPayloadsBatch_(12,1);}
+function eeRepairReadyPreviewBatch14(){return eeRepairContaminatedReadyPayloadsBatch_(13,1);}
+function eeRepairReadyPreviewBatch15(){return eeRepairContaminatedReadyPayloadsBatch_(14,1);}
 
 function eeAuditContaminatedReadyPayloads() {
   var registry=eeArtistRegistry_(),payloadValues=eeReadOnlySheet_("Apple Payloads").getDataRange().getValues(),artistSheet=SpreadsheetApp.openById(eeAppleSettings_().spreadsheetId).getSheetByName("Apple Artists"),artistValues=artistSheet?artistSheet.getDataRange().getValues():[],decoded=[],shared={},artistStates={};
   for(var artistRow=1;artistRow<artistValues.length;artistRow+=1){var catalogue={};try{catalogue=artistValues[artistRow][8]?eeDecodePayloadCell_(String(artistValues[artistRow][8])):{};}catch(error){}artistStates[String(artistValues[artistRow][0])]={enrichmentStatus:String(((catalogue.enrichment||{}).status)||"")};}
   for(var row=1;row<payloadValues.length;row+=1){if(String(payloadValues[row][5])!=="READY")continue;try{var payload=eeDecodePayloadCell_(String(payloadValues[row][4]||""));decoded.push(payload);var id=String((payload.identity||{}).artistId||""),identitySignature=eeUnique_(((payload.subject||{}).primaryArtists||[]).map(eeNorm_)).sort().join("|");if(id&&identitySignature){shared[id]=shared[id]||[];if(shared[id].indexOf(identitySignature)===-1)shared[id].push(identitySignature);}}catch(error){}}
   var duplicateCounts={};decoded.forEach(function(payload){var key=String(payload.postId||"");if(!key)return;duplicateCounts[key]=(duplicateCounts[key]||0)+1;});var duplicatePosts={};Object.keys(duplicateCounts).forEach(function(key){if(duplicateCounts[key]>1)duplicatePosts[key]=true;});
-  var findings=[],existingById={},counts={totalReadyScanned:decoded.length,CLEAN:0,CONTAMINATED:0,ENRICHMENT_CANDIDATE:0,AMBIGUOUS:0,automaticRepairSafe:0,duplicateReadyPosts:Object.keys(duplicatePosts).length,structuralContamination:0,appleIdContradictions:0,creatorMismatches:0,lexicalCollisions:0};decoded.forEach(function(payload){var key=String(payload.postId||""),finding=eeReadyAuditFinding_(payload,registry,shared,artistStates,{duplicateCount:duplicateCounts[key]||1});existingById[key]=payload;counts[finding.classification]+=1;if(finding.automaticRepairSafe){counts.automaticRepairSafe+=1;if(!EE_APPLE_AUDIT_SKIP_PREVIEW)finding.replacementPreview=eeReadyAuditReplacementPreview_(finding,payload,registry);}counts.creatorMismatches+=finding.conflictingCreators.length;finding.reasons.forEach(function(reason){if(reason.indexOf("STRUCTURAL_")===0)counts.structuralContamination+=1;if(reason.indexOf("APPLE_")===0||reason.indexOf("SHEEPDOGS_")===0)counts.appleIdContradictions+=1;if(reason.indexOf("LEXICAL_")===0)counts.lexicalCollisions+=1;});if(finding.classification!=="CLEAN")findings.push(finding);});var result={status:"OK",dryRun:true,counts:counts,repairSafeRows:findings.filter(function(value){return value.automaticRepairSafe;}),excludedFromAutoRepair:findings.filter(function(value){return value.classification==="CONTAMINATED"&&!value.automaticRepairSafe;}).map(function(value){return {postId:value.postId,title:value.title,canonicalUrl:value.canonicalUrl,safetyBlocks:value.safetyBlocks,reasons:value.reasons,categoryReasons:value.categoryReasons};}),findings:findings};console.log(JSON.stringify(result));return result;
+  var findings=[],existingById={},counts={totalReadyScanned:decoded.length,CLEAN:0,CONTAMINATED:0,ENRICHMENT_CANDIDATE:0,AMBIGUOUS:0,automaticRepairSafe:0,duplicateReadyPosts:Object.keys(duplicatePosts).length,structuralContamination:0,appleIdContradictions:0,creatorMismatches:0,lexicalCollisions:0};decoded.forEach(function(payload){var key=String(payload.postId||""),finding=eeReadyAuditFinding_(payload,registry,shared,artistStates,{duplicateCount:duplicateCounts[key]||1});existingById[key]=payload;counts[finding.classification]+=1;if(finding.automaticRepairSafe){counts.automaticRepairSafe+=1;if(!EE_APPLE_AUDIT_SKIP_PREVIEW)finding.replacementPreview=eeReadyAuditReplacementPreview_(finding,payload,registry);}counts.creatorMismatches+=finding.conflictingCreators.length;finding.reasons.forEach(function(reason){if(reason.indexOf("STRUCTURAL_")===0)counts.structuralContamination+=1;if(reason.indexOf("APPLE_")===0||reason.indexOf("SHEEPDOGS_")===0)counts.appleIdContradictions+=1;if(reason.indexOf("LEXICAL_")===0)counts.lexicalCollisions+=1;});if(finding.classification!=="CLEAN")findings.push(finding);});var result={status:"OK",dryRun:true,counts:counts,repairSafeRows:findings.filter(function(value){return value.automaticRepairSafe;}),excludedFromAutoRepair:findings.filter(function(value){return value.classification==="CONTAMINATED"&&!value.automaticRepairSafe;}).map(function(value){return {postId:value.postId,title:value.title,canonicalUrl:value.canonicalUrl,safetyBlocks:value.safetyBlocks,reasons:value.reasons,categoryReasons:value.categoryReasons};}),findings:findings};if(!EE_APPLE_AUDIT_SKIP_PREVIEW)console.log(JSON.stringify(result));return result;
 }
 
 function eeReadyQualityIssues_(payload,registry) {var finding=eeReadyAuditFinding_(payload,registry||eeArtistRegistry_(),{},{});return finding.classification==="CONTAMINATED"?finding.reasons:[];}

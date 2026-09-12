@@ -1571,3 +1571,28 @@ Next:
 6. do not run bulk repair writes until preview output is reviewed
 
 Calendar workflow/code untouched.
+
+## 2026-09-12 — Bound READY repair preview runtime
+
+Version 19 dry-run eeRepairReadyPreviewBatch01 exceeded Apps Script maximum execution time because it:
+- audited all 1,338 READY payloads
+- logged the full audit object
+- then attempted live read-only regeneration of 10 repair candidates
+
+Fix:
+- internal audit logging suppressed while called from repair-preview batching
+- preview batches reduced to exactly one candidate per invocation
+- preview result compacted to category counts + unique creators rather than full title arrays
+- Batch01 now starts at candidate 0 and processes 1
+- Batch02 starts at candidate 1, etc.
+- actual repair/write path unchanged
+
+Deterministic generated Code.gs SHA-256:
+2d74a481e91d3be76410b44d04a7a43700a7daac3884af09d4baf32fd16df406
+
+Next:
+- deploy Code.gs
+- run eeRepairReadyPreviewBatch01
+- confirm Bones Owens remains the sole corrected primary artist
+- confirm regeneration completes within execution limit
+- no repair writes yet
