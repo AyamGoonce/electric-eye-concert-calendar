@@ -1025,8 +1025,8 @@ function eePutArtistCatalogue_(record) {
   eeUpsertRow_(sheet,0,record.artistKey,[record.artistKey,record.canonicalName,1,1,record.appleArtistId||"",record.musicBrainzId||"",record.identityConfidence||"",record.status||"UNRESOLVED",eeEncodePayloadCell_(catalogue),generated,stale,record.representativePostId||"",record.error||"",Math.max(0,Number(record.transientRetryCount||0)),record.lastTransientError||"",record.retryAfter||"",Math.max(0,Number(record.identityResolverVersion||EE_APPLE_IDENTITY_RESOLVER_VERSION))]);
 }
 
-function eeGenreFallbackSpecs_(post) {
-  var map={
+function eeGenreFallbackCatalog_() {
+  return {
     "rock":{
       term:"rock music",
       accepted:["rock"]
@@ -1160,8 +1160,11 @@ function eeGenreFallbackSpecs_(post) {
       accepted:["ska","reggae"]
     }
   };
+}
 
-  var found=[],
+function eeGenreFallbackSpecs_(post) {
+  var map=eeGenreFallbackCatalog_(),
+      found=[],
       seen={};
 
   (post.labels||[]).forEach(function(label){
@@ -1175,20 +1178,102 @@ function eeGenreFallbackSpecs_(post) {
       label:String(label||""),
       normalized:normalized,
       term:map[normalized].term,
-      accepted:map[normalized].accepted
+      accepted:map[normalized].accepted,
+      source:"ARTICLE_GENRE_LABEL"
     });
   });
 
   return found.slice(0,2);
 }
 
-function eeGenreFallbackListenGroup_(post) {
-  var specs=eeGenreFallbackSpecs_(post);
+function eeContentGenreFallbackSpecs_(post) {
+  var map=eeGenreFallbackCatalog_(),
+      title=eeNorm_(String(post.title||"")),
+      body=eeNorm_(
+        String(post.content||"")
+          .replace(/<[^>]+>/g," ")
+          .replace(/&nbsp;|&#160;/gi," ")
+      ),
+      ranked=[];
+
+  function occurrences(text,phrase) {
+    var needle=eeNorm_(phrase);
+    if(!needle)return 0;
+
+    return (
+      (" "+String(text||"")+" ")
+        .split(" "+needle+" ")
+        .length-1
+    );
+  }
+
+  Object.keys(map).forEach(function(name){
+    var normalized=eeNorm_(name),
+        titleHits=occurrences(title,normalized),
+        bodyHits=occurrences(body,normalized);
+
+    if(!titleHits&&!bodyHits)return;
+
+    /*
+     * Title evidence is strongest.
+     * Repeated body evidence can still establish a useful genre context.
+     * Specific multi-word genres outrank their broad parent terms.
+     */
+    var specificity=
+          normalized.split(" ").filter(Boolean).length-1,
+        score=
+          titleHits*10+
+          Math.min(bodyHits,5)*2+
+          specificity;
+
+    ranked.push({
+      label:name,
+      normalized:normalized,
+      term:map[name].term,
+      accepted:map[name].accepted,
+      source:"ARTICLE_CONTENT_GENRE",
+      score:score
+    });
+  });
+
+  ranked.sort(function(a,b){
+    return b.score-a.score ||
+      b.normalized.length-a.normalized.length ||
+      a.normalized.localeCompare(b.normalized);
+  });
+
+  var selected=[];
+
+  ranked.forEach(function(candidate){
+    if(selected.length>=2)return;
+
+    /*
+     * Avoid returning both a specific genre and its broad parent,
+     * e.g. "heavy metal" + "metal" or "hard rock" + "rock".
+     */
+    var redundant=selected.some(function(chosen){
+      return (
+        (" "+chosen.normalized+" ")
+          .indexOf(" "+candidate.normalized+" ")!==-1 ||
+        (" "+candidate.normalized+" ")
+          .indexOf(" "+chosen.normalized+" ")!==-1
+      );
+    });
+
+    if(!redundant)selected.push(candidate);
+  });
+
+  return selected;
+}
+
+function eeGenreFallbackFromSpecs_(post,specs,mode) {
+  specs=specs||[];
 
   if(!specs.length){
     return {
       items:[],
-      labels:[]
+      labels:[],
+      mode:""
     };
   }
 
@@ -1196,12 +1281,18 @@ function eeGenreFallbackListenGroup_(post) {
       byId={};
 
   specs.forEach(function(spec){
-    var response=eeAppleSearch_({
-      term:spec.term,
-      storefront:settings.storefront,
-      media:"music",
-      entity:"album"
-    });
+    var response=null;
+
+    try{
+      response=eeAppleSearch_({
+        term:spec.term,
+        storefront:settings.storefront,
+        media:"music",
+        entity:"album"
+      });
+    }catch(error){
+      return;
+    }
 
     (response.results||[]).forEach(function(raw){
       var collectionId=String(raw.collectionId||""),
@@ -1222,15 +1313,20 @@ function eeGenreFallbackListenGroup_(post) {
       });
 
       if(!genreAccepted)return;
-
       if(byId[collectionId])return;
 
-      var tracked=eeAffiliateUrl_("LISTEN",canonicalUrl);
+      var tracked=eeAffiliateUrl_(
+        "LISTEN",
+        canonicalUrl
+      );
 
       if(!tracked)return;
 
       byId[collectionId]={
-        stableId:"genre-album:"+collectionId,
+        stableId:
+          String(mode||"GENRE_FALLBACK").toLowerCase()+
+          "-album:"+
+          collectionId,
         title:title,
         canonicalAppleUrl:canonicalUrl,
         url:tracked,
@@ -1242,25 +1338,55 @@ function eeGenreFallbackListenGroup_(post) {
         ),
         creator:creator,
         mediaType:"Album",
-        description:String(raw.primaryGenreName||""),
+        description:String(
+          raw.primaryGenreName||""
+        ),
         storefront:String(
           settings.storefront||"FR"
         ).toUpperCase(),
         category:"LISTEN",
-        relevanceTier:"GENRE_FALLBACK",
-        relevanceScore:55,
+        relevanceTier:String(
+          mode||"GENRE_FALLBACK"
+        ),
+        relevanceScore:
+          mode==="CONTENT_GENRE_FALLBACK"
+            ?48
+            :55,
         relevanceReason:
-          'Article genre label "'+
-          spec.label+
-          '" supplied the fallback recommendation context.',
+          mode==="CONTENT_GENRE_FALLBACK"
+            ?(
+              'Article text supplied the genre context "'+
+              spec.label+
+              '".'
+            )
+            :(
+              'Article genre label "'+
+              spec.label+
+              '" supplied the fallback recommendation context.'
+            ),
         relationshipContext:
-          'Genre fallback from article label "'+
-          spec.label+
-          '".',
+          mode==="CONTENT_GENRE_FALLBACK"
+            ?(
+              'Content-derived genre fallback: "'+
+              spec.label+
+              '".'
+            )
+            :(
+              'Genre fallback from article label "'+
+              spec.label+
+              '".'
+            ),
         price:null,
-        discoverySource:"ARTICLE_GENRE_LABEL",
-        appleArtistId:String(raw.artistId||"")||null,
-        recommendationMode:"GENRE_FALLBACK"
+        discoverySource:spec.source||
+          (
+            mode==="CONTENT_GENRE_FALLBACK"
+              ?"ARTICLE_CONTENT_GENRE"
+              :"ARTICLE_GENRE_LABEL"
+          ),
+        appleArtistId:
+          String(raw.artistId||"")||null,
+        recommendationMode:
+          mode||"GENRE_FALLBACK"
       };
     });
   });
@@ -1284,7 +1410,92 @@ function eeGenreFallbackListenGroup_(post) {
     items:items.slice(0,12),
     labels:specs.map(function(spec){
       return spec.label;
-    })
+    }),
+    mode:items.length
+      ?String(mode||"GENRE_FALLBACK")
+      :""
+  };
+}
+
+function eeGenreFallbackListenGroup_(post) {
+  return eeGenreFallbackFromSpecs_(
+    post,
+    eeGenreFallbackSpecs_(post),
+    "GENRE_FALLBACK"
+  );
+}
+
+function eeContentGenreFallbackListenGroup_(post) {
+  return eeGenreFallbackFromSpecs_(
+    post,
+    eeContentGenreFallbackSpecs_(post),
+    "CONTENT_GENRE_FALLBACK"
+  );
+}
+
+function eeSiteFallbackListenGroup_(post) {
+  /*
+   * Last-resort invariant:
+   * an Electric Eye article must never render an empty Apple section.
+   *
+   * First try to supply actual Rock catalogue items. If Apple search is
+   * temporarily unavailable, provide a deterministic Apple Music Rock link.
+   */
+  var searched=eeGenreFallbackFromSpecs_(
+    post,
+    [{
+      label:"Rock",
+      normalized:"rock",
+      term:"rock music",
+      accepted:["rock"],
+      source:"ELECTRIC_EYE_SITE_FALLBACK"
+    }],
+    "SITE_FALLBACK"
+  );
+
+  if(searched.items.length)return searched;
+
+  var settings=eeAppleSettings_(),
+      storefront=String(
+        settings.storefront||"FR"
+      ).toLowerCase(),
+      canonicalUrl=
+        "https://music.apple.com/"+
+        storefront+
+        "/genre/rock/21",
+      tracked=eeAffiliateUrl_(
+        "LISTEN",
+        canonicalUrl
+      )||canonicalUrl;
+
+  return {
+    items:[{
+      stableId:"site-fallback:apple-music-rock",
+      title:"Explore Rock on Apple Music",
+      canonicalAppleUrl:canonicalUrl,
+      url:tracked,
+      artworkUrl:"",
+      creator:"",
+      mediaType:"Genre",
+      description:"Rock",
+      storefront:String(
+        settings.storefront||"FR"
+      ).toUpperCase(),
+      category:"LISTEN",
+      relevanceTier:"SITE_FALLBACK",
+      relevanceScore:20,
+      relevanceReason:
+        "Electric Eye site-level music fallback.",
+      relationshipContext:
+        "No reliable artist or article-specific genre context was available.",
+      price:null,
+      discoverySource:
+        "ELECTRIC_EYE_SITE_FALLBACK",
+      appleArtistId:null,
+      recommendationMode:"SITE_FALLBACK"
+    }],
+    labels:["Rock"],
+    mode:"SITE_FALLBACK"
   };
 }
 
@@ -1401,26 +1612,34 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
     }
   });
 
-  var genreFallback={
+  var fallback={
     items:[],
-    labels:[]
+    labels:[],
+    mode:""
   };
 
   if(!categories.length){
-    genreFallback=eeGenreFallbackListenGroup_(post);
+    fallback=eeGenreFallbackListenGroup_(post);
+  }
 
-    if(genreFallback.items.length){
-      categories.push({
-        category:"LISTEN",
-        items:genreFallback.items
-      });
-    }
+  if(!categories.length&&!fallback.items.length){
+    fallback=eeContentGenreFallbackListenGroup_(post);
+  }
+
+  if(!categories.length&&!fallback.items.length){
+    fallback=eeSiteFallbackListenGroup_(post);
+  }
+
+  if(!categories.length&&fallback.items.length){
+    categories.push({
+      category:"LISTEN",
+      items:fallback.items
+    });
   }
 
   var recommendationMode=
-    genreFallback.items.length
-      ?"GENRE_FALLBACK"
-      :"ARTIST_RELATIONSHIP";
+    fallback.mode||
+    "ARTIST_RELATIONSHIP";
 
   return {
     schemaVersion:1,
@@ -1451,15 +1670,11 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
       artistKeys:analysis.primaryArtistKeys,
       cacheHits:catalogues.length,
       recommendationMode:recommendationMode,
-      genreFallbackLabels:genreFallback.labels,
+      genreFallbackLabels:fallback.labels,
       emptyClassification:
         categories.length
           ?null
-          :(
-            analysis.primaryArtistKeys.length
-              ?"EMPTY_NO_QUALIFYING_RELATIONSHIP"
-              :"EMPTY_NO_SUBJECT"
-          )
+          :"EMPTY_FALLBACK_INVARIANT_BREACH"
     }
   };
 }
@@ -1496,11 +1711,129 @@ function eeReadyAuditRelationshipNames_(artists,registry) {
   return eeUnique_(names.map(eeNorm_).filter(Boolean));
 }
 
-function eeReadyAuditItemCheck_(item,category,allowed,correctedNames) {
-  item=item||{};category=String(category||item.category||"").toUpperCase();var creator=String(item.creator||"").trim(),creatorAllowed=!creator||allowed.indexOf(eeNorm_(creator))!==-1,text=[item.title,item.description,item.cast,item.director,item.relationshipContext,item.relevanceReason].join(" "),descriptionText=String(item.description||"")+" "+String(item.relationshipContext||"")+" "+String(item.relevanceReason||""),subjectMatch=correctedNames.some(function(name){var normalized=eeNorm_(name),title=eeNorm_(item.title||""),description=eeNorm_(descriptionText);return (title===normalized||title.indexOf(normalized+" ")===0||description.indexOf(" "+normalized+" ")!==-1||description.indexOf(normalized+" ")===0)&&!(normalized==="nails"&&/nine inch nails|nail biting|fingernail/i.test(eeNorm_(text)));});
-  if(category==="READ"){var directCreator=correctedNames.some(function(name){return eeNorm_(creator)===eeNorm_(name);}),readValid=directCreator||subjectMatch||/primary artist|article subject|directly concern|substantially feature/i.test(String(item.relationshipContext||item.relevanceReason||""));return {valid:readValid,creatorConflict:false,reason:readValid?"READ_SUBJECT_EVIDENCE":"READ_RELEVANCE_UNVERIFIED"};}
-  if(category==="WATCH"){var valid=creatorAllowed||subjectMatch||/primary artist|article subject|directly concern/i.test(String(item.relationshipContext||item.relevanceReason||""));return {valid:valid,creatorConflict:!valid&&!!creator,reason:valid?"WATCH_CREDIT_OR_SUBJECT_EVIDENCE":"WATCH_RELEVANCE_UNVERIFIED"};}
-  return {valid:creatorAllowed,creatorConflict:!creatorAllowed&&!!creator,reason:creatorAllowed?"LISTEN_CREATOR_ALLOWED":"LISTEN_CREATOR_UNRELATED"};
+function eeReadyAuditItemCheck_(
+  item,
+  category,
+  allowed,
+  correctedNames
+) {
+  item=item||{};
+  category=String(
+    category||item.category||""
+  ).toUpperCase();
+
+  var creator=String(item.creator||"").trim(),
+      recommendationMode=String(
+        item.recommendationMode||""
+      ),
+      legitimateFallback=
+        category==="LISTEN" &&
+        (
+          recommendationMode==="GENRE_FALLBACK" ||
+          recommendationMode==="CONTENT_GENRE_FALLBACK" ||
+          recommendationMode==="SITE_FALLBACK"
+        ),
+      creatorAllowed=
+        !creator||
+        allowed.indexOf(eeNorm_(creator))!==-1,
+      text=[
+        item.title,
+        item.description,
+        item.cast,
+        item.director,
+        item.relationshipContext,
+        item.relevanceReason
+      ].join(" "),
+      descriptionText=
+        String(item.description||"")+" "+
+        String(item.relationshipContext||"")+" "+
+        String(item.relevanceReason||""),
+      subjectMatch=correctedNames.some(function(name){
+        var normalized=eeNorm_(name),
+            title=eeNorm_(item.title||""),
+            description=eeNorm_(descriptionText);
+
+        return (
+          title===normalized||
+          title.indexOf(normalized+" ")===0||
+          description.indexOf(
+            " "+normalized+" "
+          )!==-1||
+          description.indexOf(
+            normalized+" "
+          )===0
+        )&&!(
+          normalized==="nails" &&
+          /nine inch nails|nail biting|fingernail/i
+            .test(eeNorm_(text))
+        );
+      });
+
+  if(category==="READ"){
+    var directCreator=correctedNames.some(
+      function(name){
+        return eeNorm_(creator)===eeNorm_(name);
+      }
+    );
+
+    var readValid=
+      directCreator||
+      subjectMatch||
+      /primary artist|article subject|directly concern|substantially feature/i
+        .test(
+          String(
+            item.relationshipContext||
+            item.relevanceReason||
+            ""
+          )
+        );
+
+    return {
+      valid:readValid,
+      creatorConflict:false,
+      reason:readValid
+        ?"READ_SUBJECT_EVIDENCE"
+        :"READ_RELEVANCE_UNVERIFIED"
+    };
+  }
+
+  if(category==="WATCH"){
+    var valid=
+      creatorAllowed||
+      subjectMatch||
+      /primary artist|article subject|directly concern/i
+        .test(
+          String(
+            item.relationshipContext||
+            item.relevanceReason||
+            ""
+          )
+        );
+
+    return {
+      valid:valid,
+      creatorConflict:!valid&&!!creator,
+      reason:valid
+        ?"WATCH_CREDIT_OR_SUBJECT_EVIDENCE"
+        :"WATCH_RELEVANCE_UNVERIFIED"
+    };
+  }
+
+  if(legitimateFallback){
+    return {
+      valid:true,
+      creatorConflict:false,
+      reason:"LISTEN_EXPLICIT_FALLBACK"
+    };
+  }
+
+  return {
+    valid:creatorAllowed,
+    creatorConflict:!creatorAllowed&&!!creator,
+    reason:creatorAllowed
+      ?"LISTEN_CREATOR_ALLOWED"
+      :"LISTEN_CREATOR_UNRELATED"
+  };
 }
 
 function eeReadyAuditFinding_(payload,registry,sharedIds,artistStates,safetyContext) {

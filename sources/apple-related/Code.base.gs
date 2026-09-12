@@ -2125,6 +2125,125 @@ function eeDiagnoseSparseExactArtistExamples() {
 }
 
 
+function eeDiagnoseAppleNoBlankFallbacks() {
+  var cases=[
+    {
+      name:"GENRE_LABEL",
+      expectedMode:"GENRE_FALLBACK",
+      post:{
+        id:"DIAGNOSTIC-GENRE-LABEL",
+        url:"",
+        title:"Electric Eye feature",
+        labels:["Heavy Metal"],
+        content:"<p>An article without a reliable artist identity.</p>"
+      }
+    },
+    {
+      name:"CONTENT_GENRE",
+      expectedMode:"CONTENT_GENRE_FALLBACK",
+      post:{
+        id:"DIAGNOSTIC-CONTENT-GENRE",
+        url:"",
+        title:"Electric Eye feature",
+        labels:[],
+        content:"<p>This article discusses the death metal scene and the evolution of death metal in detail.</p>"
+      }
+    },
+    {
+      name:"SITE_FALLBACK",
+      expectedMode:"SITE_FALLBACK",
+      post:{
+        id:"DIAGNOSTIC-SITE-FALLBACK",
+        url:"",
+        title:"Electric Eye feature",
+        labels:[],
+        content:"<p>An article with no identifiable artist and no useful genre terminology.</p>"
+      }
+    }
+  ];
+
+  var results=[];
+
+  cases.forEach(function(testCase){
+    var analysis={
+      primaryArtistKeys:[],
+      primaryArtists:[],
+      people:[],
+      identityConfidence:"NONE",
+      articleType:"other"
+    };
+
+    var payload=eeAssemblePayloadFromCatalogues_(
+      testCase.post,
+      analysis,
+      []
+    );
+
+    var categories=payload.categories||[],
+        itemCount=categories.reduce(function(total,group){
+          return total+(group.items||[]).length;
+        },0),
+        mode=String(
+          (payload.diagnostics||{}).recommendationMode||""
+        ),
+        emptyClassification=
+          (payload.diagnostics||{}).emptyClassification||null,
+        passed=
+          categories.length>0 &&
+          itemCount>0 &&
+          mode===testCase.expectedMode &&
+          !emptyClassification;
+
+    var row={
+      case:testCase.name,
+      expectedMode:testCase.expectedMode,
+      actualMode:mode,
+      categoryCount:categories.length,
+      itemCount:itemCount,
+      emptyClassification:emptyClassification,
+      passed:passed,
+      sampleItems:categories.length
+        ?(categories[0].items||[]).slice(0,3).map(function(item){
+          return {
+            title:item.title||"",
+            creator:item.creator||"",
+            recommendationMode:item.recommendationMode||"",
+            discoverySource:item.discoverySource||""
+          };
+        })
+        :[]
+    };
+
+    results.push(row);
+
+    console.log(JSON.stringify({
+      type:"APPLE_NO_BLANK_FALLBACK_DIAGNOSTIC",
+      result:row
+    }));
+  });
+
+  var failed=results.filter(function(row){
+    return !row.passed;
+  });
+
+  var summary={
+    status:failed.length?"FAIL":"OK",
+    readOnly:true,
+    casesTested:results.length,
+    passed:results.length-failed.length,
+    failed:failed.length,
+    results:results
+  };
+
+  console.log(JSON.stringify({
+    type:"APPLE_NO_BLANK_FALLBACK_DIAGNOSTIC_SUMMARY",
+    summary:summary
+  }));
+
+  return summary;
+}
+
+
 function eeDiagnoseAppleMusicArtistSearchExamples() {
   var settings=eeAppleSettings_();
   var names=[

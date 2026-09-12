@@ -1159,3 +1159,37 @@ Fix:
 - git diff --check clean.
 
 This separation prevents future Apple Recommendations development from blocking otherwise healthy calendar updates.
+
+## 2026-09-12 — Apple no-blank recommendation invariant
+
+Requirement established:
+- No Electric Eye article should render a blank Apple recommendations section.
+- Artist accuracy remains the preferred path, but recommendation coverage must degrade gracefully when artist identity cannot be established.
+
+Implemented fallback hierarchy:
+1. Artist/relationship catalogue recommendations.
+2. GENRE_FALLBACK from explicit Blogger article labels.
+3. CONTENT_GENRE_FALLBACK from genre terminology in article title/body.
+4. SITE_FALLBACK using broadly relevant Electric Eye / Rock Apple Music content.
+5. If the Apple search itself cannot supply catalogue items, the site fallback can still emit a deterministic Apple Music Rock link.
+
+Diagnostics distinguish fallback recommendations from artist-derived recommendations; fallback creators are never treated as article-subject identity.
+
+Added public read-only diagnostic:
+- eeDiagnoseAppleNoBlankFallbacks()
+
+Apps Script validation on 2026-09-12:
+- GENRE_LABEL -> GENRE_FALLBACK -> 12 items -> passed
+- CONTENT_GENRE -> CONTENT_GENRE_FALLBACK -> 12 items -> passed
+- SITE_FALLBACK -> SITE_FALLBACK -> 12 items -> passed
+- summary: status OK, 3/3 passed, 0 failed
+- all cases had emptyClassification=null
+
+Build validation:
+- deterministic generated Code.gs
+- SHA256 c043ae1431998dd977233e7daf40e6281db2ee5cc5ab0a154f61d2d0fc4dd1b9
+- JavaScript syntax OK
+- git diff --check clean
+- calendar workflow and calendar scraper code untouched
+
+The validated generated Code.gs was manually installed and saved in the existing Apps Script project. No deployment was performed.
