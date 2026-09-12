@@ -1863,3 +1863,16 @@ deployment. No deployment or production worker was run here.
 - Full Apple suite returned only the same 6 pre-existing known failures, with no new failures or errors.
 - Protected calendar/non-Apple suite: 530/530 passed.
 - Production acceptance still requires a live targeted Gyasi refresh returning Apple artist ID `1462471294` and direct artist recommendations rather than `GENRE_FALLBACK`.
+
+### Live acceptance — Gyasi
+- Apps Script v25 deployed.
+- Targeted refresh of post `1518411335735396864` passed production acceptance:
+  - primaryArtists: `["Gyasi"]`
+  - Apple artist ID: `1462471294`
+  - identity: `HIGH`
+  - recommendation mode: `ARTIST_RELATIONSHIP`
+  - LISTEN: 5
+  - WATCH: 0
+  - READ: 0
+  - no `GENRE_FALLBACK`
+- Gyasi identity/recommendation issue is fixed end-to-end in production.
