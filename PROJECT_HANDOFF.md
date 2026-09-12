@@ -1346,3 +1346,38 @@ Calendar workflow and scraper code untouched.
 
 Next queued issue:
 - Charli xcx WATCH recommendations appearing in unrelated articles.
+
+## 2026-09-12 — Wargasm contextual identity validated live
+
+Production targeted refresh succeeded for both Wargasm concert reviews.
+
+Validated results:
+- 3362193983174062138 — Wargasm @ Nouveau Casino
+  - primaryArtists: Wargasm
+  - Apple artist ID: 1476730259
+  - identityLevel: HIGH
+  - recommendationMode: ARTIST_RELATIONSHIP
+  - LISTEN: 3
+  - WATCH: 0
+  - READ: 0
+
+- 2542164659318268165 — Wargasm @ Le Zénith
+  - primaryArtists: Wargasm
+  - Apple artist ID: 1476730259
+  - identityLevel: HIGH
+  - recommendationMode: ARTIST_RELATIONSHIP
+  - LISTEN: 3
+  - WATCH: 0
+  - READ: 0
+
+Production discovery reported:
+- decision: CONTEXTUAL_QUALIFIED_APPLE_ARTIST
+- terminalStatus: RESOLVED
+- terminalReason: PRIMARY_IDENTITY_CONFIDENT
+
+The previous incorrect US Wargasm identity 22575637 is no longer used by these live payloads.
+
+The fix is systemic: verified Apple artist IDs now govern catalogue identity even when Apple uses a qualified or otherwise different display name.
+
+Next task:
+- investigate Charli xcx WATCH recommendations leaking into unrelated articles.
