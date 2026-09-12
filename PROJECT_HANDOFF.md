@@ -395,3 +395,107 @@ Resolved GitHub CodeQL alert #2: clear-text logging of sensitive information.
 - Removed the debug loop in `concert_calendar/app.py` that printed every complete ConcertEvent object.
 - The useful message reporting the generated HTML calendar path remains.
 - No calendar data or production behavior was otherwise changed.
+
+## 2026-09-12 — Apple Related engine: artist-resolution investigation
+
+Current focus has returned to the Electric Eye "Related on Apple" recommendation engine.
+
+### Active implementation
+- Main deployed bundle: `deliverables/apple-related/Code.gs`
+- Current branch at investigation start: `supersonic-scraper`
+- Starting commit: `17cfe09`
+- Core relevant functions:
+  - `eeResolveIdentity_()` — artist identity resolution
+  - `eeFastArticleIdentity_()` — article identity extraction
+  - `eePrimaryArtistIdentityPayload_()` — Apple identity-search payload
+  - `eeDiscoverArtistCatalogue_()` — Apple artist/catalogue discovery
+  - `eeAnalyzeArchiveWorker()` — archive analysis
+  - `eeDiscoverArtistsWorker()` / production worker — artist discovery/enrichment
+
+### Problem
+Too many articles remain unpopulated because artist identities are ending in
+AMBIGUOUS / UNRESOLVED / ERROR rather than resolving to Apple artists.
+
+A real failure list was supplied containing both obscure and extremely obvious
+Apple Music artists. Important examples include:
+
+- Prince
+- Hozier
+- Iggy Pop
+- Depeche Mode
+- Toto
+- Metallica
+- Lady Gaga
+- KISS
+- Patti Smith
+- Franz Ferdinand
+- Mastodon
+- John Mayall
+- John Scofield
+- Jessica Hernandez
+- Little Caesar
+- Elegant Weapons
+- ...And You Will Know Us By The Trail Of Dead
+
+Because major unambiguous artists are failing as well as difficult names, this
+is probably not primarily an Apple catalogue-availability problem.
+
+### Failure classes already visible
+
+1. Ordinary artists that should resolve trivially.
+   Indicates likely query/scoring/acceptance-threshold failure.
+
+2. Generic ambiguous names:
+   Earth, Ross, Answer, Lucifer, Ride, Ghost, Ancient, Trio, Soul, Grove,
+   Sugar, Down, Sparks, FM.
+
+3. Punctuation / diacritics / stylization:
+   ...And You Will Know Us By The Trail Of Dead, M-Pire of Evil,
+   Suprême NTM, Téléphone, Les Insus?, Therapy?, W.A.S.P.,
+   Dätcha Mandala, Beastö Blancö, Gaëlle Buswel, Yü.
+
+4. Alias / canonical-name differences:
+   Trail of Dead vs ...And You Will Know Us By The Trail Of Dead and
+   possible leading-"The" catalogue differences.
+
+5. Composite/collaborative identities:
+   Richard Bona/Alfredo Rodriguez Trio,
+   Neil Young and the Chrome Hearts,
+   Smith/Kotzen,
+   Satchvai Band,
+   Earl Sweatshirt and MIKE,
+   Peter Hook & The Light.
+
+6. Non-artist/event concepts reaching artist resolution:
+   West Side Story, Mondial du Tatouage, Playlist, Friday's Playlist,
+   Blues, Jazz à la Villette, etc.
+   These suggest an upstream article-identity/classification issue.
+
+### Principle
+Do NOT solve this by creating a large manual artist exception table.
+Use the failure set to identify systemic resolver weaknesses.
+
+### Immediate next step
+Build a READ-ONLY diagnostic around the current resolver that, for a small
+representative set such as:
+
+- Prince
+- Metallica
+- Jessica Hernandez
+- Therapy?
+- Earth
+- ...And You Will Know Us By The Trail Of Dead
+
+captures for each artist:
+
+- canonical/input artist name
+- normalized Apple query/query variants
+- Apple candidates returned
+- Apple artist IDs and candidate names
+- candidate score/evidence
+- identity confidence
+- final status
+- exact rejection / ambiguity reason
+
+No production writes or recommendation regeneration until that diagnostic
+explains why obvious identities are being rejected.
