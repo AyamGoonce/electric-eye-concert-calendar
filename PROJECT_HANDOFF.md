@@ -499,3 +499,46 @@ captures for each artist:
 
 No production writes or recommendation regeneration until that diagnostic
 explains why obvious identities are being rejected.
+
+## 2026-09-12 — Apple artist resolver read-only diagnostic added
+
+Added `eeDiagnoseAppleArtistResolution(names)` to
+`deliverables/apple-related/Code.gs`.
+
+Purpose:
+- diagnose why obvious Apple Music artists are ending as AMBIGUOUS / ERROR;
+- use the current production lookup and `eeResolveIdentity_()` logic;
+- make no writes to Apple Article Identity, Apple Artists, or Apple Payloads.
+
+Default diagnostic set:
+- Prince
+- Metallica
+- Jessica Hernandez
+- Therapy?
+- Earth
+- ...And You Will Know Us By The Trail Of Dead
+
+For each artist it reports:
+- input and normalized identity
+- actual Apple search term/media/entity/storefront
+- raw Apple result count
+- exact-name Apple artist IDs
+- release counts
+- resolver score components
+- dominant exact artist candidate
+- final HIGH / MODERATE / LOW resolver result
+- explicit rejection reason such as:
+  - NO_ARTIST_CANDIDATES
+  - BEST_SCORE_BELOW_70
+  - TOP_TWO_MARGIN_BELOW_15
+  - RESOLVER_REJECTED
+- recommendation-filter accepted/rejected counts
+
+macOS JavaScript syntax validation passed:
+`APPLE CODE SYNTAX: OK`.
+
+Next step:
+Deploy/sync this diagnostic into the existing Apps Script Apple project,
+then run `eeDiagnoseAppleArtistResolution()` and inspect its Execution log.
+Do not change production resolver behavior until the diagnostic results explain
+the failure classes.
