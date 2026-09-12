@@ -562,3 +562,89 @@ Install the rebuilt `deliverables/apple-related/Code.gs` into the existing
 Apple Apps Script project, save it without changing the existing deployment,
 then run `eeDiagnoseAppleArtistResolution()` manually and capture its execution
 log for analysis.
+
+## 2026-09-12 — Apple resolver diagnostic results
+
+Ran `eeDiagnoseAppleArtistResolution()` manually in the existing Apps Script
+project against six representative failures.
+
+### Current resolver succeeds for previously problematic major artists
+
+Prince:
+- Apple exact artist ID: 155814
+- 11 returned releases
+- score 75
+- HIGH / RESOLVED
+
+Metallica:
+- Apple exact artist ID: 3996865
+- 16 returned releases
+- score 75
+- HIGH / RESOLVED
+
+...And You Will Know Us By The Trail Of Dead:
+- Apple exact artist ID: 110799
+- 19 returned releases
+- score 75
+- HIGH / RESOLVED
+
+Important implication:
+If these artists remain ERROR / AMBIGUOUS in the persistent Apple Artists
+sheet, the current resolver itself is no longer the reason. Existing terminal
+rows may be stale and not being reconsidered after resolver improvements.
+
+### Sparse-catalogue threshold failure
+
+Jessica Hernandez:
+- Apple returns one exact-name artist ID: 732516020
+- exact identity has only 2 returned releases
+- exact-name score = 30
+- no >=3-release bonus
+- final LOW / BEST_SCORE_BELOW_70
+
+Apple also returns:
+- Jessica Hernandez & The Deltas
+- artist ID 848460638
+- 11 returned releases
+
+This shows the current requirement for >=3 release rows can reject a unique
+exact-name identity even when Apple supplies no competing exact-name artist.
+
+### Search-recall failures
+
+Therapy?:
+- 50 album-search results
+- zero exact-name Apple artist IDs
+- best unrelated score 18
+- LOW / BEST_SCORE_BELOW_70
+
+Earth:
+- 49 album-search results
+- zero exact-name Apple artist IDs
+- best unrelated score 18
+- LOW / BEST_SCORE_BELOW_70
+
+These failures occur before meaningful scoring. Album search is therefore not
+a reliable artist-identity lookup for punctuation-heavy or generic names.
+
+### Current working diagnosis
+
+At least three systemic issues must be investigated:
+
+1. Persistent stale ERROR / AMBIGUOUS artist rows may not be automatically
+   reconsidered after resolver improvements.
+
+2. Unique exact-name artists with small Apple catalogues are penalized too
+   heavily by the >=3-release / score-70 rule.
+
+3. Artist identity discovery should not rely solely on album search.
+   A likely safer architecture is:
+   - Apple musicArtist identity search;
+   - exact/normalized artist-name candidate evaluation;
+   - artist-ID album lookup for catalogue evidence and recommendations;
+   - punctuation/query variants when needed;
+   - stronger article/context corroboration for genuinely ambiguous generic
+     names such as Earth.
+
+Do not loosen production matching globally until the retry/status behavior and
+musicArtist search behavior have been measured.
