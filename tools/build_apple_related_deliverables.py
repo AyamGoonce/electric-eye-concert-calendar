@@ -1479,7 +1479,7 @@ def build_code() -> str:
     first=code.find(marker); second=code.find(marker,first+1)
     if second!=-1:
         code=code[:second]+code[second:].replace(marker,"function eeReadyAuditReplacementPreviewLegacy_(finding,existing,registry)",1)
-    return code
+    return code.rstrip() + "\n"
 
 
 def main() -> None:

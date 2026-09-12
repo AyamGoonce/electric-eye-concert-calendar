@@ -542,3 +542,23 @@ Deploy/sync this diagnostic into the existing Apps Script Apple project,
 then run `eeDiagnoseAppleArtistResolution()` and inspect its Execution log.
 Do not change production resolver behavior until the diagnostic results explain
 the failure classes.
+
+## 2026-09-12 — Apple resolver diagnostic moved to canonical generator source
+
+Corrected the placement of `eeDiagnoseAppleArtistResolution()`.
+
+- Canonical source is `sources/apple-related/Code.base.gs`.
+- Generated deliverable remains `deliverables/apple-related/Code.gs`.
+- The diagnostic is now inserted before the builder truncation point, so normal rebuilds preserve it.
+- `tools/build_apple_related_deliverables.py` now normalizes generated Code.gs to one trailing newline.
+- Two consecutive Apple deliverable builds produced identical SHA-256:
+  `5fe8c2b5c2664f0bc2ca76a7547aaeacb00ecf858e02081614868be75549ad98`
+- Rebuilt Apps Script syntax validation passed.
+- `git diff --check` passed.
+- No live Apps Script, Sheets, Blogger configuration, properties, cursors, or triggers have been changed yet.
+
+Next step:
+Install the rebuilt `deliverables/apple-related/Code.gs` into the existing
+Apple Apps Script project, save it without changing the existing deployment,
+then run `eeDiagnoseAppleArtistResolution()` manually and capture its execution
+log for analysis.

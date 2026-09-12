@@ -2180,164 +2180,6 @@ function doGet(event) {
   return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
 }
 
-/* Production archive worker. Configure one time-driven trigger manually. */
-function eeBackfillWorker() {
-  var settings=eeAppleSettings_();
-  if(!settings.enabled)return {status:"DISABLED"};
-
-  var started=Date.now(),safeStartCutoff=started+180000,iterations=0,stalled=0;
-  var totals={ready:0,empty:0,error:0,skippedReady:0};
-  var properties=PropertiesService.getScriptProperties();
-  eeSetExecutionDeadline_(safeStartCutoff);
-
-  while(Date.now()<safeStartCutoff){
-    var before=Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||1);
-    var batch=eeBackfillBatch(true);
-    iterations+=1;
-    (batch.results||[]).forEach(function(item){
-      if(item.status==="READY")totals.ready+=1;
-      else if(item.status==="EMPTY")totals.empty+=1;
-      else if(item.status==="ERROR")totals.error+=1;
-      else if(item.status==="SKIPPED_READY")totals.skippedReady+=1;
-    });
-
-    if(batch.status==="RETRY_LATER")break;
-
-    if(batch.status==="COMPLETE"){
-      properties.setProperty("EE_APPLE_BACKFILL_COMPLETE","true");
-      break;
-    }
-    var after=Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||before);
-    if(after<=before){
-      stalled+=1;
-      if(stalled>=2)break;
-    }else stalled=0;
-  }
-
-  var retries=eeRetryStoredErrors_(safeStartCutoff);
-  eeClearExecutionDeadline_();
-  var result={
-    status:Date.now()>=safeStartCutoff?"TIME_LIMIT":"OK",
-    elapsedMs:Date.now()-started,
-    iterations:iterations,
-    totals:totals,
-    retries:retries,
-    cursor:Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||1),
-    primaryComplete:properties.getProperty("EE_APPLE_BACKFILL_COMPLETE")==="true",
-    stalled:stalled
-  };
-  console.log(JSON.stringify(result));
-  return result;
-}
-
-function eeFetchPostById_(postId) {
-  var targetId = String(postId || "");
-  var startIndex = 1;
-  var batchSize = 500;
-
-  while (true) {
-    var posts = eeFetchPosts_(startIndex, batchSize);
-    if (!posts.length) break;
-
-    for (var i = 0; i < posts.length; i++) {
-      if (String(posts[i].id) === targetId) return posts[i];
-    }
-
-    startIndex += posts.length;
-  }
-
-  throw new Error("Blogger post not found: " + targetId);
-}
-
-function eeRetryStoredErrors_(deadline) {
-  if(PropertiesService.getScriptProperties().getProperty("EE_APPLE_BACKFILL_COMPLETE")!=="true")return {attempted:0,recovered:0,remaining:0};
-  var sheet=eePayloadSheet_(),values=sheet.getDataRange().getValues();
-  var attempted=0,recovered=0;
-  for(var row=1;row<values.length&&Date.now()<deadline;row+=1){
-    if(String(values[row][5])!=="ERROR")continue;
-    var retryCount=Math.max(0,Number(values[row][7]||0));
-    if(retryCount>=2)continue;
-    attempted+=1;
-    var postId=String(values[row][0]);
-    try{
-      var post=eeFetchPostById_(postId);
-      var payload=eeProcessPost_(post,retryCount+1);
-      if((payload.categories||[]).some(function(group){return (group.items||[]).length;}))recovered+=1;
-    }catch(error){}
-  }
-  var current=sheet.getDataRange().getValues(),remaining=0;
-  for(var index=1;index<current.length;index+=1)if(String(current[index][5])==="ERROR")remaining+=1;
-  return {attempted:attempted,recovered:recovered,remaining:remaining};
-}
-
-function eeBackfillStatus() {
-  var values=eePayloadSheet_().getDataRange().getValues();
-  var counts={READY:0,EMPTY:0,ERROR:0},staleReady=0,latest="";
-  for(var row=1;row<values.length;row+=1){
-    var status=String(values[row][5]||"");
-    if(status==="READY"&&!eeStoredPayloadHasRecommendations_(values[row][4]))staleReady+=1;
-    else if(Object.prototype.hasOwnProperty.call(counts,status))counts[status]+=1;
-    var generated=String(values[row][2]||"");
-    if(generated>latest)latest=generated;
-  }
-  var properties=PropertiesService.getScriptProperties();
-  var result={
-    cursor:Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||1),
-    ready:counts.READY,
-    empty:counts.EMPTY,
-    error:counts.ERROR,
-    staleReady:staleReady,
-    totalStoredRows:Math.max(0,values.length-1),
-    primaryComplete:properties.getProperty("EE_APPLE_BACKFILL_COMPLETE")==="true",
-    mostRecentGeneratedAt:latest||null
-  };
-  console.log(JSON.stringify(result));
-  return result;
-}
-
-function eeRefreshPayloadForPostId(postId) {
-  postId=String(postId||"");
-  if(!/^[0-9]+$/.test(postId))throw new Error("Numeric Blogger postId required");
-  var properties=PropertiesService.getScriptProperties();
-  eeSetExecutionDeadline_(Date.now()+180000);
-  try{
-    var post=eeFetchPostById_(postId);
-    var payload=eeProcessPost_(post,0);
-    return {postId:postId,status:eePayloadHasRecommendations_(payload)?"READY":"EMPTY",generationVersion:payload.generationVersion||1,categoryCounts:(payload.categories||[]).map(function(group){return [group.category,group.items.length];}),emptyClassification:(payload.diagnostics||{}).emptyClassification||null};
-  }finally{eeClearExecutionDeadline_();}
-}
-
-function eeRefreshRowsWorker_(wantedStatus,cursorProperty) {
-  var properties=PropertiesService.getScriptProperties(),started=Date.now(),cutoff=started+180000;
-  eeSetExecutionDeadline_(cutoff);
-  try{
-    var values=eePayloadSheet_().getDataRange().getValues();
-    var cursor=Math.max(1,Number(properties.getProperty(cursorProperty)||1)),processed=0,failed=0;
-    for(var row=cursor;row<values.length&&Date.now()<cutoff;row+=1){
-      properties.setProperty(cursorProperty,String(row+1));
-      if(String(values[row][5])!==wantedStatus)continue;
-      try{eeProcessPost_(eeFetchPostById_(String(values[row][0])),0);processed+=1;}catch(error){failed+=1;}
-    }
-    if(Number(properties.getProperty(cursorProperty)||1)>=values.length)properties.setProperty(cursorProperty,"1");
-    var result={status:Date.now()>=cutoff?"TIME_LIMIT":"OK",wantedStatus:wantedStatus,processed:processed,failed:failed,cursor:Number(properties.getProperty(cursorProperty)||1)};
-    console.log(JSON.stringify(result));return result;
-  }finally{eeClearExecutionDeadline_();}
-}
-
-function eeRefreshReadyWorker() {return eeRefreshRowsWorker_("READY","EE_APPLE_REFRESH_READY_INDEX");}
-function eeRefreshEmptyWorker() {return eeRefreshRowsWorker_("EMPTY","EE_APPLE_REFRESH_EMPTY_INDEX");}
-
-function eeExplainPayloadForPostId(postId) {
-  postId=String(postId||"");
-  if(!/^[0-9]+$/.test(postId))throw new Error("Numeric Blogger postId required");
-  var properties=PropertiesService.getScriptProperties();
-  eeSetExecutionDeadline_(Date.now()+180000);
-  try{
-    var post=eeFetchPostById_(postId),payload=eeGeneratePayload_(post),diagnostics=payload.diagnostics||{};
-    var result={title:post.title,primaryArtists:(payload.subject||{}).primaryArtists||[],people:(payload.subject||{}).people||[],identity:payload.identity||null,searchIntents:diagnostics.searchIntents||[],rawResultCount:diagnostics.rawResultCount||0,rejectedCount:diagnostics.rejectedCount||0,majorRejectionReasons:diagnostics.rejectionReasons||{},finalCategoryCounts:diagnostics.finalCategoryCounts||{},emptyClassification:diagnostics.emptyClassification||null};
-    console.log(JSON.stringify(result));return result;
-  }finally{eeClearExecutionDeadline_();}
-}
 /**
  * READ-ONLY diagnostic for Apple artist identity resolution.
  *
@@ -2566,4 +2408,163 @@ function eeDiagnoseAppleArtistResolution(names) {
   }));
 
   return summary;
+}
+
+/* Production archive worker. Configure one time-driven trigger manually. */
+function eeBackfillWorker() {
+  var settings=eeAppleSettings_();
+  if(!settings.enabled)return {status:"DISABLED"};
+
+  var started=Date.now(),safeStartCutoff=started+180000,iterations=0,stalled=0;
+  var totals={ready:0,empty:0,error:0,skippedReady:0};
+  var properties=PropertiesService.getScriptProperties();
+  eeSetExecutionDeadline_(safeStartCutoff);
+
+  while(Date.now()<safeStartCutoff){
+    var before=Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||1);
+    var batch=eeBackfillBatch(true);
+    iterations+=1;
+    (batch.results||[]).forEach(function(item){
+      if(item.status==="READY")totals.ready+=1;
+      else if(item.status==="EMPTY")totals.empty+=1;
+      else if(item.status==="ERROR")totals.error+=1;
+      else if(item.status==="SKIPPED_READY")totals.skippedReady+=1;
+    });
+
+    if(batch.status==="RETRY_LATER")break;
+
+    if(batch.status==="COMPLETE"){
+      properties.setProperty("EE_APPLE_BACKFILL_COMPLETE","true");
+      break;
+    }
+    var after=Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||before);
+    if(after<=before){
+      stalled+=1;
+      if(stalled>=2)break;
+    }else stalled=0;
+  }
+
+  var retries=eeRetryStoredErrors_(safeStartCutoff);
+  eeClearExecutionDeadline_();
+  var result={
+    status:Date.now()>=safeStartCutoff?"TIME_LIMIT":"OK",
+    elapsedMs:Date.now()-started,
+    iterations:iterations,
+    totals:totals,
+    retries:retries,
+    cursor:Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||1),
+    primaryComplete:properties.getProperty("EE_APPLE_BACKFILL_COMPLETE")==="true",
+    stalled:stalled
+  };
+  console.log(JSON.stringify(result));
+  return result;
+}
+
+function eeFetchPostById_(postId) {
+  var targetId = String(postId || "");
+  var startIndex = 1;
+  var batchSize = 500;
+
+  while (true) {
+    var posts = eeFetchPosts_(startIndex, batchSize);
+    if (!posts.length) break;
+
+    for (var i = 0; i < posts.length; i++) {
+      if (String(posts[i].id) === targetId) return posts[i];
+    }
+
+    startIndex += posts.length;
+  }
+
+  throw new Error("Blogger post not found: " + targetId);
+}
+
+function eeRetryStoredErrors_(deadline) {
+  if(PropertiesService.getScriptProperties().getProperty("EE_APPLE_BACKFILL_COMPLETE")!=="true")return {attempted:0,recovered:0,remaining:0};
+  var sheet=eePayloadSheet_(),values=sheet.getDataRange().getValues();
+  var attempted=0,recovered=0;
+  for(var row=1;row<values.length&&Date.now()<deadline;row+=1){
+    if(String(values[row][5])!=="ERROR")continue;
+    var retryCount=Math.max(0,Number(values[row][7]||0));
+    if(retryCount>=2)continue;
+    attempted+=1;
+    var postId=String(values[row][0]);
+    try{
+      var post=eeFetchPostById_(postId);
+      var payload=eeProcessPost_(post,retryCount+1);
+      if((payload.categories||[]).some(function(group){return (group.items||[]).length;}))recovered+=1;
+    }catch(error){}
+  }
+  var current=sheet.getDataRange().getValues(),remaining=0;
+  for(var index=1;index<current.length;index+=1)if(String(current[index][5])==="ERROR")remaining+=1;
+  return {attempted:attempted,recovered:recovered,remaining:remaining};
+}
+
+function eeBackfillStatus() {
+  var values=eePayloadSheet_().getDataRange().getValues();
+  var counts={READY:0,EMPTY:0,ERROR:0},staleReady=0,latest="";
+  for(var row=1;row<values.length;row+=1){
+    var status=String(values[row][5]||"");
+    if(status==="READY"&&!eeStoredPayloadHasRecommendations_(values[row][4]))staleReady+=1;
+    else if(Object.prototype.hasOwnProperty.call(counts,status))counts[status]+=1;
+    var generated=String(values[row][2]||"");
+    if(generated>latest)latest=generated;
+  }
+  var properties=PropertiesService.getScriptProperties();
+  var result={
+    cursor:Number(properties.getProperty("EE_APPLE_BACKFILL_INDEX")||1),
+    ready:counts.READY,
+    empty:counts.EMPTY,
+    error:counts.ERROR,
+    staleReady:staleReady,
+    totalStoredRows:Math.max(0,values.length-1),
+    primaryComplete:properties.getProperty("EE_APPLE_BACKFILL_COMPLETE")==="true",
+    mostRecentGeneratedAt:latest||null
+  };
+  console.log(JSON.stringify(result));
+  return result;
+}
+
+function eeRefreshPayloadForPostId(postId) {
+  postId=String(postId||"");
+  if(!/^[0-9]+$/.test(postId))throw new Error("Numeric Blogger postId required");
+  var properties=PropertiesService.getScriptProperties();
+  eeSetExecutionDeadline_(Date.now()+180000);
+  try{
+    var post=eeFetchPostById_(postId);
+    var payload=eeProcessPost_(post,0);
+    return {postId:postId,status:eePayloadHasRecommendations_(payload)?"READY":"EMPTY",generationVersion:payload.generationVersion||1,categoryCounts:(payload.categories||[]).map(function(group){return [group.category,group.items.length];}),emptyClassification:(payload.diagnostics||{}).emptyClassification||null};
+  }finally{eeClearExecutionDeadline_();}
+}
+
+function eeRefreshRowsWorker_(wantedStatus,cursorProperty) {
+  var properties=PropertiesService.getScriptProperties(),started=Date.now(),cutoff=started+180000;
+  eeSetExecutionDeadline_(cutoff);
+  try{
+    var values=eePayloadSheet_().getDataRange().getValues();
+    var cursor=Math.max(1,Number(properties.getProperty(cursorProperty)||1)),processed=0,failed=0;
+    for(var row=cursor;row<values.length&&Date.now()<cutoff;row+=1){
+      properties.setProperty(cursorProperty,String(row+1));
+      if(String(values[row][5])!==wantedStatus)continue;
+      try{eeProcessPost_(eeFetchPostById_(String(values[row][0])),0);processed+=1;}catch(error){failed+=1;}
+    }
+    if(Number(properties.getProperty(cursorProperty)||1)>=values.length)properties.setProperty(cursorProperty,"1");
+    var result={status:Date.now()>=cutoff?"TIME_LIMIT":"OK",wantedStatus:wantedStatus,processed:processed,failed:failed,cursor:Number(properties.getProperty(cursorProperty)||1)};
+    console.log(JSON.stringify(result));return result;
+  }finally{eeClearExecutionDeadline_();}
+}
+
+function eeRefreshReadyWorker() {return eeRefreshRowsWorker_("READY","EE_APPLE_REFRESH_READY_INDEX");}
+function eeRefreshEmptyWorker() {return eeRefreshRowsWorker_("EMPTY","EE_APPLE_REFRESH_EMPTY_INDEX");}
+
+function eeExplainPayloadForPostId(postId) {
+  postId=String(postId||"");
+  if(!/^[0-9]+$/.test(postId))throw new Error("Numeric Blogger postId required");
+  var properties=PropertiesService.getScriptProperties();
+  eeSetExecutionDeadline_(Date.now()+180000);
+  try{
+    var post=eeFetchPostById_(postId),payload=eeGeneratePayload_(post),diagnostics=payload.diagnostics||{};
+    var result={title:post.title,primaryArtists:(payload.subject||{}).primaryArtists||[],people:(payload.subject||{}).people||[],identity:payload.identity||null,searchIntents:diagnostics.searchIntents||[],rawResultCount:diagnostics.rawResultCount||0,rejectedCount:diagnostics.rejectedCount||0,majorRejectionReasons:diagnostics.rejectionReasons||{},finalCategoryCounts:diagnostics.finalCategoryCounts||{},emptyClassification:diagnostics.emptyClassification||null};
+    console.log(JSON.stringify(result));return result;
+  }finally{eeClearExecutionDeadline_();}
 }

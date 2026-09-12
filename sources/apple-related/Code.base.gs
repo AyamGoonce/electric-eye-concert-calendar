@@ -1549,6 +1549,237 @@ function doGet(event) {
 
   return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
 }
+
+/**
+ * READ-ONLY diagnostic for Apple artist identity resolution.
+ *
+ * Does not write Artist Catalogue, Article Identity, or Payload rows.
+ * It exposes the exact Apple query, candidate artist IDs, release counts,
+ * resolver scores, confidence decision, and recommendation-candidate yield.
+ */
+function eeDiagnoseAppleArtistResolution(names) {
+  names = (names && names.length) ? names : [
+    "Prince",
+    "Metallica",
+    "Jessica Hernandez",
+    "Therapy?",
+    "Earth",
+    "...And You Will Know Us By The Trail Of Dead"
+  ];
+
+  var settings = eeAppleSettings_();
+  var mappings = eeIdentityMappings_();
+  var report = [];
+
+  names.forEach(function(name) {
+    var analysis = {
+      primaryArtists: [name],
+      people: [],
+      associatedPeople: [],
+      existingAppleArtistIds: [],
+      relationshipGraph: {nodes: [], edges: []}
+    };
+
+    var query = eePrimaryLookupQuery_(
+      analysis,
+      settings.storefront,
+      "LISTEN",
+      "album"
+    );
+
+    var response;
+    var results = [];
+    var queryError = "";
+
+    try {
+      response = eeAppleSearch_(query);
+      results = (response && response.results) || [];
+    } catch (error) {
+      queryError = String(
+        (error && (error.code || error.message)) || error || "UNKNOWN_ERROR"
+      );
+    }
+
+    var subject = eeNorm_(name);
+    var scores = {};
+
+    results.forEach(function(raw) {
+      var id = String(raw.artistId || "");
+      if (!id) return;
+
+      var rawName = String(raw.artistName || "");
+      var normalizedName = eeNorm_(rawName);
+
+      if (!scores[id]) {
+        scores[id] = {
+          artistId: id,
+          artistName: rawName,
+          normalizedName: normalizedName,
+          score: 0,
+          releases: 0,
+          exactName: false,
+          mappingBonus: 0,
+          releaseBonus: 0,
+          rejectedByMapping: false
+        };
+      }
+
+      if (normalizedName === subject && !scores[id].exactName) {
+        scores[id].exactName = true;
+        scores[id].score += 30;
+      }
+
+      scores[id].releases += 1;
+    });
+
+    mappings.forEach(function(mapping) {
+      if (eeNorm_(mapping.alias) !== subject) return;
+
+      var id = String(mapping.artistId || "");
+
+      if (mapping.status === "REJECTED") {
+        if (scores[id]) {
+          scores[id].rejectedByMapping = true;
+          delete scores[id];
+        }
+        return;
+      }
+
+      if (scores[id]) {
+        scores[id].score += 70;
+        scores[id].mappingBonus += 70;
+      }
+    });
+
+    var exactKeys = Object.keys(scores).filter(function(key) {
+      return scores[key].exactName;
+    });
+
+    var rankedExact = exactKeys.slice().sort(function(a, b) {
+      return scores[b].releases - scores[a].releases ||
+        String(a).localeCompare(String(b));
+    });
+
+    var dominantExactId = null;
+
+    if (rankedExact.length > 1) {
+      var topExactReleases = scores[rankedExact[0]].releases;
+      var secondExactReleases = scores[rankedExact[1]].releases;
+
+      if (
+        topExactReleases >= 6 &&
+        topExactReleases >= secondExactReleases * 2 &&
+        topExactReleases - secondExactReleases >= 4
+      ) {
+        dominantExactId = rankedExact[0];
+      }
+    }
+
+    Object.keys(scores).forEach(function(key) {
+      var candidate = scores[key];
+
+      if (candidate.releases < 3) return;
+
+      var bonus;
+
+      if (
+        candidate.exactName &&
+        (exactKeys.length === 1 || key === dominantExactId)
+      ) {
+        bonus = 45;
+      } else {
+        bonus = 18;
+      }
+
+      candidate.score += bonus;
+      candidate.releaseBonus += bonus;
+    });
+
+    var ranked = Object.keys(scores)
+      .map(function(key) {
+        return scores[key];
+      })
+      .sort(function(a, b) {
+        return b.score - a.score ||
+          b.releases - a.releases ||
+          String(a.artistId).localeCompare(String(b.artistId));
+      });
+
+    var identity = eeResolveIdentity_(analysis, results);
+
+    var rejectionReason = "RESOLVED";
+
+    if (!ranked.length) {
+      rejectionReason = queryError ? "APPLE_QUERY_ERROR" : "NO_ARTIST_CANDIDATES";
+    } else if (ranked[0].score < 70) {
+      rejectionReason = "BEST_SCORE_BELOW_70";
+    } else if (
+      ranked[1] &&
+      ranked[0].score - ranked[1].score < 15
+    ) {
+      rejectionReason = "TOP_TWO_MARGIN_BELOW_15";
+    } else if (!(identity && identity.artistId)) {
+      rejectionReason = "RESOLVER_REJECTED";
+    }
+
+    var recommendationMap = {};
+    var accepted = 0;
+    var rejected = 0;
+
+    results.forEach(function(raw) {
+      if (eeAddCandidateToMap_(recommendationMap, raw, query, analysis)) {
+        accepted += 1;
+      } else {
+        rejected += 1;
+      }
+    });
+
+    var row = {
+      input: name,
+      normalizedInput: subject,
+      query: {
+        term: query.term,
+        media: query.media,
+        entity: query.entity,
+        storefront: query.storefront
+      },
+      queryError: queryError || null,
+      rawResultCount: results.length,
+      exactNameArtistIds: exactKeys,
+      dominantExactArtistId: dominantExactId,
+      candidates: ranked.slice(0, 12),
+      resolver: identity,
+      decisionReason: rejectionReason,
+      recommendationFilter: {
+        acceptedRows: accepted,
+        rejectedRows: rejected,
+        uniqueAcceptedItems: Object.keys(recommendationMap).length
+      }
+    };
+
+    report.push(row);
+    console.log(JSON.stringify({
+      type: "APPLE_ARTIST_RESOLUTION_DIAGNOSTIC",
+      result: row
+    }));
+  });
+
+  var summary = {
+    status: "OK",
+    readOnly: true,
+    storefront: settings.storefront,
+    artistsTested: report.length,
+    results: report
+  };
+
+  console.log(JSON.stringify({
+    type: "APPLE_ARTIST_RESOLUTION_DIAGNOSTIC_SUMMARY",
+    summary: summary
+  }));
+
+  return summary;
+}
+
 function eeRetryBackfillFrom9() {
   PropertiesService.getScriptProperties()
     .setProperty("EE_APPLE_BACKFILL_INDEX", "9");
