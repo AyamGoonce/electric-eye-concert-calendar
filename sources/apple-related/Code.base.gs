@@ -2244,6 +2244,260 @@ function eeDiagnoseAppleNoBlankFallbacks() {
 }
 
 
+function eeDiagnoseContextualArtistResolver() {
+  var settings=eeAppleSettings_();
+
+  var cases=[
+    {
+      name:"WARGASM_UK",
+      subject:"Wargasm",
+      expectedArtistId:"1476730259",
+      expectResolved:true,
+      post:{
+        id:"DIAGNOSTIC-WARGASM",
+        url:"",
+        title:"Wargasm interview",
+        labels:["Rock"],
+        content:
+          "<p>Sam Matlock and Milkie Way discuss Wargasm and the band's music.</p>"
+      }
+    },
+    {
+      name:"THERAPY_PUNCTUATION",
+      subject:"Therapy?",
+      expectedArtistId:"13128523",
+      expectResolved:true,
+      post:{
+        id:"DIAGNOSTIC-THERAPY",
+        url:"",
+        title:"Therapy? interview",
+        labels:["Rock"],
+        content:"<p>Therapy? discuss their music.</p>"
+      }
+    },
+    {
+      name:"EARTH_AMBIGUOUS",
+      subject:"Earth",
+      expectedArtistId:"",
+      expectResolved:false,
+      post:{
+        id:"DIAGNOSTIC-EARTH",
+        url:"",
+        title:"Earth feature",
+        labels:[],
+        content:
+          "<p>A feature about Earth without unique member or biographical evidence.</p>"
+      }
+    },
+    {
+      name:"JESSICA_HERNANDEZ",
+      subject:"Jessica Hernandez",
+      expectedArtistId:"732516020",
+      expectResolved:true,
+      post:{
+        id:"DIAGNOSTIC-JESSICA-HERNANDEZ",
+        url:"",
+        title:"Jessica Hernandez interview",
+        labels:[],
+        content:"<p>Jessica Hernandez discusses her music.</p>"
+      }
+    },
+    {
+      name:"CRIMSON_PROJEKCT_NO_FALSE_DIRECT_ID",
+      subject:"The Crimson ProjeKct",
+      expectedArtistId:"",
+      expectResolved:false,
+      post:{
+        id:"DIAGNOSTIC-CRIMSON-PROJEKCT",
+        url:"",
+        title:"The Crimson ProjeKct interview",
+        labels:["Progressive Rock"],
+        content:
+          "<p>The Crimson ProjeKct discuss Adrian Belew, Tony Levin and King Crimson.</p>"
+      }
+    }
+  ];
+
+  var results=[];
+
+  cases.forEach(function(testCase){
+    var subject=testCase.subject;
+
+    var artist={
+      canonicalName:subject,
+      appleArtistId:""
+    };
+
+    var analysis={
+      primaryArtists:[subject],
+      people:[],
+      associatedPeople:[],
+      existingAppleArtistIds:[],
+      relationshipGraph:{
+        nodes:[],
+        edges:[]
+      }
+    };
+
+    var query=eePrimaryLookupQuery_(
+      analysis,
+      settings.storefront,
+      "LISTEN",
+      "musicArtist"
+    );
+
+    var artistResponse=null,
+        artistResults=[],
+        appleError="";
+
+    try{
+      artistResponse=eeAppleSearch_(query);
+      artistResults=(artistResponse&&artistResponse.results)||[];
+    }catch(error){
+      appleError=String(
+        error&&error.code||
+        error&&error.message||
+        error||
+        ""
+      );
+    }
+
+    var contextRequired=
+          eeDirectArtistContextRequired_(
+            artist,
+            artistResults
+          ),
+        contextProfile=null,
+        contextError="";
+
+    if(contextRequired){
+      try{
+        /*
+         * Call the MusicBrainz resolver directly rather than
+         * eeAcquireEntityProfile_(), so this diagnostic does not
+         * save an acquired profile.
+         */
+        contextProfile=eeMusicBrainzResolve_(
+          {
+            name:subject,
+            source:"CONTEXTUAL_RESOLVER_DIAGNOSTIC"
+          },
+          testCase.post
+        );
+      }catch(error){
+        contextError=String(
+          error&&error.message||
+          error||
+          ""
+        );
+      }
+    }
+
+    var identity=eeResolveDirectArtistIdentity_(
+      artist,
+      analysis,
+      artistResults,
+      contextProfile,
+      contextRequired,
+      contextError,
+      settings.storefront
+    );
+
+    var actualArtistId=String(
+      identity&&identity.artistId||""
+    );
+
+    var passed=testCase.expectResolved
+      ?(
+        actualArtistId===
+          String(testCase.expectedArtistId)
+      )
+      :(
+        actualArtistId===""
+      );
+
+    /*
+     * Ambiguous Earth must specifically remain subject to contextual
+     * protection rather than merely failing for unrelated reasons.
+     */
+    if(
+      testCase.name==="EARTH_AMBIGUOUS" &&
+      !contextRequired
+    ){
+      passed=false;
+    }
+
+    var row={
+      case:testCase.name,
+      subject:subject,
+      expectedArtistId:
+        testCase.expectedArtistId||null,
+      actualArtistId:
+        actualArtistId||null,
+      passed:passed,
+      appleError:appleError||null,
+      rawArtistResultCount:artistResults.length,
+      contextRequired:contextRequired,
+      contextError:contextError||null,
+      contextProfile:contextProfile
+        ?{
+          name:String(contextProfile.name||""),
+          musicBrainzId:
+            String(contextProfile.musicBrainzId||""),
+          country:String(contextProfile.country||""),
+          lifeSpan:contextProfile.lifeSpan||null,
+          sameNameCandidateCount:
+            Number(
+              contextProfile.sameNameCandidateCount||1
+            ),
+          contextDisambiguated:
+            !!contextProfile.contextDisambiguated,
+          relationshipHits:
+            contextProfile.relationshipHits||[]
+        }
+        :null,
+      identity:identity,
+      artistCandidates:
+        artistResults.slice(0,15).map(function(raw){
+          return {
+            artistId:String(raw.artistId||""),
+            artistName:String(raw.artistName||""),
+            primaryGenreName:
+              String(raw.primaryGenreName||"")
+          };
+        })
+    };
+
+    results.push(row);
+
+    console.log(JSON.stringify({
+      type:"APPLE_CONTEXTUAL_RESOLVER_DIAGNOSTIC",
+      result:row
+    }));
+  });
+
+  var failed=results.filter(function(row){
+    return !row.passed;
+  });
+
+  var summary={
+    status:failed.length?"FAIL":"OK",
+    readOnly:true,
+    casesTested:results.length,
+    passed:results.length-failed.length,
+    failed:failed.length,
+    results:results
+  };
+
+  console.log(JSON.stringify({
+    type:"APPLE_CONTEXTUAL_RESOLVER_DIAGNOSTIC_SUMMARY",
+    summary:summary
+  }));
+
+  return summary;
+}
+
+
 function eeDiagnoseAppleMusicArtistSearchExamples() {
   var settings=eeAppleSettings_();
   var names=[

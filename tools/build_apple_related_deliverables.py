@@ -2084,49 +2084,60 @@ function eeContextualAppleArtistCandidate_(
 
   if(!ids.length)return null;
 
-  var lookup;
-
-  try{
-    lookup=eeAppleLookup_({
-      ids:ids,
-      entity:"album",
-      storefront:storefront
-    });
-  }catch(error){
-    return null;
-  }
-
+  /*
+   * Catalogue depth is identity evidence here, so collect it independently
+   * for each candidate. A combined multi-ID lookup shares a single Apple
+   * response limit and can make a valid candidate appear artificially sparse.
+   */
   var seenCollections={};
 
-  (lookup.results||[]).forEach(function(raw){
-    if(String(raw.wrapperType||"")!=="collection")return;
+  ids.forEach(function(lookupId){
+    var lookup=null;
 
-    var rawArtistId=String(
-          raw.artistId||
-          raw.collectionArtistId||
-          ""
-        ),
-        rawArtistName=eeNorm_(raw.artistName||""),
-        collectionId=String(raw.collectionId||""),
-        releaseDate=String(raw.releaseDate||""),
-        yearMatch=releaseDate.match(/^(\d{4})/),
-        releaseYear=yearMatch?Number(yearMatch[1]):0;
+    try{
+      lookup=eeAppleLookup_({
+        ids:[lookupId],
+        entity:"album",
+        storefront:storefront
+      });
+    }catch(error){
+      /*
+       * Failure to inspect one candidate must not discard evidence already
+       * gathered for the remaining candidates.
+       */
+      return;
+    }
 
-    ids.forEach(function(id){
-      var candidate=candidates[id],
+    (lookup.results||[]).forEach(function(raw){
+      if(String(raw.wrapperType||"")!=="collection")return;
+
+      var candidate=candidates[lookupId],
+          rawArtistId=String(
+            raw.artistId||
+            raw.collectionArtistId||
+            ""
+          ),
+          rawArtistName=eeNorm_(raw.artistName||""),
           own=
-            rawArtistId===id ||
+            rawArtistId===lookupId ||
             rawArtistName===eeNorm_(candidate.artistName);
 
       if(!own)return;
 
-      var collectionKey=id+"|"+collectionId+"|"+
-        eeNorm_(raw.collectionName||"");
+      var collectionId=String(raw.collectionId||""),
+          collectionKey=
+            lookupId+"|"+
+            collectionId+"|"+
+            eeNorm_(raw.collectionName||"");
 
       if(seenCollections[collectionKey])return;
-      seenCollections[collectionKey]=true;
 
+      seenCollections[collectionKey]=true;
       candidate.ownReleaseCount+=1;
+
+      var releaseDate=String(raw.releaseDate||""),
+          yearMatch=releaseDate.match(/^(\d{4})/),
+          releaseYear=yearMatch?Number(yearMatch[1]):0;
 
       if(releaseYear){
         if(

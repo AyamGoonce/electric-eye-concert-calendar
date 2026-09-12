@@ -1193,3 +1193,28 @@ Build validation:
 - calendar workflow and calendar scraper code untouched
 
 The validated generated Code.gs was manually installed and saved in the existing Apps Script project. No deployment was performed.
+
+## 2026-09-12 — Contextual Apple artist identity resolver validated
+
+The contextual Apple artist resolver is now validated for production use independently of the later WATCH/READ expansion.
+
+Fix:
+- Ambiguous Apple artist candidates now gather album/catalogue evidence independently per candidate ID.
+- This avoids shared multi-ID Apple lookup limits making a valid candidate appear artificially sparse.
+- No ambiguity thresholds were weakened.
+- No artist-specific Apple ID exception was added.
+
+Read-only Apps Script regression:
+- Wargasm -> Apple artist 1476730259, WARGASM (UK), HIGH confidence
+  - qualifier country match: UK / GB
+  - own release count: 26
+  - catalogue span: 2019-2026
+  - decision: CONTEXTUAL_QUALIFIED_APPLE_ARTIST
+- Therapy? -> 13128523
+- Earth -> remains unresolved / context required
+- Jessica Hernandez -> 732516020
+- The Crimson ProjeKct -> no false direct Apple identity
+- summary: status OK, 5/5 passed
+
+The generated Code.gs was manually installed and saved in Apps Script for read-only validation.
+Calendar workflow and calendar scraper code were not touched.
