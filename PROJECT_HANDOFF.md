@@ -1305,3 +1305,25 @@ Calendar workflow and scraper code untouched.
 
 Next queued issue:
 - Charli xcx WATCH recommendations appearing in unrelated articles.
+
+## 2026-09-12 — Preserve resolved Apple LISTEN items by artist ID
+
+Fixed two linked production issues:
+
+1. LISTEN filtering now trusts a resolved Apple artist ID even when Apple's display name differs from the canonical site name.
+   Example:
+   - canonical site artist: Wargasm
+   - Apple display artist: WARGASM (UK)
+   - matching Apple artist ID remains authoritative.
+
+2. A RESOLVED artist catalogue with no recommendations is now eligible for automatic regeneration instead of remaining permanently cached empty.
+
+This prevents valid contextual identities from being discarded solely because Apple decorates or qualifies the artist display name.
+
+Build SHA256:
+a7d31dcc812fba36679c982113592804da58323e71f08e197e27120c345dc9bb
+
+Calendar workflow and scraper code untouched.
+
+Next queued issue:
+- Charli xcx WATCH recommendations appearing in unrelated articles.
