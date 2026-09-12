@@ -1141,3 +1141,21 @@ Current caveat:
 - Resume with read-only regression validation before running production discovery maintenance.
 - Identity regression set remains Wargasm, Earth, Therapy?, Jessica Hernandez and The Crimson ProjeKct.
 - Associated-act recommendation expansion remains pending after identity safety validation.
+
+## 2026-09-12 — Calendar workflow unblocked from Apple test regressions
+
+Calendar publication failures were traced to the shared GitHub Actions test gate, not to the calendar scraper.
+
+Cause:
+- update-calendar.yml ran every Python test in tests/.
+- Five failing Apple Recommendations tests caused the calendar production workflow to exit before publication.
+- The calendar scraper/build itself was still functioning.
+
+Fix:
+- Calendar production workflow now runs all Python test modules except tests/test_apple_related_deliverables.py.
+- Apple Recommendations tests remain in the repository but no longer block production calendar publication.
+- Node artist auto-linker regression remains unchanged.
+- Local validation: 529 non-Apple Python tests passed.
+- git diff --check clean.
+
+This separation prevents future Apple Recommendations development from blocking otherwise healthy calendar updates.

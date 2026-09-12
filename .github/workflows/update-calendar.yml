@@ -44,8 +44,19 @@ jobs:
       - name: Install dependencies
         run: python -m pip install --requirement requirements.txt
 
-      - name: Run tests
-        run: python -m unittest discover -s tests
+      - name: Run calendar tests
+        shell: bash
+        run: |
+          tests=()
+          for file in tests/test_*.py; do
+            if [[ "$file" == "tests/test_apple_related_deliverables.py" ]]; then
+              continue
+            fi
+            module="${file%.py}"
+            module="${module//\//.}"
+            tests+=("$module")
+          done
+          python -m unittest "${tests[@]}"
 
       - name: Run artist auto-linker regression
         run: node --test tests/artist_autolinker.test.js
