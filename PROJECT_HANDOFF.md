@@ -1100,3 +1100,44 @@ Not yet production-validated:
 - Do not run production discovery maintenance until regression diagnostics are checked.
 - First Apps Script regression targets: Wargasm, Earth, Therapy?, Jessica Hernandez, The Crimson ProjeKct, plus a no-artist article with a usable genre label.
 - Associated-act recommendation expansion remains the next feature after identity safety is validated.
+
+## 2026-09-12 — Contextual Apple qualified-name resolution checkpoint
+
+Follow-up to resolver v2 commit 9782a14.
+
+Added systemic Apple identity handling for qualified/disambiguated artist names such as:
+- article subject / MusicBrainz identity: Wargasm
+- Apple display identity: WARGASM (UK)
+
+Implementation:
+- Added country-aware qualified-name recognition for Apple artist results.
+- MusicBrainz country/context may validate an Apple qualifier such as "(UK)".
+- Added Apple catalogue lookup across candidate artist IDs.
+- Candidate ranking considers:
+  - exact vs qualified artist name
+  - qualifier/country agreement
+  - own-release count
+  - earliest/latest own-release years
+  - compatibility with MusicBrainz activity dates
+- A substantial own catalogue can distinguish a real primary artist identity from a feature-credit/secondary Apple identity.
+- Contextual candidates with catalogue dates contradicting the MusicBrainz activity period are penalized/rejected.
+- Previously stored Apple IDs and identity mappings no longer bypass contextual validation for ambiguous/common artist names. This is required so resolver upgrades can correct an already-resolved wrong identity instead of preserving it merely because it was stored earlier.
+
+Wargasm evidence established during diagnostics:
+- correct article subject: newer UK WARGASM, MusicBrainz contextual identity includes Sam Matlock and Milkie Way.
+- Apple artist 1476730259 = WARGASM (UK), substantial catalogue beginning 2019, including Venom, EXPLICIT: The MiXXXtape, Spit., Salma Hayek, etc.
+- Apple artist 1778991054 = Wargasm (UK), only one feature-credit release observed.
+- Apple artist 22575637 = older US Wargasm, catalogue beginning in the 1980s; incompatible with the UK act.
+- No artist-specific Wargasm Apple ID exception was added.
+
+Local validation:
+- deterministic double build SHA-256:
+  6c47f4f991ee8c204b002c910f6e5bc840f5ed0454cec39c094ebf14ef9b22b0
+- generated Code.gs JavaScript syntax: OK
+- git diff --check: clean
+
+Current caveat:
+- This latest qualified-name/catalogue resolver has NOT yet been pasted into Apps Script or production-tested.
+- Resume with read-only regression validation before running production discovery maintenance.
+- Identity regression set remains Wargasm, Earth, Therapy?, Jessica Hernandez and The Crimson ProjeKct.
+- Associated-act recommendation expansion remains pending after identity safety validation.
