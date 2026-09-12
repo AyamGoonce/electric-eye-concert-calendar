@@ -1492,3 +1492,30 @@ Expected production result for the Monty album review:
 - no Charli xcx WATCH contamination from the polluted multi-primary path
 
 Calendar code/workflow untouched.
+
+## 2026-09-12 — Structured review identity fix verified live
+
+Production Apps Script deployment updated to version 18.
+
+Targeted refresh results:
+- 9108689668210977804 — Album Review: Monty Alexander - A Jamarican In Paris
+  - primaryArtists: ["Monty Alexander"]
+  - artistId: 2987018
+  - identityLevel: HIGH
+  - WATCH: 0
+- 1848550250756678869 — Monty Alexander @ Birdland
+  - primaryArtists: ["Monty Alexander"]
+  - artistId: 2987018
+  - identityLevel: HIGH
+  - WATCH: 0
+
+Public endpoint verification:
+- album-review payload: 42,652 bytes, down from approximately 96,379 bytes before correction
+- Charli xcx items: 0
+- Birdland payload: 49,594 bytes
+- Charli xcx items: 0
+
+Important follow-up finding:
+Targeted refresh reported Birdland LISTEN=43, but the public endpoint immediately returned LISTEN=50. This suggests the public payload cache may not be invalidated when stored payloads are regenerated. Investigate eeGetPayload_/payload-write cache invalidation next.
+
+Calendar remains untouched.
