@@ -957,3 +957,36 @@ because the >=3-release evidence bonus is required to cross the score threshold.
 
 The Crimson ProjeKct will be a regression case for both search-recall fallback
 and later associated-act expansion.
+
+## 2026-09-12 — Direct Apple musicArtist search diagnostic added
+
+Added read-only diagnostic:
+
+`eeDiagnoseAppleMusicArtistSearchExamples()`
+
+Regression cases:
+- The Crimson ProjeKct
+- Therapy?
+- Earth
+- Jessica Hernandez
+
+Purpose:
+- test Apple's direct `musicArtist` entity search independently from album
+  search;
+- determine whether artist-first lookup can recover identities that album
+  search currently misses;
+- measure whether exact normalized artist-name matches are returned before
+  changing production resolver behavior.
+
+This diagnostic does not mutate Apple Artists, Apple Article Identity,
+Apple Payloads, cursors, or resolver mappings.
+
+Validation:
+- two consecutive generated builds were identical:
+  `b5225095cd192b8d6ac387aa87ec8c3851ad0070e4f1190808d271da4c5b21b4`
+- Apps Script JavaScript syntax check passed;
+- git diff --check passed.
+
+Next step:
+Install the rebuilt Code.gs in the existing Apps Script project and run
+`eeDiagnoseAppleMusicArtistSearchExamples()` manually.

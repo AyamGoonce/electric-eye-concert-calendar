@@ -1788,6 +1788,92 @@ function eeDiagnoseSparseExactArtistExamples() {
   ]);
 }
 
+
+function eeDiagnoseAppleMusicArtistSearchExamples() {
+  var settings=eeAppleSettings_();
+  var names=[
+    "The Crimson ProjeKct",
+    "Therapy?",
+    "Earth",
+    "Jessica Hernandez"
+  ];
+  var report=[];
+
+  names.forEach(function(name){
+    var query={
+      category:"LISTEN",
+      media:"music",
+      entity:"musicArtist",
+      term:name,
+      intent:"PRIMARY_ARTIST_IDENTITY",
+      relationship:"primary artist identity",
+      relationshipWeight:100,
+      storefront:settings.storefront
+    };
+
+    var response,results=[],queryError="";
+    try{
+      response=eeAppleSearch_(query);
+      results=response.results||[];
+    }catch(error){
+      queryError=String(error&&error.code||error&&error.message||error);
+    }
+
+    var subject=eeNorm_(name);
+    var candidates=results.map(function(raw){
+      var artistName=String(raw.artistName||raw.collectionName||raw.trackName||"");
+      return {
+        artistId:String(raw.artistId||raw.collectionArtistId||""),
+        artistName:artistName,
+        normalizedName:eeNorm_(artistName),
+        exactName:eeNorm_(artistName)===subject,
+        primaryGenreName:String(raw.primaryGenreName||""),
+        artistLinkUrl:String(raw.artistLinkUrl||raw.collectionViewUrl||"")
+      };
+    });
+
+    var exact=candidates.filter(function(value){
+      return value.exactName&&value.artistId;
+    });
+
+    var row={
+      input:name,
+      normalizedInput:subject,
+      query:{
+        term:name,
+        media:"music",
+        entity:"musicArtist",
+        storefront:settings.storefront
+      },
+      queryError:queryError||null,
+      rawResultCount:results.length,
+      exactMatches:exact,
+      candidates:candidates.slice(0,15)
+    };
+
+    report.push(row);
+    console.log(JSON.stringify({
+      type:"APPLE_MUSIC_ARTIST_SEARCH_DIAGNOSTIC",
+      result:row
+    }));
+  });
+
+  var summary={
+    status:"OK",
+    readOnly:true,
+    storefront:settings.storefront,
+    artistsTested:report.length,
+    results:report
+  };
+
+  console.log(JSON.stringify({
+    type:"APPLE_MUSIC_ARTIST_SEARCH_DIAGNOSTIC_SUMMARY",
+    summary:summary
+  }));
+
+  return summary;
+}
+
 function eeRetryBackfillFrom9() {
   PropertiesService.getScriptProperties()
     .setProperty("EE_APPLE_BACKFILL_INDEX", "9");
