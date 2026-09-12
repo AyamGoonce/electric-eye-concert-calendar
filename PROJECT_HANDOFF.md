@@ -842,3 +842,38 @@ Next step:
 Install the rebuilt Code.gs in the existing Apps Script project and run
 `eeRunArtistDiscoveryMaintenanceOnce()` once. This should trigger the one-time
 resolver-version cursor reset and begin draining the stale identity backlog.
+
+## 2026-09-12 — Automatic resolver-v1 stale identity sweep validated
+
+Ran `eeRunArtistDiscoveryMaintenanceOnce()` after installing the resolver-version
+cursor-reset logic.
+
+Observed behavior:
+
+Knower:
+- stale artist was automatically reconsidered
+- 9 Apple calls
+- 0 cache hits
+- elapsed ~89.8 seconds
+- terminal status remained AMBIGUOUS
+- terminal reason: PLAUSIBLE_MATCH
+
+Josie:
+- worker automatically advanced to the next eligible artist
+- performed part of discovery
+- stopped safely with:
+  `APPLE_SEARCH_EXECUTION_HEADROOM`
+- terminal worker result: RETRY_LATER
+- transient retry count: 1
+- discovery cursor pinned at row 3
+
+This confirms:
+- the resolver-v1 sweep restarted automatically;
+- stale terminal artists are processed without manual per-artist intervention;
+- the worker can process multiple candidates in one maintenance run;
+- execution-headroom protection stops the run before a hard Apps Script timeout;
+- the cursor remains on the interrupted artist so the next maintenance cycle
+  resumes rather than skipping it.
+
+The stale identity backlog can therefore drain incrementally through normal
+maintenance runs.
