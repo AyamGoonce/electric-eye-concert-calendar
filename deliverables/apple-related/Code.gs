@@ -2377,30 +2377,34 @@ function eeFastArticleIdentity_(post, registry) {
               :"other";
 
   /*
-   * Concert-review titles provide an authoritative primary subject:
+   * Structured review titles provide an authoritative primary subject:
    *     Artist @ Venue, City - Date
+   *     Album Review: Artist - Album
    *
-   * Other performers can legitimately be associated with the same article,
+   * Other entities can legitimately be associated with the same article,
    * but an article-index association alone must not promote them to primary
    * artist status when the title identifies one exact artist.
    */
-  if(articleType==="concert_review"&&!override){
-    var concertTitleSubject=eeTitleArtistCandidate_(title),
-        concertTitleNorm=eeNorm_(concertTitleSubject);
+  if(
+    (articleType==="concert_review"||articleType==="album_review") &&
+    !override
+  ){
+    var structuredTitleSubject=eeTitleArtistCandidate_(title),
+        structuredTitleNorm=eeNorm_(structuredTitleSubject);
 
-    if(concertTitleNorm){
-      var exactConcertMatches=matches.filter(function(item){
+    if(structuredTitleNorm){
+      var exactStructuredMatches=matches.filter(function(item){
         return eeUnique_(
           [item.artist.canonicalName]
             .concat(item.artist.aliases||[])
             .concat(item.artist.alternateSpellings||[])
         ).some(function(name){
-          return eeNorm_(name)===concertTitleNorm;
+          return eeNorm_(name)===structuredTitleNorm;
         });
       });
 
-      if(exactConcertMatches.length){
-        matches=exactConcertMatches;
+      if(exactStructuredMatches.length){
+        matches=exactStructuredMatches;
       }
     }
   }
