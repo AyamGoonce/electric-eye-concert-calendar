@@ -900,3 +900,60 @@ Validation:
 - git diff --check passed.
 
 No resolver behavior has been changed yet.
+
+## 2026-09-12 — Sparse-exact vs search-recall cases separated
+
+Ran `eeDiagnoseSparseExactArtistExamples()`.
+
+### The Crimson ProjeKct
+
+Apple album search:
+- query: The Crimson ProjeKct
+- raw results: 3
+- exact-name Apple artist IDs: none
+- returned artist identities included:
+  - King Crimson (Apple artist ID 627204)
+  - Markus Reuter (Apple artist ID 49873671)
+- resolver score: 0
+- result: LOW / BEST_SCORE_BELOW_70
+
+Conclusion:
+The Crimson ProjeKct is NOT a sparse exact-name scoring failure.
+The failure occurs earlier: album search does not surface an exact primary
+artist identity. This belongs to the search-recall class already seen with
+artists such as Therapy? and Earth.
+
+It also illustrates why controlled associated-act recommendations are useful:
+Apple itself surfaces directly related King Crimson material around the query,
+but related acts must remain distinct from primary-artist identity.
+
+### Jessica Hernandez
+
+Apple album search:
+- one exact-name artist ID: 732516020
+- only 2 exact-name release rows
+- exact-name score: 30
+- result: LOW / BEST_SCORE_BELOW_70
+
+Conclusion:
+Jessica Hernandez remains the clean regression case for the sparse-catalogue
+identity-scoring problem. A unique exact artist identity is currently rejected
+because the >=3-release evidence bonus is required to cross the score threshold.
+
+### Resolver work now required
+
+1. Sparse exact identity:
+   safely accept a sole exact-name Apple artist candidate without requiring a
+   minimum three-release catalogue solely to establish identity.
+
+2. Artist-first/search-recall fallback:
+   when album search cannot establish an exact artist identity, query Apple's
+   artist entity directly, then use the resulting artist ID for catalogue
+   discovery.
+
+3. After identity is reliable, implement controlled one-hop associated-act
+   recommendation expansion for direct members, parent bands, side projects,
+   and strongly evidenced collaborations, without allowing relationship drift.
+
+The Crimson ProjeKct will be a regression case for both search-recall fallback
+and later associated-act expansion.
