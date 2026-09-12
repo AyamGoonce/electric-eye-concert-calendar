@@ -1843,3 +1843,23 @@ deployment. No deployment or production worker was run here.
 - Deterministic generated `Code.gs` SHA-256: `ad63143cc87efd8957c6f0c1a23c0baae43147cea4c52b36102758e22e2d4bae`.
 - Blogger theme SHA-256 remains unchanged: `5223bc5cc69ca7f0cbe2dad56ece024e0aac60e17cabdd37df93cb5202f7734a`.
 - After deployment, refresh post `1518411335735396864` and require a real Gyasi Apple artist ID plus direct artist recommendations before declaring the production issue fixed.
+
+
+## 2026-09-13 — Recover Apple identity from trusted historical payloads
+
+- Base commit: `093750ffeec0779f41dc45fd779bafc3b25d0f56`.
+- v24 correctly rejected `RESOLVED` artist rows with a blank Apple artist ID, but live Gyasi still fell back to genre because fresh discovery did not recover the ID.
+- The site already contained older HIGH-confidence READY Gyasi payloads with the verified Apple artist ID `1462471294`.
+- Added systemic historical catalogue recovery before external rediscovery.
+- Recovery is accepted only when prior READY payloads:
+  - have one canonical primary artist matching the current artist,
+  - have HIGH identity confidence,
+  - contain a non-empty Apple artist ID,
+  - and all qualifying historical payloads agree on exactly one Apple artist ID.
+- Conflicting historical IDs are rejected.
+- A valid historical recovery restores both the verified Apple artist ID and its recommendation catalogue, persists the artist as RESOLVED, and avoids unnecessary external discovery.
+- No Gyasi-specific hard-code was added.
+- Focused recovery regressions: 4/4 passed.
+- Full Apple suite returned only the same 6 pre-existing known failures, with no new failures or errors.
+- Protected calendar/non-Apple suite: 530/530 passed.
+- Production acceptance still requires a live targeted Gyasi refresh returning Apple artist ID `1462471294` and direct artist recommendations rather than `GENRE_FALLBACK`.

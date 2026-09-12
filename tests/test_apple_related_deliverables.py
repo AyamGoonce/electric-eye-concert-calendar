@@ -434,23 +434,41 @@ JSON.stringify({status:record.status,savedStatus:saved.status,artistId:record.ap
 ''')
         self.assertEqual('{"status":"DEFERRED","savedStatus":"DEFERRED","artistId":"","error":"APPLE_ARTIST_ID_UNRESOLVED","categories":1,"retryAfter":true,"immediateRetry":false}', result)
 
+    def test_historical_ready_payload_requires_one_agreed_artist_id(self):
+        result = self.run_apps_script(r"""
+var rows=[
+ ["postId","","","","payload","status"],
+ ["1","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"a"}]}]}),"READY"],
+ ["2","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"b"}]}]}),"READY"],
+ ["3","","","",JSON.stringify({subject:{primaryArtists:["Other Artist"]},identity:{level:"HIGH",artistId:"999"},categories:[{category:"LISTEN",items:[{stableId:"c"}]}]}),"READY"]
+];
+eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return rows;}};}};};
+eeDecodePayloadCell_=function(value){return JSON.parse(value);};
+var agreed=eeHistoricalArtistCatalogueRecovery_({canonicalName:"Example Artist"});
+rows.push(["4","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"456"},categories:[{category:"LISTEN",items:[{stableId:"d"}]}]}),"READY"]);
+var conflict=eeHistoricalArtistCatalogueRecovery_({canonicalName:"Example Artist"});
+JSON.stringify({agreed:agreed&&agreed.appleArtistId||"",conflict:conflict&&conflict.appleArtistId||""});
+""")
+        self.assertEqual('{"agreed":"123","conflict":""}', result)
+
     def test_poisoned_resolved_catalogue_recovers_then_reuses_direct_results(self):
         result = self.run_apps_script(r'''
 var registry={schemaVersion:1,structuralLabels:[],articleOverrides:{},artists:[{canonicalName:"Example Artist",slug:"example-artist",aliases:[],articleIds:["post"],ambiguityClass:"distinctive"}]};
 var stored={artistKey:"example-artist",canonicalName:"Example Artist",appleArtistId:"",identityConfidence:"HIGH",status:"RESOLVED",identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION,catalogue:{categories:[{category:"LISTEN",items:[{stableId:"fallback",title:"Fallback",creator:"Other"}]}]}};
-var primaryCalls=0,writes=0,properties={};
+var primaryCalls=0,writes=0,historicalCalls=0,properties={};
 eeArtistRegistry_=function(){return registry;};eePutArticleIdentity_=function(){};eeGetArtistCatalogue_=function(){return stored;};
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
-eePrimaryArtistIdentityPayload_=function(){primaryCalls+=1;return {identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"direct",title:"Direct Album",creator:"Example Artist",appleArtistId:"123",relevanceScore:100}]}],diagnostics:{}};};
+eeHistoricalArtistCatalogueRecovery_=function(artist){historicalCalls+=1;return {appleArtistId:"123",categories:[{category:"LISTEN",items:[{stableId:"direct",title:"Direct Album",creator:"Example Artist",appleArtistId:"123",relevanceScore:100}]}]};};
+eePrimaryArtistIdentityPayload_=function(){primaryCalls+=1;throw new Error("DISCOVERY_SHOULD_NOT_RUN");};
 eeGeneratePayloadLegacy_=function(){throw new Error("DEEP_DISCOVERY_NOT_REQUIRED");};
 eePutArtistCatalogue_=function(record){writes+=1;record.identityResolverVersion=EE_APPLE_IDENTITY_RESOLVER_VERSION;stored=record;};
 eeAppleSettings_=function(){return {storefront:"FR"};};eeAffiliateUrl_=function(category,url){return url;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
 var post={id:"post",title:"Example Artist returns",labels:["Example Artist"],content:"",url:"/post"};
 var first=eeGeneratePayload_(post),second=eeGeneratePayload_(post);
-JSON.stringify({primaryCalls:primaryCalls,writes:writes,storedStatus:stored.status,storedId:stored.appleArtistId,firstMode:first.diagnostics.recommendationMode,firstId:first.identity.artistId,firstItem:first.categories[0].items[0].stableId,secondMode:second.diagnostics.recommendationMode,secondItem:second.categories[0].items[0].stableId});
+JSON.stringify({primaryCalls:primaryCalls,writes:writes,historicalCalls:historicalCalls,storedStatus:stored.status,storedId:stored.appleArtistId,firstMode:first.diagnostics.recommendationMode,firstId:first.identity.artistId,firstItem:first.categories[0].items[0].stableId,secondMode:second.diagnostics.recommendationMode,secondItem:second.categories[0].items[0].stableId});
 ''')
-        self.assertEqual('{"primaryCalls":1,"writes":1,"storedStatus":"RESOLVED","storedId":"123","firstMode":"ARTIST_RELATIONSHIP","firstId":"123","firstItem":"direct","secondMode":"ARTIST_RELATIONSHIP","secondItem":"direct"}', result)
+        self.assertEqual('{"primaryCalls":0,"writes":1,"historicalCalls":1,"storedStatus":"RESOLVED","storedId":"123","firstMode":"ARTIST_RELATIONSHIP","firstId":"123","firstItem":"direct","secondMode":"ARTIST_RELATIONSHIP","secondItem":"direct"}', result)
 
     def test_minimal_pending_catalogue_is_ready_without_waiting_for_related_artist(self):
         result = self.run_apps_script(r'''
@@ -461,6 +479,7 @@ eeArtistRegistry_=function(){return {schemaVersion:1,articleOverrides:{},structu
  {canonicalName:"Related",slug:"related",aliases:[],articleIds:["1"],ambiguityClass:"distinctive"}
 ]};};
 eePutArticleIdentity_=function(){};eeGetArtistCatalogue_=function(){return null;};
+eeHistoricalArtistCatalogueRecovery_=function(){return null;};
 eeDiscoverArtistCatalogue_=function(artist){discoveries.push(artist.slug);if(artist.slug==="related")throw new Error("RELATED_MUST_NOT_BLOCK");return {artistKey:"primary",canonicalName:"Primary",appleArtistId:"99",status:"RESOLVED",catalogue:{categories:[{category:"LISTEN",items:[{stableId:"album",title:"Album",creator:"Primary"}]}],enrichment:{status:"PENDING"}}};};
 eePutPayload_=function(post,payload,status){puts.push({status:status,payload:payload});};
 var payload=eeProcessPost_({id:"1",title:"Primary and Related",labels:[],content:"",url:"/1"});

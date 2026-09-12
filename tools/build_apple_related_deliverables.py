@@ -3686,11 +3686,137 @@ function eeDiscoverArtistCatalogueReadOnly_(artist,post) {
   return record;
 }
 
+function eeHistoricalArtistCatalogueRecovery_(artist) {
+  var values=eePayloadSheet_().getDataRange().getValues(),
+      needle=eeNorm_((artist||{}).canonicalName||""),
+      ids={},best=null,bestCount=-1;
+  if(!needle)return null;
+
+  for(var row=1;row<values.length;row+=1){
+    if(String(values[row][5]||"")!=="READY")continue;
+
+    var payload={};
+    try{payload=eeDecodePayloadCell_(values[row][4]);}
+    catch(error){continue;}
+
+    if(!eePayloadHasRecommendations_(payload))continue;
+
+    var names=((payload.subject||{}).primaryArtists||[]),
+        identity=payload.identity||{},
+        id=String(identity.artistId||"");
+
+    if(
+      names.length!==1 ||
+      eeNorm_(names[0])!==needle ||
+      String(identity.level||"")!=="HIGH" ||
+      !id
+    )continue;
+
+    ids[id]=true;
+    if(Object.keys(ids).length>1)return null;
+
+    var count=0;
+    (payload.categories||[]).forEach(function(group){
+      count+=(group.items||[]).length;
+    });
+
+    if(count>bestCount){
+      bestCount=count;
+      best={
+        appleArtistId:id,
+        categories:JSON.parse(JSON.stringify(payload.categories||[])),
+        representativePostId:String(payload.postId||"")
+      };
+    }
+  }
+
+  return Object.keys(ids).length===1?best:null;
+}
+
 function eeGeneratePayload_(post) {
-  var registry=eeArtistRegistry_(),analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis);
-  if(!analysis.primaryArtistKeys.length)return eeAssemblePayloadFromCatalogues_(post,analysis,[]);
+  var registry=eeArtistRegistry_(),
+      analysis=eeFastArticleIdentity_(post,registry);
+  eePutArticleIdentity_(analysis);
+
+  if(!analysis.primaryArtistKeys.length)
+    return eeAssemblePayloadFromCatalogues_(post,analysis,[]);
+
   var catalogues=[];
-  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key),needsResolution=eeArtistNeedsIdentityResolution_(record),needsRevalidation=eeArtistNeedsResolverRevalidation_(record),needsCatalogueRecovery=!!(record&&record.status==="RESOLVED"&&!eePayloadHasRecommendations_(record.catalogue));if((needsResolution||needsRevalidation||needsCatalogueRecovery)&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION)record=eeDiscoverArtistCatalogueReadOnly_(artist,post);else record=eeDiscoverArtistCatalogue_(artist,post,false,needsRevalidation||needsCatalogueRecovery);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
+
+  analysis.primaryArtistKeys.forEach(function(key,index){
+    var artist=registry.artists.filter(function(value){
+          return value.slug===key;
+        })[0]||{
+          canonicalName:analysis.primaryArtists[index],
+          slug:key,
+          aliases:[],
+          ambiguityClass:"provisional"
+        },
+        record=eeGetArtistCatalogue_(key);
+
+    if(!String((record||{}).appleArtistId||"")){
+      var historical=eeHistoricalArtistCatalogueRecovery_(artist);
+
+      if(historical){
+        record={
+          artistKey:artist.slug,
+          canonicalName:artist.canonicalName,
+          appleArtistId:historical.appleArtistId,
+          musicBrainzId:String((record||{}).musicBrainzId||artist.musicBrainzId||""),
+          identityConfidence:"HIGH",
+          status:"RESOLVED",
+          error:"",
+          categories:historical.categories,
+          representativePostId:String(post.id),
+          transientRetryCount:0,
+          lastTransientError:"",
+          retryAfter:"",
+          identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION
+        };
+
+        record.catalogue={
+          schemaVersion:1,
+          generationVersion:EE_APPLE_CONFIG.generationVersion,
+          artistKey:record.artistKey,
+          canonicalName:record.canonicalName,
+          categories:record.categories
+        };
+
+        if(!(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION))
+          eePutArtistCatalogue_(record);
+      }
+    }
+
+    var needsResolution=eeArtistNeedsIdentityResolution_(record),
+        needsRevalidation=eeArtistNeedsResolverRevalidation_(record),
+        needsCatalogueRecovery=!!(
+          record &&
+          record.status==="RESOLVED" &&
+          !eePayloadHasRecommendations_(record.catalogue)
+        );
+
+    if(
+      (needsResolution||needsRevalidation||needsCatalogueRecovery) &&
+      !catalogues.length
+    ){
+      if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION)
+        record=eeDiscoverArtistCatalogueReadOnly_(artist,post);
+      else
+        record=eeDiscoverArtistCatalogue_(
+          artist,
+          post,
+          false,
+          needsRevalidation||needsCatalogueRecovery
+        );
+    }
+
+    if(
+      record &&
+      record.status==="RESOLVED" &&
+      eePayloadHasRecommendations_(record.catalogue)
+    )catalogues.push(record);
+  });
+
   return eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);
 }
 
