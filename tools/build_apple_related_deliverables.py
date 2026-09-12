@@ -2156,6 +2156,338 @@ function eeRepairContaminatedReadyPayloadsBatch_(startIndex,maxCandidates) {
   console.log(JSON.stringify(result));
   return result;
 }
+
+function eeReadyRepairFailures_() {
+  var raw=PropertiesService.getScriptProperties()
+    .getProperty("EE_APPLE_READY_REPAIR_FAILURES")||"{}";
+  try{
+    var parsed=JSON.parse(raw);
+    return parsed&&typeof parsed==="object"?parsed:{};
+  }catch(error){
+    return {};
+  }
+}
+
+function eeSaveReadyRepairFailures_(failures) {
+  PropertiesService.getScriptProperties().setProperty(
+    "EE_APPLE_READY_REPAIR_FAILURES",
+    JSON.stringify(failures||{})
+  );
+}
+
+function eeDeleteReadyRepairWorkerTriggers_() {
+  ScriptApp.getProjectTriggers().forEach(function(trigger){
+    if(trigger.getHandlerFunction()==="eeRunReadyRepairWorker"){
+      ScriptApp.deleteTrigger(trigger);
+    }
+  });
+}
+
+function eeScheduleReadyRepairWorker_() {
+  eeDeleteReadyRepairWorkerTriggers_();
+  ScriptApp.newTrigger("eeRunReadyRepairWorker")
+    .timeBased()
+    .after(60*1000)
+    .create();
+}
+
+function eeReadyRepairWorkerStatus() {
+  var props=PropertiesService.getScriptProperties(),
+      failures=eeReadyRepairFailures_(),
+      permanent=0,
+      retrying=0;
+
+  Object.keys(failures).forEach(function(postId){
+    if(Number((failures[postId]||{}).count||0)>=3)permanent+=1;
+    else retrying+=1;
+  });
+
+  var result={
+    active:props.getProperty("EE_APPLE_READY_REPAIR_ACTIVE")==="1",
+    repaired:Number(
+      props.getProperty("EE_APPLE_READY_REPAIR_REPAIRED")||0
+    ),
+    runs:Number(
+      props.getProperty("EE_APPLE_READY_REPAIR_RUNS")||0
+    ),
+    permanentlySkipped:permanent,
+    retrying:retrying
+  };
+
+  console.log(JSON.stringify(result));
+  return result;
+}
+
+function eeStopReadyRepairWorker() {
+  var props=PropertiesService.getScriptProperties();
+  props.setProperty("EE_APPLE_READY_REPAIR_ACTIVE","0");
+  eeDeleteReadyRepairWorkerTriggers_();
+
+  var result={
+    status:"STOPPED",
+    worker:eeReadyRepairWorkerStatus()
+  };
+
+  console.log(JSON.stringify(result));
+  return result;
+}
+
+function eeStartReadyRepairWorker() {
+  var props=PropertiesService.getScriptProperties();
+
+  eeDeleteReadyRepairWorkerTriggers_();
+
+  props.setProperty("EE_APPLE_READY_REPAIR_ACTIVE","1");
+  props.setProperty("EE_APPLE_READY_REPAIR_REPAIRED","0");
+  props.setProperty("EE_APPLE_READY_REPAIR_RUNS","0");
+  props.deleteProperty("EE_APPLE_READY_REPAIR_FAILURES");
+
+  return eeRunReadyRepairWorker();
+}
+
+function eeRunReadyRepairWorker() {
+  var props=PropertiesService.getScriptProperties();
+
+  if(props.getProperty("EE_APPLE_READY_REPAIR_ACTIVE")!=="1"){
+    return {
+      status:"STOPPED",
+      message:"READY repair worker is not active."
+    };
+  }
+
+  var lock=LockService.getScriptLock();
+
+  if(!lock.tryLock(5000)){
+    eeScheduleReadyRepairWorker_();
+    return {
+      status:"BUSY",
+      message:"Another READY repair worker execution is active."
+    };
+  }
+
+  var started=Date.now(),
+      processed=0,
+      repairedThisRun=0,
+      failuresThisRun=0,
+      skippedThisRun=0,
+      rows=[];
+
+  try{
+    eeDeleteReadyRepairWorkerTriggers_();
+
+    var previousSkip=EE_APPLE_AUDIT_SKIP_PREVIEW,
+        audit;
+
+    EE_APPLE_AUDIT_SKIP_PREVIEW=true;
+
+    try{
+      audit=eeAuditContaminatedReadyPayloads();
+    }finally{
+      EE_APPLE_AUDIT_SKIP_PREVIEW=previousSkip;
+    }
+
+    var failures=eeReadyRepairFailures_(),
+        registry=eeArtistRegistry_(),
+        candidates=audit.findings.filter(function(finding){
+          if(
+            finding.classification!=="CONTAMINATED" ||
+            !finding.automaticRepairSafe
+          ){
+            return false;
+          }
+
+          var prior=failures[String(finding.postId)]||{};
+          return Number(prior.count||0)<3;
+        });
+
+    if(!candidates.length){
+      props.setProperty("EE_APPLE_READY_REPAIR_ACTIVE","0");
+      eeDeleteReadyRepairWorkerTriggers_();
+
+      var finished={
+        status:"COMPLETE",
+        repaired:Number(
+          props.getProperty("EE_APPLE_READY_REPAIR_REPAIRED")||0
+        ),
+        runs:Number(
+          props.getProperty("EE_APPLE_READY_REPAIR_RUNS")||0
+        ),
+        permanentlySkipped:Object.keys(failures).filter(function(postId){
+          return Number((failures[postId]||{}).count||0)>=3;
+        }).length,
+        remainingAutomaticRepairSafe:0
+      };
+
+      console.log(JSON.stringify(finished));
+      return finished;
+    }
+
+    for(var i=0;i<candidates.length;i+=1){
+      if(processed>=2)break;
+
+      if(processed>0 && Date.now()-started>180000)break;
+
+      var finding=candidates[i],
+          postId=String(finding.postId||""),
+          row={
+            postId:postId,
+            title:finding.title,
+            status:"PRESERVED_READY"
+          };
+
+      processed+=1;
+
+      try{
+        var existing=eeGetPayload_(postId);
+
+        if(!existing || !eePayloadHasRecommendations_(existing)){
+          throw new Error("EXISTING_READY_PAYLOAD_MISSING");
+        }
+
+        var post=eeFetchPostById_(postId),
+            previousReadOnly=EE_APPLE_READ_ONLY_GENERATION,
+            candidate;
+
+        try{
+          EE_APPLE_READ_ONLY_GENERATION=true;
+          candidate=eeGeneratePayload_(post);
+        }finally{
+          EE_APPLE_READ_ONLY_GENERATION=previousReadOnly;
+        }
+
+        candidate=eeMergeValidatedRepairItems_(
+          candidate,
+          existing,
+          registry
+        );
+
+        if(!eePayloadHasRecommendations_(candidate)){
+          throw new Error("NO_RECOMMENDATIONS");
+        }
+
+        var qualityIssues=eeReadyQualityIssues_(candidate,registry);
+
+        if(qualityIssues.length){
+          failures[postId]={
+            count:3,
+            error:"QUALITY_VALIDATION_FAILED",
+            details:qualityIssues.slice(0,12),
+            title:finding.title
+          };
+
+          failuresThisRun+=1;
+          skippedThisRun+=1;
+
+          row.status="SKIPPED_VALIDATION";
+          row.error="QUALITY_VALIDATION_FAILED";
+          row.details=qualityIssues.slice(0,12);
+
+          rows.push(row);
+          continue;
+        }
+
+        eePutReviewedQualityRepair_(post,candidate);
+
+        delete failures[postId];
+
+        repairedThisRun+=1;
+
+        row.status="REPAIRED";
+        row.primaryArtists=
+          (candidate.subject||{}).primaryArtists||[];
+
+        row.categories={LISTEN:0,WATCH:0,READ:0};
+
+        (candidate.categories||[]).forEach(function(group){
+          var category=String(group.category||"").toUpperCase();
+          if(Object.prototype.hasOwnProperty.call(row.categories,category)){
+            row.categories[category]=(group.items||[]).length;
+          }
+        });
+
+        rows.push(row);
+
+      }catch(error){
+        var previous=failures[postId]||{},
+            count=Number(previous.count||0)+1,
+            message=String(
+              error&&error.code ||
+              error&&error.message ||
+              error
+            );
+
+        failures[postId]={
+          count:count,
+          error:message,
+          title:finding.title
+        };
+
+        failuresThisRun+=1;
+
+        if(count>=3)skippedThisRun+=1;
+
+        row.status=count>=3
+          ?"SKIPPED_AFTER_3_FAILURES"
+          :"RETRY_LATER";
+        row.error=message;
+        row.failureCount=count;
+
+        rows.push(row);
+      }
+    }
+
+    eeSaveReadyRepairFailures_(failures);
+
+    var totalRepaired=
+          Number(
+            props.getProperty(
+              "EE_APPLE_READY_REPAIR_REPAIRED"
+            )||0
+          ) + repairedThisRun,
+        runs=
+          Number(
+            props.getProperty(
+              "EE_APPLE_READY_REPAIR_RUNS"
+            )||0
+          ) + 1;
+
+    props.setProperty(
+      "EE_APPLE_READY_REPAIR_REPAIRED",
+      String(totalRepaired)
+    );
+
+    props.setProperty(
+      "EE_APPLE_READY_REPAIR_RUNS",
+      String(runs)
+    );
+
+    var remainingEstimate=Math.max(
+      0,
+      candidates.length-repairedThisRun-skippedThisRun
+    );
+
+    eeScheduleReadyRepairWorker_();
+
+    var result={
+      status:"CONTINUING",
+      processed:processed,
+      repairedThisRun:repairedThisRun,
+      failuresThisRun:failuresThisRun,
+      repairedTotal:totalRepaired,
+      run:runs,
+      remainingEstimate:remainingEstimate,
+      rows:rows,
+      nextRunScheduled:true
+    };
+
+    console.log(JSON.stringify(result));
+    return result;
+
+  }finally{
+    lock.releaseLock();
+  }
+}
+
 function eeRepairReadyPreviewBatch01(){return eeRepairContaminatedReadyPayloadsBatch_(0,1);}
 function eeRepairReadyPreviewBatch02(){return eeRepairContaminatedReadyPayloadsBatch_(1,1);}
 function eeRepairReadyPreviewBatch03(){return eeRepairContaminatedReadyPayloadsBatch_(2,1);}

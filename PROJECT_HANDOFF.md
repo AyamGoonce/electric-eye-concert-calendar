@@ -1620,3 +1620,32 @@ This confirms:
 - contaminated BONES / Charli xcx recommendations are not retained in the regenerated candidate
 
 No repair write has been run yet.
+
+## 2026-09-12 — Automatic resumable READY repair worker
+
+Added a resumable production repair worker for contaminated Apple READY payloads.
+
+Behavior:
+- user starts it once with eeStartReadyRepairWorker()
+- each execution audits current READY payloads and selects only CONTAMINATED + automaticRepairSafe rows
+- processes at most 2 candidates per execution
+- regeneration runs through the validated read-only discovery path
+- existing READY payload is preserved unless the regenerated candidate:
+  - contains recommendations
+  - passes eeReadyQualityIssues_ validation
+- successful candidates are written through eePutReviewedQualityRepair_
+- failed candidates retry automatically
+- after 3 failures a candidate is skipped and its existing READY payload remains untouched
+- worker schedules its next execution automatically
+- duplicate worker triggers are removed before scheduling
+- ScriptLock prevents concurrent repair executions
+- worker stops automatically when no eligible candidates remain
+- status: eeReadyRepairWorkerStatus()
+- emergency stop: eeStopReadyRepairWorker()
+
+Live safety gate already validated on Bones Owens before enabling bulk automation.
+
+Deterministic generated Code.gs SHA-256:
+90631f0ba76ce61a27c5749952543356db6c6dfc1db098feecde96bc65e2b08a
+
+No calendar files modified.
