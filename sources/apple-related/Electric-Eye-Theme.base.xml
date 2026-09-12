@@ -20713,14 +20713,16 @@ if (!placedNearPlayer) {
       var shelfId="ee-apple-shelf-"+String(group.category||"").toLowerCase();
       shelf.id=shelfId;
 
-      items.forEach(function(item,index){
+      function appendItem(item){
         var card=el("a","ee-apple-card");
         card.href=item.url||item.canonicalAppleUrl;
         card.target="_blank";
         card.rel="nofollow sponsored noopener";
+
         if(item.affiliateStatus==="TOOLBOX_REQUIRED"||item.affiliateStatus==="NOT_CLAIMED_COMMISSIONABLE"){
           card.setAttribute("data-ee-apple-link-policy","preserve");
         }
+
         card.dataset.eeAppleItem=JSON.stringify({
           title:item.title,
           creator:item.creator,
@@ -20736,7 +20738,6 @@ if (!placedNearPlayer) {
           relationshipContext:item.relationshipContext||item.relevanceReason||""
         });
 
-        if(index>=CONFIG.initialPerCategory)card.hidden=true;
         var image=el("img","ee-apple-artwork");
         image.src=item.artworkUrl;
         image.alt="";
@@ -20748,10 +20749,18 @@ if (!placedNearPlayer) {
         var copy=el("span","ee-apple-card__copy");
         copy.appendChild(el("span","ee-apple-card__title",item.title));
         if(item.creator)copy.appendChild(el("span","ee-apple-card__creator",item.creator));
+
         var meta=[item.mediaType,price(item)].filter(Boolean).join(" · ");
         if(meta)copy.appendChild(el("span","ee-apple-card__meta",meta));
+
         card.appendChild(copy);
         shelf.appendChild(card);
+      }
+
+      var renderedCount=Math.min(CONFIG.initialPerCategory,items.length);
+
+      items.slice(0,renderedCount).forEach(function(item){
+        appendItem(item);
       });
 
       section.appendChild(shelf);
@@ -20764,9 +20773,12 @@ if (!placedNearPlayer) {
 
         toggle.addEventListener("click",function(){
           var cards=shelf.querySelectorAll(".ee-apple-card");
-          var visible=Array.prototype.filter.call(cards,function(card){return !card.hidden;}).length;
+          var visible=Array.prototype.filter.call(
+            cards,
+            function(card){return !card.hidden;}
+          ).length;
 
-          if(visible>=cards.length){
+          if(renderedCount>=items.length && visible>=items.length){
             Array.prototype.forEach.call(cards,function(card,index){
               card.hidden=index>=CONFIG.initialPerCategory;
             });
@@ -20775,12 +20787,24 @@ if (!placedNearPlayer) {
             return;
           }
 
-          var next=Math.min(cards.length,visible+CONFIG.revealStep);
+          var next=Math.min(items.length,visible+CONFIG.revealStep);
+
+          while(renderedCount<next){
+            appendItem(items[renderedCount]);
+            renderedCount+=1;
+          }
+
+          cards=shelf.querySelectorAll(".ee-apple-card");
+
           Array.prototype.forEach.call(cards,function(card,index){
             card.hidden=index>=next;
           });
-          toggle.textContent=next>=cards.length?"Show less":"More";
-          toggle.setAttribute("aria-expanded",String(next>CONFIG.initialPerCategory));
+
+          toggle.textContent=next>=items.length?"Show less":"More";
+          toggle.setAttribute(
+            "aria-expanded",
+            String(next>CONFIG.initialPerCategory)
+          );
         });
 
         bar.appendChild(toggle);

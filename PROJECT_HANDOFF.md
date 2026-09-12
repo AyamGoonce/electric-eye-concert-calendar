@@ -1425,3 +1425,33 @@ This confirms the complete production chain now works:
 
 Next task:
 - investigate Charli xcx WATCH recommendations appearing in unrelated articles.
+
+## 2026-09-12 — Apple frontend incremental rendering performance fix
+
+Investigated site-wide slow individual-article loading associated with Related on Apple.
+
+Confirmed:
+- Public Apps Script endpoint only reads stored payloads; it does not regenerate recommendations during page load.
+- Some stored payloads are very large and contaminated, including unrelated Charli xcx WATCH items.
+- Live frontend previously created a DOM card and assigned artwork URLs for every recommendation immediately, even cards hidden behind More.
+- Safari could therefore schedule many unnecessary Apple artwork requests during initial page load.
+
+Frontend fix:
+- Only the first 4 recommendations per category are created initially.
+- More creates the next 4 cards on demand.
+- Remaining cards and their artwork URLs do not exist until requested.
+- Show less still collapses back to the first 4.
+- Popover handlers use event delegation from the module, so dynamically created cards remain fully supported.
+
+Generated Electric-Eye-Theme.xml SHA256:
+47e455076a9a4509b0e18013e4527b7af59f45f9eed8bd90c63bbf8dd2b020f2
+
+Files changed:
+- sources/apple-related/Electric-Eye-Theme.base.xml
+- deliverables/apple-related/Electric-Eye-Theme.xml
+
+Calendar code/workflow untouched.
+
+Still outstanding:
+- remove Charli xcx WATCH contamination from unrelated stored payloads
+- investigate/rebuild affected payloads whose recommendations are missing or incorrect
