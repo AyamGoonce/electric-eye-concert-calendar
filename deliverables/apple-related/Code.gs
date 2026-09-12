@@ -30,6 +30,9 @@ function eeApplePostAllowed_(postId) {
 var EE_APPLE_EXECUTION_DEADLINE=0;
 var EE_APPLE_DISCOVERY_DIAGNOSTIC=null;
 var EE_APPLE_READ_ONLY_GENERATION = false;
+var EE_APPLE_READ_ONLY_LAST_REQUEST_AT = 0;
+var EE_APPLE_READ_ONLY_COOLDOWN_UNTIL = 0;
+var EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT = 0;
 function eeSetExecutionDeadline_(value){EE_APPLE_EXECUTION_DEADLINE=Number(value||0);}
 function eeClearExecutionDeadline_(){EE_APPLE_EXECUTION_DEADLINE=0;}
 
@@ -85,11 +88,14 @@ function eeAppleFetch_(url, options, label) {
   try{
     var properties=PropertiesService.getScriptProperties();
     var deadline=EE_APPLE_EXECUTION_DEADLINE;
+    var readOnly=typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION;
     var cooldown=Number(properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")||0);
+    if(readOnly)cooldown=Math.max(cooldown,Number(EE_APPLE_READ_ONLY_COOLDOWN_UNTIL||0));
     if(cooldown>Date.now()){var cooling=new Error("APPLE_RETRY_LATER_COOLDOWN");cooling.code="APPLE_RETRY_LATER_COOLDOWN";cooling.retryable=true;throw cooling;}
     var attempts=3,lastError=null;
     for(var attempt=0;attempt<attempts;attempt+=1){
       var last=Number(properties.getProperty("EE_APPLE_LAST_REQUEST_AT")||0);
+      if(readOnly)last=Math.max(last,Number(EE_APPLE_READ_ONLY_LAST_REQUEST_AT||0));
       var throttleWait=Math.max(0,EE_APPLE_CONFIG.minimumRequestIntervalMs-(Date.now()-last));
       var backoff=attempt?Math.pow(2,attempt-1)*1200+Math.floor(Math.random()*350):0;
       var wait=Math.max(throttleWait,backoff);
@@ -102,15 +108,24 @@ function eeAppleFetch_(url, options, label) {
       if(wait)Utilities.sleep(wait);
       eeDiscoveryDiagnosticAppleCall_();
       var response=UrlFetchApp.fetch(url,options);
-      properties.setProperty("EE_APPLE_CALL_COUNT",String(Number(properties.getProperty("EE_APPLE_CALL_COUNT")||0)+1));
-      properties.setProperty("EE_APPLE_LAST_REQUEST_AT",String(Date.now()));
+      if(readOnly){
+        EE_APPLE_READ_ONLY_LAST_REQUEST_AT=Date.now();
+      }else{
+        properties.setProperty("EE_APPLE_CALL_COUNT",String(Number(properties.getProperty("EE_APPLE_CALL_COUNT")||0)+1));
+        properties.setProperty("EE_APPLE_LAST_REQUEST_AT",String(Date.now()));
+      }
       var code=response.getResponseCode();
       if(code===200)return response;
       lastError=eeAppleHttpError_(label,code);
       if(!lastError.retryable)throw lastError;
-      properties.setProperty("EE_APPLE_LAST_TRANSIENT_FAILURE",new Date().toISOString()+" "+lastError.code);
+      if(!readOnly){
+        properties.setProperty("EE_APPLE_LAST_TRANSIENT_FAILURE",new Date().toISOString()+" "+lastError.code);
+      }
     }
-    if(lastError&&lastError.retryable)properties.setProperty("EE_APPLE_COOLDOWN_UNTIL",String(Date.now()+300000));
+    if(lastError&&lastError.retryable){
+      if(readOnly)EE_APPLE_READ_ONLY_COOLDOWN_UNTIL=Date.now()+300000;
+      else properties.setProperty("EE_APPLE_COOLDOWN_UNTIL",String(Date.now()+300000));
+    }
     throw lastError||new Error(String(label||"APPLE_SEARCH")+"_FAILED");
   }finally{
     lock.releaseLock();
@@ -123,7 +138,7 @@ function eeAppleSearch_(query) {
   var url="https://itunes.apple.com/search?"+queryString;
   var digest=Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,url)).slice(0,40);
   var cache=CacheService.getScriptCache(),cacheKey="apple-search:"+digest,cached=cache.get(cacheKey);
-  if(cached){eeDiscoveryDiagnosticCacheHit_();var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));return JSON.parse(cached);}
+  if(cached){eeDiscoveryDiagnosticCacheHit_();if(!(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION)){var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));}return JSON.parse(cached);}
   var response=eeAppleFetch_(url,{muteHttpExceptions:true,headers:{Accept:"application/json"}},"APPLE_SEARCH");
   var value=JSON.parse(response.getContentText()),cacheText=JSON.stringify(value);
   if(cacheText.length<95000)cache.put(cacheKey,cacheText,EE_APPLE_CONFIG.payloadCacheSeconds);
@@ -138,7 +153,7 @@ function eeAppleLookup_(query) {
   var url="https://itunes.apple.com/lookup?"+queryString;
   var digest=Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,url)).slice(0,40);
   var cache=CacheService.getScriptCache(),cacheKey="apple-lookup:"+digest,cached=cache.get(cacheKey);
-  if(cached){eeDiscoveryDiagnosticCacheHit_();var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));return JSON.parse(cached);}
+  if(cached){eeDiscoveryDiagnosticCacheHit_();if(!(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION)){var properties=PropertiesService.getScriptProperties();properties.setProperty("EE_APPLE_CACHE_HIT_COUNT",String(Number(properties.getProperty("EE_APPLE_CACHE_HIT_COUNT")||0)+1));}return JSON.parse(cached);}
   var response=eeAppleFetch_(url,{muteHttpExceptions:true,headers:{Accept:"application/json"}},"APPLE_LOOKUP");
   var value=JSON.parse(response.getContentText()),cacheText=JSON.stringify(value);
   if(cacheText.length<95000)cache.put(cacheKey,cacheText,EE_APPLE_CONFIG.payloadCacheSeconds);
@@ -824,7 +839,11 @@ function eePublicEntityJson_(url) {
     var lastError=null;
 
     for(var attempt=0;attempt<attempts;attempt+=1){
+      var readOnly=typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION;
       var last=Number(properties.getProperty("EE_ENTITY_LAST_REQUEST_AT")||0);
+      if(readOnly&&typeof EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT!=="undefined"){
+        last=Math.max(last,Number(EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT||0));
+      }
       var wait=Math.max(0,1100-(Date.now()-last));
       if(wait)Utilities.sleep(wait);
 
@@ -837,7 +856,11 @@ function eePublicEntityJson_(url) {
           }
         });
 
-        properties.setProperty("EE_ENTITY_LAST_REQUEST_AT",String(Date.now()));
+        if(readOnly&&typeof EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT!=="undefined"){
+          EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT=Date.now();
+        }else{
+          properties.setProperty("EE_ENTITY_LAST_REQUEST_AT",String(Date.now()));
+        }
 
         var code=response.getResponseCode();
 
@@ -4422,11 +4445,64 @@ function eeRetryNextStaleArtistIdentity() {
   }
 }
 
+function eeDiscoverArtistCatalogueReadOnly_(artist,post) {
+  var legacy=eePrimaryArtistIdentityPayload_(artist,post),
+      fastResolved=String((legacy.identity||{}).level)==="HIGH"&&!!(legacy.identity||{}).artistId,
+      fastHardAmbiguity=!!((legacy.diagnostics||{}).hardIdentityAmbiguity);
+
+  if(!fastResolved&&!fastHardAmbiguity){
+    legacy=eeGeneratePayloadLegacy_(post);
+  }
+
+  var identity=legacy.identity||{},
+      categories=(legacy.categories||[]).map(function(group){
+        return {
+          category:group.category,
+          items:(group.items||[]).filter(function(item){
+            return group.category!=="LISTEN"||
+              !item.creator||
+              (identity.artistId&&item.appleArtistId&&String(item.appleArtistId)===String(identity.artistId))||
+              eeNorm_(item.creator)===eeNorm_(artist.canonicalName);
+          })
+        };
+      }).filter(function(group){
+        return group.items.length;
+      }),
+      confidence=String(identity.level||"LOW"),
+      appleArtistId=identity.artistId||artist.appleArtistId||"",
+      status=(appleArtistId||confidence==="HIGH")
+        ?"RESOLVED"
+        :confidence==="MODERATE"
+          ?"AMBIGUOUS"
+          :"ERROR",
+      record={
+        artistKey:artist.slug,
+        canonicalName:artist.canonicalName,
+        appleArtistId:appleArtistId,
+        musicBrainzId:artist.musicBrainzId||"",
+        identityConfidence:confidence,
+        status:status,
+        error:status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"",
+        categories:status==="ERROR"?[]:categories,
+        representativePostId:String(post.id)
+      };
+
+  record.catalogue={
+    schemaVersion:1,
+    generationVersion:EE_APPLE_CONFIG.generationVersion,
+    artistKey:record.artistKey,
+    canonicalName:record.canonicalName,
+    categories:record.categories
+  };
+
+  return record;
+}
+
 function eeGeneratePayload_(post) {
   var registry=eeArtistRegistry_(),analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis);
   if(!analysis.primaryArtistKeys.length)return eeAssemblePayloadFromCatalogues_(post,analysis,[]);
   var catalogues=[];
-  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key),needsResolution=eeArtistNeedsIdentityResolution_(record),needsRevalidation=eeArtistNeedsResolverRevalidation_(record),needsCatalogueRecovery=!!(record&&record.status==="RESOLVED"&&!eePayloadHasRecommendations_(record.catalogue));if((needsResolution||needsRevalidation||needsCatalogueRecovery)&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION){var readonlyError=new Error("READ_ONLY_DISCOVERY_REQUIRED");readonlyError.code="READ_ONLY_DISCOVERY_REQUIRED";throw readonlyError;}record=eeDiscoverArtistCatalogue_(artist,post,false,needsRevalidation||needsCatalogueRecovery);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
+  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key),needsResolution=eeArtistNeedsIdentityResolution_(record),needsRevalidation=eeArtistNeedsResolverRevalidation_(record),needsCatalogueRecovery=!!(record&&record.status==="RESOLVED"&&!eePayloadHasRecommendations_(record.catalogue));if((needsResolution||needsRevalidation||needsCatalogueRecovery)&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION)record=eeDiscoverArtistCatalogueReadOnly_(artist,post);else record=eeDiscoverArtistCatalogue_(artist,post,false,needsRevalidation||needsCatalogueRecovery);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
   return eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);
 }
 

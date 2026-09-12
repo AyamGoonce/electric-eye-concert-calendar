@@ -1543,3 +1543,31 @@ Still outstanding:
 - repair writes remain disabled pending a safe preview/discovery solution
 
 Calendar code/workflow untouched.
+
+## 2026-09-12 — Read-only READY repair discovery
+
+READY repair preview previously failed with READ_ONLY_DISCOVERY_REQUIRED whenever regeneration needed fresh artist discovery.
+
+Implemented a dedicated read-only discovery path:
+- eeDiscoverArtistCatalogueReadOnly_ performs Apple/MusicBrainz identity/catalogue discovery in memory
+- preview no longer writes Apple Artists rows
+- eePutArticleIdentity_, entity profile saves and identity mapping saves remain suppressed in read-only mode
+- Apple request counters, last-request timestamps, transient-failure state, cooldown state and cache-hit counters are not persisted during read-only preview
+- MusicBrainz EE_ENTITY_LAST_REQUEST_AT is kept in transient memory during preview rather than Script Properties
+- normal production discovery behavior is unchanged
+- CacheService may still receive ephemeral response-cache entries, intentionally
+
+Builder output is deterministic:
+924f882d91807d74998bb07662a04aea7aada8127dd6bfea3c24928cecaa3f34
+
+Apple test suite currently reports 7 failures. A detached baseline run at commit 33ac593 produced the exact same 7 failing tests, confirming this patch introduced no additional test failures. Existing failures are pre-existing test drift/regressions to address separately.
+
+Next:
+1. deploy generated Code.gs to Apps Script
+2. update existing web deployment
+3. run eeRepairReadyPreviewBatch01()
+4. verify structured identities such as Bones Owens remain narrow
+5. verify previews now generate candidates instead of READ_ONLY_DISCOVERY_REQUIRED
+6. do not run bulk repair writes until preview output is reviewed
+
+Calendar workflow/code untouched.

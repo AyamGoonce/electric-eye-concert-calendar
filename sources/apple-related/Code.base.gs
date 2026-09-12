@@ -726,7 +726,11 @@ function eePublicEntityJson_(url) {
     var lastError=null;
 
     for(var attempt=0;attempt<attempts;attempt+=1){
+      var readOnly=typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION;
       var last=Number(properties.getProperty("EE_ENTITY_LAST_REQUEST_AT")||0);
+      if(readOnly&&typeof EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT!=="undefined"){
+        last=Math.max(last,Number(EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT||0));
+      }
       var wait=Math.max(0,1100-(Date.now()-last));
       if(wait)Utilities.sleep(wait);
 
@@ -739,7 +743,11 @@ function eePublicEntityJson_(url) {
           }
         });
 
-        properties.setProperty("EE_ENTITY_LAST_REQUEST_AT",String(Date.now()));
+        if(readOnly&&typeof EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT!=="undefined"){
+          EE_APPLE_READ_ONLY_ENTITY_LAST_REQUEST_AT=Date.now();
+        }else{
+          properties.setProperty("EE_ENTITY_LAST_REQUEST_AT",String(Date.now()));
+        }
 
         var code=response.getResponseCode();
 
