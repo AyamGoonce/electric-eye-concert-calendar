@@ -1130,7 +1130,7 @@ function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
 var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
-var EE_APPLE_IDENTITY_RESOLVER_VERSION=2;
+var EE_APPLE_IDENTITY_RESOLVER_VERSION=3;
 function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
 function eeArtistNeedsIdentityResolution_(record){
   if(!record)return true;
@@ -3058,7 +3058,7 @@ function eeGeneratePayload_(post) {
   var registry=eeArtistRegistry_(),analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis);
   if(!analysis.primaryArtistKeys.length)return eeAssemblePayloadFromCatalogues_(post,analysis,[]);
   var catalogues=[];
-  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key);if(eeArtistNeedsIdentityResolution_(record)&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION){var readonlyError=new Error("READ_ONLY_DISCOVERY_REQUIRED");readonlyError.code="READ_ONLY_DISCOVERY_REQUIRED";throw readonlyError;}record=eeDiscoverArtistCatalogue_(artist,post);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
+  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key),needsResolution=eeArtistNeedsIdentityResolution_(record),needsRevalidation=eeArtistNeedsResolverRevalidation_(record);if((needsResolution||needsRevalidation)&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION){var readonlyError=new Error("READ_ONLY_DISCOVERY_REQUIRED");readonlyError.code="READ_ONLY_DISCOVERY_REQUIRED";throw readonlyError;}record=eeDiscoverArtistCatalogue_(artist,post,false,needsRevalidation);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
   return eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);
 }
 

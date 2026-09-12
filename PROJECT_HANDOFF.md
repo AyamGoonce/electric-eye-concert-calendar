@@ -1282,3 +1282,26 @@ Calendar workflow and scraper code untouched.
 
 Next queued issue:
 - WATCH recommendations are leaking Charli xcx into unrelated articles after the recent Charli xcx article was published.
+
+## 2026-09-12 — Revalidate resolved Apple catalogues on resolver upgrade
+
+Identity resolver version bumped from 2 to 3.
+
+Production generation now checks both:
+- eeArtistNeedsIdentityResolution_(record)
+- eeArtistNeedsResolverRevalidation_(record)
+
+A RESOLVED artist catalogue created by an older resolver version is now rediscovered through the current resolver instead of being reused indefinitely.
+
+This addresses stale but previously RESOLVED incorrect Apple identities such as:
+- Wargasm old US Apple artist 22575637
+versus expected UK Wargasm:
+- Apple artist 1476730259
+
+Build SHA256:
+583eb5739ca70838b4a5cdaee1e342f20b94b043aeaf296ff45e87f7fc634271
+
+Calendar workflow and scraper code untouched.
+
+Next queued issue:
+- Charli xcx WATCH recommendations appearing in unrelated articles.
