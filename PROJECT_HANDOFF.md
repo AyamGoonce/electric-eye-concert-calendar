@@ -648,3 +648,43 @@ At least three systemic issues must be investigated:
 
 Do not loosen production matching globally until the retry/status behavior and
 musicArtist search behavior have been measured.
+
+## 2026-09-12 — Versioned retry for stale Apple artist identity failures
+
+Implemented controlled retries for persistent Apple Artists rows that previously
+became permanently trapped as ERROR or AMBIGUOUS.
+
+Added:
+- `EE_APPLE_IDENTITY_RESOLVER_VERSION = 1`
+- `identityResolverVersion` column to `Apple Artists`
+- `eeArtistNeedsIdentityResolution_(record)`
+
+Behavior:
+- UNRESOLVED always remains eligible for identity discovery.
+- ERROR / AMBIGUOUS becomes eligible only when its stored resolver version is
+  older than the current resolver version.
+- Existing rows without the new column/value are treated as resolver version 0.
+- Once an artist is attempted under resolver v1, subsequent stored rows carry
+  identityResolverVersion=1 and do not retry indefinitely.
+- A future substantive resolver improvement can intentionally bump the version
+  to reconsider prior terminal failures once.
+
+The rule is used by:
+- direct article generation;
+- artist discovery maintenance;
+- existing catalogue short-circuit logic.
+
+This specifically addresses stale terminal rows such as artists that failed
+under older resolver behavior but resolve correctly now.
+
+It does NOT yet address:
+- sparse exact-name catalogues such as Jessica Hernandez;
+- Apple album-search recall failures such as Therapy? and Earth.
+
+Validation:
+- two consecutive generated Code.gs builds produced identical SHA-256:
+  728f2222967b94672ccda368da77661916047448f06035fc074669ce203da61c
+- Apps Script JavaScript syntax check passed;
+- git diff --check passed.
+
+No production sheet rows have yet been retried with this new logic.

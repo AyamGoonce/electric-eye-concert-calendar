@@ -627,11 +627,19 @@ function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
 var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
+var EE_APPLE_IDENTITY_RESOLVER_VERSION=1;
 function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
+function eeArtistNeedsIdentityResolution_(record){
+  if(!record)return true;
+  var status=String(record.status||"");
+  if(status==="UNRESOLVED")return true;
+  return (status==="ERROR"||status==="AMBIGUOUS")&&
+    Math.max(0,Number(record.identityResolverVersion||0))<EE_APPLE_IDENTITY_RESOLVER_VERSION;
+}
 
 function eeArtistCatalogueSheet_() {
-  var header=["artistKey","canonicalName","registrySchemaVersion","catalogueSchemaVersion","appleArtistId","musicBrainzId","identityConfidence","status","catalogueJson","generatedAt","staleAfter","representativePostId","error","transientRetryCount","lastTransientError","retryAfter"],sheet=eeNamedSheet_("Apple Artists",header);
-  if(sheet.getLastColumn()<header.length)sheet.getRange(1,14,1,3).setValues([["transientRetryCount","lastTransientError","retryAfter"]]);
+  var header=["artistKey","canonicalName","registrySchemaVersion","catalogueSchemaVersion","appleArtistId","musicBrainzId","identityConfidence","status","catalogueJson","generatedAt","staleAfter","representativePostId","error","transientRetryCount","lastTransientError","retryAfter","identityResolverVersion"],sheet=eeNamedSheet_("Apple Artists",header);
+  if(sheet.getLastColumn()<header.length){var existingColumns=sheet.getLastColumn();sheet.getRange(1,existingColumns+1,1,header.length-existingColumns).setValues([header.slice(existingColumns)]);}
   return sheet;
 }
 
@@ -651,7 +659,7 @@ function eePutArticleIdentity_(analysis, registry, knownArtistKeys) {
 
 function eeGetArtistCatalogue_(artistKey) {
   var values=eeArtistCatalogueSheet_().getDataRange().getValues();
-  for(var row=1;row<values.length;row+=1)if(String(values[row][0])===String(artistKey)){var payload=String(values[row][8]||""),staleAfter=String(values[row][10]||"");return {artistKey:String(values[row][0]),canonicalName:String(values[row][1]),appleArtistId:String(values[row][4]||""),musicBrainzId:String(values[row][5]||""),identityConfidence:String(values[row][6]||""),status:String(values[row][7]||""),catalogue:payload?eeDecodePayloadCell_(payload):null,generatedAt:String(values[row][9]||""),staleAfter:staleAfter,isStale:!!staleAfter&&Date.parse(staleAfter)<=Date.now(),representativePostId:String(values[row][11]||""),error:String(values[row][12]||""),transientRetryCount:Math.max(0,Number(values[row][13]||0)),lastTransientError:String(values[row][14]||""),retryAfter:String(values[row][15]||"")};}
+  for(var row=1;row<values.length;row+=1)if(String(values[row][0])===String(artistKey)){var payload=String(values[row][8]||""),staleAfter=String(values[row][10]||"");return {artistKey:String(values[row][0]),canonicalName:String(values[row][1]),appleArtistId:String(values[row][4]||""),musicBrainzId:String(values[row][5]||""),identityConfidence:String(values[row][6]||""),status:String(values[row][7]||""),catalogue:payload?eeDecodePayloadCell_(payload):null,generatedAt:String(values[row][9]||""),staleAfter:staleAfter,isStale:!!staleAfter&&Date.parse(staleAfter)<=Date.now(),representativePostId:String(values[row][11]||""),error:String(values[row][12]||""),transientRetryCount:Math.max(0,Number(values[row][13]||0)),lastTransientError:String(values[row][14]||""),retryAfter:String(values[row][15]||""),identityResolverVersion:Math.max(0,Number(values[row][16]||0))};}
   return null;
 }
 
@@ -659,7 +667,7 @@ function eePutArtistCatalogue_(record) {
   var sheet=eeArtistCatalogueSheet_(),now=new Date(),generated=record.generatedAt||now.toISOString(),stale=record.staleAfter||new Date(now.getTime()+30*86400000).toISOString();
   var catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:record.artistKey,canonicalName:record.canonicalName,categories:record.categories||[]};
   if(record.enrichment)catalogue.enrichment=record.enrichment;
-  eeUpsertRow_(sheet,0,record.artistKey,[record.artistKey,record.canonicalName,1,1,record.appleArtistId||"",record.musicBrainzId||"",record.identityConfidence||"",record.status||"UNRESOLVED",eeEncodePayloadCell_(catalogue),generated,stale,record.representativePostId||"",record.error||"",Math.max(0,Number(record.transientRetryCount||0)),record.lastTransientError||"",record.retryAfter||""]);
+  eeUpsertRow_(sheet,0,record.artistKey,[record.artistKey,record.canonicalName,1,1,record.appleArtistId||"",record.musicBrainzId||"",record.identityConfidence||"",record.status||"UNRESOLVED",eeEncodePayloadCell_(catalogue),generated,stale,record.representativePostId||"",record.error||"",Math.max(0,Number(record.transientRetryCount||0)),record.lastTransientError||"",record.retryAfter||"",Math.max(0,Number(record.identityResolverVersion||EE_APPLE_IDENTITY_RESOLVER_VERSION))]);
 }
 
 function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
@@ -851,7 +859,7 @@ function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
   if(!eeAcquireWorkerLease_(lease,360000)){var busy=new Error("ARTIST_DISCOVERY_BUSY");busy.code="ARTIST_DISCOVERY_BUSY";busy.retryable=true;eeDiscoveryDiagnosticFinish_(diagnostic,"RETRY_LATER",busy.code,busy);throw busy;}
   try{
     var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.appleArtistId&&existing.status!=="RESOLVED"){existing.status="RESOLVED";existing.identityConfidence="HIGH";}
-    if(existing&&["UNRESOLVED","DEFERRED"].indexOf(existing.status)===-1&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
+    if(existing&&existing.status!=="DEFERRED"&&!eeArtistNeedsIdentityResolution_(existing)&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
     if(forceRefresh&&existing&&existing.status==="RESOLVED"&&existing.appleArtistId){
       var progress=eeIncrementalResolvedEnrichment_(artist,post,existing);
       if(!progress.readyForFinalization){
@@ -883,7 +891,7 @@ function eeGeneratePayload_(post) {
   var registry=eeArtistRegistry_(),analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis);
   if(!analysis.primaryArtistKeys.length)return eeAssemblePayloadFromCatalogues_(post,analysis,[]);
   var catalogues=[];
-  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key);if((!record||record.status==="UNRESOLVED")&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION){var readonlyError=new Error("READ_ONLY_DISCOVERY_REQUIRED");readonlyError.code="READ_ONLY_DISCOVERY_REQUIRED";throw readonlyError;}record=eeDiscoverArtistCatalogue_(artist,post);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
+  analysis.primaryArtistKeys.forEach(function(key,index){var artist=registry.artists.filter(function(value){return value.slug===key;})[0]||{canonicalName:analysis.primaryArtists[index],slug:key,aliases:[],ambiguityClass:"provisional"},record=eeGetArtistCatalogue_(key);if(eeArtistNeedsIdentityResolution_(record)&&!catalogues.length){if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION){var readonlyError=new Error("READ_ONLY_DISCOVERY_REQUIRED");readonlyError.code="READ_ONLY_DISCOVERY_REQUIRED";throw readonlyError;}record=eeDiscoverArtistCatalogue_(artist,post);}if(record&&record.status==="RESOLVED"&&eePayloadHasRecommendations_(record.catalogue))catalogues.push(record);});
   return eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);
 }
 
@@ -901,7 +909,9 @@ function eeDiscoverArtistsWorker() {
     var sheet=eeArtistCatalogueSheet_(),values=sheet.getDataRange().getValues(),properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1));
     eeSetExecutionDeadline_(Math.min(EE_APPLE_EXECUTION_DEADLINE||Date.now()+180000,Date.now()+180000));
     for(var row=cursor;row<values.length&&Date.now()<EE_APPLE_EXECUTION_DEADLINE;row+=1){
-      if(String(values[row][7])!=="UNRESOLVED"){
+      var rowStatus=String(values[row][7]||""),rowResolverVersion=Math.max(0,Number(values[row][16]||0));
+      var rowNeedsIdentity=rowStatus==="UNRESOLVED"||((rowStatus==="ERROR"||rowStatus==="AMBIGUOUS")&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION);
+      if(!rowNeedsIdentity){
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         continue;
       }
