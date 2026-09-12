@@ -990,3 +990,83 @@ Validation:
 Next step:
 Install the rebuilt Code.gs in the existing Apps Script project and run
 `eeDiagnoseAppleMusicArtistSearchExamples()` manually.
+
+## 2026-09-12 — Identity vs Apple recommendation anchor
+
+New product requirement confirmed.
+
+The engine must distinguish:
+
+- article subject identity;
+- resolved Apple artist identity;
+- Apple recommendation anchor(s).
+
+These are not always the same thing.
+
+### The Crimson ProjeKct
+
+Apple does not expose a usable primary artist result for The Crimson ProjeKct.
+If there is no usable Crimson ProjeKct catalogue in Apple Music, it is
+acceptable and desirable to use directly associated acts such as King Crimson
+as recommendation anchors.
+
+Important:
+King Crimson must NOT be stored as though it were the same artist identity as
+The Crimson ProjeKct.
+
+Desired conceptual state:
+
+- article subject: The Crimson ProjeKct
+- primary Apple artist: none if unavailable
+- recommendation anchor: King Crimson
+- relationship: directly associated / parent-related act
+- additional one-hop anchors may include strongly evidenced members or related
+  projects such as Adrian Belew or Tony Levin
+
+### Same-name collision requirement
+
+Generic or reused artist names must not be resolved from name equality alone.
+
+Regression cases now include:
+
+- Earth
+- Wargasm
+
+The existing engine has produced recommendations for the wrong Wargasm.
+This must be prevented systemically.
+
+When multiple Apple artists share the same name, resolution should use article
+and identity context such as:
+
+- member names
+- album and song titles
+- collaborators
+- side projects / related bands
+- country or origin when supported
+- active period / dates
+- genre as supporting evidence only
+- MusicBrainz relationships and aliases
+- Apple catalogue titles and release dates
+
+The engine should select an Apple artist only when contextual evidence
+converges. Otherwise the identity must remain ambiguous.
+
+### Resolver design direction
+
+1. Preserve literal/punctuation-sensitive names before normalized comparison.
+2. Use direct Apple `musicArtist` search to improve recall.
+3. If one strong exact identity exists, resolve it.
+4. If multiple same-name candidates exist, perform contextual disambiguation.
+5. Keep ambiguous when evidence is insufficient.
+6. Keep article subject identity separate from recommendation anchors.
+7. Allow controlled one-hop related-act anchors when the primary subject has
+   no usable Apple catalogue.
+8. Do not use uncontrolled transitive relationship expansion.
+9. Avoid artist-specific hard-coded exception tables.
+
+Regression set now includes:
+- Jessica Hernandez — unique sparse exact identity
+- Therapy? — punctuation-sensitive identity
+- Earth — many same-name candidates
+- Wargasm — known wrong-same-name recommendation
+- The Crimson ProjeKct — no primary Apple identity; related-anchor case
