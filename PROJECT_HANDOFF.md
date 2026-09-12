@@ -1519,3 +1519,27 @@ Important follow-up finding:
 Targeted refresh reported Birdland LISTEN=43, but the public endpoint immediately returned LISTEN=50. This suggests the public payload cache may not be invalidated when stored payloads are regenerated. Investigate eeGetPayload_/payload-write cache invalidation next.
 
 Calendar remains untouched.
+
+## 2026-09-12 — READY audit structured-title identity fix
+
+READY contamination audit was found to re-broaden structured concert-title identities after eeFastArticleIdentity_() had already narrowed them correctly.
+
+Example:
+Bones Owens @ l'Olympia, Paris - September 28th, 2024
+
+Audit previously corrected this to:
+["Bones","Bones Owens"]
+
+Cause:
+eeCorrectedPayloadIdentity_() independently scanned the title lead and, for any venue title, replaced the production identity with every matching registry artist. This allowed shorter lexical matches such as "Bones" inside "Bones Owens" to become co-primary artists.
+
+Fix:
+- ordinary structured concert and album-review titles now retain eeFastArticleIdentity_() as the authoritative identity source
+- audit-specific multi-artist override remains only for explicitly identified cases such as co-headliners, joint tours, and double bills
+- no artist-specific hardcoding added
+
+Still outstanding:
+- READY repair preview currently fails with READ_ONLY_DISCOVERY_REQUIRED when a candidate needs catalogue discovery
+- repair writes remain disabled pending a safe preview/discovery solution
+
+Calendar code/workflow untouched.
