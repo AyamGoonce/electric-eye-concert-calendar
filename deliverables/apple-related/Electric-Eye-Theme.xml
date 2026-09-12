@@ -20801,6 +20801,11 @@ if (!placedNearPlayer) {
         var controls=el("span","ee-apple-controls");
         var more=el("button","ee-apple-toggle","More");
         var less=el("button","ee-apple-toggle","Show less");
+        var prefetchedPage=null;
+        var prefetchOffset=-1;
+        var prefetchPromise=null;
+        var prefetchObserver=null;
+
         more.type=less.type="button";
         more.setAttribute("aria-expanded","false");
         less.setAttribute("aria-expanded","true");
@@ -20808,34 +20813,219 @@ if (!placedNearPlayer) {
         less.setAttribute("aria-controls",shelfId);
         less.hidden=true;
 
-        function visibleCount(){return Array.prototype.filter.call(shelf.querySelectorAll(".ee-apple-card"),function(card){return !card.hidden;}).length;}
-        function updateControls(){var visible=visibleCount();less.hidden=visible<=CONFIG.initialPerCategory;more.hidden=visible>=renderedCount&&!hasMore;more.setAttribute("aria-expanded",String(visible>CONFIG.initialPerCategory));}
+        function visibleCount(){
+          return Array.prototype.filter.call(
+            shelf.querySelectorAll(".ee-apple-card"),
+            function(card){return !card.hidden;}
+          ).length;
+        }
+
+        function updateControls(){
+          var visible=visibleCount();
+          less.hidden=visible<=CONFIG.initialPerCategory;
+          more.hidden=visible>=renderedCount&&!hasMore;
+          more.setAttribute(
+            "aria-expanded",
+            String(visible>CONFIG.initialPerCategory)
+          );
+
+          if(!hasMore&&prefetchObserver){
+            prefetchObserver.disconnect();
+            prefetchObserver=null;
+          }
+        }
+
+        function clearPrefetch(offset){
+          if(Number(offset)!==Number(prefetchOffset))return;
+          prefetchedPage=null;
+          prefetchPromise=null;
+          prefetchOffset=-1;
+        }
+
+        function prefetchNext(){
+          if(!hasMore)return null;
+
+          var offset=serverCursor;
+
+          if(prefetchedPage&&prefetchOffset===offset){
+            return Promise.resolve(prefetchedPage);
+          }
+
+          if(prefetchPromise&&prefetchOffset===offset){
+            return prefetchPromise;
+          }
+
+          prefetchOffset=offset;
+
+          prefetchPromise=requestPage(
+            group.category,
+            offset
+          ).then(function(page){
+            if(prefetchOffset===offset){
+              prefetchedPage=page;
+              prefetchPromise=null;
+            }
+            return page;
+          }).catch(function(error){
+            clearPrefetch(offset);
+            throw error;
+          });
+
+          return prefetchPromise;
+        }
+
+        function warmNextPage(){
+          var pending=prefetchNext();
+          if(pending&&typeof pending.catch==="function"){
+            pending.catch(function(){});
+          }
+        }
+
+        function takeNextPage(offset){
+          if(prefetchedPage&&prefetchOffset===offset){
+            var page=prefetchedPage;
+            clearPrefetch(offset);
+            return Promise.resolve(page);
+          }
+
+          if(prefetchPromise&&prefetchOffset===offset){
+            var pending=prefetchPromise;
+
+            return pending.then(function(page){
+              clearPrefetch(offset);
+              return page;
+            },function(error){
+              clearPrefetch(offset);
+              throw error;
+            });
+          }
+
+          return requestPage(group.category,offset);
+        }
+
         more.addEventListener("click",function(){
           var cards=shelf.querySelectorAll(".ee-apple-card");
           var visible=visibleCount();
-          var next=Math.min(renderedCount,visible+CONFIG.revealStep);
-          Array.prototype.forEach.call(cards,function(card,index){
-            card.hidden=index>=next;
-          });
-          if(next>visible){updateControls();return;}
-          if(!hasMore){updateControls();return;}
-          var requestedOffset=serverCursor;
-          more.disabled=true;
-          requestPage(group.category,requestedOffset).then(function(page){
-            var returned=((page.categories||[])[0]||{});
-            total=Math.max(renderedCount,Number(returned.total||total));
-            (returned.items||[]).forEach(function(item){var id=String(item.stableId||item.url||item.canonicalAppleUrl||"");if(!id||seenIds[id])return;seenIds[id]=true;items.push(item);appendItem(item);renderedCount+=1;});
-            var returnedCursor=Number(returned.nextOffset);
-            if(Number.isFinite(returnedCursor)&&returnedCursor>requestedOffset)serverCursor=returnedCursor;
-            else hasMore=false;
-            hasMore=hasMore&&returned.hasMore===true&&serverCursor<total;
+          var next=Math.min(
+            renderedCount,
+            visible+CONFIG.revealStep
+          );
+
+          Array.prototype.forEach.call(
+            cards,
+            function(card,index){
+              card.hidden=index>=next;
+            }
+          );
+
+          if(next>visible){
             updateControls();
-          }).catch(function(){}).finally(function(){more.disabled=false;});
+            warmNextPage();
+            return;
+          }
+
+          if(!hasMore){
+            updateControls();
+            return;
+          }
+
+          var requestedOffset=serverCursor;
+          var waitingForNetwork=!(
+            prefetchedPage&&
+            prefetchOffset===requestedOffset
+          );
+
+          more.disabled=true;
+
+          if(waitingForNetwork){
+            more.textContent="Loading…";
+          }
+
+          takeNextPage(requestedOffset).then(function(page){
+            var returned=((page.categories||[])[0]||{});
+
+            total=Math.max(
+              renderedCount,
+              Number(returned.total||total)
+            );
+
+            (returned.items||[]).forEach(function(item){
+              var id=String(
+                item.stableId||
+                item.url||
+                item.canonicalAppleUrl||
+                ""
+              );
+
+              if(!id||seenIds[id])return;
+
+              seenIds[id]=true;
+              items.push(item);
+              appendItem(item);
+              renderedCount+=1;
+            });
+
+            var returnedCursor=Number(returned.nextOffset);
+
+            if(
+              Number.isFinite(returnedCursor)&&
+              returnedCursor>requestedOffset
+            ){
+              serverCursor=returnedCursor;
+            }else{
+              hasMore=false;
+            }
+
+            hasMore=
+              hasMore&&
+              returned.hasMore===true&&
+              serverCursor<total;
+
+            updateControls();
+            warmNextPage();
+
+          }).catch(function(){
+            clearPrefetch(requestedOffset);
+
+          }).finally(function(){
+            more.disabled=false;
+            more.textContent="More";
+          });
         });
-        less.addEventListener("click",function(){Array.prototype.forEach.call(shelf.querySelectorAll(".ee-apple-card"),function(card,index){card.hidden=index>=CONFIG.initialPerCategory;});updateControls();});
+
+        less.addEventListener("click",function(){
+          Array.prototype.forEach.call(
+            shelf.querySelectorAll(".ee-apple-card"),
+            function(card,index){
+              card.hidden=index>=CONFIG.initialPerCategory;
+            }
+          );
+
+          updateControls();
+        });
+
         controls.appendChild(more);
         controls.appendChild(less);
         bar.appendChild(controls);
+
+        if("IntersectionObserver" in window&&hasMore){
+          prefetchObserver=new IntersectionObserver(
+            function(entries){
+              if(entries.some(function(entry){
+                return entry.isIntersecting;
+              })){
+                warmNextPage();
+              }
+            },
+            {
+              root:null,
+              rootMargin:"800px 0px",
+              threshold:0
+            }
+          );
+
+          prefetchObserver.observe(controls);
+        }
       }
 
       module.appendChild(section);

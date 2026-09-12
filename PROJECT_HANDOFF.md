@@ -1876,3 +1876,22 @@ deployment. No deployment or production worker was run here.
   - READ: 0
   - no `GENRE_FALLBACK`
 - Gyasi identity/recommendation issue is fixed end-to-end in production.
+
+## 2026-09-13 — Prefetch Apple More-button pages
+
+- Added frontend-only next-page prefetch for Related on Apple shelves.
+- Initial public payload remains capped at 4 items per category.
+- Prefetch begins only when the shelf controls approach the viewport via IntersectionObserver (`rootMargin: 800px`).
+- Prefetch downloads JSON only; hidden cards and artwork are not created or loaded ahead of user expansion.
+- Prefetched/in-flight requests are reused by the More button instead of starting duplicate requests.
+- Failed background prefetches are swallowed safely and cleared so a later More click can retry normally.
+- Existing server cursor remains independent of rendered-card count and duplicate suppression.
+- Show less behavior is preserved.
+- `Code.gs` is unchanged; no Apps Script deployment is required for this change.
+- Apple suite: 88 tests, same 6 pre-existing known failures and no new failures.
+- Protected non-Apple/calendar suite: 530/530 passed.
+- Deterministic generated theme SHA-256:
+  `d6069eca3da23a45da7b1b9b187952e3ac5531a5441a2dec58e16df3b51ec8b4`
+- Code.gs SHA-256 remains:
+  `87eb1063d045e1abab919286d5b35b24f1e6b4ed3aa50ea83e10a225aabe764a`
+- Production acceptance still required after installing the regenerated Blogger theme.

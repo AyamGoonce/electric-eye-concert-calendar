@@ -1391,10 +1391,10 @@ JSON.stringify({recovered:recovered,slept:sleeps.length>0,classifications:classi
         self.assertNotIn("categoryLimit", self.code)
         self.assertNotIn("maxPerCategory", self.theme)
         self.assertIn("var items=group.items.slice();", self.theme)
-        self.assertIn("requestPage(group.category,requestedOffset)", self.theme)
+        self.assertIn("takeNextPage(requestedOffset)", self.theme)
         self.assertIn("var requestedOffset=serverCursor;", self.theme)
         self.assertIn("serverCursor=returnedCursor", self.theme)
-        self.assertIn("var next=Math.min(renderedCount,visible+CONFIG.revealStep);", self.theme)
+        self.assertIn("visible+CONFIG.revealStep", self.theme)
         self.assertIn("card.hidden=index>=CONFIG.initialPerCategory;", self.theme)
         self.assertIn('var less=el("button","ee-apple-toggle","Show less")', self.theme)
 
@@ -1541,7 +1541,7 @@ JSON.stringify(keys);
         self.assertIn('reject(new Error("Apple payload fetch timeout"))', apple)
         self.assertIn('return requestPageJsonp(values);', apple)
         self.assertIn('params.set("callback",callback)', apple)
-        self.assertIn('requestPage(group.category,requestedOffset)', apple)
+        self.assertIn('takeNextPage(requestedOffset)', apple)
         self.assertNotIn('image.hidden', apple)
 
     def test_frontend_server_cursor_advances_independently_of_duplicate_cards(self):
@@ -1550,15 +1550,30 @@ JSON.stringify(keys);
         self.assertIn("if(!id||seenIds[id])return;", apple)
         self.assertIn("returnedCursor>requestedOffset", apple)
         self.assertIn("serverCursor=returnedCursor", apple)
-        self.assertIn("else hasMore=false;", apple)
+        self.assertIn("hasMore=false;", apple)
         self.assertLess(apple.index("if(!id||seenIds[id])return;"), apple.index("serverCursor=returnedCursor"))
 
     def test_frontend_can_collapse_before_all_remote_pages_are_loaded(self):
         apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
         self.assertIn('var less=el("button","ee-apple-toggle","Show less")', apple)
         self.assertIn("less.hidden=visible<=CONFIG.initialPerCategory", apple)
-        self.assertIn("if(next>visible){updateControls();return;}", apple)
+        self.assertIn("if(next>visible){", apple)
+        self.assertIn("updateControls();", apple)
+        self.assertIn("warmNextPage();", apple)
+        self.assertIn('function warmNextPage()', apple)
+        self.assertIn('pending.catch(function(){})', apple)
         self.assertIn("card.hidden=index>=CONFIG.initialPerCategory", apple)
+        self.assertIn('var prefetchedPage=null;', apple)
+        self.assertIn('var prefetchPromise=null;', apple)
+        self.assertIn('function prefetchNext()', apple)
+        self.assertIn('function takeNextPage(offset)', apple)
+        self.assertIn('takeNextPage(requestedOffset)', apple)
+        self.assertIn('rootMargin:"800px 0px"', apple)
+        self.assertIn('prefetchObserver.observe(controls)', apple)
+        self.assertIn('if(prefetchPromise&&prefetchOffset===offset)', apple)
+        self.assertIn('more.textContent="Loading…"', apple)
+        self.assertIn('more.textContent="More"', apple)
+        self.assertIn('clearPrefetch(requestedOffset);', apple)
 
     def test_selective_refresh_has_independent_cursor_contract(self):
         refresh = self.code[self.code.index("function eeRefreshPayloadForPostId") :]
