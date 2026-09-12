@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import json
 from pathlib import Path
 
 import concert_calendar.content_index as content_index
@@ -24,6 +25,34 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_geographic_label_is_structural_without_hiding_real_artists(self):
+        index = build_index([
+            entry(
+                "Gyasi back in Paris next month!",
+                ["Concert", "Gyasi", "Paris", "Rock"],
+                "2026-01-01",
+            ),
+            entry(
+                "Obituary @ Bataclan, Paris - January 1st, 2026",
+                ["Concert Review", "Obituary", "Paris"],
+                "2026-01-02",
+            ),
+        ], generated_at="2026-01-03T00:00:00Z")
+
+        self.assertIn("gyasi", index["artists"])
+        self.assertNotIn("paris", index["artists"])
+        self.assertEqual(["gyasi"], index["articles"][0]["a"])
+        self.assertIn("obituary", index["artists"])
+        self.assertEqual(["obituary"], index["articles"][1]["a"])
+
+        with tempfile.TemporaryDirectory() as directory:
+            content_index.write_artist_exports(directory, index)
+            registry = json.loads(
+                Path(directory, "artist-index.json").read_text(encoding="utf-8")
+            )
+        self.assertIn("paris", registry["structuralLabels"])
+        self.assertNotIn("Paris", [artist["canonicalName"] for artist in registry["artists"]])
+
     def test_editorial_prefix_labels_never_seed_pseudo_artists(self):
         index = build_index([
             entry(

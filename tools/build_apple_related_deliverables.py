@@ -816,9 +816,16 @@ function eeExactEntityInText_(text,name) {return eeContains_(text,name);}
 function eeTitleArtistCandidate_(title) {
   title=String(title||"");
   var concert=title.match(/^(.+?)\s+@\s+/);
-  var action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|perform|performs)\b/i);
+  var action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|back|perform|performs)\b/i);
   var album=title.match(/^album review\s*(?::|[–-])\s*(.+?)(?:\s+[–-]\s+|$)/i);
   return String((concert||action||album||[])[1]||"").trim();
+}
+
+function eeIdentityNonArtist_(value,structuralLabels) {
+  var normalized=eeNorm_(value);
+  if(!normalized)return true;
+  if(structuralLabels&&structuralLabels[normalized])return true;
+  return /^(?:news|review|music|concert|concert review|festival|tour|tour dates|video|album|album review|single|song|track|show|tickets?|playlist|friday'?s playlist|interview|obituary|opening act|opener|photo(?:graphy|s)?|pictures?|paris|new|rock|hard rock|classic rock|alternative rock|indie rock|progressive rock|prog|blues|blues rock|metal|heavy metal|death metal|black metal|thrash metal|doom metal|country|folk|americana|pop|punk|punk rock|hardcore|jazz|electronic|electronica|hip hop|rap|r&b|soul|funk|reggae|ska)$/i.test(normalized);
 }
 
 function eeFastArticleIdentity_(post, registry) {
@@ -855,7 +862,7 @@ function eeFastArticleIdentity_(post, registry) {
     );
 
     var structuralArtist=names.some(function(name){
-      return !!structuralLabels[eeNorm_(name)];
+      return eeIdentityNonArtist_(name,structuralLabels);
     });
 
     var titleCandidate=eeNorm_(eeTitleArtistCandidate_(title));
@@ -868,7 +875,7 @@ function eeFastArticleIdentity_(post, registry) {
 
     var exactLabel=names.some(function(name){
       var key=eeNorm_(name);
-      return normalizedLabels[key]&&!structuralLabels[key];
+      return normalizedLabels[key]&&!eeIdentityNonArtist_(key,structuralLabels);
     });
 
     var titleMatch=names.some(function(name){
@@ -1006,6 +1013,8 @@ function eeFastArticleIdentity_(post, registry) {
           .concat(artist.alternateSpellings||[])
       );
 
+      if(names.some(function(name){return eeIdentityNonArtist_(name,structuralLabels);}))return;
+
       var mentions=0;
 
       names.forEach(function(name){
@@ -1060,8 +1069,6 @@ function eeFastArticleIdentity_(post, registry) {
   if(!matches.length&&!override){
     var candidate=eeTitleArtistCandidate_(title),
         candidateNorm=eeNorm_(candidate),
-        generic=/^(?:news|review|music|concert|festival|tour|video|album|single|song|track|show|tickets?|paris|new)$/i,
-        genreLike=/^(?:rock|hard rock|classic rock|alternative rock|indie rock|progressive rock|prog|blues|blues rock|metal|heavy metal|death metal|black metal|thrash metal|doom metal|country|folk|americana|pop|punk|punk rock|hardcore|jazz|electronic|electronica|hip[- ]?hop|rap|r&b|soul|funk|reggae|ska)$/i,
         ambiguousWords={
           beat:true,
           down:true,
@@ -1079,8 +1086,7 @@ function eeFastArticleIdentity_(post, registry) {
     if(
       candidate &&
       corroborated &&
-      !generic.test(candidate) &&
-      !genreLike.test(candidate) &&
+      !eeIdentityNonArtist_(candidate,structuralLabels) &&
       !ambiguousWords[candidateNorm]
     ){
       matches.push({
@@ -1119,9 +1125,7 @@ function eeFastArticleIdentity_(post, registry) {
       }).filter(function(value){
         return value.name &&
           value.mentions>=2 &&
-          !structuralLabels[value.normalized] &&
-          !generic.test(value.name) &&
-          !genreLike.test(value.name) &&
+          !eeIdentityNonArtist_(value.name,structuralLabels) &&
           !ambiguousWords[value.normalized];
       }).sort(function(a,b){
         return b.mentions-a.mentions ||

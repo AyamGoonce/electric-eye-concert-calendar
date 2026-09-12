@@ -1782,3 +1782,47 @@ When separately approved, this cache fix requires redeploying generated
 build and needs no UI change for this fix. Calendar, scraper, workflow,
 recommendation-generation, identity, repair-safety, and UI behavior were not
 changed.
+
+## 2026-09-12 — Structural-label artist identity correction
+
+Fixed the production identity bug in which the content index had promoted the
+geographic Blogger label `Paris` to a distinctive artist with broad article
+associations. That polluted registry entry was then trusted by
+`eeFastArticleIdentity_` through its `articleIds` fast path, causing the Gyasi post
+to resolve as two primary artists and fall through to unrelated genre results.
+
+Changes:
+- content-index structural identity hygiene now classifies `paris` as a
+  non-artist label. Independent title structure can still establish a legitimate
+  artist collision, preserving the existing Obituary-style reviewed/evidenced
+  behavior. The title parser also recognizes the editorial form `Artist back …`.
+- Apps Script now uses one `eeIdentityNonArtist_` helper across registry fast-path,
+  exact-label, provisional-title, and body-fallback identity decisions. A polluted
+  Paris registry row is rejected even when distinctive, article-associated,
+  exactly labeled, and present in the title; reviewed associations and genuine
+  structurally titled artists remain supported.
+- no recommendation generation, paging/cache, repair eligibility, worker,
+  calendar, workflow, or UI behavior changed.
+
+Verification:
+- focused content-index/Apple identity regressions: 5 passed, covering three
+  Gyasi title structures plus Obituary preservation.
+- a fresh temporary index from all 1,788 public Blogger posts retained Gyasi and
+  Obituary, omitted Paris from `artists`, and exported `paris` in
+  `structuralLabels`.
+- full Apple suite: 84 tests, 78 passed; the same six known pre-existing
+  generation/worker expectation failures remain.
+- protected non-Apple/calendar suite: 530 tests passed (the prior 529 plus the new
+  content-index regression).
+- Python compilation, XML parsing, and `git diff --check` passed.
+- two clean canonical builds were deterministic.
+- generated Code.gs SHA-256:
+  `5303416437b79524aee8db99cd6a54bee9b348213788bd06445499efe7dafbd1`
+- generated Electric-Eye-Theme.xml SHA-256, unchanged from the prior commit:
+  `5223bc5cc69ca7f0cbe2dad56ece024e0aac60e17cabdd37df93cb5202f7734a`
+
+Deployment, only when separately approved, requires publishing the corrected
+`artist-index.json`, redeploying generated Apps Script `Code.gs`, clearing or
+allowing expiry of the existing artist-registry cache, and then running the
+targeted refresh for post `1518411335735396864`. The Blogger theme does not need
+deployment. No deployment or production worker was run here.

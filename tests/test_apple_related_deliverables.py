@@ -335,6 +335,26 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 ''')
         self.assertEqual('["Obituary"]', result)
 
+    def test_fast_identity_rejects_polluted_paris_registry_entry(self):
+        result = self.run_apps_script(r'''
+var registry={schemaVersion:1,structuralLabels:["concert","rock"],articleOverrides:{},artists:[
+ {canonicalName:"Gyasi",slug:"gyasi",articleIds:["gyasi-post"],reviewedArticleIds:[],ambiguityClass:"distinctive"},
+ {canonicalName:"Paris",slug:"paris",articleIds:["gyasi-post"],reviewedArticleIds:[],ambiguityClass:"distinctive"}
+]};
+function identity(title){var analysis=eeFastArticleIdentity_({id:"gyasi-post",title:title,labels:["Concert","Gyasi","Paris","Rock"],content:"",url:""},registry);return {artists:analysis.primaryArtists,keys:analysis.primaryArtistKeys,parisEvidence:analysis.identityEvidence.some(function(item){return item.artistKey==="paris";})};}
+JSON.stringify([
+ identity("Gyasi back in Paris next month!"),
+ identity("Gyasi returns to Paris in September!"),
+ identity("Gyasi @ La Maroquinerie, Paris - October 12th, 2025")
+]);
+''')
+        self.assertEqual(
+            '[{"artists":["Gyasi"],"keys":["gyasi"],"parisEvidence":false},'
+            '{"artists":["Gyasi"],"keys":["gyasi"],"parisEvidence":false},'
+            '{"artists":["Gyasi"],"keys":["gyasi"],"parisEvidence":false}]',
+            result,
+        )
+
     def test_fast_identity_regression_matrix_and_ambiguous_names(self):
         result = self.run_apps_script(r'''
 var registry={schemaVersion:1,structuralLabels:["obituary","news","concert review"],articleOverrides:{},artists:[

@@ -66,6 +66,9 @@ GENERIC_LABELS = {
     "obituary", "opening", "opening act", "opener", "photo", "photography", "photos",
     "pic", "pics", "pictures", "playlist", "record", "review", "single",
     "tour", "tour dates", "video", "youtube",
+    # Geographic taxonomy labels are structural unless independent title
+    # structure establishes a legitimate artist collision.
+    "paris",
     "alternative", "alternative rock", "alt-country", "alt-rock", "americana",
     "banjo", "bass", "black metal", "blues", "blues rock", "classic rock",
     "country", "death metal", "doom", "folk", "funk", "fusion", "garage",
@@ -214,7 +217,7 @@ def _title_artist_candidate(title, article_type):
             return interview.group(1).strip()
     action = re.match(
         r"^(.+?)\s+(?:announce|announces|release|releases|share|shares|"
-        r"unveil|unveils|return|returns|perform|performs)\b",
+        r"unveil|unveils|return|returns|back|perform|performs)\b",
         title,
         re.I,
     )
