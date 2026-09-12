@@ -575,43 +575,385 @@ function eeTitleArtistCandidate_(title) {
 
 function eeFastArticleIdentity_(post, registry) {
   registry=registry||eeArtistRegistry_();
-  var postId=String(post.id||""),override=(registry.articleOverrides||{})[postId]||null;
-  var labels=(post.labels||[]).map(function(value){return String(value||"").trim();});
-  var normalizedLabels={};labels.forEach(function(value){normalizedLabels[eeNorm_(value)]=true;});
-  var structuralLabels={};(registry.structuralLabels||[]).forEach(function(value){structuralLabels[eeNorm_(value)]=true;});
-  var title=String(post.title||""),body=String(post.content||"").replace(/<[^>]+>/g," ").replace(/&nbsp;|&#160;/gi," ");
-  var matches=[];
+
+  var postId=String(post.id||""),
+      override=(registry.articleOverrides||{})[postId]||null,
+      labels=(post.labels||[]).map(function(value){
+        return String(value||"").trim();
+      }),
+      normalizedLabels={},
+      structuralLabels={};
+
+  labels.forEach(function(value){
+    normalizedLabels[eeNorm_(value)]=true;
+  });
+
+  (registry.structuralLabels||[]).forEach(function(value){
+    structuralLabels[eeNorm_(value)]=true;
+  });
+
+  var title=String(post.title||""),
+      body=String(post.content||"")
+        .replace(/<[^>]+>/g," ")
+        .replace(/&nbsp;|&#160;/gi," "),
+      normalizedBody=eeNorm_(body),
+      matches=[];
+
   function evidenceFor(artist){
-    var names=eeUnique_([artist.canonicalName].concat(artist.aliases||[]).concat(artist.alternateSpellings||[]));
-    var structuralArtist=names.some(function(name){return !!structuralLabels[eeNorm_(name)];});
+    var names=eeUnique_(
+      [artist.canonicalName]
+        .concat(artist.aliases||[])
+        .concat(artist.alternateSpellings||[])
+    );
+
+    var structuralArtist=names.some(function(name){
+      return !!structuralLabels[eeNorm_(name)];
+    });
+
     var titleCandidate=eeNorm_(eeTitleArtistCandidate_(title));
-    var independentStructuralTitle=structuralArtist&&names.some(function(name){return eeNorm_(name)===titleCandidate;});
-    var exactLabel=names.some(function(name){var key=eeNorm_(name);return normalizedLabels[key]&&!structuralLabels[key];});
-    var titleMatch=names.some(function(name){return eeExactEntityInText_(title,name);});
-    var articleKnown=(artist.articleIds||[]).map(String).indexOf(postId)!==-1;
-    var reviewedKnown=(artist.reviewedArticleIds||[]).map(String).indexOf(postId)!==-1;
+
+    var independentStructuralTitle=
+      structuralArtist &&
+      names.some(function(name){
+        return eeNorm_(name)===titleCandidate;
+      });
+
+    var exactLabel=names.some(function(name){
+      var key=eeNorm_(name);
+      return normalizedLabels[key]&&!structuralLabels[key];
+    });
+
+    var titleMatch=names.some(function(name){
+      return eeExactEntityInText_(title,name);
+    });
+
+    var articleKnown=(artist.articleIds||[])
+      .map(String)
+      .indexOf(postId)!==-1;
+
+    var reviewedKnown=(artist.reviewedArticleIds||[])
+      .map(String)
+      .indexOf(postId)!==-1;
+
     var relationshipTerms=[]
-      .concat(artist.members||[],artist.formerMembers||[],artist.associatedActs||[],artist.sideProjects||[],artist.keywords||[]);
-    var relationshipHits=relationshipTerms.filter(function(name){return eeExactEntityInText_(title+" "+body,name);});
-    var mentions=names.reduce(function(total,name){var needle=eeNorm_(name),hay=eeNorm_(body);return total+(needle?hay.split(needle).length-1:0);},0);
-    var ambiguous=artist.ambiguityClass&&artist.ambiguityClass!=="distinctive";
-    var accepted=reviewedKnown||independentStructuralTitle||(!structuralArtist&&articleKnown)||(!structuralArtist&&!ambiguous&&(exactLabel||titleMatch))||(!structuralArtist&&ambiguous&&exactLabel&&(relationshipHits.length>0||mentions>=2));
-    return {accepted:accepted,score:reviewedKnown?125:articleKnown?120:independentStructuralTitle?115:exactLabel&&relationshipHits.length?110:exactLabel&&mentions>=2?105:exactLabel?96:titleMatch?88:0,evidence:[reviewedKnown&&"reviewed article association",articleKnown&&!structuralArtist&&"existing artist-index article association",independentStructuralTitle&&"independent title-derived artist identity",exactLabel&&"exact Blogger artist label",titleMatch&&"bounded title identity",relationshipHits.length&&("relationship corroboration: "+relationshipHits.join(", ")),mentions>=2&&"repeated body mentions"].filter(Boolean),ambiguous:ambiguous};
+      .concat(
+        artist.members||[],
+        artist.formerMembers||[],
+        artist.associatedActs||[],
+        artist.sideProjects||[],
+        artist.keywords||[]
+      );
+
+    var relationshipHits=relationshipTerms.filter(function(name){
+      return eeExactEntityInText_(title+" "+body,name);
+    });
+
+    var mentions=names.reduce(function(total,name){
+      var needle=eeNorm_(name);
+      if(!needle)return total;
+      return total+(normalizedBody.split(needle).length-1);
+    },0);
+
+    var ambiguous=
+      artist.ambiguityClass &&
+      artist.ambiguityClass!=="distinctive";
+
+    var accepted=
+      reviewedKnown ||
+      independentStructuralTitle ||
+      (!structuralArtist&&articleKnown) ||
+      (
+        !structuralArtist &&
+        !ambiguous &&
+        (exactLabel||titleMatch)
+      ) ||
+      (
+        !structuralArtist &&
+        ambiguous &&
+        exactLabel &&
+        (relationshipHits.length>0||mentions>=2)
+      );
+
+    return {
+      accepted:accepted,
+      score:
+        reviewedKnown?125:
+        articleKnown?120:
+        independentStructuralTitle?115:
+        exactLabel&&relationshipHits.length?110:
+        exactLabel&&mentions>=2?105:
+        exactLabel?96:
+        titleMatch?88:
+        mentions>=3?92:
+        mentions>=2?90:
+        0,
+      evidence:[
+        reviewedKnown&&"reviewed article association",
+        articleKnown&&!structuralArtist&&
+          "existing artist-index article association",
+        independentStructuralTitle&&
+          "independent title-derived artist identity",
+        exactLabel&&"exact Blogger artist label",
+        titleMatch&&"bounded title identity",
+        mentions>=2&&
+          ("repeated body mentions: "+String(mentions)),
+        relationshipHits.length&&
+          ("relationship corroboration: "+relationshipHits.join(", "))
+      ].filter(Boolean),
+      ambiguous:ambiguous
+    };
   }
+
   if(override){
-    (override.primaryArtists||[]).forEach(function(name){var artist=(registry.artists||[]).filter(function(value){return eeNorm_(value.canonicalName)===eeNorm_(name);})[0];if(artist)matches.push({artist:artist,score:130,evidence:override.identityEvidence||["reviewed article override"],ambiguous:false});});
+    (override.primaryArtists||[]).forEach(function(name){
+      var artist=(registry.artists||[]).filter(function(value){
+        return eeNorm_(value.canonicalName)===eeNorm_(name);
+      })[0];
+
+      if(artist){
+        matches.push({
+          artist:artist,
+          score:130,
+          evidence:override.identityEvidence||
+            ["reviewed article override"],
+          ambiguous:false
+        });
+      }
+    });
   }else{
-    (registry.artists||[]).forEach(function(artist){var result=evidenceFor(artist);if(result.accepted)matches.push({artist:artist,score:result.score,evidence:result.evidence,ambiguous:result.ambiguous});});
+    (registry.artists||[]).forEach(function(artist){
+      var result=evidenceFor(artist);
+
+      if(result.accepted){
+        matches.push({
+          artist:artist,
+          score:result.score,
+          evidence:result.evidence,
+          ambiguous:result.ambiguous
+        });
+      }
+    });
   }
+
+  /*
+   * Body-only artist discovery is a fallback, not an additional identity
+   * source once stronger title/label evidence already exists.
+   *
+   * Restrict this path to known distinctive registry artists and require a
+   * clearly dominant repeated body mention. Reused/generic names such as
+   * Earth or Wargasm still require contextual disambiguation.
+   */
   if(!matches.length&&!override){
-    var candidate=eeTitleArtistCandidate_(title);
-    var candidateNorm=eeNorm_(candidate),generic=/^(?:news|review|music|concert|festival|tour|video|album|single|song|track|show|tickets?|paris|new)$/i,ambiguousWords={beat:true,down:true,possessed:true,live:true,ghost:true,tool:true,kiss:true,sparks:true};
-    var corroborated=labels.some(function(label){return eeNorm_(label)===candidateNorm;});
-    if(candidate&&corroborated&&!generic.test(candidate)&&!ambiguousWords[candidateNorm])matches.push({artist:{canonicalName:candidate,slug:candidateNorm.replace(/\s+/g,"-"),aliases:[],articleIds:[],ambiguityClass:"provisional"},score:94,evidence:["provisional exact title and Blogger label"],ambiguous:false});
+    var bodyKnown=[],
+        boundedBody=" "+normalizedBody+" ";
+
+    (registry.artists||[]).forEach(function(artist){
+      if(
+        String(artist.ambiguityClass||"")!=="distinctive"
+      )return;
+
+      var names=eeUnique_(
+        [artist.canonicalName]
+          .concat(artist.aliases||[])
+          .concat(artist.alternateSpellings||[])
+      );
+
+      var mentions=0;
+
+      names.forEach(function(name){
+        var needle=eeNorm_(name);
+        if(!needle)return;
+
+        var count=boundedBody
+          .split(" "+needle+" ")
+          .length-1;
+
+        if(count>mentions)mentions=count;
+      });
+
+      if(mentions>=2){
+        bodyKnown.push({
+          artist:artist,
+          mentions:mentions
+        });
+      }
+    });
+
+    bodyKnown.sort(function(a,b){
+      return b.mentions-a.mentions ||
+        String(a.artist.canonicalName||"")
+          .localeCompare(
+            String(b.artist.canonicalName||"")
+          );
+    });
+
+    if(bodyKnown.length){
+      var topBody=bodyKnown[0],
+          secondBody=bodyKnown[1]||null,
+          dominantBody=
+            !secondBody ||
+            topBody.mentions>=secondBody.mentions+2;
+
+      if(dominantBody){
+        matches.push({
+          artist:topBody.artist,
+          score:92,
+          evidence:[
+            "dominant repeated body identity",
+            "repeated body mentions: "+
+              String(topBody.mentions)
+          ],
+          ambiguous:false
+        });
+      }
+    }
   }
-  matches.sort(function(a,b){return b.score-a.score||a.artist.canonicalName.localeCompare(b.artist.canonicalName);});
-  var articleType=/playlist/i.test(title)||labels.some(function(label){return /playlist/i.test(label);})?"playlist":/obituary|r\.i\.p\./i.test(title)?"obituary":/interview/i.test(title)?"interview":/@/.test(title)?"concert_review":/album review/i.test(title)?"album_review":"other";
-  return {schemaVersion:1,analysisVersion:1,postId:postId,canonicalUrl:post.url||"",primaryArtistKeys:matches.map(function(item){return item.artist.slug;}),primaryArtists:matches.map(function(item){return item.artist.canonicalName;}),people:[],identityConfidence:matches.length?(matches[0].score>=105?"HIGH":"MEDIUM"):"NONE",identityEvidence:matches.map(function(item){return {artistKey:item.artist.slug,evidence:item.evidence};}),ambiguous:matches.some(function(item){return item.ambiguous;}),articleType:articleType};
+
+  if(!matches.length&&!override){
+    var candidate=eeTitleArtistCandidate_(title),
+        candidateNorm=eeNorm_(candidate),
+        generic=/^(?:news|review|music|concert|festival|tour|video|album|single|song|track|show|tickets?|paris|new)$/i,
+        genreLike=/^(?:rock|hard rock|classic rock|alternative rock|indie rock|progressive rock|prog|blues|blues rock|metal|heavy metal|death metal|black metal|thrash metal|doom metal|country|folk|americana|pop|punk|punk rock|hardcore|jazz|electronic|electronica|hip[- ]?hop|rap|r&b|soul|funk|reggae|ska)$/i,
+        ambiguousWords={
+          beat:true,
+          down:true,
+          possessed:true,
+          live:true,
+          ghost:true,
+          tool:true,
+          kiss:true,
+          sparks:true
+        },
+        corroborated=labels.some(function(label){
+          return eeNorm_(label)===candidateNorm;
+        });
+
+    if(
+      candidate &&
+      corroborated &&
+      !generic.test(candidate) &&
+      !genreLike.test(candidate) &&
+      !ambiguousWords[candidateNorm]
+    ){
+      matches.push({
+        artist:{
+          canonicalName:candidate,
+          slug:candidateNorm.replace(/\s+/g,"-"),
+          aliases:[],
+          articleIds:[],
+          ambiguityClass:"provisional"
+        },
+        score:94,
+        evidence:[
+          "provisional exact title and Blogger label"
+        ],
+        ambiguous:false
+      });
+    }
+
+    /*
+     * No usable title artist:
+     * promote the strongest non-genre Blogger label that is repeatedly
+     * present in the article body.
+     */
+    if(!matches.length){
+      var bodyLabels=labels.map(function(label){
+        var normalized=eeNorm_(label),
+            mentions=normalized
+              ? normalizedBody.split(normalized).length-1
+              : 0;
+
+        return {
+          name:String(label||"").trim(),
+          normalized:normalized,
+          mentions:mentions
+        };
+      }).filter(function(value){
+        return value.name &&
+          value.mentions>=2 &&
+          !structuralLabels[value.normalized] &&
+          !generic.test(value.name) &&
+          !genreLike.test(value.name) &&
+          !ambiguousWords[value.normalized];
+      }).sort(function(a,b){
+        return b.mentions-a.mentions ||
+          a.normalized.localeCompare(b.normalized);
+      });
+
+      if(bodyLabels.length){
+        var bodyArtist=bodyLabels[0];
+
+        matches.push({
+          artist:{
+            canonicalName:bodyArtist.name,
+            slug:bodyArtist.normalized
+              .replace(/[^a-z0-9]+/g,"-")
+              .replace(/^-|-$/g,""),
+            aliases:[],
+            articleIds:[],
+            ambiguityClass:"provisional"
+          },
+          score:93,
+          evidence:[
+            "body-corroborated Blogger artist label",
+            "repeated body mentions: "+
+              String(bodyArtist.mentions)
+          ],
+          ambiguous:false
+        });
+      }
+    }
+  }
+
+  matches.sort(function(a,b){
+    return b.score-a.score ||
+      a.artist.canonicalName.localeCompare(
+        b.artist.canonicalName
+      );
+  });
+
+  var articleType=
+    /playlist/i.test(title) ||
+    labels.some(function(label){
+      return /playlist/i.test(label);
+    })
+      ?"playlist"
+      :/obituary|r\.i\.p\./i.test(title)
+        ?"obituary"
+        :/interview/i.test(title)
+          ?"interview"
+          :/@/.test(title)
+            ?"concert_review"
+            :/album review/i.test(title)
+              ?"album_review"
+              :"other";
+
+  return {
+    schemaVersion:1,
+    analysisVersion:2,
+    postId:postId,
+    canonicalUrl:post.url||"",
+    primaryArtistKeys:matches.map(function(item){
+      return item.artist.slug;
+    }),
+    primaryArtists:matches.map(function(item){
+      return item.artist.canonicalName;
+    }),
+    people:[],
+    identityConfidence:matches.length
+      ?(matches[0].score>=105?"HIGH":"MEDIUM")
+      :"NONE",
+    identityEvidence:matches.map(function(item){
+      return {
+        artistKey:item.artist.slug,
+        evidence:item.evidence
+      };
+    }),
+    ambiguous:matches.some(function(item){
+      return item.ambiguous;
+    }),
+    articleType:articleType
+  };
 }
 
 function eeNamedSheet_(name,header) {
@@ -631,14 +973,23 @@ function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
 var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
-var EE_APPLE_IDENTITY_RESOLVER_VERSION=1;
+var EE_APPLE_IDENTITY_RESOLVER_VERSION=2;
 function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
 function eeArtistNeedsIdentityResolution_(record){
   if(!record)return true;
   var status=String(record.status||"");
   if(status==="UNRESOLVED")return true;
   return (status==="ERROR"||status==="AMBIGUOUS")&&
-    Math.max(0,Number(record.identityResolverVersion||0))<EE_APPLE_IDENTITY_RESOLVER_VERSION;
+    Math.max(0,Number(record.identityResolverVersion||0))<
+      EE_APPLE_IDENTITY_RESOLVER_VERSION;
+}
+
+function eeArtistNeedsResolverRevalidation_(record){
+  if(!record)return false;
+
+  return String(record.status||"")==="RESOLVED" &&
+    Math.max(0,Number(record.identityResolverVersion||0))<
+      EE_APPLE_IDENTITY_RESOLVER_VERSION;
 }
 
 function eeArtistCatalogueSheet_() {
@@ -674,13 +1025,443 @@ function eePutArtistCatalogue_(record) {
   eeUpsertRow_(sheet,0,record.artistKey,[record.artistKey,record.canonicalName,1,1,record.appleArtistId||"",record.musicBrainzId||"",record.identityConfidence||"",record.status||"UNRESOLVED",eeEncodePayloadCell_(catalogue),generated,stale,record.representativePostId||"",record.error||"",Math.max(0,Number(record.transientRetryCount||0)),record.lastTransientError||"",record.retryAfter||"",Math.max(0,Number(record.identityResolverVersion||EE_APPLE_IDENTITY_RESOLVER_VERSION))]);
 }
 
+function eeGenreFallbackSpecs_(post) {
+  var map={
+    "rock":{
+      term:"rock music",
+      accepted:["rock"]
+    },
+    "hard rock":{
+      term:"hard rock",
+      accepted:["hard rock","rock"]
+    },
+    "classic rock":{
+      term:"classic rock",
+      accepted:["rock"]
+    },
+    "alternative rock":{
+      term:"alternative rock",
+      accepted:["alternative","rock"]
+    },
+    "indie rock":{
+      term:"indie rock",
+      accepted:["alternative","rock"]
+    },
+    "progressive rock":{
+      term:"progressive rock",
+      accepted:["rock"]
+    },
+    "prog":{
+      term:"progressive rock",
+      accepted:["rock"]
+    },
+    "blues":{
+      term:"blues music",
+      accepted:["blues"]
+    },
+    "blues rock":{
+      term:"blues rock",
+      accepted:["blues","rock"]
+    },
+    "metal":{
+      term:"metal music",
+      accepted:["metal"]
+    },
+    "heavy metal":{
+      term:"heavy metal",
+      accepted:["metal"]
+    },
+    "death metal":{
+      term:"death metal",
+      accepted:["metal"]
+    },
+    "black metal":{
+      term:"black metal",
+      accepted:["metal"]
+    },
+    "thrash metal":{
+      term:"thrash metal",
+      accepted:["metal"]
+    },
+    "doom metal":{
+      term:"doom metal",
+      accepted:["metal"]
+    },
+    "punk":{
+      term:"punk rock",
+      accepted:["punk","alternative","rock"]
+    },
+    "punk rock":{
+      term:"punk rock",
+      accepted:["punk","alternative","rock"]
+    },
+    "hardcore":{
+      term:"hardcore punk",
+      accepted:["punk","alternative","rock"]
+    },
+    "pop":{
+      term:"pop music",
+      accepted:["pop"]
+    },
+    "jazz":{
+      term:"jazz music",
+      accepted:["jazz"]
+    },
+    "country":{
+      term:"country music",
+      accepted:["country"]
+    },
+    "folk":{
+      term:"folk music",
+      accepted:["folk","singer songwriter"]
+    },
+    "americana":{
+      term:"americana music",
+      accepted:["americana","country","folk"]
+    },
+    "electronic":{
+      term:"electronic music",
+      accepted:["electronic","lectronique","dance"]
+    },
+    "electronica":{
+      term:"electronica",
+      accepted:["electronic","lectronique","dance"]
+    },
+    "hip hop":{
+      term:"hip hop",
+      accepted:["hip hop","rap"]
+    },
+    "hip-hop":{
+      term:"hip hop",
+      accepted:["hip hop","rap"]
+    },
+    "rap":{
+      term:"rap music",
+      accepted:["rap","hip hop"]
+    },
+    "r&b":{
+      term:"r&b music",
+      accepted:["r b","soul"]
+    },
+    "soul":{
+      term:"soul music",
+      accepted:["soul","r b"]
+    },
+    "funk":{
+      term:"funk music",
+      accepted:["funk","soul","r b"]
+    },
+    "reggae":{
+      term:"reggae music",
+      accepted:["reggae"]
+    },
+    "ska":{
+      term:"ska music",
+      accepted:["ska","reggae"]
+    }
+  };
+
+  var found=[],
+      seen={};
+
+  (post.labels||[]).forEach(function(label){
+    var normalized=eeNorm_(label);
+
+    if(!map[normalized]||seen[normalized])return;
+
+    seen[normalized]=true;
+
+    found.push({
+      label:String(label||""),
+      normalized:normalized,
+      term:map[normalized].term,
+      accepted:map[normalized].accepted
+    });
+  });
+
+  return found.slice(0,2);
+}
+
+function eeGenreFallbackListenGroup_(post) {
+  var specs=eeGenreFallbackSpecs_(post);
+
+  if(!specs.length){
+    return {
+      items:[],
+      labels:[]
+    };
+  }
+
+  var settings=eeAppleSettings_(),
+      byId={};
+
+  specs.forEach(function(spec){
+    var response=eeAppleSearch_({
+      term:spec.term,
+      storefront:settings.storefront,
+      media:"music",
+      entity:"album"
+    });
+
+    (response.results||[]).forEach(function(raw){
+      var collectionId=String(raw.collectionId||""),
+          title=String(raw.collectionName||""),
+          creator=String(raw.artistName||""),
+          canonicalUrl=String(raw.collectionViewUrl||""),
+          genre=eeNorm_(raw.primaryGenreName||"");
+
+      if(
+        !collectionId ||
+        !title ||
+        !creator ||
+        !canonicalUrl
+      )return;
+
+      var genreAccepted=spec.accepted.some(function(term){
+        return genre.indexOf(eeNorm_(term))!==-1;
+      });
+
+      if(!genreAccepted)return;
+
+      if(byId[collectionId])return;
+
+      var tracked=eeAffiliateUrl_("LISTEN",canonicalUrl);
+
+      if(!tracked)return;
+
+      byId[collectionId]={
+        stableId:"genre-album:"+collectionId,
+        title:title,
+        canonicalAppleUrl:canonicalUrl,
+        url:tracked,
+        artworkUrl:String(
+          raw.artworkUrl100||
+          raw.artworkUrl60||
+          raw.artworkUrl30||
+          ""
+        ),
+        creator:creator,
+        mediaType:"Album",
+        description:String(raw.primaryGenreName||""),
+        storefront:String(
+          settings.storefront||"FR"
+        ).toUpperCase(),
+        category:"LISTEN",
+        relevanceTier:"GENRE_FALLBACK",
+        relevanceScore:55,
+        relevanceReason:
+          'Article genre label "'+
+          spec.label+
+          '" supplied the fallback recommendation context.',
+        relationshipContext:
+          'Genre fallback from article label "'+
+          spec.label+
+          '".',
+        price:null,
+        discoverySource:"ARTICLE_GENRE_LABEL",
+        appleArtistId:String(raw.artistId||"")||null,
+        recommendationMode:"GENRE_FALLBACK"
+      };
+    });
+  });
+
+  var items=Object.keys(byId).map(function(key){
+    return byId[key];
+  });
+
+  items.sort(function(a,b){
+    return Number(b.relevanceScore||0)-
+      Number(a.relevanceScore||0)||
+      String(a.creator||"").localeCompare(
+        String(b.creator||"")
+      )||
+      String(a.title||"").localeCompare(
+        String(b.title||"")
+      );
+  });
+
+  return {
+    items:items.slice(0,12),
+    labels:specs.map(function(spec){
+      return spec.label;
+    })
+  };
+}
+
 function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
-  var allowedCatalogues={};(analysis.primaryArtistKeys||[]).forEach(function(key,index){allowedCatalogues[String(key)]=eeNorm_((analysis.primaryArtists||[])[index]||"");});
-  catalogues=(catalogues||[]).filter(function(record){var expected=allowedCatalogues[String(record.artistKey||"")];return !!expected&&expected===eeNorm_(record.canonicalName||"");});
-  var groups={LISTEN:{},WATCH:{},READ:{}},articleText=String(post.title||"")+" "+String(post.content||"").replace(/<[^>]+>/g," ");
-  catalogues.forEach(function(record){((record.catalogue||{}).categories||[]).forEach(function(group){(group.items||[]).forEach(function(item){var ranked=JSON.parse(JSON.stringify(item)),sourceUrl=ranked.url||ranked.canonicalAppleUrl||"",trackedUrl=sourceUrl?eeAffiliateUrl_(group.category,sourceUrl):"";if(sourceUrl&&!trackedUrl)return;if(trackedUrl)ranked.url=trackedUrl;var boost=0;if(ranked.title&&eeExactEntityInText_(articleText,ranked.title))boost+=6;if(analysis.articleType==="interview"&&ranked.creator&&eeExactEntityInText_(post.title||"",ranked.creator))boost+=3;ranked.relevanceScore=Number(ranked.relevanceScore||0)+boost;var key=String(ranked.stableId||ranked.url||ranked.title),existing=groups[group.category]&&groups[group.category][key];if(groups[group.category]&&(!existing||Number(ranked.relevanceScore||0)>Number(existing.relevanceScore||0)))groups[group.category][key]=ranked;});});});
-  var primaryIds=catalogues.map(function(record){return record.appleArtistId;}).filter(Boolean),categories=[];["LISTEN","WATCH","READ"].forEach(function(category){var items=Object.keys(groups[category]).map(function(key){return groups[category][key];});items.sort(function(a,b){return eePrimaryRecommendationRank_(a,analysis.primaryArtists,primaryIds)-eePrimaryRecommendationRank_(b,analysis.primaryArtists,primaryIds)||Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title).localeCompare(String(b.title));});if(items.length)categories.push({category:category,items:items});});
-  return {schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,generatedAt:new Date().toISOString(),postId:String(post.id),canonicalUrl:post.url||"",storefront:eeAppleSettings_().storefront,subject:{title:post.title||"",primaryArtists:analysis.primaryArtists,people:analysis.people||[]},identity:{level:analysis.identityConfidence,artistId:catalogues.length===1?catalogues[0].appleArtistId||null:null,confidenceScore:analysis.identityConfidence==="HIGH"?100:75},categories:categories,diagnostics:{architecture:"ARTIST_REGISTRY_V1",artistKeys:analysis.primaryArtistKeys,cacheHits:catalogues.length,emptyClassification:categories.length?null:(analysis.primaryArtistKeys.length?"EMPTY_NO_QUALIFYING_RELATIONSHIP":"EMPTY_NO_SUBJECT")}};
+  var allowedCatalogues={};
+
+  (analysis.primaryArtistKeys||[]).forEach(function(key,index){
+    allowedCatalogues[String(key)]=
+      eeNorm_((analysis.primaryArtists||[])[index]||"");
+  });
+
+  catalogues=(catalogues||[]).filter(function(record){
+    var expected=allowedCatalogues[String(record.artistKey||"")];
+
+    return !!expected &&
+      expected===eeNorm_(record.canonicalName||"");
+  });
+
+  var groups={
+        LISTEN:{},
+        WATCH:{},
+        READ:{}
+      },
+      articleText=
+        String(post.title||"")+" "+
+        String(post.content||"").replace(/<[^>]+>/g," ");
+
+  catalogues.forEach(function(record){
+    ((record.catalogue||{}).categories||[]).forEach(function(group){
+      (group.items||[]).forEach(function(item){
+        var ranked=JSON.parse(JSON.stringify(item)),
+            sourceUrl=
+              ranked.url||
+              ranked.canonicalAppleUrl||
+              "",
+            trackedUrl=sourceUrl
+              ?eeAffiliateUrl_(group.category,sourceUrl)
+              :"";
+
+        if(sourceUrl&&!trackedUrl)return;
+        if(trackedUrl)ranked.url=trackedUrl;
+
+        var boost=0;
+
+        if(
+          ranked.title &&
+          eeExactEntityInText_(articleText,ranked.title)
+        )boost+=6;
+
+        if(
+          analysis.articleType==="interview" &&
+          ranked.creator &&
+          eeExactEntityInText_(post.title||"",ranked.creator)
+        )boost+=3;
+
+        ranked.relevanceScore=
+          Number(ranked.relevanceScore||0)+boost;
+
+        var key=String(
+          ranked.stableId||
+          ranked.url||
+          ranked.title
+        );
+
+        var existing=
+          groups[group.category] &&
+          groups[group.category][key];
+
+        if(
+          groups[group.category] &&
+          (
+            !existing ||
+            Number(ranked.relevanceScore||0)>
+              Number(existing.relevanceScore||0)
+          )
+        ){
+          groups[group.category][key]=ranked;
+        }
+      });
+    });
+  });
+
+  var primaryIds=catalogues.map(function(record){
+        return record.appleArtistId;
+      }).filter(Boolean),
+      categories=[];
+
+  ["LISTEN","WATCH","READ"].forEach(function(category){
+    var items=Object.keys(groups[category]).map(function(key){
+      return groups[category][key];
+    });
+
+    items.sort(function(a,b){
+      return eePrimaryRecommendationRank_(
+        a,
+        analysis.primaryArtists,
+        primaryIds
+      )-
+      eePrimaryRecommendationRank_(
+        b,
+        analysis.primaryArtists,
+        primaryIds
+      )||
+      Number(b.relevanceScore||0)-
+      Number(a.relevanceScore||0)||
+      String(a.title).localeCompare(String(b.title));
+    });
+
+    if(items.length){
+      categories.push({
+        category:category,
+        items:items
+      });
+    }
+  });
+
+  var genreFallback={
+    items:[],
+    labels:[]
+  };
+
+  if(!categories.length){
+    genreFallback=eeGenreFallbackListenGroup_(post);
+
+    if(genreFallback.items.length){
+      categories.push({
+        category:"LISTEN",
+        items:genreFallback.items
+      });
+    }
+  }
+
+  var recommendationMode=
+    genreFallback.items.length
+      ?"GENRE_FALLBACK"
+      :"ARTIST_RELATIONSHIP";
+
+  return {
+    schemaVersion:1,
+    generationVersion:EE_APPLE_CONFIG.generationVersion,
+    generatedAt:new Date().toISOString(),
+    postId:String(post.id),
+    canonicalUrl:post.url||"",
+    storefront:eeAppleSettings_().storefront,
+    subject:{
+      title:post.title||"",
+      primaryArtists:analysis.primaryArtists,
+      people:analysis.people||[]
+    },
+    identity:{
+      level:analysis.identityConfidence,
+      artistId:
+        catalogues.length===1
+          ?catalogues[0].appleArtistId||null
+          :null,
+      confidenceScore:
+        analysis.identityConfidence==="HIGH"
+          ?100
+          :75
+    },
+    categories:categories,
+    diagnostics:{
+      architecture:"ARTIST_REGISTRY_V2",
+      artistKeys:analysis.primaryArtistKeys,
+      cacheHits:catalogues.length,
+      recommendationMode:recommendationMode,
+      genreFallbackLabels:genreFallback.labels,
+      emptyClassification:
+        categories.length
+          ?null
+          :(
+            analysis.primaryArtistKeys.length
+              ?"EMPTY_NO_QUALIFYING_RELATIONSHIP"
+              :"EMPTY_NO_SUBJECT"
+          )
+    }
+  };
 }
 
 function eeReadOnlySheet_(name) {var settings=eeAppleSettings_();if(!settings.spreadsheetId)throw new Error("EE_APPLE_SPREADSHEET_ID is not configured");var sheet=SpreadsheetApp.openById(settings.spreadsheetId).getSheetByName(name);if(!sheet)throw new Error("Missing sheet: "+name);return sheet;}
@@ -813,19 +1594,456 @@ function eeRepairContaminatedReadyPayloads(dryRun) {
   var result={status:"OK",dryRun:false,counts:audit.counts,findings:audit.findings,repaired:repaired};console.log(JSON.stringify(result));return result;
 }
 
+function eeLiteralArtistKey_(value) {
+  return String(value||"")
+    .trim()
+    .replace(/\s+/g," ")
+    .toLowerCase();
+}
+
+function eeDirectArtistContextRequired_(artist,artistResults) {
+  var subjectName=String((artist||{}).canonicalName||""),
+      subjectLiteral=eeLiteralArtistKey_(subjectName),
+      subjectNorm=eeNorm_(subjectName),
+      literalIds={},
+      normalizedIds={};
+
+  (artistResults||[]).forEach(function(raw){
+    var id=String(raw.artistId||""),
+        name=String(raw.artistName||"");
+
+    if(!id)return;
+
+    if(eeLiteralArtistKey_(name)===subjectLiteral)
+      literalIds[id]=true;
+
+    if(eeNorm_(name)===subjectNorm)
+      normalizedIds[id]=true;
+  });
+
+  var literalCount=Object.keys(literalIds).length,
+      normalizedCount=Object.keys(normalizedIds).length,
+      words=subjectNorm.split(" ").filter(Boolean),
+      punctuationDistinct=
+        literalCount===1 &&
+        normalizedCount>1 &&
+        /[?!.$&+]/.test(subjectName);
+
+  if(punctuationDistinct)return false;
+
+  return normalizedCount>1 || words.length===1;
+}
+
+function eeResolveDirectArtistIdentity_(
+  artist,
+  analysis,
+  artistResults,
+  contextProfile,
+  contextRequired,
+  contextError
+) {
+  var subjectName=String(
+        (artist||{}).canonicalName||
+        ((analysis.primaryArtists||[])[0])||
+        ""
+      ),
+      subjectLiteral=eeLiteralArtistKey_(subjectName),
+      subjectNorm=eeNorm_(subjectName),
+      existingId=String(
+        (analysis.existingAppleArtistIds||[])[0]||""
+      ),
+      mappings=eeIdentityMappings_(),
+      rejected={},
+      approved={},
+      byId={};
+
+  mappings.forEach(function(mapping){
+    if(eeNorm_(mapping.alias)!==subjectNorm)return;
+
+    var id=String(mapping.artistId||"");
+    if(!id)return;
+
+    if(String(mapping.status||"")==="REJECTED")
+      rejected[id]=true;
+    else
+      approved[id]=true;
+  });
+
+  (artistResults||[]).forEach(function(raw){
+    var id=String(raw.artistId||""),
+        name=String(raw.artistName||"");
+
+    if(!id||rejected[id])return;
+
+    byId[id]={
+      artistId:id,
+      artistName:name,
+      literalExact:
+        eeLiteralArtistKey_(name)===subjectLiteral,
+      normalizedExact:
+        eeNorm_(name)===subjectNorm,
+      primaryGenreName:String(raw.primaryGenreName||"")
+    };
+  });
+
+  if(existingId&&byId[existingId]){
+    return {
+      level:"HIGH",
+      artistId:existingId,
+      confidenceScore:100,
+      decisionReason:"TRUSTED_EXISTING_APPLE_ARTIST_ID",
+      hardAmbiguity:false
+    };
+  }
+
+  var mappedIds=Object.keys(approved).filter(function(id){
+    return !!byId[id];
+  });
+
+  if(mappedIds.length===1){
+    return {
+      level:"HIGH",
+      artistId:mappedIds[0],
+      confidenceScore:100,
+      decisionReason:"TRUSTED_IDENTITY_MAPPING",
+      hardAmbiguity:false
+    };
+  }
+
+  if(mappedIds.length>1){
+    return {
+      level:"MODERATE",
+      artistId:null,
+      confidenceScore:55,
+      decisionReason:"MULTIPLE_TRUSTED_IDENTITY_MAPPINGS",
+      hardAmbiguity:true
+    };
+  }
+
+  var contextNames=contextProfile
+      ?eeUnique_(
+        [contextProfile.name]
+          .concat(contextProfile.aliases||[])
+      )
+      :[],
+      contextMatches=contextNames.some(function(name){
+        return eeNorm_(name)===subjectNorm;
+      });
+
+  if(contextRequired){
+    if(!contextProfile||!contextMatches){
+      return {
+        level:"MODERATE",
+        artistId:null,
+        confidenceScore:45,
+        decisionReason:contextError
+          ?"CONTEXT_RESOLUTION_UNAVAILABLE"
+          :"CONTEXT_REQUIRED_FOR_AMBIGUOUS_NAME",
+        hardAmbiguity:true
+      };
+    }
+
+    var contextualAppleId=String(
+      contextProfile.appleArtistId||""
+    );
+
+    if(
+      contextualAppleId &&
+      byId[contextualAppleId]
+    ){
+      return {
+        level:"HIGH",
+        artistId:contextualAppleId,
+        confidenceScore:100,
+        decisionReason:
+          "MUSICBRAINZ_LINKED_APPLE_ARTIST_ID",
+        hardAmbiguity:false
+      };
+    }
+
+    if(
+      Number(contextProfile.sameNameCandidateCount||1)>1
+    ){
+      if(!contextProfile.contextDisambiguated){
+        return {
+          level:"MODERATE",
+          artistId:null,
+          confidenceScore:50,
+          decisionReason:
+            "MUSICBRAINZ_SAME_NAME_IDENTITY_AMBIGUOUS",
+          hardAmbiguity:true
+        };
+      }
+
+      /*
+       * The article identity is known, but MusicBrainz has not supplied an
+       * Apple link. Do NOT substitute a different same-name Apple artist.
+       *
+       * This is the Wargasm safeguard.
+       */
+      return {
+        level:"MODERATE",
+        artistId:null,
+        confidenceScore:60,
+        decisionReason:
+          "CONTEXTUAL_MUSICBRAINZ_IDENTITY_UNMAPPED_TO_APPLE",
+        hardAmbiguity:true
+      };
+    }
+  }
+
+  var literalIds=Object.keys(byId).filter(function(id){
+    return byId[id].literalExact;
+  });
+
+  if(literalIds.length===1){
+    return {
+      level:"HIGH",
+      artistId:literalIds[0],
+      confidenceScore:95,
+      decisionReason:"UNIQUE_LITERAL_EXACT_ARTIST",
+      hardAmbiguity:false
+    };
+  }
+
+  if(literalIds.length>1){
+    return {
+      level:"MODERATE",
+      artistId:null,
+      confidenceScore:55,
+      decisionReason:"MULTIPLE_LITERAL_EXACT_ARTISTS",
+      hardAmbiguity:true
+    };
+  }
+
+  var normalizedIds=Object.keys(byId).filter(function(id){
+    return byId[id].normalizedExact;
+  });
+
+  if(normalizedIds.length===1){
+    return {
+      level:"HIGH",
+      artistId:normalizedIds[0],
+      confidenceScore:90,
+      decisionReason:"UNIQUE_NORMALIZED_EXACT_ARTIST",
+      hardAmbiguity:false
+    };
+  }
+
+  if(normalizedIds.length>1){
+    return {
+      level:"MODERATE",
+      artistId:null,
+      confidenceScore:50,
+      decisionReason:"MULTIPLE_NORMALIZED_EXACT_ARTISTS",
+      hardAmbiguity:true
+    };
+  }
+
+  return {
+    level:"LOW",
+    artistId:null,
+    confidenceScore:0,
+    decisionReason:"NO_EXACT_ARTIST_ENTITY",
+    hardAmbiguity:false
+  };
+}
+
 function eePrimaryArtistIdentityPayload_(artist,post) {
   var settings=eeAppleSettings_();
-  var analysis={primaryArtists:[artist.canonicalName],people:[],associatedPeople:[],existingAppleArtistIds:artist.appleArtistId?[String(artist.appleArtistId)]:[],relationshipGraph:{nodes:[],edges:[]}};
-  var query=eePrimaryLookupQuery_(analysis,settings.storefront,"LISTEN","album"),queryDiagnostic=eeDiscoveryDiagnosticQuery_(query),response=eeAppleSearch_(query),results=response.results||[],map={};
-  eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);
-  results.forEach(function(raw){
-    if(eeAddCandidateToMap_(map,raw,query,analysis))eeDiscoveryDiagnosticDecision_(queryDiagnostic,true,"QUALIFYING_RELATIONSHIP");
-    else eeDiscoveryDiagnosticDecision_(queryDiagnostic,false,"NO_QUALIFYING_RELATIONSHIP");
+
+  var analysis={
+    primaryArtists:[artist.canonicalName],
+    people:[],
+    associatedPeople:[],
+    existingAppleArtistIds:
+      artist.appleArtistId
+        ?[String(artist.appleArtistId)]
+        :[],
+    relationshipGraph:{
+      nodes:[],
+      edges:[]
+    }
+  };
+
+  var artistQuery=eePrimaryLookupQuery_(
+        analysis,
+        settings.storefront,
+        "LISTEN",
+        "musicArtist"
+      ),
+      artistDiagnostic=
+        eeDiscoveryDiagnosticQuery_(artistQuery),
+      artistResponse=eeAppleSearch_(artistQuery),
+      artistResults=artistResponse.results||[];
+
+  eeDiscoveryDiagnosticCandidates_(
+    artistDiagnostic,
+    artistResponse
+  );
+
+  var contextRequired=
+        eeDirectArtistContextRequired_(
+          artist,
+          artistResults
+        ),
+      contextProfile=null,
+      contextError="";
+
+  if(contextRequired){
+    try{
+      contextProfile=
+        eeCachedEntityProfile_(post)||
+        eeAcquireEntityProfile_(post);
+    }catch(error){
+      contextError=String(
+        error&&error.message||error||""
+      );
+    }
+  }
+
+  var directIdentity=
+    eeResolveDirectArtistIdentity_(
+      artist,
+      analysis,
+      artistResults,
+      contextProfile,
+      contextRequired,
+      contextError
+    );
+
+  if(directIdentity.hardAmbiguity){
+    eeDiscoveryDiagnosticDecision_(
+      artistDiagnostic,
+      false,
+      directIdentity.decisionReason
+    );
+
+    return {
+      schemaVersion:1,
+      generationVersion:EE_APPLE_CONFIG.generationVersion,
+      identity:directIdentity,
+      categories:[],
+      diagnostics:{
+        fastPrimaryIdentity:true,
+        hardIdentityAmbiguity:true,
+        searchIntents:[
+          "LISTEN:musicArtist:"+artist.canonicalName
+        ],
+        artistRawResultCount:artistResults.length,
+        albumRawResultCount:0,
+        directIdentityReason:
+          directIdentity.decisionReason,
+        contextRequired:contextRequired,
+        contextMusicBrainzId:
+          contextProfile
+            ?String(contextProfile.musicBrainzId||"")
+            :"",
+        contextError:contextError
+      }
+    };
+  }
+
+  eeDiscoveryDiagnosticDecision_(
+    artistDiagnostic,
+    directIdentity.level==="HIGH",
+    directIdentity.decisionReason
+  );
+
+  var albumQuery=eePrimaryLookupQuery_(
+        analysis,
+        settings.storefront,
+        "LISTEN",
+        "album"
+      ),
+      albumDiagnostic=
+        eeDiscoveryDiagnosticQuery_(albumQuery),
+      albumResponse=eeAppleSearch_(albumQuery),
+      albumResults=albumResponse.results||[],
+      map={};
+
+  eeDiscoveryDiagnosticCandidates_(
+    albumDiagnostic,
+    albumResponse
+  );
+
+  albumResults.forEach(function(raw){
+    if(
+      eeAddCandidateToMap_(
+        map,
+        raw,
+        albumQuery,
+        analysis
+      )
+    ){
+      eeDiscoveryDiagnosticDecision_(
+        albumDiagnostic,
+        true,
+        "QUALIFYING_RELATIONSHIP"
+      );
+    }else{
+      eeDiscoveryDiagnosticDecision_(
+        albumDiagnostic,
+        false,
+        "NO_QUALIFYING_RELATIONSHIP"
+      );
+    }
   });
-  var identity=eeResolveIdentity_(analysis,results),items=Object.keys(map).map(function(key){return map[key];});
-  if(identity.level==="HIGH"&&identity.artistId)items=items.filter(function(item){return !item.appleArtistId||String(item.appleArtistId)===String(identity.artistId);});
-  items.sort(function(a,b){return Number(b.relevanceScore||0)-Number(a.relevanceScore||0)||String(a.title||"").localeCompare(String(b.title||""));});
-  return {schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,identity:identity,categories:items.length?[{category:"LISTEN",items:items}]:[],diagnostics:{fastPrimaryIdentity:true,searchIntents:["LISTEN:album:"+artist.canonicalName],rawResultCount:results.length}};
+
+  var identity=
+        directIdentity.level==="HIGH" &&
+        directIdentity.artistId
+          ?directIdentity
+          :eeResolveIdentity_(
+            analysis,
+            albumResults
+          ),
+      items=Object.keys(map).map(function(key){
+        return map[key];
+      });
+
+  if(identity.level==="HIGH"&&identity.artistId){
+    items=items.filter(function(item){
+      return !item.appleArtistId ||
+        String(item.appleArtistId)===
+          String(identity.artistId);
+    });
+  }
+
+  items.sort(function(a,b){
+    return Number(b.relevanceScore||0)-
+      Number(a.relevanceScore||0)||
+      String(a.title||"").localeCompare(
+        String(b.title||"")
+      );
+  });
+
+  return {
+    schemaVersion:1,
+    generationVersion:EE_APPLE_CONFIG.generationVersion,
+    identity:identity,
+    categories:items.length
+      ?[{category:"LISTEN",items:items}]
+      :[],
+    diagnostics:{
+      fastPrimaryIdentity:true,
+      hardIdentityAmbiguity:false,
+      searchIntents:[
+        "LISTEN:musicArtist:"+artist.canonicalName,
+        "LISTEN:album:"+artist.canonicalName
+      ],
+      artistRawResultCount:artistResults.length,
+      albumRawResultCount:albumResults.length,
+      directIdentityReason:
+        directIdentity.decisionReason,
+      contextRequired:contextRequired,
+      contextMusicBrainzId:
+        contextProfile
+          ?String(contextProfile.musicBrainzId||"")
+          :"",
+      contextError:contextError
+    }
+  };
 }
 
 var EE_APPLE_ENRICHMENT_QUERIES_PER_RUN=3;
@@ -857,13 +2075,13 @@ function eeIncrementalResolvedEnrichment_(artist,post,existing) {
   return {readyForFinalization:!remaining.length&&!lastError,categories:categories,enrichment:state,lastError:lastError};
 }
 
-function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
+function eeDiscoverArtistCatalogue_(artist,post,forceRefresh,revalidateIdentity) {
   var diagnostic=eeDiscoveryDiagnosticStart_(artist);
   var lease="CATALOGUE_"+String(artist.slug||"").replace(/[^A-Za-z0-9_-]/g,"_");
   if(!eeAcquireWorkerLease_(lease,360000)){var busy=new Error("ARTIST_DISCOVERY_BUSY");busy.code="ARTIST_DISCOVERY_BUSY";busy.retryable=true;eeDiscoveryDiagnosticFinish_(diagnostic,"RETRY_LATER",busy.code,busy);throw busy;}
   try{
     var existing=eeGetArtistCatalogue_(artist.slug);if(existing&&existing.appleArtistId&&existing.status!=="RESOLVED"){existing.status="RESOLVED";existing.identityConfidence="HIGH";}
-    if(existing&&existing.status!=="DEFERRED"&&!eeArtistNeedsIdentityResolution_(existing)&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
+    if(existing&&existing.status!=="DEFERRED"&&!eeArtistNeedsIdentityResolution_(existing)&&!revalidateIdentity&&!forceRefresh){eeDiscoveryDiagnosticFinish_(diagnostic,existing.status,"EXISTING_CATALOGUE",null);return existing;}
     if(forceRefresh&&existing&&existing.status==="RESOLVED"&&existing.appleArtistId){
       var progress=eeIncrementalResolvedEnrichment_(artist,post,existing);
       if(!progress.readyForFinalization){
@@ -871,8 +2089,8 @@ function eeDiscoverArtistCatalogue_(artist,post,forceRefresh) {
         eePutArtistCatalogue_(pendingRecord);pendingRecord.catalogue={schemaVersion:1,generationVersion:EE_APPLE_CONFIG.generationVersion,artistKey:pendingRecord.artistKey,canonicalName:pendingRecord.canonicalName,categories:pendingRecord.categories,enrichment:pendingRecord.enrichment};eeDiscoveryDiagnosticFinish_(diagnostic,"RESOLVED","ENRICHMENT_PENDING",progress.lastError?{code:progress.lastError}:null);return pendingRecord;
       }
     }
-    var legacy=forceRefresh?eeGeneratePayloadLegacy_(post):eePrimaryArtistIdentityPayload_(artist,post),fastResolved=!forceRefresh&&String((legacy.identity||{}).level)==="HIGH"&&!!(legacy.identity||{}).artistId;
-    if(!forceRefresh&&!fastResolved)legacy=eeGeneratePayloadLegacy_(post);
+    var legacy=forceRefresh?eeGeneratePayloadLegacy_(post):eePrimaryArtistIdentityPayload_(artist,post),fastResolved=!forceRefresh&&String((legacy.identity||{}).level)==="HIGH"&&!!(legacy.identity||{}).artistId,fastHardAmbiguity=!forceRefresh&&!!((legacy.diagnostics||{}).hardIdentityAmbiguity);
+    if(!forceRefresh&&!fastResolved&&!fastHardAmbiguity)legacy=eeGeneratePayloadLegacy_(post);
     var identity=legacy.identity||{};
     var categories=(legacy.categories||[]).map(function(group){return {category:group.category,items:(group.items||[]).filter(function(item){return !item.creator||eeNorm_(item.creator)===eeNorm_(artist.canonicalName)||group.category!=="LISTEN";})};}).filter(function(group){return group.items.length;});
     var confidence=String(identity.level||"LOW"),appleArtistId=identity.artistId||artist.appleArtistId||"",status=(appleArtistId||confidence==="HIGH")?"RESOLVED":confidence==="MODERATE"?"AMBIGUOUS":"ERROR",errorReason=status==="ERROR"?"APPLE_ARTIST_DISCOVERY_EXHAUSTED":"";
@@ -1026,7 +2244,7 @@ function eeDiscoverArtistsWorker() {
     eeSetExecutionDeadline_(Math.min(EE_APPLE_EXECUTION_DEADLINE||Date.now()+180000,Date.now()+180000));
     for(var row=cursor;row<values.length&&Date.now()<EE_APPLE_EXECUTION_DEADLINE;row+=1){
       var rowStatus=String(values[row][7]||""),rowResolverVersion=Math.max(0,Number(values[row][16]||0));
-      var rowNeedsIdentity=rowStatus==="UNRESOLVED"||((rowStatus==="ERROR"||rowStatus==="AMBIGUOUS")&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION);
+      var rowNeedsIdentity=rowStatus==="UNRESOLVED"||((rowStatus==="ERROR"||rowStatus==="AMBIGUOUS"||rowStatus==="RESOLVED")&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION);
       if(!rowNeedsIdentity){
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         continue;
@@ -1035,7 +2253,8 @@ function eeDiscoverArtistsWorker() {
       properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row));
       try{
         var post=eeFetchPostById_(representativePostId),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
-        var catalogue=eeDiscoverArtistCatalogue_(artist,post);
+        var revalidateIdentity=rowStatus==="RESOLVED"&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION;
+        var catalogue=eeDiscoverArtistCatalogue_(artist,post,false,revalidateIdentity);
         if(!catalogue||["RESOLVED","AMBIGUOUS","ERROR"].indexOf(String(catalogue.status))===-1)throw new Error("ARTIST_DISCOVERY_NO_TERMINAL_STATUS");
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         if(catalogue.status==="ERROR")console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"ERROR",errorReason:catalogue.error||"APPLE_ARTIST_DISCOVERY_EXHAUSTED",nextCursor:row+1}));

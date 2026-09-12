@@ -1070,3 +1070,33 @@ Regression set now includes:
 - Earth — many same-name candidates
 - Wargasm — known wrong-same-name recommendation
 - The Crimson ProjeKct — no primary Apple identity; related-anchor case
+
+## 2026-09-12 — Apple identity resolver v2 checkpoint
+
+Implemented and locally validated Apple resolver v2.
+
+Key changes:
+- Apple artist resolution now performs direct musicArtist identity lookup before album scoring.
+- Same-name identities can require contextual MusicBrainz evidence instead of trusting a unique Apple name result.
+- MusicBrainz resolution can disambiguate same-name artists using article relationship evidence such as member names.
+- Wargasm regression is explicitly protected: the UK WARGASM identity can be established from Sam Matlock / Milkie Way context, while Apple's FR search currently exposes only the older US Wargasm artist ID 22575637; that Apple ID must not be substituted for the UK act.
+- Therapy?-style punctuation-sensitive literal identity remains supported.
+- Previously RESOLVED rows with an older identityResolverVersion are now eligible for one-time resolver-v2 revalidation, allowing old wrong identities to be corrected.
+- Artist discovery can fall back from title evidence to artist labels and then dominant repeated body identity.
+- Body-only artist discovery is fallback-only and cannot contaminate an article that already has stronger title/label identity evidence.
+- If no artist can be established, recognised music-genre labels can produce an explicitly marked GENRE_FALLBACK LISTEN payload rather than EMPTY_NO_SUBJECT.
+- Genre fallback is recommendation context only; it is never treated as artist identity.
+- Entity profile cache now avoids blindly reusing context-disambiguated same-name profiles across unrelated articles.
+- Direct resolver diagnostic regression set includes Wargasm.
+
+Local validation:
+- deterministic double build: fea359b6b11d67f0a0a07a21e292c027c4fae2badc923d53ba2c5ada3a6b682c
+- generated Code.gs JavaScript syntax: OK
+- git diff --check: clean
+- critical production functions each occur exactly once
+
+Not yet production-validated:
+- Resolver v2 has NOT yet been installed into Apps Script.
+- Do not run production discovery maintenance until regression diagnostics are checked.
+- First Apps Script regression targets: Wargasm, Earth, Therapy?, Jessica Hernandez, The Crimson ProjeKct, plus a no-artist article with a usable genre label.
+- Associated-act recommendation expansion remains the next feature after identity safety is validated.

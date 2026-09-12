@@ -525,62 +525,142 @@ function eeTitleRoleRelationship_(post) {
 }
 
 function eeEntitySignalCandidates_(post) {
-  var generic=/^(?:news|review|album review|record review|concert review|live review|interview|obituary|r\.?i\.?p\.?|music|rock|hard rock|classic rock|alternative rock|indie rock|blues|blues rock|metal|heavy metal|country|folk|americana|pop|punk|jazz|electronic|festival|tour|video|playlist|friday'?s playlist)$/i;
-  var values=[],rawTitle=String(post.title||"").trim(),title=rawTitle.replace(/^\s*(?:album|record|concert|live)\s+review\s*:\s*/i,"").replace(/^\s*(?:r\.?i\.?p\.?|interview)\s*:?\s*/i,"");
-  var titleLead=title.split(/\s+[–—]\s+/)[0].trim();
+  var generic=/^(?:news|review|album review|record review|concert review|live review|interview|obituary|r\.?i\.?p\.?|music|rock|hard rock|classic rock|alternative rock|indie rock|progressive rock|prog|blues|blues rock|metal|heavy metal|death metal|black metal|thrash metal|doom metal|country|folk|americana|pop|punk|punk rock|hardcore|jazz|electronic|electronica|hip[- ]?hop|rap|r&b|soul|funk|reggae|ska|festival|tour|video|playlist|friday'?s playlist)$/i;
+
+  var values=[],
+      rawTitle=String(post.title||"").trim(),
+      title=rawTitle
+        .replace(/^\s*(?:album|record|concert|live)\s+review\s*:\s*/i,"")
+        .replace(/^\s*(?:r\.?i\.?p\.?|interview)\s*:?\s*/i,""),
+      titleLead=title.split(/\s+[–—]\s+/)[0].trim(),
+      body=String(post.content||"")
+        .replace(/<[^>]+>/g," ")
+        .replace(/&nbsp;|&#160;/gi," "),
+      bodyNorm=eeNorm_(body);
+
   var role=eeTitleRoleRelationship_(post);
 
   if(role){
-    values.push({name:role.artist,strength:110,source:"title role primary artist"});
-    values.push({name:role.person,strength:105,source:"title role article subject"});
+    values.push({
+      name:role.artist,
+      strength:110,
+      source:"title role primary artist"
+    });
+    values.push({
+      name:role.person,
+      strength:105,
+      source:"title role article subject"
+    });
   }
 
   var concertMatch=title.match(/^(.+?)\s+@\s+.+?(?:\s+-\s+.+)?$/);
   var concertSubject=concertMatch?String(concertMatch[1]||"").trim():"";
 
-  var editorialMatch=title.match(/^(?:watch|hear|listen to|stream|see|check out|premiere)\s+(.{1,80}?)(?=[’'](?:s\b|\s)|\s+(?:performs?|performing|plays?|playing|covers?|covering|releases?|releasing|shares?|sharing|announces?|announcing|returns?|returning|debuts?|debuting|unveils?|unveiling|drops?|dropping|presents?|presenting)\b)/i);
-  var editorialSubject=editorialMatch?String(editorialMatch[1]||"").replace(/[.!?:;,]+$/,"").trim():"";
+  var editorialMatch=title.match(
+    /^(?:watch|hear|listen to|stream|see|check out|premiere)\s+(.{1,80}?)(?=[’'](?:s\b|\s)|\s+(?:performs?|performing|plays?|playing|covers?|covering|releases?|releasing|shares?|sharing|announces?|announcing|returns?|returning|debuts?|debuting|unveils?|unveiling|drops?|dropping|presents?|presenting)\b)/i
+  );
 
-  if(editorialSubject&&!generic.test(editorialSubject)&&eeNorm_(editorialSubject).split(" ").length<=7){
-    values.push({name:editorialSubject,strength:102,source:"editorial action title subject"});
+  var editorialSubject=editorialMatch
+    ? String(editorialMatch[1]||"").replace(/[.!?:;,]+$/,"").trim()
+    : "";
+
+  if(
+    editorialSubject &&
+    !generic.test(editorialSubject) &&
+    eeNorm_(editorialSubject).split(" ").length<=7
+  ){
+    values.push({
+      name:editorialSubject,
+      strength:102,
+      source:"editorial action title subject"
+    });
   }
 
   if(concertSubject){
-    if(!generic.test(concertSubject)&&eeNorm_(concertSubject).split(" ").length<=7){
-      values.push({name:concertSubject,strength:100,source:"concert title subject"});
+    if(
+      !generic.test(concertSubject) &&
+      eeNorm_(concertSubject).split(" ").length<=7
+    ){
+      values.push({
+        name:concertSubject,
+        strength:100,
+        source:"concert title subject"
+      });
     }
   }else{
     var separator=title.match(/\s+[–—-]\s+|\s*:\s+|\s*,\s*/);
     if(separator){
       var subject=title.slice(0,separator.index).trim();
-      if(subject&&!generic.test(subject)&&eeNorm_(subject).split(" ").length<=7){
-        values.push({name:subject,strength:100,source:"title structure"});
+      if(
+        subject &&
+        !generic.test(subject) &&
+        eeNorm_(subject).split(" ").length<=7
+      ){
+        values.push({
+          name:subject,
+          strength:100,
+          source:"title structure"
+        });
       }
     }
   }
 
+  /*
+   * Labels are valuable even when the article title is not artist-led.
+   * Genre/structural labels stay excluded from artist identity.
+   *
+   * A label occurring in the body is substantially stronger than a naked
+   * label because it establishes that the entity is actually discussed.
+   */
   (post.labels||[]).forEach(function(label){
-    var text=String(label||"").trim(),words=eeNorm_(text).split(" ");
-    if(!text||generic.test(text)||words.length>7)return;
+    var text=String(label||"").trim(),
+        normalized=eeNorm_(text),
+        words=normalized.split(" ").filter(Boolean);
 
-    if(concertSubject){
-      if(eeNorm_(text)===eeNorm_(concertSubject)){
-        values.push({name:text,strength:96,source:"concert-title-corroborated label"});
-      }
+    if(!text||generic.test(text)||!words.length||words.length>7)return;
+
+    var mentions=normalized
+      ? bodyNorm.split(normalized).length-1
+      : 0;
+
+    if(concertSubject&&normalized===eeNorm_(concertSubject)){
+      values.push({
+        name:text,
+        strength:96,
+        source:"concert-title-corroborated label"
+      });
     }else if(eeContains_(titleLead,text)){
-      values.push({name:text,strength:96,source:"title-corroborated label"});
+      values.push({
+        name:text,
+        strength:96,
+        source:"title-corroborated label"
+      });
+    }else if(mentions>=2){
+      values.push({
+        name:text,
+        strength:95,
+        source:"body-corroborated artist label"
+      });
+    }else if(mentions===1){
+      values.push({
+        name:text,
+        strength:90,
+        source:"body-supported artist label"
+      });
     }
   });
 
   var seen={};
+
   return values.filter(function(value){
     var key=eeNorm_(value.name);
     if(!key||seen[key])return false;
     seen[key]=true;
     return true;
   }).sort(function(a,b){
-    return b.strength-a.strength||eeNorm_(a.name).localeCompare(eeNorm_(b.name));
-  }).slice(0,4);
+    return b.strength-a.strength||
+      eeNorm_(a.name).localeCompare(eeNorm_(b.name));
+  }).slice(0,6);
 }
 
 function eeAppleLabelFallbackArtists_(post) {
@@ -753,17 +833,273 @@ function eeAppleStrongTitleProfile_(signal) {
   };
 }
 
-function eeMusicBrainzResolve_(signal) {
-  var search=eePublicEntityJson_("https://musicbrainz.org/ws/2/artist/?query=artist:%22"+encodeURIComponent(signal.name)+"%22&limit=5&fmt=json"),needle=eeNorm_(signal.name),exact=(search.artists||[]).filter(function(artist){var names=[artist.name].concat((artist.aliases||[]).map(function(alias){return alias.name;}));return Number(artist.score||0)>=95&&names.some(function(name){return eeNorm_(name)===needle;});});
-  if(exact.length!==1)return null;var artist=exact[0],detail=eePublicEntityJson_("https://musicbrainz.org/ws/2/artist/"+encodeURIComponent(artist.id)+"?inc=artist-rels&fmt=json"),profile={name:artist.name,aliases:eeUnique_([signal.name].concat((artist.aliases||[]).map(function(alias){return alias.name;}))),priority:Number(artist.score||0),musicBrainzId:artist.id,confidence:"HIGH",evidence:[signal.source+" exact match","MusicBrainz score "+String(artist.score)],primaryArtists:[artist.name],people:artist.type==="Person"?[artist.name]:[],members:[],collaborators:[],producers:[],sideProjects:[],relatedArtists:[]};
-  (detail.relations||[]).forEach(function(relation){if(relation["target-type"]!=="artist"||!relation.artist||!relation.artist.name)return;var name=relation.artist.name,type=String(relation.type||"").toLowerCase();if(type==="member of band"){if(artist.type==="Group")profile.members.push(name);else profile.sideProjects.push(name);}else if(type==="collaboration"||type==="supporting musician")profile.collaborators.push(name);else if(type==="producer"||type==="producer position")profile.producers.push(name);else if(type==="subgroup"||type==="tribute")profile.relatedArtists.push(name);});
-  ["members","collaborators","producers","sideProjects","relatedArtists"].forEach(function(key){profile[key]=eeUnique_(profile[key]).slice(0,12);});return profile;
+function eeMusicBrainzAppleArtistId_(relations) {
+  var ids=[];
+
+  (relations||[]).forEach(function(relation){
+    if(
+      relation["target-type"]!=="url" ||
+      !relation.url ||
+      !relation.url.resource
+    )return;
+
+    var target=String(relation.url.resource||"");
+    var match=target.match(
+      /music\.apple\.com\/[^/]+\/artist\/(?:[^/]+\/)?(\d+)/i
+    );
+
+    if(match)ids.push(String(match[1]));
+  });
+
+  ids=eeUnique_(ids);
+  return ids.length===1?ids[0]:"";
 }
+
+function eeMusicBrainzResolve_(signal,post) {
+  var search=eePublicEntityJson_(
+    "https://musicbrainz.org/ws/2/artist/?query=artist:%22"+
+    encodeURIComponent(signal.name)+
+    "%22&limit=8&fmt=json"
+  );
+
+  var needle=eeNorm_(signal.name);
+
+  var exact=(search.artists||[]).filter(function(artist){
+    var names=[artist.name].concat(
+      (artist.aliases||[]).map(function(alias){
+        return alias.name;
+      })
+    );
+
+    return Number(artist.score||0)>=95 &&
+      names.some(function(name){
+        return eeNorm_(name)===needle;
+      });
+  }).slice(0,5);
+
+  if(!exact.length)return null;
+
+  var articleText=[
+    String((post||{}).title||""),
+    String((post||{}).content||"").replace(/<[^>]+>/g," "),
+    ((post||{}).labels||[]).join(" ")
+  ].join(" ");
+
+  var candidates=[];
+
+  exact.forEach(function(artist){
+    var detail=eePublicEntityJson_(
+      "https://musicbrainz.org/ws/2/artist/"+
+      encodeURIComponent(artist.id)+
+      "?inc=artist-rels+url-rels&fmt=json"
+    );
+
+    var relationNames=[];
+
+    (detail.relations||[]).forEach(function(relation){
+      if(
+        relation["target-type"]==="artist" &&
+        relation.artist &&
+        relation.artist.name
+      ){
+        relationNames.push(String(relation.artist.name));
+      }
+    });
+
+    relationNames=eeUnique_(relationNames);
+
+    var relationshipHits=relationNames.filter(function(name){
+      return eeContains_(articleText,name);
+    });
+
+    candidates.push({
+      artist:artist,
+      detail:detail,
+      relationshipNames:relationNames,
+      relationshipHits:relationshipHits,
+      relationshipHitCount:relationshipHits.length,
+      searchScore:Number(artist.score||0),
+      appleArtistId:eeMusicBrainzAppleArtistId_(detail.relations||[])
+    });
+  });
+
+  candidates.sort(function(a,b){
+    return b.relationshipHitCount-a.relationshipHitCount ||
+      b.searchScore-a.searchScore ||
+      String(a.artist.id).localeCompare(String(b.artist.id));
+  });
+
+  var chosen=null,
+      contextDisambiguated=false;
+
+  if(candidates.length===1){
+    chosen=candidates[0];
+  }else{
+    var top=candidates[0],
+        second=candidates[1];
+
+    /*
+     * Same-name artists require contextual evidence.
+     *
+     * Example:
+     * Wargasm (US) and WARGASM (UK) both match the name, but an article
+     * mentioning Sam Matlock and Milkie Way uniquely selects the UK act.
+     */
+    if(
+      top.relationshipHitCount>=1 &&
+      top.relationshipHitCount>second.relationshipHitCount
+    ){
+      chosen=top;
+      contextDisambiguated=true;
+    }
+  }
+
+  if(!chosen)return null;
+
+  var artist=chosen.artist,
+      detail=chosen.detail,
+      profile={
+        profileResolverVersion:2,
+        name:artist.name,
+        aliases:eeUnique_(
+          [signal.name].concat(
+            (artist.aliases||[]).map(function(alias){
+              return alias.name;
+            })
+          )
+        ),
+        priority:Number(artist.score||0),
+        musicBrainzId:artist.id,
+        appleArtistId:chosen.appleArtistId||"",
+        confidence:"HIGH",
+        evidence:[
+          signal.source+" exact match",
+          "MusicBrainz score "+String(artist.score)
+        ],
+        primaryArtists:[artist.name],
+        people:artist.type==="Person"?[artist.name]:[],
+        members:[],
+        collaborators:[],
+        producers:[],
+        sideProjects:[],
+        relatedArtists:[],
+        country:String(detail.country||artist.country||""),
+        artistType:String(detail.type||artist.type||""),
+        disambiguation:String(
+          detail.disambiguation||artist.disambiguation||""
+        ),
+        lifeSpan:detail["life-span"]||artist["life-span"]||{},
+        sameNameCandidateCount:candidates.length,
+        contextDisambiguated:contextDisambiguated,
+        disambiguationEvidenceNames:chosen.relationshipHits.slice()
+      };
+
+  if(chosen.relationshipHits.length){
+    profile.evidence.push(
+      "article relationship evidence: "+
+      chosen.relationshipHits.join(", ")
+    );
+  }
+
+  (detail.relations||[]).forEach(function(relation){
+    if(
+      relation["target-type"]!=="artist" ||
+      !relation.artist ||
+      !relation.artist.name
+    )return;
+
+    var name=relation.artist.name,
+        type=String(relation.type||"").toLowerCase();
+
+    if(type==="member of band"){
+      if(artist.type==="Group")profile.members.push(name);
+      else profile.sideProjects.push(name);
+    }else if(
+      type==="collaboration" ||
+      type==="supporting musician"
+    ){
+      profile.collaborators.push(name);
+    }else if(
+      type==="producer" ||
+      type==="producer position"
+    ){
+      profile.producers.push(name);
+    }else if(
+      type==="subgroup" ||
+      type==="tribute"
+    ){
+      profile.relatedArtists.push(name);
+    }
+  });
+
+  [
+    "members",
+    "collaborators",
+    "producers",
+    "sideProjects",
+    "relatedArtists"
+  ].forEach(function(key){
+    profile[key]=eeUnique_(profile[key]).slice(0,12);
+  });
+
+  return profile;
+}
+
 function eeSaveEntityProfile_(profile) {
-  var profiles=eeEntityProfiles_().filter(function(value){return String(value.musicBrainzId||"")!==String(profile.musicBrainzId||"")&&eeNorm_(value.name)!==eeNorm_(profile.name);});profiles.unshift(profile);profiles=profiles.slice(0,30);var properties=PropertiesService.getScriptProperties(),text=JSON.stringify(profiles);while(text.length>8500&&profiles.length>1){profiles.pop();text=JSON.stringify(profiles);}properties.setProperty("EE_APPLE_ENTITY_PROFILES",text);return profile;
+  var profiles=eeEntityProfiles_().filter(function(value){
+    return String(value.musicBrainzId||"")!==
+      String(profile.musicBrainzId||"");
+  });
+
+  profiles.unshift(profile);
+  profiles=profiles.slice(0,30);
+
+  var properties=PropertiesService.getScriptProperties(),
+      text=JSON.stringify(profiles);
+
+  while(text.length>8500&&profiles.length>1){
+    profiles.pop();
+    text=JSON.stringify(profiles);
+  }
+
+  properties.setProperty("EE_APPLE_ENTITY_PROFILES",text);
+  return profile;
 }
+
 function eeCachedEntityProfile_(post) {
-  var signals=eeEntitySignalCandidates_(post),profiles=eeEntityProfiles_();for(var signalIndex=0;signalIndex<signals.length;signalIndex+=1){var needle=eeNorm_(signals[signalIndex].name),matched=profiles.filter(function(profile){return eeUnique_([profile.name].concat(profile.aliases||[])).some(function(alias){return eeNorm_(alias)===needle;});});if(matched.length===1)return matched[0];if(matched.length>1)return null;}return null;
+  var signals=eeEntitySignalCandidates_(post),
+      profiles=eeEntityProfiles_(),
+      articleText=[
+        String(post.title||""),
+        String(post.content||"").replace(/<[^>]+>/g," "),
+        (post.labels||[]).join(" ")
+      ].join(" ");
+
+  for(var signalIndex=0;signalIndex<signals.length;signalIndex+=1){
+    var needle=eeNorm_(signals[signalIndex].name);
+
+    var matched=profiles.filter(function(profile){
+      if(Number(profile.profileResolverVersion||0)<2)return false;
+
+      return eeUnique_(
+        [profile.name].concat(profile.aliases||[])
+      ).some(function(alias){
+        return eeNorm_(alias)===needle;
+      });
+    }).filter(function(profile){
+      if(!profile.contextDisambiguated)return true;
+
+      var evidence=profile.disambiguationEvidenceNames||[];
+
+      return evidence.some(function(name){
+        return eeContains_(articleText,name);
+      });
+    });
+
+    if(matched.length===1)return matched[0];
+  }
+
+  return null;
 }
 
 function eeAcquireEntityProfile_(post) {
@@ -774,7 +1110,7 @@ function eeAcquireEntityProfile_(post) {
     var profile=null;
 
     try {
-      profile=eeMusicBrainzResolve_(signals[index]);
+      profile=eeMusicBrainzResolve_(signals[index],post);
       if(profile)return eeSaveEntityProfile_(profile);
     } catch(error) {
       lastError=error;
@@ -1795,6 +2131,7 @@ function eeDiagnoseAppleMusicArtistSearchExamples() {
     "The Crimson ProjeKct",
     "Therapy?",
     "Earth",
+    "Wargasm",
     "Jessica Hernandez"
   ];
   var report=[];
