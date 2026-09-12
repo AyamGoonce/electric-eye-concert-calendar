@@ -433,7 +433,7 @@ JSON.stringify({empty:empty,error:error,poorer:poorer,writes:writes.length,lastS
     def test_minimal_ready_round_trips_through_existing_reader_boundary(self):
         result = self.run_apps_script(r'''
 var rows=[["postId","canonicalUrl","generatedAt","storefront","payloadJson","status","error","retryCount"]];
-var sheet={getLastRow:function(){return rows.length;},getLastColumn:function(){return 8;},getDataRange:function(){return {getValues:function(){return rows;}};},getRange:function(row,column,rowCount,columnCount){if(column===1&&columnCount===1)return {createTextFinder:function(value){return {matchEntireCell:function(){return this;},findNext:function(){for(var i=1;i<rows.length;i++)if(String(rows[i][0])===String(value))return {getRow:function(){return i+1;}};return null;}};}};return {setValues:function(values){rows[row-1]=values[0];},setValue:function(){},getValues:function(){return [rows[row-1]];}};}};
+var sheet={getLastRow:function(){return rows.length;},getLastColumn:function(){return 8;},getDataRange:function(){return {getValues:function(){return rows;}};},getRange:function(row,column,rowCount,columnCount){if(column===1&&columnCount===1)return {createTextFinder:function(value){return {matchEntireCell:function(){return this;},findAll:function(){var found=[];for(var i=1;i<rows.length;i++)if(String(rows[i][0])===String(value))found.push({getRow:(function(number){return function(){return number;};})(i+1)});return found;}};}};return {setValues:function(values){rows[row-1]=values[0];},setValue:function(){},getValues:function(){return [rows[row-1]];}};}};
 eePayloadSheet_=function(){return sheet;};eeEncodePayloadCell_=function(value){return JSON.stringify(value);};eeDecodePayloadCell_=function(value){return JSON.parse(value);};
 var cache={};CacheService={getScriptCache:function(){return {get:function(key){return cache[key]||null;},put:function(key,value){cache[key]=value;},remove:function(key){delete cache[key];}};}};
 eeAppleSettings_=function(){return {enabled:true,storefront:"FR"};};eeApplePostAllowed_=function(){return true;};
@@ -1313,10 +1313,12 @@ JSON.stringify({recovered:recovered,slept:sleeps.length>0,classifications:classi
         self.assertNotIn("categoryLimit", self.code)
         self.assertNotIn("maxPerCategory", self.theme)
         self.assertIn("var items=group.items.slice();", self.theme)
-        self.assertIn("requestPage(group.category,renderedCount)", self.theme)
+        self.assertIn("requestPage(group.category,requestedOffset)", self.theme)
+        self.assertIn("var requestedOffset=serverCursor;", self.theme)
+        self.assertIn("serverCursor=returnedCursor", self.theme)
         self.assertIn("var next=Math.min(renderedCount,visible+CONFIG.revealStep);", self.theme)
-        self.assertIn('renderedCount>=total&&visible>=renderedCount?"Show less":"More"', self.theme)
         self.assertIn("card.hidden=index>=CONFIG.initialPerCategory;", self.theme)
+        self.assertIn('var less=el("button","ee-apple-toggle","Show less")', self.theme)
 
         result = self.run_apps_script(r'''
 eeAppleSettings_=function(){return {enabled:true,storefront:"FR"};};
@@ -1334,23 +1336,37 @@ JSON.stringify({ready:eePayloadHasRecommendations_(payload),count:payload.catego
 
     def test_public_reader_uses_targeted_post_id_lookup_not_full_sheet_scan(self):
         result = self.run_apps_script(r'''
-var scans=0,ranges=[],payload={postId:"42",categories:[{category:"LISTEN",items:[{stableId:"a"}]}]};
-eePayloadSheet_=function(){return {getLastRow:function(){return 7;},getDataRange:function(){scans+=1;throw new Error("full scan forbidden");},getRange:function(row,column,rows,columns){ranges.push([row,column,rows,columns]);if(column===1&&columns===1)return {createTextFinder:function(value){return {matchEntireCell:function(){return this;},findNext:function(){return {getRow:function(){return 5;}};}};}};return {getValues:function(){return [["42","",new Date().toISOString(),"FR",JSON.stringify(payload),"READY"]];}};}};};
+var scans=0,ranges=[],rows={
+  2:["42","","2026-01-01T00:00:00Z","FR",JSON.stringify({postId:"42",categories:[{category:"LISTEN",items:[{stableId:"old"}]}]}),"READY"],
+  4:["42","","2026-02-01T00:00:00Z","FR",JSON.stringify({postId:"42",categories:[{category:"LISTEN",items:[{stableId:"new"}]}]}),"READY"]
+};
+eePayloadSheet_=function(){return {getLastRow:function(){return 7;},getDataRange:function(){scans+=1;throw new Error("full scan forbidden");},getRange:function(row,column,count,columns){ranges.push([row,column,count,columns]);if(column===1&&columns===1)return {createTextFinder:function(value){return {matchEntireCell:function(){return this;},findAll:function(){return [2,4].map(function(number){return {getRow:function(){return number;}};});}};}};return {getValues:function(){return [rows[row]];}};}};};
 JSON.stringify({payload:eeGetPayload_("42"),scans:scans,ranges:ranges});
 ''')
         parsed = json.loads(result)
-        self.assertEqual("42", parsed["payload"]["postId"])
+        self.assertEqual("new", parsed["payload"]["categories"][0]["items"][0]["stableId"])
         self.assertEqual(0, parsed["scans"])
-        self.assertEqual([[2, 1, 6, 1], [5, 1, 1, 6]], parsed["ranges"])
+        self.assertEqual([[2, 1, 6, 1], [2, 1, 1, 6], [4, 1, 1, 6]], parsed["ranges"])
 
-    def test_public_reader_preserves_ready_only_and_malformed_payload_protection(self):
+    def test_public_reader_duplicate_empty_and_malformed_rows_do_not_hide_ready(self):
         result = self.run_apps_script(r'''
-var status="EMPTY",stored="{}";
-eePayloadSheet_=function(){return {getLastRow:function(){return 2;},getRange:function(row,column,rows,columns){if(column===1&&columns===1)return {createTextFinder:function(){return {matchEntireCell:function(){return this;},findNext:function(){return {getRow:function(){return 2;}};}};}};return {getValues:function(){return [["42","","","FR",stored,status]];}};}};};
-var empty=eeGetPayload_("42");status="READY";stored="not-json";var malformed=eeGetPayload_("42");
-JSON.stringify({empty:empty,malformed:malformed});
+var valid=JSON.stringify({postId:"42",categories:[{category:"LISTEN",items:[{stableId:"valid"}]}]}),rows={2:["42","","2026-03-01T00:00:00Z","FR","{}","EMPTY"],3:["42","","2026-04-01T00:00:00Z","FR","not-json","READY"],5:["42","","","FR",valid,"READY"],7:["42","","","FR",valid.replace("valid","highest-row"),"READY"]};
+eePayloadSheet_=function(){return {getLastRow:function(){return 7;},getRange:function(row,column,count,columns){if(column===1&&columns===1)return {createTextFinder:function(){return {matchEntireCell:function(){return this;},findAll:function(){return [2,3,5,7].map(function(number){return {getRow:function(){return number;}};});}};}};return {getValues:function(){return [rows[row]];}};}};};
+eeGetPayload_("42").categories[0].items[0].stableId;
 ''')
-        self.assertEqual('{"empty":null,"malformed":null}', result)
+        self.assertEqual("highest-row", result)
+
+    def test_public_page_builds_compact_envelope_without_full_payload_clone(self):
+        page = self.code[self.code.index("function eePublicPayloadPage_"):self.code.index("function eeClearPublicPayloadCache_")]
+        self.assertNotIn("eePublicPayload_(payload)", page)
+        self.assertNotIn("JSON.stringify(payload)", page)
+        self.assertNotIn("JSON.parse", page)
+        result = self.run_apps_script(r'''
+var originalItems=[{stableId:"one"},{stableId:"two"},{stableId:"three"},{stableId:"four"},{stableId:"five"}],payload={schemaVersion:1,postId:"42",diagnostics:{private:true},privateField:"no",categories:[{category:"LISTEN",items:originalItems}]};
+var page=eePublicPayloadPage_(payload,"LISTEN",0,4);page.categories[0].items.pop();
+JSON.stringify({keys:Object.keys(page).sort(),storedLength:payload.categories[0].items.length,diagnostics:page.diagnostics||null,privateField:page.privateField||null});
+''')
+        self.assertEqual('{"keys":["categories","postId","schemaVersion"],"storedLength":5,"diagnostics":null,"privateField":null}', result)
 
     def test_public_payload_initial_page_and_category_pagination(self):
         result = self.run_apps_script(r'''
@@ -1382,9 +1398,28 @@ doGet({parameter:{action:"payload",postId:"42"}}).text;
         self.assertIn('document.addEventListener("DOMContentLoaded",start,{once:true})', apple)
         self.assertIn('else start();', apple)
         self.assertNotIn('window.addEventListener("load"', apple)
-        self.assertIn('return fetch(CONFIG.endpoint+', apple)
-        self.assertIn('requestPage(group.category,renderedCount)', apple)
+        self.assertIn('try{fetch(CONFIG.endpoint+', apple)
+        self.assertIn('reject(new Error("Apple payload fetch timeout"))', apple)
+        self.assertIn('return requestPageJsonp(values);', apple)
+        self.assertIn('params.set("callback",callback)', apple)
+        self.assertIn('requestPage(group.category,requestedOffset)', apple)
         self.assertNotIn('image.hidden', apple)
+
+    def test_frontend_server_cursor_advances_independently_of_duplicate_cards(self):
+        apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
+        self.assertIn("var requestedOffset=serverCursor;", apple)
+        self.assertIn("if(!id||seenIds[id])return;", apple)
+        self.assertIn("returnedCursor>requestedOffset", apple)
+        self.assertIn("serverCursor=returnedCursor", apple)
+        self.assertIn("else hasMore=false;", apple)
+        self.assertLess(apple.index("if(!id||seenIds[id])return;"), apple.index("serverCursor=returnedCursor"))
+
+    def test_frontend_can_collapse_before_all_remote_pages_are_loaded(self):
+        apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
+        self.assertIn('var less=el("button","ee-apple-toggle","Show less")', apple)
+        self.assertIn("less.hidden=visible<=CONFIG.initialPerCategory", apple)
+        self.assertIn("if(next>visible){updateControls();return;}", apple)
+        self.assertIn("card.hidden=index>=CONFIG.initialPerCategory", apple)
 
     def test_selective_refresh_has_independent_cursor_contract(self):
         refresh = self.code[self.code.index("function eeRefreshPayloadForPostId") :]

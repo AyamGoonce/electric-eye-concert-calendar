@@ -1698,3 +1698,48 @@ remains a generation-quality concern and was not broadened into this task.
 Missing-artist backfill (including Stevie Wonder / Angra-type gaps) remains a
 separate next task. Calendar code, scraper logic, workflows, and tests were not
 modified.
+
+## 2026-09-12 — Apple delivery manual-audit corrections
+
+Corrected only the five issues identified in the independent audit of commit
+`d2aa6f7`; no deployment was performed.
+
+New behavior:
+- the exact column-A TextFinder lookup inspects every matched row and chooses the
+  newest valid READY payload by timestamp, with highest row number as the stable
+  tie/fallback. EMPTY, malformed, and older duplicates cannot mask it, and the
+  public reader remains read-only without a full-sheet scan.
+- `eePublicPayloadPage_` now constructs a small allowlisted public envelope and
+  slices directly from the stored category arrays. It does not serialize, clone,
+  or mutate the full decoded payload and never exposes diagnostics.
+- asynchronous CORS `fetch` remains the primary transport. Synchronous failure,
+  rejection, non-OK response, JSON failure, abort, or timeout falls back to the
+  existing validated JSONP callback contract with matching page parameters and
+  reliable callback/script/timer cleanup.
+- each shelf now tracks its server cursor separately from its rendered unique-card
+  count. The cursor begins at and advances from server `nextOffset`; duplicate
+  stable IDs do not render twice or move the cursor backward, and a no-progress
+  response disables further remote paging.
+- More reveals already-fetched hidden cards before requesting another page. A
+  separate Show less control appears as soon as more than four cards are visible,
+  allowing immediate collapse without fetching the full category; fetched cards
+  stay in the DOM while unfetched artwork remains unloaded.
+
+Validation:
+- focused delivery regression tests: 9 passed.
+- full Apple suite: 78 tests, 72 passed. The remaining six failures are the same
+  pre-existing generation/worker expectation-drift failures present at baseline;
+  the two baseline delivery failures are resolved.
+- protected non-Apple/calendar suite: 529 passed.
+- two consecutive builds produced identical artifacts; XML parsing and
+  `git diff --check` passed.
+- generated Code.gs SHA-256:
+  `8215aceb34ffb6dc5009cb9a60a1fb93eff86246cf16df7b75124ca462233602`
+- generated Electric-Eye-Theme.xml SHA-256:
+  `5223bc5cc69ca7f0cbe2dad56ece024e0aac60e17cabdd37df93cb5202f7734a`
+
+Deployment, when separately approved, requires redeploying the generated Apps
+Script `Code.gs` to the existing web app and installing the generated Blogger
+theme, followed by live duplicate-row, fetch/JSONP, pagination, and collapse
+checks. Calendar code, scraper logic, workflows, and READY repair/safety logic
+were not changed.

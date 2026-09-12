@@ -20640,6 +20640,7 @@ if (!placedNearPlayer) {
 .ee-apple-generated__disclosure{margin:5px 0 0;color:var(--meta-color,#77716b);font-size:10px;line-height:1.3}
 .ee-apple-section{margin:0;padding:12px 0 14px;border-top:1px solid rgba(119,113,107,.25)}.ee-apple-section:last-child{padding-bottom:0}
 .ee-apple-section__bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.ee-apple-section__title{margin:0;color:var(--post-title-color,#171717);font-size:11px;line-height:1;letter-spacing:.13em;text-transform:uppercase}
+.ee-apple-controls{display:flex;align-items:center;gap:10px}
 .ee-apple-toggle{border:0;padding:3px 0;background:none;color:var(--main-color,#d82323);font:700 10px/1 var(--body-font,&#39;Instrument Sans&#39;,Arial,sans-serif);letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 .ee-apple-shelf{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 12px}
 .ee-apple-card{position:relative;display:grid!important;min-width:0;grid-template-columns:78px minmax(0,1fr);gap:9px;align-items:start;color:var(--post-title-color,#171717)!important;text-decoration:none!important}
@@ -20757,6 +20758,8 @@ if (!placedNearPlayer) {
 
       var renderedCount=Math.min(CONFIG.initialPerCategory,items.length);
       var total=Math.max(renderedCount,Number(group.total||items.length));
+      var serverCursor=Math.max(renderedCount,Number(group.nextOffset||renderedCount));
+      var hasMore=group.hasMore===true&&serverCursor<total;
       var seenIds={};items.forEach(function(item){seenIds[String(item.stableId||item.url||item.canonicalAppleUrl||"")]=true;});
 
       items.slice(0,renderedCount).forEach(function(item){
@@ -20766,52 +20769,44 @@ if (!placedNearPlayer) {
       section.appendChild(shelf);
 
       if(total>CONFIG.initialPerCategory){
-        var toggle=el("button","ee-apple-toggle","More");
-        toggle.type="button";
-        toggle.setAttribute("aria-expanded","false");
-        toggle.setAttribute("aria-controls",shelfId);
+        var controls=el("span","ee-apple-controls");
+        var more=el("button","ee-apple-toggle","More");
+        var less=el("button","ee-apple-toggle","Show less");
+        more.type=less.type="button";
+        more.setAttribute("aria-expanded","false");
+        less.setAttribute("aria-expanded","true");
+        more.setAttribute("aria-controls",shelfId);
+        less.setAttribute("aria-controls",shelfId);
+        less.hidden=true;
 
-        function updateToggle(visible){toggle.textContent=renderedCount>=total&&visible>=renderedCount?"Show less":"More";toggle.setAttribute("aria-expanded",String(visible>CONFIG.initialPerCategory));}
-        toggle.addEventListener("click",function(){
+        function visibleCount(){return Array.prototype.filter.call(shelf.querySelectorAll(".ee-apple-card"),function(card){return !card.hidden;}).length;}
+        function updateControls(){var visible=visibleCount();less.hidden=visible<=CONFIG.initialPerCategory;more.hidden=visible>=renderedCount&&!hasMore;more.setAttribute("aria-expanded",String(visible>CONFIG.initialPerCategory));}
+        more.addEventListener("click",function(){
           var cards=shelf.querySelectorAll(".ee-apple-card");
-          var visible=Array.prototype.filter.call(
-            cards,
-            function(card){return !card.hidden;}
-          ).length;
-
-          if(renderedCount>=total && visible>=renderedCount){
-            Array.prototype.forEach.call(cards,function(card,index){
-              card.hidden=index>=CONFIG.initialPerCategory;
-            });
-            toggle.textContent="More";
-            toggle.setAttribute("aria-expanded","false");
-            return;
-          }
-
+          var visible=visibleCount();
           var next=Math.min(renderedCount,visible+CONFIG.revealStep);
-
-          while(renderedCount<next){
-            appendItem(items[renderedCount]);
-            renderedCount+=1;
-          }
-
-          cards=shelf.querySelectorAll(".ee-apple-card");
-
           Array.prototype.forEach.call(cards,function(card,index){
             card.hidden=index>=next;
           });
-
-          if(next>visible){updateToggle(next);return;}
-          toggle.disabled=true;
-          requestPage(group.category,renderedCount).then(function(page){
+          if(next>visible){updateControls();return;}
+          if(!hasMore){updateControls();return;}
+          var requestedOffset=serverCursor;
+          more.disabled=true;
+          requestPage(group.category,requestedOffset).then(function(page){
             var returned=((page.categories||[])[0]||{});
             total=Math.max(renderedCount,Number(returned.total||total));
             (returned.items||[]).forEach(function(item){var id=String(item.stableId||item.url||item.canonicalAppleUrl||"");if(!id||seenIds[id])return;seenIds[id]=true;items.push(item);appendItem(item);renderedCount+=1;});
-            updateToggle(renderedCount);
-          }).catch(function(){}).finally(function(){toggle.disabled=false;});
+            var returnedCursor=Number(returned.nextOffset);
+            if(Number.isFinite(returnedCursor)&&returnedCursor>requestedOffset)serverCursor=returnedCursor;
+            else hasMore=false;
+            hasMore=hasMore&&returned.hasMore===true&&serverCursor<total;
+            updateControls();
+          }).catch(function(){}).finally(function(){more.disabled=false;});
         });
-
-        bar.appendChild(toggle);
+        less.addEventListener("click",function(){Array.prototype.forEach.call(shelf.querySelectorAll(".ee-apple-card"),function(card,index){card.hidden=index>=CONFIG.initialPerCategory;});updateControls();});
+        controls.appendChild(more);
+        controls.appendChild(less);
+        bar.appendChild(controls);
       }
 
       module.appendChild(section);
@@ -20905,12 +20900,30 @@ if (!placedNearPlayer) {
     window.addEventListener("resize",close);
   }
 
+  function requestPageJsonp(values){
+    return new Promise(function(resolve,reject){
+      var callback="__eeApplePayload"+Date.now()+String(Math.random()).slice(2),script=document.createElement("script"),settled=false;
+      var timeout=window.setTimeout(function(){finish(new Error("Apple payload JSONP timeout"));},CONFIG.callbackTimeout);
+      function cleanup(){window.clearTimeout(timeout);try{delete window[callback];}catch(error){window[callback]=undefined;}if(script.parentNode)script.parentNode.removeChild(script);}
+      function finish(error,data){if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve(data);}
+      window[callback]=function(data){finish(null,data);};
+      script.onerror=function(){finish(new Error("Apple payload JSONP failed"));};
+      var params=new URLSearchParams(values);params.set("callback",callback);script.src=CONFIG.endpoint+"?"+params.toString();script.async=true;
+      (document.head||document.documentElement).appendChild(script);
+    });
+  }
+
   function requestPage(category,offset){
-    var params=new URLSearchParams({action:"payload",postId:context.getAttribute("data-ee-post-id"),offset:String(offset||0),limit:String(CONFIG.revealStep)});
-    if(category)params.set("category",category);
+    var values={action:"payload",postId:context.getAttribute("data-ee-post-id"),offset:String(offset||0),limit:String(CONFIG.revealStep)};
+    if(category)values.category=category;
+    var params=new URLSearchParams(values);
     var controller=typeof AbortController!=="undefined"?new AbortController():null;
-    var timeout=window.setTimeout(function(){if(controller)controller.abort();},CONFIG.callbackTimeout);
-    return fetch(CONFIG.endpoint+"?"+params.toString(),{method:"GET",mode:"cors",credentials:"omit",signal:controller?controller.signal:undefined}).then(function(response){if(!response.ok)throw new Error("Apple payload request failed");return response.json();}).finally(function(){window.clearTimeout(timeout);});
+    var timeout,primary=new Promise(function(resolve,reject){
+      timeout=window.setTimeout(function(){if(controller)controller.abort();reject(new Error("Apple payload fetch timeout"));},CONFIG.callbackTimeout);
+      try{fetch(CONFIG.endpoint+"?"+params.toString(),{method:"GET",mode:"cors",credentials:"omit",signal:controller?controller.signal:undefined}).then(resolve,reject);}
+      catch(error){reject(error);}
+    });
+    return primary.then(function(response){if(!response.ok)throw new Error("Apple payload request failed");return response.json();}).then(function(data){window.clearTimeout(timeout);return data;},function(){window.clearTimeout(timeout);return requestPageJsonp(values);});
   }
 
   function start(){

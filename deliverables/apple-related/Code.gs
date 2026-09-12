@@ -1352,12 +1352,19 @@ function eeGetPayload_(postId) {
   if(!/^[0-9]+$/.test(postId))return null;
   var sheet=eePayloadSheet_(),lastRow=sheet.getLastRow();
   if(lastRow<2)return null;
-  var match=sheet.getRange(2,1,lastRow-1,1).createTextFinder(postId).matchEntireCell(true).findNext();
-  if(!match)return null;
-  var row=sheet.getRange(match.getRow(),1,1,6).getValues()[0];
-  if(String(row[0])!==postId||String(row[5])!=="READY")return null;
-  var stored=String(row[4]||"");if(!stored)return null;
-  try{var payload=eeDecodePayloadCell_(stored);return eePayloadHasRecommendations_(payload)?payload:null;}catch(error){return null;}
+  var matches=sheet.getRange(2,1,lastRow-1,1).createTextFinder(postId).matchEntireCell(true).findAll(),best=null;
+  (matches||[]).forEach(function(match){
+    var rowNumber=match.getRow(),row=sheet.getRange(rowNumber,1,1,6).getValues()[0];
+    if(String(row[0])!==postId||String(row[5])!=="READY")return;
+    var stored=String(row[4]||"");if(!stored)return;
+    try{
+      var payload=eeDecodePayloadCell_(stored);if(!eePayloadHasRecommendations_(payload))return;
+      var timestamp=row[2] instanceof Date?row[2].getTime():Date.parse(String(row[2]||""));
+      timestamp=Number.isFinite(timestamp)?timestamp:-1;
+      if(!best||timestamp>best.timestamp||(timestamp===best.timestamp&&rowNumber>best.rowNumber))best={payload:payload,timestamp:timestamp,rowNumber:rowNumber};
+    }catch(error){}
+  });
+  return best?best.payload:null;
 }
 
 function eePublicPayloadPage_(payload,category,offset,limit) {
@@ -1368,8 +1375,9 @@ function eePublicPayloadPage_(payload,category,offset,limit) {
   parsedOffset=Number.isFinite(parsedOffset)&&parsedOffset>=0?Math.floor(parsedOffset):0;
   parsedLimit=Number.isFinite(parsedLimit)&&parsedLimit>0?Math.min(4,Math.floor(parsedLimit)):4;
   if(category&&!allowed[category])return null;
-  var result=eePublicPayload_(payload),groups=[];
-  (result.categories||[]).forEach(function(group){
+  var result={},groups=[];
+  ["schemaVersion","generationVersion","postId","title","url","storefront","generatedAt","subject","identity"].forEach(function(key){if(Object.prototype.hasOwnProperty.call(payload,key))result[key]=payload[key];});
+  (payload.categories||[]).forEach(function(group){
     var name=String(group.category||"").toUpperCase();if(!allowed[name]||(category&&name!==category))return;
     var items=Array.isArray(group.items)?group.items:[],start=category?parsedOffset:0,page=items.slice(start,start+parsedLimit),total=items.length;
     if(!category&&!page.length)return;
