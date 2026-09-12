@@ -1596,3 +1596,27 @@ Next:
 - confirm Bones Owens remains the sole corrected primary artist
 - confirm regeneration completes within execution limit
 - no repair writes yet
+
+## 2026-09-12 — Version 20 live repair-preview validation
+
+Apps Script Version 20 deployed to the existing production web-app deployment.
+
+Live eeRepairReadyPreviewBatch01 result:
+- completed successfully in ~75 seconds
+- processed 1 of 483 currently automatic-repair-safe contaminated READY payloads
+- post 7914085451853545120: Bones Owens @ l'Olympia, Paris - September 28th, 2024
+- correctedPrimaryArtists: ["Bones Owens"]
+- LISTEN: 6 items, creators only ["Bones Owens"]
+- WATCH: 0
+- READ: 0
+- validationPassed: true
+- wouldWrite: true
+- regenerationFailures: 0
+
+This confirms:
+- READ_ONLY_DISCOVERY_REQUIRED is eliminated for this case
+- one-candidate preview fits within Apps Script execution limits
+- structured-title identity narrowing remains correct
+- contaminated BONES / Charli xcx recommendations are not retained in the regenerated candidate
+
+No repair write has been run yet.
