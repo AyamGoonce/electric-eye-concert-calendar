@@ -1401,3 +1401,27 @@ Calendar workflow and scraper code untouched.
 
 Next live validation:
 - rerun the two Wargasm posts and verify the stored payload is actually replaced with Apple artist 1476730259.
+
+## 2026-09-12 — Wargasm fix verified on live site
+
+Final production verification completed.
+
+Both targeted Wargasm articles now visibly serve the correct UK Wargasm recommendations on the live Electric Eye site.
+
+Validated live behavior:
+- primary artist: Wargasm
+- Apple artist ID: 1476730259
+- recommendation mode: ARTIST_RELATIONSHIP
+- LISTEN: 3
+- stale US Wargasm recommendations no longer displayed
+
+This confirms the complete production chain now works:
+- title-led primary artist selection
+- contextual same-name identity resolution
+- resolver-version revalidation
+- verified Apple-ID catalogue retrieval
+- qualified Apple display-name handling
+- corrected identity allowed to replace stale READY payloads
+
+Next task:
+- investigate Charli xcx WATCH recommendations appearing in unrelated articles.
