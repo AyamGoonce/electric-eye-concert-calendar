@@ -722,3 +722,39 @@ Next production-validation step:
 2. save without redeploying;
 3. run `eePreviewNextStaleArtistIdentityRetry()` only;
 4. inspect the candidate before allowing the one-row retry.
+
+## 2026-09-12 — Versioned stale-identity retry validated in production
+
+Ran the controlled one-artist retry against the first eligible stale terminal
+Apple Artists row:
+
+Artist:
+- Neal Black & the Healers
+- artistKey: neal-black-the-healers
+- previous status: AMBIGUOUS
+- previous identityResolverVersion: 0
+
+Result:
+- retry completed successfully
+- new status: AMBIGUOUS
+- new identityResolverVersion: 1
+- Apple artist ID: none
+- identity confidence: MODERATE
+- categories written: none
+- error: none
+
+Discovery diagnostic:
+- 6 Apple calls
+- 0 cache hits
+- elapsed ~54.5 seconds
+- album searches returned qualifying relationship candidates
+- music-video search returned none
+- ebook/audiobook results were rejected as unrelated
+- terminal status remained AMBIGUOUS / PLAUSIBLE_MATCH
+
+This validates that the resolver-version migration works as intended:
+old terminal rows can be reconsidered once, and unsuccessful retries do not
+loop forever because they are marked with the current resolver version.
+
+The Apps Script editor later displayed a lost-connection warning, but the
+execution itself had already produced the successful RETRIED result.
