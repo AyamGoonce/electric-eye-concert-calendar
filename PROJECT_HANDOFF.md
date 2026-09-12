@@ -1242,3 +1242,23 @@ Build SHA256:
 d2b026a620c52f6c927b6cb9844183bb0ade4d398e85bce2b83454e8a8f0dcdd
 
 Calendar workflow and scraper code untouched.
+
+## 2026-09-12 — Concert title controls primary Apple artist
+
+Fixed production article identity selection for concert-review titles of the form:
+Artist @ Venue, City - Date
+
+Behavior:
+- The exact artist identified before @ is authoritative for primaryArtists when it matches a known artist/alias.
+- Other performers legitimately associated with the same article remain available as relationship entities.
+- Shared-bill artists no longer become co-primary artists merely because they share the article/index association.
+- No article-specific or Wargasm-specific hardcode was added.
+
+Initial production regression targets:
+- 3362193983174062138 — Wargasm @ Nouveau Casino
+- 2542164659318268165 — Wargasm @ Le Zénith
+
+Build SHA256:
+f1f25f340067f4fd4ecb17f52386b1c72abb17527008f62c5cbd0e313265cf42
+
+Calendar workflow and scraper code untouched.

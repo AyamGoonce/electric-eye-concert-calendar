@@ -1056,6 +1056,35 @@ function eeFastArticleIdentity_(post, registry) {
               ?"album_review"
               :"other";
 
+  /*
+   * Concert-review titles provide an authoritative primary subject:
+   *     Artist @ Venue, City - Date
+   *
+   * Other performers can legitimately be associated with the same article,
+   * but an article-index association alone must not promote them to primary
+   * artist status when the title identifies one exact artist.
+   */
+  if(articleType==="concert_review"&&!override){
+    var concertTitleSubject=eeTitleArtistCandidate_(title),
+        concertTitleNorm=eeNorm_(concertTitleSubject);
+
+    if(concertTitleNorm){
+      var exactConcertMatches=matches.filter(function(item){
+        return eeUnique_(
+          [item.artist.canonicalName]
+            .concat(item.artist.aliases||[])
+            .concat(item.artist.alternateSpellings||[])
+        ).some(function(name){
+          return eeNorm_(name)===concertTitleNorm;
+        });
+      });
+
+      if(exactConcertMatches.length){
+        matches=exactConcertMatches;
+      }
+    }
+  }
+
   return {
     schemaVersion:1,
     analysisVersion:2,
