@@ -3978,7 +3978,23 @@ function eeGeneratePayload_(post) {
 
 function eeAnalyzeArchiveWorker() {
   if(!eeAcquireWorkerLease_("IDENTITY",240000))return {status:"BUSY"};
-  try{var properties=PropertiesService.getScriptProperties(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_IDENTITY_INDEX")||1)),posts=eeFetchPosts_(cursor,100),registry=eeArtistRegistry_(),artistRows=eeArtistCatalogueSheet_().getDataRange().getValues(),knownArtistKeys={};for(var knownRow=1;knownRow<artistRows.length;knownRow+=1)knownArtistKeys[String(artistRows[knownRow][0])]=true;
+  try{
+    var properties=PropertiesService.getScriptProperties(),
+        resolverVersion=String(EE_APPLE_IDENTITY_RESOLVER_VERSION);
+
+    // A resolver change must re-analyse existing articles, not merely new ones.
+    if(properties.getProperty("EE_APPLE_ARTICLE_IDENTITY_RESOLVER_VERSION")!==resolverVersion){
+      properties.setProperty("EE_APPLE_ARTICLE_IDENTITY_RESOLVER_VERSION",resolverVersion);
+      properties.setProperty("EE_APPLE_IDENTITY_INDEX","1");
+      properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");
+      properties.deleteProperty("EE_APPLE_IDENTITY_COMPLETE");
+    }
+
+    var cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_IDENTITY_INDEX")||1)),
+        posts=eeFetchPosts_(cursor,100),
+        registry=eeArtistRegistry_(),
+        artistRows=eeArtistCatalogueSheet_().getDataRange().getValues(),
+        knownArtistKeys={};for(var knownRow=1;knownRow<artistRows.length;knownRow+=1)knownArtistKeys[String(artistRows[knownRow][0])]=true;
   posts.forEach(function(post){var analysis=eeFastArticleIdentity_(post,registry);eePutArticleIdentity_(analysis,registry,knownArtistKeys);});
   if(posts.length)properties.setProperty("EE_APPLE_IDENTITY_INDEX",String(cursor+posts.length));else properties.setProperty("EE_APPLE_IDENTITY_COMPLETE","true");
   var result={status:posts.length?"OK":"COMPLETE",startIndex:cursor,analyzed:posts.length,nextIndex:cursor+posts.length};console.log(JSON.stringify(result));return result;}finally{eeReleaseWorkerLease_("IDENTITY");}

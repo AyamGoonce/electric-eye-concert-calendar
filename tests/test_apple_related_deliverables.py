@@ -343,6 +343,25 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 ''')
         self.assertEqual('["Obituary"]', result)
 
+    def test_identity_resolver_version_rewinds_existing_articles(self):
+        code = self.code
+        self.assertIn(
+            'EE_APPLE_ARTICLE_IDENTITY_RESOLVER_VERSION',
+            code,
+        )
+        self.assertIn(
+            'properties.setProperty("EE_APPLE_IDENTITY_INDEX","1")',
+            code,
+        )
+        self.assertIn(
+            'properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1")',
+            code,
+        )
+        self.assertIn(
+            'properties.deleteProperty("EE_APPLE_IDENTITY_COMPLETE")',
+            code,
+        )
+
     def test_article_associations_cannot_define_primary_artist(self):
         code = self.code
         self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=4;", code)
