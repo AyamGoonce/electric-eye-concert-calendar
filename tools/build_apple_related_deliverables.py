@@ -1,3 +1,4 @@
+import json
 """Build production Apple-related deliverables from the supplied live exports."""
 
 from pathlib import Path
@@ -855,16 +856,19 @@ function eeAssembleArticlePayloadsWorker() {return {status:"LEGACY_TRIGGER_IDLE"
 '''
 
 
+def _apple_embedded_artist_registry_js():
+    path = Path(__file__).resolve().parents[1] / "output" / "automation" / "artist-index.json"
+    registry = json.loads(path.read_text(encoding="utf-8"))
+    if registry.get("schemaVersion") != 1 or not isinstance(registry.get("artists"), list):
+        raise RuntimeError("Invalid Apple artist registry source")
+    value = json.dumps(registry, ensure_ascii=False, separators=(",", ":"))
+    value = value.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    return "var EE_APPLE_ARTIST_REGISTRY=Object.freeze(" + value + ");"
+
+
 ARTIST_REGISTRY = r'''
 function eeArtistRegistry_() {
-  var cache=CacheService.getScriptCache(),key="ee-artist-registry-v1",cached=cache.get(key);
-  if(cached)return JSON.parse(cached);
-  var response=UrlFetchApp.fetch(EE_APPLE_CONFIG.artistIndexUrl,{muteHttpExceptions:true,headers:{Accept:"application/json"}});
-  if(response.getResponseCode()!==200)throw new Error("ARTIST_REGISTRY_HTTP_"+response.getResponseCode());
-  var registry=JSON.parse(response.getContentText());
-  if(registry.schemaVersion!==1||!Array.isArray(registry.artists))throw new Error("ARTIST_REGISTRY_SCHEMA");
-  var text=JSON.stringify(registry);if(text.length<95000)cache.put(key,text,21600);
-  return registry;
+  return EE_APPLE_ARTIST_REGISTRY;
 }
 
 function eeExactEntityInText_(text,name) {return eeContains_(text,name);}
@@ -4053,7 +4057,7 @@ def build_code() -> str:
     code = replace_once(
         code,
         "  categoryLimit: 24,",
-        '  generationVersion: 3,\n  artistIndexUrl: "https://archive.electriceyerock.com/proof/artist-index.json",',
+        '  generationVersion: 3,',
         "generation version",
     )
     code = replace_once(
@@ -4509,7 +4513,7 @@ def build_code() -> str:
     code = replace_once(
         code,
         "function doGet(event) {",
-        ARTIST_REGISTRY + "\n\nfunction doGet(event) {",
+        _apple_embedded_artist_registry_js() + "\n\n" + ARTIST_REGISTRY + "\n\nfunction doGet(event) {",
         "artist registry architecture",
     )
     code = replace_once(

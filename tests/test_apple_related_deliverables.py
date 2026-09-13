@@ -1434,6 +1434,12 @@ JSON.stringify({listen:!!listen,watch:!!watch});
 ''')
         self.assertEqual('{"listen":true,"watch":false}', result)
 
+    def test_artist_registry_is_embedded_not_fetched_from_calendar_publication(self):
+        self.assertIn("var EE_APPLE_ARTIST_REGISTRY=Object.freeze(", self.code)
+        self.assertIn("return EE_APPLE_ARTIST_REGISTRY;", self.code)
+        self.assertNotIn("artistIndexUrl", self.code)
+        self.assertNotIn("archive.electriceyerock.com/proof/artist-index.json", self.code)
+
     def test_transient_apple_failure_cannot_become_genre_or_site_fallback(self):
         self.assertIn(
             'if(error&&(error.retryable||eeEnrichmentTransient_(error)))throw error;',
