@@ -1434,6 +1434,12 @@ JSON.stringify({listen:!!listen,watch:!!watch});
 ''')
         self.assertEqual('{"listen":true,"watch":false}', result)
 
+    def test_transient_apple_failure_cannot_become_genre_or_site_fallback(self):
+        self.assertIn(
+            'if(error&&(error.retryable||eeEnrichmentTransient_(error)))throw error;',
+            self.code,
+        )
+
     def test_transient_retry_policy_403_429_503(self):
         result = self.run_apps_script(r'''
 var stored={};

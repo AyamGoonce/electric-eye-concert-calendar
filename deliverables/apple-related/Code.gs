@@ -2870,6 +2870,7 @@ function eeGenreFallbackFromSpecs_(post,specs,mode) {
         entity:"album"
       });
     }catch(error){
+      if(error&&(error.retryable||eeEnrichmentTransient_(error)))throw error;
       return;
     }
 
