@@ -20700,6 +20700,10 @@ if (!placedNearPlayer) {
     head.appendChild(el("p","ee-apple-generated__disclosure","Some links are affiliate links."));
     module.appendChild(head);
 
+    var readMore=document.getElementById("ee-read-more");
+    if(readMore&&readMore.parentNode)readMore.parentNode.insertBefore(module,readMore);
+    else postBody.insertAdjacentElement("afterend",module);
+
     categories.forEach(function(group){
       var section=el("section","ee-apple-section");
       var bar=el("div","ee-apple-section__bar");
@@ -20763,7 +20767,7 @@ if (!placedNearPlayer) {
       var seenIds={};items.forEach(function(item){seenIds[String(item.stableId||item.url||item.canonicalAppleUrl||"")]=true;});
 
       items.slice(0,renderedCount).forEach(function(item){
-        appendItem(item);
+        try{appendItem(item);}catch(error){}
       });
 
       section.appendChild(shelf);
@@ -20795,7 +20799,7 @@ if (!placedNearPlayer) {
           requestPage(group.category,requestedOffset).then(function(page){
             var returned=((page.categories||[])[0]||{});
             total=Math.max(renderedCount,Number(returned.total||total));
-            (returned.items||[]).forEach(function(item){var id=String(item.stableId||item.url||item.canonicalAppleUrl||"");if(!id||seenIds[id])return;seenIds[id]=true;items.push(item);appendItem(item);renderedCount+=1;});
+            (returned.items||[]).forEach(function(item){var id=String(item.stableId||item.url||item.canonicalAppleUrl||"");if(!id||seenIds[id])return;try{appendItem(item);}catch(error){return;}seenIds[id]=true;items.push(item);renderedCount+=1;});
             var returnedCursor=Number(returned.nextOffset);
             if(Number.isFinite(returnedCursor)&&returnedCursor>requestedOffset)serverCursor=returnedCursor;
             else hasMore=false;
@@ -20812,9 +20816,7 @@ if (!placedNearPlayer) {
       module.appendChild(section);
     });
 
-    var readMore=document.getElementById("ee-read-more");
-    if(readMore&&readMore.parentNode)readMore.parentNode.insertBefore(module,readMore);
-    else postBody.insertAdjacentElement("afterend",module);
+    if(!module.querySelector(".ee-apple-card")){module.remove();return;}
     setupPopover(module);
   }
 

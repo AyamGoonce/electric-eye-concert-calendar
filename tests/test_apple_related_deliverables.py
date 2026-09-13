@@ -1846,6 +1846,14 @@ JSON.stringify(keys);
         self.assertIn("hasMore=false;", apple)
         self.assertLess(apple.index("if(!id||seenIds[id])return;"), apple.index("serverCursor=returnedCursor"))
 
+    def test_frontend_bad_item_cannot_abort_entire_module(self):
+        apple = self.theme.split("id='ee-related-on-apple-candidate-js'", 1)[1]
+        insertion = apple.index('postBody.insertAdjacentElement("afterend",module);')
+        population = apple.index('categories.forEach(function(group){')
+        self.assertLess(insertion, population)
+        self.assertIn('try{appendItem(item);}catch(error){}', apple)
+        self.assertIn('if(!module.querySelector(".ee-apple-card")){module.remove();return;}', apple)
+
     def test_frontend_can_collapse_before_all_remote_pages_are_loaded(self):
         apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
         # Current contract: on-demand paging only; no hidden prefetch.
