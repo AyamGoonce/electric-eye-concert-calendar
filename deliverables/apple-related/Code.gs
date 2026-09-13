@@ -404,12 +404,27 @@ function eePayloadIdentityCorrection_(candidate,existing) {
 }
 
 
+function eePayloadQualityCorrection_(candidate,existing) {
+  try{
+    var registry=eeArtistRegistry_(),
+        candidateIssues=eeReadyQualityIssues_(candidate,registry),
+        existingIssues=eeReadyQualityIssues_(existing,registry);
+    return !candidateIssues.length&&existingIssues.length>0;
+  }catch(error){
+    return false;
+  }
+}
+
 function eePayloadAtLeastAsUseful_(candidate,existing) {
   if(!eePayloadHasRecommendations_(candidate))return false;
   if(!eePayloadHasRecommendations_(existing))return true;
 
   if(
     eePayloadIdentityCorrection_(
+      candidate,
+      existing
+    )||
+    eePayloadQualityCorrection_(
       candidate,
       existing
     )
@@ -435,8 +450,8 @@ function eePrimaryRecommendationRank_(item,primaryArtists,primaryArtistIds) {
 
 function eeStoredPayloadHasRecommendations_(stored) {
   var value=String(stored||"");
-  if(value.indexOf("GZIP64:")===0)return true;
-  try{return eePayloadHasRecommendations_(JSON.parse(value));}catch(error){return false;}
+  if(!value)return false;
+  try{return eePayloadHasRecommendations_(eeDecodePayloadCell_(value));}catch(error){return false;}
 }
 
 function eeReviewedPostSubjects_(postId) {
@@ -476,12 +491,17 @@ function eeProcessPost_(post, retryCount) {
     var payload = eeGeneratePayload_(post);
     var hasRecommendations=eePayloadHasRecommendations_(payload);
 
+    var writeAccepted;
     if (hasRecommendations) {
-      eePutPayload_(post, payload, "READY", "", retryCount);
+      writeAccepted=eePutPayload_(post, payload, "READY", "", retryCount);
     } else {
-      eePutPayload_(post, payload, "EMPTY", String((payload.diagnostics||{}).emptyClassification||"EMPTY_OTHER"), retryCount);
+      writeAccepted=eePutPayload_(post, payload, "EMPTY", String((payload.diagnostics||{}).emptyClassification||"EMPTY_OTHER"), retryCount);
     }
 
+    if(writeAccepted===false){
+      var retained=eeGetPayload_(post.id);
+      if(eePayloadHasRecommendations_(retained))return retained;
+    }
     return payload;
 
   } catch(error) {
@@ -1424,6 +1444,7 @@ function eePutPayload_(post, payload, status, error, retryCount) {
     "ee-apple-payload:" + String(post.id)
   );
   eeClearPublicPayloadCache_(post.id,existing,payload);
+  return true;
 }
 
 function eeNorm_(value) { return String(value || "").toLowerCase().replace(/[’‘]/g, "'").replace(/[^a-z0-9'+]+/g, " ").replace(/\s+/g, " ").trim(); }

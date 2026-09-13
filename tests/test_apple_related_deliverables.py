@@ -516,6 +516,37 @@ JSON.stringify({empty:empty,error:error,poorer:poorer,writes:writes.length,lastS
             result,
         )
 
+    def test_quality_corrected_smaller_ready_can_replace_contaminated_larger_ready(self):
+        result = self.run_apps_script(r'''
+var existing={storefront:"FR",subject:{primaryArtists:["Primary"]},identity:{level:"HIGH",artistId:"1"},categories:[{category:"LISTEN",items:[{stableId:"a"},{stableId:"bad"}]},{category:"WATCH",items:[{stableId:"wrong"}]}]},writes=[];
+eeGetPayload_=function(){return existing;};eeEncodePayloadCell_=function(value){return JSON.stringify(value);};
+eeArtistRegistry_=function(){return {};};eeReadyQualityIssues_=function(payload){return payload===existing?["CONTAMINATED"]:[];};
+eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"]];}};},getRange:function(){return {setValues:function(rows){writes.push(rows[0]);}};}};};
+CacheService={getScriptCache:function(){return {remove:function(){},removeAll:function(){}};}};
+var candidate={storefront:"FR",subject:{primaryArtists:["Primary"]},identity:{level:"HIGH",artistId:"1"},categories:[{category:"LISTEN",items:[{stableId:"a"}]}]};
+var accepted=eePutPayload_({id:"1",url:"/1"},candidate,"READY","",0);
+JSON.stringify({accepted:accepted,writes:writes.length,status:writes[0][5]});
+''')
+        self.assertEqual('{"accepted":true,"writes":1,"status":"READY"}', result)
+
+    def test_rejected_generation_returns_the_ready_payload_that_remains_stored(self):
+        result = self.run_apps_script(r'''
+var retained={postId:"1",categories:[{category:"LISTEN",items:[{stableId:"old"}]}]};
+eeAppleSettings_=function(){return {enabled:true};};
+eeGeneratePayload_=function(){return {postId:"1",categories:[],diagnostics:{emptyClassification:"EMPTY_OTHER"}};};
+eePutPayload_=function(){return false;};eeGetPayload_=function(){return retained;};
+var result=eeProcessPost_({id:"1",url:"/1"},1);
+JSON.stringify({item:result.categories[0].items[0].stableId,categories:result.categories.length});
+''')
+        self.assertEqual('{"item":"old","categories":1}', result)
+
+    def test_compressed_ready_validity_decodes_instead_of_trusting_prefix(self):
+        result = self.run_apps_script(r'''
+eeDecodePayloadCell_=function(value){if(value==="GZIP64:bad")throw new Error("corrupt");return {categories:[{category:"LISTEN",items:[{stableId:"ok"}]}]};};
+JSON.stringify({bad:eeStoredPayloadHasRecommendations_("GZIP64:bad"),good:eeStoredPayloadHasRecommendations_("GZIP64:good")});
+''')
+        self.assertEqual('{"bad":false,"good":true}', result)
+
     def test_minimal_ready_round_trips_through_existing_reader_boundary(self):
         result = self.run_apps_script(r'''
 var rows=[["postId","canonicalUrl","generatedAt","storefront","payloadJson","status","error","retryCount"]];

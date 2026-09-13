@@ -658,12 +658,27 @@ function eePayloadIdentityCorrection_(candidate,existing) {
 }
 
 
+function eePayloadQualityCorrection_(candidate,existing) {
+  try{
+    var registry=eeArtistRegistry_(),
+        candidateIssues=eeReadyQualityIssues_(candidate,registry),
+        existingIssues=eeReadyQualityIssues_(existing,registry);
+    return !candidateIssues.length&&existingIssues.length>0;
+  }catch(error){
+    return false;
+  }
+}
+
 function eePayloadAtLeastAsUseful_(candidate,existing) {
   if(!eePayloadHasRecommendations_(candidate))return false;
   if(!eePayloadHasRecommendations_(existing))return true;
 
   if(
     eePayloadIdentityCorrection_(
+      candidate,
+      existing
+    )||
+    eePayloadQualityCorrection_(
       candidate,
       existing
     )
@@ -689,8 +704,8 @@ function eePrimaryRecommendationRank_(item,primaryArtists,primaryArtistIds) {
 
 function eeStoredPayloadHasRecommendations_(stored) {
   var value=String(stored||"");
-  if(value.indexOf("GZIP64:")===0)return true;
-  try{return eePayloadHasRecommendations_(JSON.parse(value));}catch(error){return false;}
+  if(!value)return false;
+  try{return eePayloadHasRecommendations_(eeDecodePayloadCell_(value));}catch(error){return false;}
 }
 
 function eeReviewedPostSubjects_(postId) {
@@ -4104,6 +4119,12 @@ def build_code() -> str:
     )
     code = replace_once(
         code,
+        '    if (hasRecommendations) {\n      eePutPayload_(post, payload, "READY", "", retryCount);\n    } else {\n      eePutPayload_(post, payload, "EMPTY", String((payload.diagnostics||{}).emptyClassification||"EMPTY_OTHER"), retryCount);\n    }\n\n    return payload;',
+        '    var writeAccepted;\n    if (hasRecommendations) {\n      writeAccepted=eePutPayload_(post, payload, "READY", "", retryCount);\n    } else {\n      writeAccepted=eePutPayload_(post, payload, "EMPTY", String((payload.diagnostics||{}).emptyClassification||"EMPTY_OTHER"), retryCount);\n    }\n\n    if(writeAccepted===false){\n      var retained=eeGetPayload_(post.id);\n      if(eePayloadHasRecommendations_(retained))return retained;\n    }\n    return payload;',
+        "persisted payload result",
+    )
+    code = replace_once(
+        code,
         '        String(error && error.message || error)\n      );',
         '        String(error && error.message || error),\n        retryCount\n      );',
         "error retry persistence",
@@ -4475,7 +4496,7 @@ def build_code() -> str:
     code = replace_once(
         code,
         '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );',
-        '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );\n  eeClearPublicPayloadCache_(post.id,existing,payload);',
+        '  CacheService.getScriptCache().remove(\n    "ee-apple-payload:" + String(post.id)\n  );\n  eeClearPublicPayloadCache_(post.id,existing,payload);\n  return true;',
         "public slice cache invalidation",
     )
     code = replace_function(code, "doGet", "eeDiagnoseAppleArtistResolution", PUBLIC_DO_GET)
