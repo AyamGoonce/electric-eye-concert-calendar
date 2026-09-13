@@ -1330,6 +1330,10 @@ function eePayloadSheet_() {
   var sheet = spreadsheet.getSheetByName("Apple Payloads") || spreadsheet.insertSheet("Apple Payloads");
   if (sheet.getLastRow() === 0) sheet.appendRow(["postId", "canonicalUrl", "generatedAt", "storefront", "payloadJson", "status", "error", "retryCount"]);
   else if (sheet.getLastColumn() < 8) sheet.getRange(1, 8).setValue("retryCount");
+  // Blogger post IDs can exceed the safe integer range used by Sheets.
+  // Keep column A as plain text so 19-digit IDs are never rounded.
+  sheet.getRange("A:A").setNumberFormat("@");
+
   return sheet;
 }
 

@@ -1478,6 +1478,10 @@ JSON.stringify({ready:eePayloadHasRecommendations_(payload),count:payload.catego
 ''')
         self.assertEqual('{"ready":true,"count":30,"version":3}', result)
 
+    def test_payload_sheet_preserves_long_blogger_post_ids_as_plain_text(self):
+        self.assertIn('sheet.getRange("A:A").setNumberFormat("@");', self.code)
+        self.assertIn('String(post.id)', self.code)
+
     def test_public_reader_uses_targeted_post_id_lookup_not_full_sheet_scan(self):
         result = self.run_apps_script(r'''
 var scans=0,ranges=[],rows={
