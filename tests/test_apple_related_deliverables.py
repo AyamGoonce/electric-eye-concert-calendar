@@ -188,7 +188,8 @@ class AppleRelatedDeliverableTests(unittest.TestCase):
     def test_empty_or_disabled_response_leaves_legacy_fallback(self):
         self.assertRegex(self.theme, r"if\(!CONFIG\.enabled\|\|!context\|\|!postBody\|\|hasExistingSection\(\)\)return")
         self.assertRegex(self.theme, r"if\(!categories\.length\)return;\s*removeLegacySafeAffiliate\(\);")
-        self.assertIn('output=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit)||output;', self.code)
+        self.assertIn('var page=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit);', self.code)
+        self.assertIn('if(page){', self.code)
         self.assertIn('settings.enabled && /^[0-9]+$/.test', self.code)
 
     def test_reader_endpoint_only_serves_stored_ready_payloads(self):
@@ -1471,6 +1472,169 @@ doGet({parameter:{action:"payload",postId:"42"}}).text;
         self.assertEqual(4, len(parsed["categories"][0]["items"]))
         self.assertTrue(parsed["categories"][0]["hasMore"])
 
+    def test_public_endpoint_does_not_cache_payload_miss(self):
+        result = self.run_apps_script(r'''
+var payload={
+  schemaVersion:1,
+  postId:"42",
+  categories:[
+    {
+      category:"LISTEN",
+      items:[
+        {
+          stableId:"album",
+          title:"Album",
+          url:"https://music.apple.com/album"
+        }
+      ]
+    }
+  ]
+};
+
+var reads=0,puts=0,cache={};
+
+eeApplePostAllowed_=function(){return true;};
+
+eeGetPayload_=function(){
+  reads+=1;
+  return reads===1?null:payload;
+};
+
+CacheService={
+  getScriptCache:function(){
+    return {
+      get:function(key){return cache[key]||null;},
+      put:function(key,value){
+        puts+=1;
+        cache[key]=value;
+      }
+    };
+  }
+};
+
+ContentService={
+  MimeType:{JAVASCRIPT:"js",JSON:"json"},
+  createTextOutput:function(text){
+    return {
+      text:text,
+      setMimeType:function(){return this;}
+    };
+  }
+};
+
+var first=JSON.parse(
+  doGet({
+    parameter:{
+      action:"payload",
+      postId:"42"
+    }
+  }).text
+);
+
+var second=JSON.parse(
+  doGet({
+    parameter:{
+      action:"payload",
+      postId:"42"
+    }
+  }).text
+);
+
+JSON.stringify({
+  firstCategories:first.categories.length,
+  secondCategories:second.categories.length,
+  reads:reads,
+  puts:puts,
+  keys:Object.keys(cache)
+});
+''')
+
+        self.assertEqual(
+            '{"firstCategories":0,"secondCategories":1,"reads":2,"puts":1,'
+            '"keys":["ee-public-v3:42:ALL:0:4"]}',
+            result,
+        )
+
+    def test_public_endpoint_ignores_cached_empty_payload(self):
+        result = self.run_apps_script(r'''
+var payload={
+  schemaVersion:1,
+  postId:"42",
+  categories:[
+    {
+      category:"LISTEN",
+      items:[
+        {
+          stableId:"album",
+          title:"Album",
+          url:"https://music.apple.com/album"
+        }
+      ]
+    }
+  ]
+};
+
+var reads=0,puts=0;
+var cache={
+  "ee-public-v3:42:ALL:0:4":
+    JSON.stringify({
+      schemaVersion:1,
+      postId:"42",
+      categories:[]
+    })
+};
+
+eeApplePostAllowed_=function(){return true;};
+
+eeGetPayload_=function(){
+  reads+=1;
+  return payload;
+};
+
+CacheService={
+  getScriptCache:function(){
+    return {
+      get:function(key){return cache[key]||null;},
+      put:function(key,value){
+        puts+=1;
+        cache[key]=value;
+      }
+    };
+  }
+};
+
+ContentService={
+  MimeType:{JAVASCRIPT:"js",JSON:"json"},
+  createTextOutput:function(text){
+    return {
+      text:text,
+      setMimeType:function(){return this;}
+    };
+  }
+};
+
+var response=JSON.parse(
+  doGet({
+    parameter:{
+      action:"payload",
+      postId:"42"
+    }
+  }).text
+);
+
+JSON.stringify({
+  categories:response.categories.length,
+  item:response.categories[0].items[0].stableId,
+  reads:reads,
+  puts:puts
+});
+''')
+
+        self.assertEqual(
+            '{"categories":1,"item":"album","reads":1,"puts":1}',
+            result,
+        )
+
     def test_normal_payload_write_invalidates_old_and_new_public_pages_after_write(self):
         result = self.run_apps_script(r'''
 function items(count){var rows=[];for(var i=0;i<count;i++)rows.push({stableId:String(i)});return rows;}
@@ -1479,10 +1643,10 @@ eeGetPayload_=function(){return oldPayload;};eePayloadAtLeastAsUseful_=function(
 eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["postId"]];}};},getRange:function(){return {setValues:function(){written=true;events.push("write");}};}};};
 CacheService={getScriptCache:function(){return {remove:function(key){removed.push(key);},removeAll:function(keys){events.push("invalidate");removed=removed.concat(keys);}};}};
 eePutPayload_({id:"42",url:""},nextPayload,"READY","",0);
-JSON.stringify({written:written,events:events,keys:removed.filter(function(key){return key.indexOf("ee-public-v2:")===0;}).sort()});
+JSON.stringify({written:written,events:events,keys:removed.filter(function(key){return key.indexOf("ee-public-v3:")===0;}).sort()});
 ''')
         self.assertEqual(
-            '{"written":true,"events":["write","invalidate"],"keys":["ee-public-v2:42:ALL:0:4","ee-public-v2:42:LISTEN:0:4","ee-public-v2:42:LISTEN:4:4","ee-public-v2:42:LISTEN:8:4","ee-public-v2:42:WATCH:0:4"]}',
+            '{"written":true,"events":["write","invalidate"],"keys":["ee-public-v3:42:ALL:0:4","ee-public-v3:42:LISTEN:0:4","ee-public-v3:42:LISTEN:4:4","ee-public-v3:42:LISTEN:8:4","ee-public-v3:42:WATCH:0:4"]}',
             result,
         )
 
@@ -1494,10 +1658,10 @@ eeGetPayload_=function(){return oldPayload;};eeEncodePayloadCell_=function(){ret
 eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["postId"],["42"]];}};},getRange:function(){return {setValues:function(values){writtenStatus=values[0][6];events.push("write");}};}};};
 CacheService={getScriptCache:function(){return {remove:function(key){removed.push(key);},removeAll:function(keys){events.push("invalidate");removed=removed.concat(keys);}};}};
 var ok=eePutReviewedQualityRepair_({id:"42",url:""},nextPayload);
-JSON.stringify({ok:ok,status:writtenStatus,events:events,keys:removed.filter(function(key){return key.indexOf("ee-public-v2:")===0;}).sort()});
+JSON.stringify({ok:ok,status:writtenStatus,events:events,keys:removed.filter(function(key){return key.indexOf("ee-public-v3:")===0;}).sort()});
 ''')
         self.assertEqual(
-            '{"ok":true,"status":"QUALITY_REPAIR","events":["write","invalidate"],"keys":["ee-public-v2:42:ALL:0:4","ee-public-v2:42:READ:0:4","ee-public-v2:42:READ:4:4","ee-public-v2:42:READ:8:4"]}',
+            '{"ok":true,"status":"QUALITY_REPAIR","events":["write","invalidate"],"keys":["ee-public-v3:42:ALL:0:4","ee-public-v3:42:READ:0:4","ee-public-v3:42:READ:4:4","ee-public-v3:42:READ:8:4"]}',
             result,
         )
 
@@ -1517,20 +1681,20 @@ invalidations;
 var items=[];for(var i=0;i<209;i++)items.push({stableId:String(i)});var removed=[];
 CacheService={getScriptCache:function(){return {removeAll:function(keys){removed=removed.concat(keys);}};}};
 eeClearPublicPayloadCache_("42",{categories:[{category:"LISTEN",items:items}]},null);
-JSON.stringify({count:removed.length,has204:removed.indexOf("ee-public-v2:42:LISTEN:204:4")!==-1,has208:removed.indexOf("ee-public-v2:42:LISTEN:208:4")!==-1,last:removed[removed.length-1]});
+JSON.stringify({count:removed.length,has204:removed.indexOf("ee-public-v3:42:LISTEN:204:4")!==-1,has208:removed.indexOf("ee-public-v3:42:LISTEN:208:4")!==-1,last:removed[removed.length-1]});
 ''')
-        self.assertEqual('{"count":54,"has204":true,"has208":true,"last":"ee-public-v2:42:LISTEN:208:4"}', result)
+        self.assertEqual('{"count":54,"has204":true,"has208":true,"last":"ee-public-v3:42:LISTEN:208:4"}', result)
 
     def test_public_endpoint_cache_key_uses_canonical_effective_parameters(self):
         result = self.run_apps_script(r'''
 var keys=[];eeApplePostAllowed_=function(){return true;};
-CacheService={getScriptCache:function(){return {get:function(key){keys.push(key);return JSON.stringify({schemaVersion:1,postId:"42",categories:[]});},put:function(){}};}};
+CacheService={getScriptCache:function(){return {get:function(key){keys.push(key);return JSON.stringify({schemaVersion:1,postId:"42",categories:[{category:"LISTEN",items:[{stableId:"cached",title:"Cached",url:"https://music.apple.com/cached"}]}]});},put:function(){}};}};
 ContentService={MimeType:{JAVASCRIPT:"js",JSON:"json"},createTextOutput:function(text){return {text:text,setMimeType:function(){return this;}};}};
 doGet({parameter:{action:"payload",postId:"42",category:"listen",offset:"-2.5",limit:"999"}});
 doGet({parameter:{action:"payload",postId:"42",category:"LISTEN",offset:"4.9",limit:"4.8"}});
 JSON.stringify(keys);
 ''')
-        self.assertEqual('["ee-public-v2:42:LISTEN:0:4","ee-public-v2:42:LISTEN:4:4"]', result)
+        self.assertEqual('["ee-public-v3:42:LISTEN:0:4","ee-public-v3:42:LISTEN:4:4"]', result)
 
     def test_frontend_starts_early_and_uses_async_fetch_without_hidden_preload(self):
         apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]

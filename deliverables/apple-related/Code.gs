@@ -1387,9 +1387,9 @@ function eePublicPayloadPage_(payload,category,offset,limit) {
 }
 
 function eeClearPublicPayloadCache_(postId,previousPayload,nextPayload) {
-  var cache=CacheService.getScriptCache(),lengths={LISTEN:0,WATCH:0,READ:0},keys=["ee-public-v2:"+[String(postId),"ALL","0","4"].join(":")];
+  var cache=CacheService.getScriptCache(),lengths={LISTEN:0,WATCH:0,READ:0},keys=["ee-public-v3:"+[String(postId),"ALL","0","4"].join(":")];
   [previousPayload,nextPayload].forEach(function(payload){((payload||{}).categories||[]).forEach(function(group){var category=String(group.category||"").toUpperCase();if(!Object.prototype.hasOwnProperty.call(lengths,category))return;lengths[category]=Math.max(lengths[category],Array.isArray(group.items)?group.items.length:0);});});
-  Object.keys(lengths).forEach(function(category){for(var offset=0;offset<lengths[category];offset+=4)keys.push("ee-public-v2:"+[String(postId),category,String(offset),"4"].join(":"));});
+  Object.keys(lengths).forEach(function(category){for(var offset=0;offset<lengths[category];offset+=4)keys.push("ee-public-v3:"+[String(postId),category,String(offset),"4"].join(":"));});
   if(cache.removeAll){for(var start=0;start<keys.length;start+=100)cache.removeAll(keys.slice(start,start+100));}else keys.forEach(function(key){cache.remove(key);});
 }
 
@@ -5291,10 +5291,23 @@ function doGet(event) {
     var category=String(params.category||"").toUpperCase(),parsedOffset=Number(params.offset),parsedLimit=Number(params.limit);
     var offset=Number.isFinite(parsedOffset)&&parsedOffset>=0?Math.floor(parsedOffset):0;
     var limit=Number.isFinite(parsedLimit)&&parsedLimit>0?Math.min(4,Math.floor(parsedLimit)):4;
-    var cacheKey="ee-public-v2:"+[postId,category||"ALL",String(offset),String(limit)].join(":");
+    var cacheKey="ee-public-v3:"+[postId,category||"ALL",String(offset),String(limit)].join(":");
     var cache=CacheService.getScriptCache(),cached=null;try{cached=cache.get(cacheKey);}catch(cacheReadError){}
-    if(cached){try{output=JSON.parse(cached);}catch(cacheParseError){cached=null;}}
-    if(!cached){output=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit)||output;var text=JSON.stringify(output);if(text.length<90000)try{cache.put(cacheKey,text,EE_APPLE_CONFIG.payloadCacheSeconds);}catch(cacheWriteError){}}
+    if(cached){
+      try{
+        var cachedOutput=JSON.parse(cached);
+        if(eePayloadHasRecommendations_(cachedOutput))output=cachedOutput;
+        else cached=null;
+      }catch(cacheParseError){cached=null;}
+    }
+    if(!cached){
+      var page=eePublicPayloadPage_(eeGetPayload_(postId),category,offset,limit);
+      if(page){
+        output=page;
+        var text=JSON.stringify(output);
+        if(text.length<90000)try{cache.put(cacheKey,text,EE_APPLE_CONFIG.payloadCacheSeconds);}catch(cacheWriteError){}
+      }
+    }
   }
   var body=JSON.stringify(output);
   if(callback&&/^[A-Za-z_$][0-9A-Za-z_$]{0,80}$/.test(callback))return ContentService.createTextOutput(callback+"("+body+");").setMimeType(ContentService.MimeType.JAVASCRIPT);
