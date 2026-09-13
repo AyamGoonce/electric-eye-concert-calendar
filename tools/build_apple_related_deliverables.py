@@ -3872,13 +3872,13 @@ function eeDiscoverArtistsWorker() {
     var resolverVersion=String(EE_APPLE_IDENTITY_RESOLVER_VERSION);
     if(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_RESOLVER_VERSION")!==resolverVersion){
       properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_RESOLVER_VERSION",resolverVersion);
-      properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX","1");
+      if(String(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||"1")!=="1")properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX","1");
     }
     var cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX")||1));
     eeSetExecutionDeadline_(Math.min(EE_APPLE_EXECUTION_DEADLINE||Date.now()+180000,Date.now()+180000));
     for(var row=cursor;row<values.length&&Date.now()<EE_APPLE_EXECUTION_DEADLINE;row+=1){
       var rowStatus=String(values[row][7]||""),rowResolverVersion=Math.max(0,Number(values[row][16]||0));
-      var rowNeedsIdentity=rowStatus==="UNRESOLVED"||((rowStatus==="ERROR"||rowStatus==="AMBIGUOUS"||rowStatus==="RESOLVED")&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION);
+      var rowNeedsIdentity=rowStatus==="UNRESOLVED"||((rowStatus==="ERROR"||rowStatus==="AMBIGUOUS")&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION);
       if(!rowNeedsIdentity){
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         continue;
@@ -3887,8 +3887,7 @@ function eeDiscoverArtistsWorker() {
       properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row));
       try{
         var post=eeFetchPostById_(representativePostId),registry=eeArtistRegistry_(),artist=registry.artists.filter(function(value){return value.slug===artistKey;})[0]||{slug:artistKey,canonicalName:canonicalName,aliases:[],ambiguityClass:"provisional"};
-        var revalidateIdentity=rowStatus==="RESOLVED"&&rowResolverVersion<EE_APPLE_IDENTITY_RESOLVER_VERSION;
-        var catalogue=eeDiscoverArtistCatalogue_(artist,post,false,revalidateIdentity);
+        var catalogue=eeDiscoverArtistCatalogue_(artist,post,false,false);
         if(!catalogue||["RESOLVED","AMBIGUOUS","DEFERRED","ERROR"].indexOf(String(catalogue.status))===-1)throw new Error("ARTIST_DISCOVERY_NO_TERMINAL_STATUS");
         properties.setProperty("EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row+1));
         if(catalogue.status==="ERROR")console.log(JSON.stringify({artistKey:artistKey,canonicalName:canonicalName,terminalStatus:"ERROR",errorReason:catalogue.error||"APPLE_ARTIST_DISCOVERY_EXHAUSTED",nextCursor:row+1}));
