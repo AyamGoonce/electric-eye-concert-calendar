@@ -343,6 +343,12 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 ''')
         self.assertEqual('["Obituary"]', result)
 
+    def test_exact_title_artist_outranks_shared_article_associations(self):
+        self.assertIn(
+            "if(titleMatches.length===1)matches=titleMatches;",
+            self.code,
+        )
+
     def test_fast_identity_rejects_polluted_paris_registry_entry(self):
         result = self.run_apps_script(r'''
 var registry={schemaVersion:1,structuralLabels:["concert","rock"],articleOverrides:{},artists:[

@@ -1058,6 +1058,26 @@ function eeFastArticleIdentity_(post, registry) {
    * clearly dominant repeated body mention. Reused/generic names such as
    * Earth or Wargasm still require contextual disambiguation.
    */
+  // A single exact title-derived artist outranks shared article associations.
+  // This prevents openers/bill-mates attached to the same article from
+  // becoming primary subjects.
+  if(!override){
+    var authoritativeTitle=eeNorm_(eeTitleArtistCandidate_(title));
+    if(authoritativeTitle){
+      var titleMatches=matches.filter(function(match){
+        var artist=match.artist||{};
+        return eeUnique_(
+          [artist.canonicalName]
+            .concat(artist.aliases||[])
+            .concat(artist.alternateSpellings||[])
+        ).some(function(name){
+          return eeNorm_(name)===authoritativeTitle;
+        });
+      });
+      if(titleMatches.length===1)matches=titleMatches;
+    }
+  }
+
   if(!matches.length&&!override){
     var bodyKnown=[],
         boundedBody=" "+normalizedBody+" ";
