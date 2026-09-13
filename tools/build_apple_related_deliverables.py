@@ -3340,48 +3340,59 @@ function eePrimaryArtistIdentityPayload_(artist,post) {
         "LISTEN",
         "album"
       ),
-      albumDiagnostic=
-        eeDiscoveryDiagnosticQuery_(albumQuery),
-      albumResponse=eeAppleSearch_(albumQuery),
-      albumResults=albumResponse.results||[],
-      map={};
+      albumResults=[],
+      map={},
+      identity=directIdentity,
+      albumSearchPerformed=false;
 
-  eeDiscoveryDiagnosticCandidates_(
-    albumDiagnostic,
-    albumResponse
-  );
+  /*
+   * A unique, verified artist entity is already enough to establish
+   * catalogue ownership. Do not perform a second text search merely to
+   * rediscover the same identity; use the authoritative artist ID lookup
+   * below to populate releases. Only ambiguous/low direct identity needs
+   * the album-text fallback.
+   */
+  if(!(directIdentity.level==="HIGH"&&directIdentity.artistId)){
+    var albumDiagnostic=
+          eeDiscoveryDiagnosticQuery_(albumQuery),
+        albumResponse=eeAppleSearch_(albumQuery);
 
-  albumResults.forEach(function(raw){
-    if(
-      eeAddCandidateToMap_(
-        map,
-        raw,
-        albumQuery,
-        analysis
-      )
-    ){
-      eeDiscoveryDiagnosticDecision_(
-        albumDiagnostic,
-        true,
-        "QUALIFYING_RELATIONSHIP"
-      );
-    }else{
-      eeDiscoveryDiagnosticDecision_(
-        albumDiagnostic,
-        false,
-        "NO_QUALIFYING_RELATIONSHIP"
-      );
-    }
-  });
+    albumSearchPerformed=true;
+    albumResults=albumResponse.results||[];
 
-  var identity=
-        directIdentity.level==="HIGH" &&
-        directIdentity.artistId
-          ?directIdentity
-          :eeResolveIdentity_(
-            analysis,
-            albumResults
-          );
+    eeDiscoveryDiagnosticCandidates_(
+      albumDiagnostic,
+      albumResponse
+    );
+
+    albumResults.forEach(function(raw){
+      if(
+        eeAddCandidateToMap_(
+          map,
+          raw,
+          albumQuery,
+          analysis
+        )
+      ){
+        eeDiscoveryDiagnosticDecision_(
+          albumDiagnostic,
+          true,
+          "QUALIFYING_RELATIONSHIP"
+        );
+      }else{
+        eeDiscoveryDiagnosticDecision_(
+          albumDiagnostic,
+          false,
+          "NO_QUALIFYING_RELATIONSHIP"
+        );
+      }
+    });
+
+    identity=eeResolveIdentity_(
+      analysis,
+      albumResults
+    );
+  }
 
   /*
    * A verified Apple artist ID is authoritative for catalogue identity.
@@ -3456,10 +3467,14 @@ function eePrimaryArtistIdentityPayload_(artist,post) {
     diagnostics:{
       fastPrimaryIdentity:true,
       hardIdentityAmbiguity:false,
-      searchIntents:[
-        "LISTEN:musicArtist:"+artist.canonicalName,
-        "LISTEN:album:"+artist.canonicalName
-      ],
+      searchIntents:albumSearchPerformed
+        ?[
+          "LISTEN:musicArtist:"+artist.canonicalName,
+          "LISTEN:album:"+artist.canonicalName
+        ]
+        :[
+          "LISTEN:musicArtist:"+artist.canonicalName
+        ],
       artistRawResultCount:artistResults.length,
       albumRawResultCount:albumResults.length,
       directIdentityReason:

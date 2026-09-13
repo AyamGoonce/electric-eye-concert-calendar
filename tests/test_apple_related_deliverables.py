@@ -659,8 +659,9 @@ eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){
 eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
 eeArticleAnalysis_=function(){return {relationshipGraph:{nodes:[],edges:[]}};};
 eeAppleSettings_=function(){return {storefront:"FR"};};
-eeAppleSearch_=function(query){searches.push(query);return {results:[1,2,3].map(function(id){return {artistId:"99",artistName:"Ariel Pink",collectionId:id,collectionName:"Album "+id};})};};
-eeAddCandidateToMap_=function(map,raw){map[String(raw.collectionId)]={stableId:String(raw.collectionId),category:"LISTEN",creator:raw.artistName,appleArtistId:raw.artistId,title:raw.collectionName,relevanceScore:96};return true;};
+eeAppleSearch_=function(query){searches.push(query);return {results:[{artistId:"99",artistName:"Ariel Pink",wrapperType:"artist"}]};};
+eeAppleLookup_=function(){return {results:[1,2,3].map(function(id){return {artistId:"99",artistName:"Ariel Pink",collectionId:id,collectionName:"Album "+id};})};};
+eeAddCandidateToMap_=function(map,raw){if(!raw.collectionId)return false;map[String(raw.collectionId)]={stableId:String(raw.collectionId),category:"LISTEN",creator:raw.artistName,appleArtistId:raw.artistId,title:raw.collectionName,relevanceScore:96};return true;};
 eeGeneratePayloadLegacy_=function(){legacyCalls+=1;throw new Error("EXHAUSTIVE_PATH_SHOULD_NOT_RUN");};
 eePutArtistCatalogue_=function(record){saved=record;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
@@ -669,7 +670,7 @@ JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:re
 ''')
         self.assertEqual(
             '{"status":"RESOLVED","artistId":"99","confidence":"HIGH","searchCount":1,'
-            '"query":{"term":"Ariel Pink","entity":"album","category":"LISTEN"},"legacyCalls":0,'
+            '"query":{"term":"Ariel Pink","entity":"musicArtist","category":"LISTEN"},"legacyCalls":0,'
             '"staleImmediately":true,"schemaVersion":1,"generationVersion":3,"categories":1}',
             result,
         )
