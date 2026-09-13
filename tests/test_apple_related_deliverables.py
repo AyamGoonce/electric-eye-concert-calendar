@@ -209,6 +209,13 @@ class AppleRelatedDeliverableTests(unittest.TestCase):
         self.assertNotIn("ScriptApp.newTrigger", self.code)
         self.assertNotIn("ScriptApp.getProjectTriggers", self.code)
 
+    def test_ready_repair_worker_is_manual_and_does_not_own_a_trigger(self):
+        self.assertIn("function eeReadyRepairContinuation_()", self.code)
+        self.assertIn('productionTrigger:"eeDiscoverArtistsWorker"', self.code)
+        self.assertIn("nextRunScheduled:false", self.code)
+        self.assertNotIn("eeScheduleReadyRepairWorker_", self.code)
+        self.assertNotIn("eeDeleteReadyRepairWorkerTriggers_", self.code)
+
     def test_live_single_trigger_orchestrator_rotates_all_maintenance_stages(self):
         result = self.run_apps_script(r'''
 var props={EE_APPLE_PRODUCTION_GENERATION:"3",EE_APPLE_PRODUCTION_INDEX:"1",EE_APPLE_PRODUCTION_MAINTENANCE_PHASE:"0"},calls=[];

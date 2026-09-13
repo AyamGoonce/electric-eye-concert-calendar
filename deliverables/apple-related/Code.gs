@@ -3498,20 +3498,12 @@ function eeSaveReadyRepairFailures_(failures) {
   );
 }
 
-function eeDeleteReadyRepairWorkerTriggers_() {
-  ScriptApp.getProjectTriggers().forEach(function(trigger){
-    if(trigger.getHandlerFunction()==="eeRunReadyRepairWorker"){
-      ScriptApp.deleteTrigger(trigger);
-    }
-  });
-}
-
-function eeScheduleReadyRepairWorker_() {
-  eeDeleteReadyRepairWorkerTriggers_();
-  ScriptApp.newTrigger("eeRunReadyRepairWorker")
-    .timeBased()
-    .after(60*1000)
-    .create();
+function eeReadyRepairContinuation_() {
+  return {
+    scheduled:false,
+    productionTrigger:"eeDiscoverArtistsWorker",
+    message:"Run eeRunReadyRepairWorker manually for another bounded repair batch."
+  };
 }
 
 function eeReadyRepairWorkerStatus() {
@@ -3544,7 +3536,6 @@ function eeReadyRepairWorkerStatus() {
 function eeStopReadyRepairWorker() {
   var props=PropertiesService.getScriptProperties();
   props.setProperty("EE_APPLE_READY_REPAIR_ACTIVE","0");
-  eeDeleteReadyRepairWorkerTriggers_();
 
   var result={
     status:"STOPPED",
@@ -3557,8 +3548,6 @@ function eeStopReadyRepairWorker() {
 
 function eeStartReadyRepairWorker() {
   var props=PropertiesService.getScriptProperties();
-
-  eeDeleteReadyRepairWorkerTriggers_();
 
   props.setProperty("EE_APPLE_READY_REPAIR_ACTIVE","1");
   props.setProperty("EE_APPLE_READY_REPAIR_REPAIRED","0");
@@ -3581,10 +3570,10 @@ function eeRunReadyRepairWorker() {
   var lock=LockService.getScriptLock();
 
   if(!lock.tryLock(5000)){
-    eeScheduleReadyRepairWorker_();
     return {
       status:"BUSY",
-      message:"Another READY repair worker execution is active."
+      message:"Another READY repair worker execution is active.",
+      continuation:eeReadyRepairContinuation_()
     };
   }
 
@@ -3596,8 +3585,6 @@ function eeRunReadyRepairWorker() {
       rows=[];
 
   try{
-    eeDeleteReadyRepairWorkerTriggers_();
-
     var previousSkip=EE_APPLE_AUDIT_SKIP_PREVIEW,
         audit;
 
@@ -3625,7 +3612,6 @@ function eeRunReadyRepairWorker() {
 
     if(!candidates.length){
       props.setProperty("EE_APPLE_READY_REPAIR_ACTIVE","0");
-      eeDeleteReadyRepairWorkerTriggers_();
 
       var finished={
         status:"COMPLETE",
@@ -3789,8 +3775,6 @@ function eeRunReadyRepairWorker() {
       candidates.length-repairedThisRun-skippedThisRun
     );
 
-    eeScheduleReadyRepairWorker_();
-
     var result={
       status:"CONTINUING",
       processed:processed,
@@ -3800,7 +3784,8 @@ function eeRunReadyRepairWorker() {
       run:runs,
       remainingEstimate:remainingEstimate,
       rows:rows,
-      nextRunScheduled:true
+      nextRunScheduled:false,
+      continuation:eeReadyRepairContinuation_()
     };
 
     console.log(JSON.stringify(result));
