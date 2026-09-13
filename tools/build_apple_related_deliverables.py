@@ -9,6 +9,34 @@ THEME_SOURCE = ROOT / "sources" / "apple-related" / "Electric-Eye-Theme.base.xml
 CODE_SOURCE = ROOT / "sources" / "apple-related" / "Code.base.gs"
 
 PUBLIC_PAYLOAD_READER = r'''
+function eePayloadRowRecord_(row,rowNumber) {
+  row=row||[];
+  var stored=String(row[4]||""),status=String(row[5]||""),payload=null;
+  try{if(stored)payload=eeDecodePayloadCell_(stored);}catch(error){payload=null;}
+  var timestamp=row[2] instanceof Date?row[2].getTime():Date.parse(String(row[2]||""));
+  timestamp=Number.isFinite(timestamp)?timestamp:-1;
+  return {postId:String(row[0]||""),rowNumber:Number(rowNumber||0),row:row,status:status,payload:payload,validReady:status==="READY"&&eePayloadHasRecommendations_(payload),timestamp:timestamp};
+}
+
+function eePayloadRowPreferred_(candidate,current) {
+  if(!candidate)return false;
+  if(!current)return true;
+  if(candidate.validReady!==current.validReady)return candidate.validReady;
+  if(candidate.timestamp!==current.timestamp)return candidate.timestamp>current.timestamp;
+  return candidate.rowNumber>current.rowNumber;
+}
+
+function eeCanonicalPayloadRowFromValues_(values,postId) {
+  postId=String(postId||"");
+  var best=null;
+  for(var row=1;row<(values||[]).length;row+=1){
+    if(String(values[row][0])!==postId)continue;
+    var candidate=eePayloadRowRecord_(values[row],row+1);
+    if(eePayloadRowPreferred_(candidate,best))best=candidate;
+  }
+  return best;
+}
+
 function eeGetPayload_(postId) {
   postId=String(postId||"");
   if(!/^[0-9]+$/.test(postId))return null;
@@ -16,17 +44,12 @@ function eeGetPayload_(postId) {
   if(lastRow<2)return null;
   var matches=sheet.getRange(2,1,lastRow-1,1).createTextFinder(postId).matchEntireCell(true).findAll(),best=null;
   (matches||[]).forEach(function(match){
-    var rowNumber=match.getRow(),row=sheet.getRange(rowNumber,1,1,6).getValues()[0];
-    if(String(row[0])!==postId||String(row[5])!=="READY")return;
-    var stored=String(row[4]||"");if(!stored)return;
-    try{
-      var payload=eeDecodePayloadCell_(stored);if(!eePayloadHasRecommendations_(payload))return;
-      var timestamp=row[2] instanceof Date?row[2].getTime():Date.parse(String(row[2]||""));
-      timestamp=Number.isFinite(timestamp)?timestamp:-1;
-      if(!best||timestamp>best.timestamp||(timestamp===best.timestamp&&rowNumber>best.rowNumber))best={payload:payload,timestamp:timestamp,rowNumber:rowNumber};
-    }catch(error){}
+    var rowNumber=match.getRow(),row=sheet.getRange(rowNumber,1,1,8).getValues()[0];
+    if(String(row[0])!==postId)return;
+    var candidate=eePayloadRowRecord_(row,rowNumber);
+    if(eePayloadRowPreferred_(candidate,best))best=candidate;
   });
-  return best?best.payload:null;
+  return best&&best.validReady?best.payload:null;
 }
 
 function eePublicPayloadPage_(payload,category,offset,limit) {
@@ -760,8 +783,13 @@ var EE_APPLE_PRODUCTION_NEWEST_SCAN=12;
 function eeStoredPayloadGeneration_(stored) {try{return Number((eeDecodePayloadCell_(stored)||{}).generationVersion||0);}catch(error){return 0;}}
 
 function eeProductionPayloadState_() {
-  var values=eePayloadSheet_().getDataRange().getValues(),map={};
-  for(var row=1;row<values.length;row+=1)map[String(values[row][0])]={status:String(values[row][5]||""),generationVersion:eeStoredPayloadGeneration_(values[row][4]),hasRecommendations:String(values[row][5]||"")==="READY"&&eeStoredPayloadHasRecommendations_(values[row][4]),error:String(values[row][6]||""),retryCount:Math.max(0,Number(values[row][7]||0))};
+  var values=eePayloadSheet_().getDataRange().getValues(),selected={},map={};
+  for(var row=1;row<values.length;row+=1){
+    var postId=String(values[row][0]||"");if(!postId)continue;
+    var candidate=eePayloadRowRecord_(values[row],row+1);
+    if(eePayloadRowPreferred_(candidate,selected[postId]))selected[postId]=candidate;
+  }
+  Object.keys(selected).forEach(function(postId){var record=selected[postId],stored=record.row[4];map[postId]={status:record.status,generationVersion:eeStoredPayloadGeneration_(stored),hasRecommendations:record.validReady,error:String(record.row[6]||""),retryCount:Math.max(0,Number(record.row[7]||0))};});
   return map;
 }
 
@@ -4150,6 +4178,21 @@ def build_code() -> str:
         "  if(eePayloadHasRecommendations_(existing)&&(status!==\"READY\"||!eePayloadAtLeastAsUseful_(payload,existing)))return false;\n"
         "  var sheet = eePayloadSheet_();",
         "last-known-good READY protection",
+    )
+    code = replace_once(
+        code,
+        '  var values = sheet.getDataRange().getValues();\n'
+        '  var target = values.length + 1;\n\n'
+        '  for (var row = 1; row < values.length; row += 1) {\n'
+        '    if (String(values[row][0]) === String(post.id)) {\n'
+        '      target = row + 1;\n'
+        '      break;\n'
+        '    }\n'
+        '  }',
+        '  var values = sheet.getDataRange().getValues();\n'
+        '  var canonical = eeCanonicalPayloadRowFromValues_(values, post.id);\n'
+        '  var target = canonical ? canonical.rowNumber : values.length + 1;',
+        "canonical payload write row",
     )
     code = replace_once(
         code,

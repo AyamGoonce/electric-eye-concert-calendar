@@ -1490,7 +1490,49 @@ JSON.stringify({payload:eeGetPayload_("42"),scans:scans,ranges:ranges});
         parsed = json.loads(result)
         self.assertEqual("new", parsed["payload"]["categories"][0]["items"][0]["stableId"])
         self.assertEqual(0, parsed["scans"])
-        self.assertEqual([[2, 1, 6, 1], [2, 1, 1, 6], [4, 1, 1, 6]], parsed["ranges"])
+        self.assertEqual([[2, 1, 6, 1], [2, 1, 1, 8], [4, 1, 1, 8]], parsed["ranges"])
+
+    def test_payload_reader_writer_and_worker_choose_same_duplicate_ready_row(self):
+        result = self.run_apps_script(r'''
+function payload(id,version){return JSON.stringify({postId:"42",generationVersion:version,categories:[{category:"LISTEN",items:[{stableId:id}]}]});}
+var rows=[
+  ["postId","canonicalUrl","generatedAt","storefront","payloadJson","status","error","retryCount"],
+  ["42","","2026-01-01T00:00:00Z","FR",payload("old",1),"READY","",1],
+  ["42","","2026-04-01T00:00:00Z","FR","{}","EMPTY","newer empty",9],
+  ["42","","2026-03-01T00:00:00Z","FR",payload("canonical",7),"READY","",3]
+],writeRow=0;
+eePayloadSheet_=function(){return {
+  getLastRow:function(){return rows.length;},
+  getDataRange:function(){return {getValues:function(){return rows.map(function(row){return row.slice();});}};},
+  getRange:function(row,column,count,columns){
+    return {
+      createTextFinder:function(){return {matchEntireCell:function(){return this;},findAll:function(){return [2,3,4].map(function(number){return {getRow:function(){return number;}};});}};},
+      getValues:function(){return [rows[row-1].slice(0,columns)];},
+      setValues:function(values){writeRow=row;rows[row-1]=values[0].slice();}
+    };
+  }
+};};
+eePayloadAtLeastAsUseful_=function(){return true;};
+eeEncodePayloadCell_=function(value){return JSON.stringify(value);};
+CacheService={getScriptCache:function(){return {remove:function(){},removeAll:function(){}};}};
+var before=eeGetPayload_("42"),state=eeProductionPayloadState_();
+eePutPayload_({id:"42",url:"/42"},{postId:"42",storefront:"FR",categories:[{category:"LISTEN",items:[{stableId:"replacement"}]}]},"READY","",4);
+JSON.stringify({reader:before.categories[0].items[0].stableId,stateVersion:state["42"].generationVersion,stateRetry:state["42"].retryCount,writeRow:writeRow});
+''')
+        self.assertEqual('{"reader":"canonical","stateVersion":7,"stateRetry":3,"writeRow":4}', result)
+
+    def test_duplicate_row_selection_prefers_valid_ready_over_newer_invalid_state(self):
+        result = self.run_apps_script(r'''
+var values=[
+  ["postId","canonicalUrl","generatedAt","storefront","payloadJson","status","error","retryCount"],
+  ["42","","2026-03-01T00:00:00Z","FR",JSON.stringify({generationVersion:5,categories:[{category:"LISTEN",items:[{stableId:"ready"}]}]}),"READY","",2],
+  ["42","","2026-04-01T00:00:00Z","FR","not-json","READY","broken",8],
+  ["42","","2026-05-01T00:00:00Z","FR","{}","EMPTY","empty",9]
+];
+var selected=eeCanonicalPayloadRowFromValues_(values,"42");
+JSON.stringify({row:selected.rowNumber,ready:selected.validReady,item:selected.payload.categories[0].items[0].stableId});
+''')
+        self.assertEqual('{"row":2,"ready":true,"item":"ready"}', result)
 
     def test_public_reader_duplicate_empty_and_malformed_rows_do_not_hide_ready(self):
         result = self.run_apps_script(r'''
