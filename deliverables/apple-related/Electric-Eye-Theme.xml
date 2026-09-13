@@ -9989,6 +9989,14 @@ body#layout #cryzen-mobile-logo-section > h4:after{
       <div class='post-body entry-content' id='post-body'>
         <data:post.body/>
         <span class='ee-apple-context' expr:data-ee-post-id='data:post.id' expr:data-ee-post-url='data:post.url.canonical' hidden='hidden'/>
+<script class='ee-apple-context-capture'
+        expr:data-ee-post-id='data:post.id'
+        expr:data-ee-post-url='data:post.url.canonical'>
+(function(s){
+  window.EE_APPLE_POST_ID=s.getAttribute("data-ee-post-id")||window.EE_APPLE_POST_ID;
+  window.EE_APPLE_POST_URL=s.getAttribute("data-ee-post-url")||window.EE_APPLE_POST_URL;
+})(document.currentScript);
+</script>
       </div>
       <!-- Ads after post content. -->
       <b:if cond='data:view.isPost'><b:tag cond='data:widgets any w =&gt; w.sectionId == &quot;cryzen-pro-main-after-ad&quot;' id='after-ad' name='div'/></b:if>
@@ -13128,6 +13136,14 @@ html.ee-custom-search.ee-search-ready .blog-posts-wrap::before{
       <div class='post-body entry-content' id='post-body'>
         <data:post.body/>
         <span class='ee-apple-context' expr:data-ee-post-id='data:post.id' expr:data-ee-post-url='data:post.url.canonical' hidden='hidden'/>
+<script class='ee-apple-context-capture'
+        expr:data-ee-post-id='data:post.id'
+        expr:data-ee-post-url='data:post.url.canonical'>
+(function(s){
+  window.EE_APPLE_POST_ID=s.getAttribute("data-ee-post-id")||window.EE_APPLE_POST_ID;
+  window.EE_APPLE_POST_URL=s.getAttribute("data-ee-post-url")||window.EE_APPLE_POST_URL;
+})(document.currentScript);
+</script>
       </div>
       <!-- Ads after post content. -->
       <b:if cond='data:view.isPost'><b:tag cond='data:widgets any w =&gt; w.sectionId == &quot;cryzen-pro-main-after-ad&quot;' id='after-ad' name='div'/></b:if>
@@ -20960,6 +20976,17 @@ if (!placedNearPlayer) {
   function start(){
     if(started)return;started=true;
     context=document.querySelector(".ee-apple-context[data-ee-post-id]");
+    if(!context){
+      if(window.EE_APPLE_POST_ID){
+        context={
+          getAttribute:function(name){
+            if(name==="data-ee-post-id")return String(window.EE_APPLE_POST_ID||"");
+            if(name==="data-ee-post-url")return String(window.EE_APPLE_POST_URL||location.href);
+            return "";
+          }
+        };
+      }
+    }
     postBody=document.querySelector(".is-post .post-body");
     if(!CONFIG.enabled||!context||!postBody||hasExistingSection())return;
     requestPage("",0).then(function(payload){render(payload);}).catch(function(){});

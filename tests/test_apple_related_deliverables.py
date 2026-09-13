@@ -1846,6 +1846,14 @@ JSON.stringify(keys);
         self.assertIn("hasMore=false;", apple)
         self.assertLess(apple.index("if(!id||seenIds[id])return;"), apple.index("serverCursor=returnedCursor"))
 
+    def test_frontend_preserves_post_identity_after_context_dom_removal(self):
+        self.assertEqual(2, self.theme.count("ee-apple-context-capture"))
+        self.assertIn("window.EE_APPLE_POST_ID", self.theme)
+        self.assertIn("window.EE_APPLE_POST_URL", self.theme)
+        apple = self.theme.split("id='ee-related-on-apple-candidate-js'", 1)[1]
+        self.assertIn('if(window.EE_APPLE_POST_ID)', apple)
+        self.assertIn('name==="data-ee-post-id"', apple)
+
     def test_frontend_bad_item_cannot_abort_entire_module(self):
         apple = self.theme.split("id='ee-related-on-apple-candidate-js'", 1)[1]
         insertion = apple.index('postBody.insertAdjacentElement("afterend",module);')
