@@ -605,7 +605,7 @@ var logs=[];console.log=function(value){logs.push(value);};
 var saved=null,properties={};
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
 eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
-eeGeneratePayloadLegacy_=function(){
+eePrimaryArtistIdentityPayload_=function(){
   var query=eeDiscoveryDiagnosticQuery_({term:"Sparks",entity:"musicArtist",category:"LISTEN"});
   eeDiscoveryDiagnosticAppleCall_();eeDiscoveryDiagnosticCacheHit_();
   eeDiscoveryDiagnosticCandidates_(query,{results:[{},{}]});
@@ -622,7 +622,7 @@ JSON.stringify({status:record.status,count:logs.length,type:log.type,artistKey:l
         self.assertEqual(
             '{"status":"RESOLVED","count":1,"type":"APPLE_ARTIST_DISCOVERY","artistKey":"sparks",'
             '"canonicalName":"Sparks","appleCalls":1,"cacheHits":1,"terminalStatus":"RESOLVED",'
-            '"terminalReason":"CONFIDENT_MATCH","stoppedBy":"","elapsedIsNumber":true,'
+            '"terminalReason":"PRIMARY_IDENTITY_CONFIDENT","stoppedBy":"","elapsedIsNumber":true,'
             '"query":{"term":"Sparks","entity":"musicArtist","category":"LISTEN","candidateCount":2,'
             '"accepted":1,"rejected":1,"reasons":{"QUALIFYING_RELATIONSHIP":1,"NO_QUALIFYING_RELATIONSHIP":1}}}',
             result,
@@ -633,7 +633,7 @@ JSON.stringify({status:record.status,count:logs.length,type:log.type,artistKey:l
 var logs=[];console.log=function(value){logs.push(value);};
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
 eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
-eeGeneratePayloadLegacy_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};
+eePrimaryArtistIdentityPayload_=function(){var error=new Error("APPLE_SEARCH_HTTP_429");error.code="APPLE_SEARCH_HTTP_429";error.retryable=true;throw error;};
 var caught=null;try{eeDiscoverArtistCatalogue_({slug:"artist",canonicalName:"Artist"},{id:"post-1"},true);}catch(error){caught={code:error.code,retryable:error.retryable};}
 var log=JSON.parse(logs[0]);
 var stops=["APPLE_SEARCH_HTTP_403","APPLE_SEARCH_HTTP_429","APPLE_SEARCH_EXECUTION_HEADROOM","APPLE_RETRY_LATER_COOLDOWN"].map(function(code){return eeDiscoveryDiagnosticStopReason_({code:code});});
@@ -674,7 +674,7 @@ JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:re
             result,
         )
 
-    def test_ambiguous_primary_artist_uses_existing_deep_fallback(self):
+    def test_ambiguous_primary_artist_does_not_use_whole_article_fallback(self):
         result = self.run_apps_script(r'''
 var saved=null,legacyCalls=0,searches=0,properties={};
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
@@ -690,27 +690,52 @@ var record=eeDiscoverArtistCatalogue_({slug:"nails",canonicalName:"Nails"},{id:"
 JSON.stringify({status:record.status,confidence:record.identityConfidence,primarySearches:searches,legacyCalls:legacyCalls,error:record.error});
 ''')
         self.assertEqual(
-            '{"status":"AMBIGUOUS","confidence":"MODERATE","primarySearches":1,"legacyCalls":1,"error":""}',
+            '{"status":"AMBIGUOUS","confidence":"MODERATE","primarySearches":1,"legacyCalls":0,"error":""}',
             result,
         )
 
-    def test_forced_refresh_preserves_full_associated_act_enrichment(self):
+    def test_forced_refresh_finalizes_target_locked_enrichment_without_legacy_generation(self):
         result = self.run_apps_script(r'''
-var saved=null,fastCalls=0,legacyCalls=0,properties={};
+var saved=null,fastCalls=0,legacyCalls=0,enrichmentCalls=0,properties={};
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
-eeGetArtistCatalogue_=function(){return {status:"RESOLVED"};};
-eePrimaryArtistIdentityPayload_=function(){fastCalls+=1;throw new Error("FAST_PATH_SHOULD_NOT_RUN");};
-eeGeneratePayloadLegacy_=function(){legacyCalls+=1;return {identity:{level:"HIGH",artistId:"99"},categories:[{category:"WATCH",items:[{stableId:"associated",creator:"King Crimson",title:"Associated act film"}]}]};};
+var existing={artistKey:"beat",canonicalName:"BEAT",appleArtistId:"99",identityConfidence:"HIGH",status:"RESOLVED",catalogue:{categories:[],enrichment:{status:"FINALIZE",completedQueries:[],totalQueries:1,pendingQueries:0}}};
+eeGetArtistCatalogue_=function(){return existing;};
+eeIncrementalResolvedEnrichment_=function(){enrichmentCalls+=1;return {readyForFinalization:true,categories:[{category:"WATCH",items:[{stableId:"associated",creator:"King Crimson",title:"Associated act film"}]}],enrichment:{status:"FINALIZE",completedQueries:["watch"],totalQueries:1,pendingQueries:0,lastError:""}};};
+eePrimaryArtistIdentityPayload_=function(){fastCalls+=1;throw new Error("FAST_PATH_SHOULD_NOT_RUN_AFTER_FINALIZATION");};
+eeGeneratePayloadLegacy_=function(){legacyCalls+=1;throw new Error("LEGACY_PATH_MUST_NOT_RUN");};
 eePutArtistCatalogue_=function(record){saved=record;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
 var record=eeDiscoverArtistCatalogue_({slug:"beat",canonicalName:"BEAT",associatedActs:["King Crimson"]},{id:"post-1"},true);
-JSON.stringify({status:record.status,fastCalls:fastCalls,legacyCalls:legacyCalls,category:record.catalogue.categories[0].category,item:record.catalogue.categories[0].items[0].stableId,staleAfter:saved.staleAfter||""});
+JSON.stringify({status:record.status,fastCalls:fastCalls,legacyCalls:legacyCalls,enrichmentCalls:enrichmentCalls,category:record.catalogue.categories[0].category,item:record.catalogue.categories[0].items[0].stableId,enrichment:record.enrichment.status,staleAfter:saved.staleAfter||""});
 ''')
         self.assertEqual(
-            '{"status":"RESOLVED","fastCalls":0,"legacyCalls":1,"category":"WATCH",'
-            '"item":"associated","staleAfter":""}',
+            '{"status":"RESOLVED","fastCalls":0,"legacyCalls":0,"enrichmentCalls":1,'
+            '"category":"WATCH","item":"associated","enrichment":"COMPLETE","staleAfter":""}',
             result,
         )
+
+    def test_incremental_enrichment_is_locked_to_catalogue_artist_not_whole_article(self):
+        result = self.run_apps_script(r'''
+var captured=null;
+eeArticleAnalysis_=function(){throw new Error("WHOLE_ARTICLE_ANALYSIS_MUST_NOT_RUN");};
+eeAppleSettings_=function(){return {storefront:"FR"};};
+eeSearchPlan_=function(analysis){captured=analysis;return [];};
+var existing={artistKey:"bowling-for-soup",canonicalName:"Bowling For Soup",appleArtistId:"111",catalogue:{categories:[],enrichment:{completedQueries:[]}}};
+var progress=eeIncrementalResolvedEnrichment_({slug:"bowling-for-soup",canonicalName:"Bowling For Soup"},{id:"post-1",title:"Bowling For Soup + Simple Plan"},existing);
+JSON.stringify({primary:captured.primaryArtists,nodes:captured.relationshipGraph.nodes.map(function(node){return node.name;}),artistIds:captured.existingAppleArtistIds,ready:progress.readyForFinalization});
+''')
+        self.assertEqual(
+            '{"primary":["Bowling For Soup"],"nodes":["Bowling For Soup"],"artistIds":["111"],"ready":true}',
+            result,
+        )
+
+    def test_catalogue_discovery_functions_do_not_call_whole_article_legacy_generator(self):
+        start = self.code.index("function eeDiscoverArtistCatalogue_(")
+        end = self.code.index("function eeNextStaleArtistIdentityRetryCandidate_", start)
+        self.assertNotIn("eeGeneratePayloadLegacy_", self.code[start:end])
+        start = self.code.index("function eeDiscoverArtistCatalogueReadOnly_(")
+        end = self.code.index("function eeHistoricalArtistCatalogueRecovery_", start)
+        self.assertNotIn("eeGeneratePayloadLegacy_", self.code[start:end])
 
     def test_resolved_enrichment_headroom_preserves_identity_and_partial_catalogue(self):
         result = self.run_apps_script(r'''
@@ -770,7 +795,7 @@ JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:re
 ''')
         self.assertEqual(
             '{"status":"RESOLVED","artistId":"42","confidence":"HIGH","item":"new-progress",'
-            '"enrichment":"FINALIZE_PENDING","error":"APPLE_SEARCH_HTTP_429","savedStatus":"RESOLVED"}',
+            '"enrichment":"COMPLETE","error":"","savedStatus":"RESOLVED"}',
             result,
         )
 
@@ -779,7 +804,8 @@ JSON.stringify({status:record.status,artistId:record.appleArtistId,confidence:re
 var saved=null,properties={},nextLevel="LOW",nextArtistId=null;
 eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
 eeGetArtistCatalogue_=function(){return {status:"UNRESOLVED"};};
-eeGeneratePayloadLegacy_=function(){return {identity:{level:nextLevel,artistId:nextArtistId},categories:[{category:"LISTEN",items:[{stableId:"wrong",creator:"Other Artist"}]}]};};
+eePrimaryArtistIdentityPayload_=function(){return {identity:{level:nextLevel,artistId:nextArtistId},categories:[{category:"LISTEN",items:[{stableId:"wrong",creator:"Other Artist"}]}],diagnostics:{}};};
+eeGeneratePayloadLegacy_=function(){throw new Error("LEGACY_PATH_MUST_NOT_RUN");};
 eePutArtistCatalogue_=function(record){saved=record;};
 PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return properties[key]||"";},setProperty:function(key,value){properties[key]=value;}};}};
 function attempt(level,artistId){nextLevel=level;nextArtistId=artistId;saved=null;var returned=eeDiscoverArtistCatalogue_({slug:"crimson-projekt",canonicalName:"Crimson ProjeKct"},{id:"post-1"},true);return {savedStatus:saved.status,savedConfidence:saved.identityConfidence,savedError:saved.error,savedCategories:saved.categories,returnedStatus:returned.status,returnedError:returned.error,catalogueCategories:returned.catalogue.categories};}
