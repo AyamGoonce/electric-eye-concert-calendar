@@ -5065,8 +5065,13 @@ function eeGeneratePayload_(post) {
           !eePayloadHasRecommendations_(record.catalogue)
         );
 
+    /*
+     * Ordinary article generation reuses a valid resolved catalogue.
+     * Resolver-version upgrades belong to the maintenance worker so a
+     * healthy READY article does not synchronously rediscover its artist.
+     */
     if(
-      (needsResolution||needsRevalidation||needsCatalogueRecovery) &&
+      (needsResolution||needsCatalogueRecovery) &&
       !catalogues.length
     ){
       if(typeof EE_APPLE_READ_ONLY_GENERATION!=="undefined"&&EE_APPLE_READ_ONLY_GENERATION)
