@@ -973,10 +973,13 @@ function eeFastArticleIdentity_(post, registry) {
       artist.ambiguityClass &&
       artist.ambiguityClass!=="distinctive";
 
+    // A reviewed-article association is direct editorial metadata.
+    // General articleIds are advisory only and must never establish identity:
+    // those associations can include artists merely connected through related
+    // articles, bills, or other shared relationships.
     var accepted=
       reviewedKnown ||
       independentStructuralTitle ||
-      (!structuralArtist&&articleKnown) ||
       (
         !structuralArtist &&
         !ambiguous &&
@@ -993,7 +996,6 @@ function eeFastArticleIdentity_(post, registry) {
       accepted:accepted,
       score:
         reviewedKnown?125:
-        articleKnown?120:
         independentStructuralTitle?115:
         exactLabel&&relationshipHits.length?110:
         exactLabel&&mentions>=2?105:
@@ -1004,8 +1006,6 @@ function eeFastArticleIdentity_(post, registry) {
         0,
       evidence:[
         reviewedKnown&&"reviewed article association",
-        articleKnown&&!structuralArtist&&
-          "existing artist-index article association",
         independentStructuralTitle&&
           "independent title-derived artist identity",
         exactLabel&&"exact Blogger artist label",
@@ -1338,7 +1338,7 @@ function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
 var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
-var EE_APPLE_IDENTITY_RESOLVER_VERSION=3;
+var EE_APPLE_IDENTITY_RESOLVER_VERSION=4;
 function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
 function eeArtistNeedsIdentityResolution_(record){
   if(!record)return true;
@@ -2067,7 +2067,58 @@ function eeReadyAuditExplicitPersonSubject_(title) {
   var text=String(title||""),interview=text.match(/(?:interview|conversation)\s+with\s+(.+?)(?:\s*-\s*video\s*interview|\s*\(video[^)]*\)|$)/i);if(interview)return String(interview[1]).trim();var match=text.match(/^\s*([A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’.-]+(?:\s+[A-ZÀ-ÖØ-Þ][A-Za-zÀ-ÖØ-öø-ÿ'’.-]+){1,2})\s+(?:at|with|is|was|drummer|guitarist|bassist|singer|of)\b/i);return match?String(match[1]).trim():"";
 }
 
-function eeCorrectedPayloadIdentity_(payload,registry) {var subject=(payload.subject||{}),post={id:String(payload.postId||""),url:String(payload.canonicalUrl||""),title:String(subject.title||""),labels:[],content:""},analysis=eeFastArticleIdentity_(post,registry),titleArtists=eeReadyAuditTitleSubjects_(payload,registry),person=eeReadyAuditExplicitPersonSubject_(post.title);if(person&&!/^\s*(a|the)\s+/i.test(person)){var personArtist=eeReadyAuditArtistByName_(person,registry);analysis.primaryArtists=[personArtist?personArtist.canonicalName:person];analysis.primaryArtistKeys=[personArtist?personArtist.slug:eeNorm_(person).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")];analysis.ambiguous=false;analysis.identityConfidence="HIGH";return analysis;}if(titleArtists.length){var explicit=/\b(?:co[- ]?headlin|joint tour|double bill)\b/i.test(post.title);if(explicit){analysis.primaryArtists=eeUnique_(titleArtists.map(function(artist){return artist.canonicalName;}));analysis.primaryArtistKeys=eeUnique_(titleArtists.map(function(artist){return artist.slug;}));analysis.ambiguous=false;analysis.identityConfidence="HIGH";}}return analysis;}
+function eeCorrectedPayloadIdentity_(payload,registry) {
+  var subject=(payload.subject||{}),
+      post={
+        id:String(payload.postId||""),
+        url:String(payload.canonicalUrl||""),
+        title:String(subject.title||""),
+        labels:[],
+        content:""
+      },
+      analysis=eeFastArticleIdentity_(post,registry),
+      titleArtists=eeReadyAuditTitleSubjects_(payload,registry),
+      person=eeReadyAuditExplicitPersonSubject_(post.title);
+
+  if(person&&!/^\s*(a|the)\s+/i.test(person)){
+    var personArtist=eeReadyAuditArtistByName_(person,registry);
+    analysis.primaryArtists=[personArtist?personArtist.canonicalName:person];
+    analysis.primaryArtistKeys=[
+      personArtist
+        ?personArtist.slug
+        :eeNorm_(person).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")
+    ];
+    analysis.ambiguous=false;
+    analysis.identityConfidence="HIGH";
+    return analysis;
+  }
+
+  // The READY audit already has an independent title parser. A single exact
+  // title subject is sufficient here and does not require articleIds.
+  if(titleArtists.length===1){
+    analysis.primaryArtists=[titleArtists[0].canonicalName];
+    analysis.primaryArtistKeys=[titleArtists[0].slug];
+    analysis.ambiguous=false;
+    analysis.identityConfidence="HIGH";
+    return analysis;
+  }
+
+  if(titleArtists.length){
+    var explicit=/\b(?:co[- ]?headlin|joint tour|double bill)\b/i.test(post.title);
+    if(explicit){
+      analysis.primaryArtists=eeUnique_(titleArtists.map(function(artist){
+        return artist.canonicalName;
+      }));
+      analysis.primaryArtistKeys=eeUnique_(titleArtists.map(function(artist){
+        return artist.slug;
+      }));
+      analysis.ambiguous=false;
+      analysis.identityConfidence="HIGH";
+    }
+  }
+
+  return analysis;
+}
 
 function eeReadyAuditRelationshipNames_(artists,registry) {
   var names=[],primary=eeUnique_((artists||[]).map(function(artist){return eeNorm_(artist.canonicalName);}).filter(Boolean));

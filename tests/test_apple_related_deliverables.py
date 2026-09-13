@@ -343,6 +343,22 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 ''')
         self.assertEqual('["Obituary"]', result)
 
+    def test_article_associations_cannot_define_primary_artist(self):
+        code = self.code
+        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=4;", code)
+        identity = code.split("function eeFastArticleIdentity_", 1)[1].split(
+            "function eeArticleType_", 1
+        )[0]
+
+        self.assertIn("reviewedKnown ||", identity)
+        self.assertNotIn("(!structuralArtist&&articleKnown)", identity)
+        self.assertNotIn("articleKnown?120:", identity)
+        self.assertNotIn(
+            "existing artist-index article association",
+            identity,
+        )
+
+
     def test_exact_title_artist_outranks_shared_article_associations(self):
         self.assertIn(
             "if(titleMatches.length===1)matches=titleMatches;",
@@ -408,7 +424,7 @@ JSON.stringify({
 ''')
         self.assertEqual(
             '{"ordinary":[],"obituaryMetadata":["frank-beard"],"obituaryBand":["obituary"],"ambiguousTitle":[],"sparks":["sparks"],"beat":["beat"],'
-            '"down":["down"],"possessed":["possessed"],"known":["the-cure"],'
+            '"down":["down"],"possessed":["possessed"],"known":[],'
             '"multi":["anthrax","ga-20"],"distinct":["shadow-of-intent","monty-alexander","killer-kin","hackett-rothery"],"concert":["kris-barras-band"],'
             '"obituary":["frank-beard"],"festival":[],"provisional":["new-artist"]}',
             result,
