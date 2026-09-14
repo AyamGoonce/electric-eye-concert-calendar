@@ -876,9 +876,10 @@ function eeExactEntityInText_(text,name) {return eeContains_(text,name);}
 function eeTitleArtistCandidate_(title) {
   title=String(title||"");
   var concert=title.match(/^(.+?)\s+@\s+/);
-  var action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|back|perform|performs)\b/i);
+  var action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|back|perform|performs|bring|brings|headline|headlines)\b/i);
+  var infinitive=title.match(/^(.+?)\s+to\s+(?:celebrate|perform|play|bring|return|release|announce|headline|tour|mark)\b/i);
   var album=title.match(/^album review\s*(?::|[–-])\s*(.+?)(?:\s+[–-]\s+|$)/i);
-  return String((concert||action||album||[])[1]||"").trim();
+  return String((concert||action||infinitive||album||[])[1]||"").trim();
 }
 
 function eeIdentityNonArtist_(value,structuralLabels) {
@@ -912,7 +913,12 @@ function eeFastArticleIdentity_(post, registry) {
         .replace(/<[^>]+>/g," ")
         .replace(/&nbsp;|&#160;/gi," "),
       normalizedBody=eeNorm_(body),
-      matches=[];
+      matches=[],
+      playlistArticle=
+        /\bplaylist\b/i.test(title) ||
+        labels.some(function(value){
+          return /\bplaylist\b/i.test(String(value||""));
+        });
 
   function evidenceFor(artist){
     var names=eeUnique_(
@@ -1036,18 +1042,121 @@ function eeFastArticleIdentity_(post, registry) {
       }
     });
   }else{
-    (registry.artists||[]).forEach(function(artist){
-      var result=evidenceFor(artist);
+    if(playlistArticle){
+      var playlistHits=[];
 
-      if(result.accepted){
+      (registry.artists||[]).forEach(function(artist){
+        var names=eeUnique_(
+          [artist.canonicalName]
+            .concat(artist.aliases||[])
+            .concat(artist.alternateSpellings||[])
+        );
+
+        // Generic/reused names still require the normal ambiguity resolver.
+        if(
+          artist.ambiguityClass &&
+          artist.ambiguityClass!=="distinctive"
+        )return;
+
+        var firstIndex=-1;
+
+        names.forEach(function(name){
+          if(!eeExactEntityInText_(body,name))return;
+
+          var index=normalizedBody.indexOf(eeNorm_(name));
+          if(index<0)index=999999999;
+
+          if(firstIndex<0||index<firstIndex){
+            firstIndex=index;
+          }
+        });
+
+        if(firstIndex>=0){
+          playlistHits.push({
+            artist:artist,
+            index:firstIndex
+          });
+        }
+      });
+
+      playlistHits.sort(function(a,b){
+        return a.index-b.index ||
+          String(a.artist.canonicalName||"").localeCompare(
+            String(b.artist.canonicalName||"")
+          );
+      });
+
+      // Multi-artist payloads are intentional for playlists.
+      // Bound fan-out so one huge playlist cannot explode catalogue work.
+      playlistHits.slice(0,12).forEach(function(hit){
         matches.push({
-          artist:artist,
-          score:result.score,
-          evidence:result.evidence,
-          ambiguous:result.ambiguous
+          artist:hit.artist,
+          score:112,
+          evidence:["playlist article-local artist"],
+          ambiguous:false
+        });
+      });
+    }else{
+      (registry.artists||[]).forEach(function(artist){
+        var result=evidenceFor(artist);
+
+        if(result.accepted){
+          matches.push({
+            artist:artist,
+            score:result.score,
+            evidence:result.evidence,
+            ambiguous:result.ambiguous
+          });
+        }
+      });
+    }
+  }
+
+  // A clearly named artist must be allowed into discovery even when it is
+  // not yet present in the embedded registry. This creates an UNRESOLVED
+  // artist candidate instead of immediately falling back to generic Rock.
+  //
+  // Known ambiguous names (e.g. Wargasm) do NOT use this shortcut.
+  if(!override&&!playlistArticle&&!matches.length){
+    var unresolvedCandidate=String(
+          eeTitleArtistCandidate_(title)||""
+        ).trim(),
+        normalizedCandidate=eeNorm_(unresolvedCandidate),
+        knownCandidate=(registry.artists||[]).some(function(artist){
+          return eeUnique_(
+            [artist.canonicalName]
+              .concat(artist.aliases||[])
+              .concat(artist.alternateSpellings||[])
+          ).some(function(name){
+            return eeNorm_(name)===normalizedCandidate;
+          });
+        });
+
+    if(
+      unresolvedCandidate &&
+      normalizedCandidate &&
+      !knownCandidate &&
+      !eeIdentityNonArtist_(unresolvedCandidate,structuralLabels)
+    ){
+      var unresolvedKey=normalizedCandidate
+        .replace(/[^a-z0-9]+/g,"-")
+        .replace(/^-|-$/g,"");
+
+      if(unresolvedKey){
+        matches.push({
+          artist:{
+            canonicalName:unresolvedCandidate,
+            slug:unresolvedKey,
+            aliases:[],
+            alternateSpellings:[],
+            ambiguityClass:"distinctive"
+          },
+          score:114,
+          evidence:["unresolved title-derived artist identity"],
+          ambiguous:false
         });
       }
-    });
+    }
   }
 
   /*
@@ -1061,7 +1170,7 @@ function eeFastArticleIdentity_(post, registry) {
   // A single exact title-derived artist outranks shared article associations.
   // This prevents openers/bill-mates attached to the same article from
   // becoming primary subjects.
-  if(!override){
+  if(!override&&!playlistArticle){
     var authoritativeTitle=eeNorm_(eeTitleArtistCandidate_(title));
     if(authoritativeTitle){
       var titleMatches=matches.filter(function(match){
@@ -1338,7 +1447,7 @@ function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
 var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
-var EE_APPLE_IDENTITY_RESOLVER_VERSION=4;
+var EE_APPLE_IDENTITY_RESOLVER_VERSION=5;
 function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
 function eeArtistNeedsIdentityResolution_(record){
   if(!record)return true;
@@ -1979,21 +2088,32 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
     }
   });
 
-  var fallback={
-    items:[],
-    labels:[],
-    mode:""
-  };
+  var hasNamedSubject=
+        (analysis.primaryArtistKeys||[]).length>0 ||
+        (analysis.primaryArtists||[]).length>0,
+      fallback={
+        items:[],
+        labels:[],
+        mode:""
+      };
 
-  if(!categories.length){
+  if(!categories.length&&!hasNamedSubject){
     fallback=eeGenreFallbackListenGroup_(post);
   }
 
-  if(!categories.length&&!fallback.items.length){
+  if(
+    !categories.length &&
+    !hasNamedSubject &&
+    !fallback.items.length
+  ){
     fallback=eeContentGenreFallbackListenGroup_(post);
   }
 
-  if(!categories.length&&!fallback.items.length){
+  if(
+    !categories.length &&
+    !hasNamedSubject &&
+    !fallback.items.length
+  ){
     fallback=eeSiteFallbackListenGroup_(post);
   }
 
@@ -2006,7 +2126,11 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
 
   var recommendationMode=
     fallback.mode||
-    "ARTIST_RELATIONSHIP";
+    (
+      hasNamedSubject&&!categories.length
+        ?"NAMED_SUBJECT_PENDING"
+        :"ARTIST_RELATIONSHIP"
+    );
 
   return {
     schemaVersion:1,
@@ -2041,7 +2165,11 @@ function eeAssemblePayloadFromCatalogues_(post,analysis,catalogues) {
       emptyClassification:
         categories.length
           ?null
-          :"EMPTY_FALLBACK_INVARIANT_BREACH"
+          :(
+            hasNamedSubject
+              ?"EMPTY_NAMED_SUBJECT_PENDING"
+              :"EMPTY_FALLBACK_INVARIANT_BREACH"
+          )
     }
   };
 }

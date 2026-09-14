@@ -343,6 +343,36 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 ''')
         self.assertEqual('["Obituary"]', result)
 
+    def test_playlist_identity_supports_multiple_article_local_artists(self):
+        code = self.code
+        self.assertIn("var playlistHits=[];", code)
+        self.assertIn("playlistHits.slice(0,12)", code)
+        self.assertIn(
+            'evidence:["playlist article-local artist"]',
+            code,
+        )
+        self.assertIn("if(!override&&!playlistArticle)", code)
+
+    def test_unknown_explicit_title_artist_enters_resolution_queue(self):
+        code = self.code
+        self.assertIn("|bring|brings|headline|headlines)", code)
+        self.assertIn("var unresolvedCandidate=", code)
+        self.assertIn("!knownCandidate", code)
+        self.assertIn(
+            'evidence:["unresolved title-derived artist identity"]',
+            code,
+        )
+
+    def test_named_artist_subject_suppresses_generic_rock_fallback(self):
+        code = self.code
+        self.assertIn("var hasNamedSubject=", code)
+        self.assertIn(
+            "if(!categories.length&&!hasNamedSubject)",
+            code,
+        )
+        self.assertIn('"NAMED_SUBJECT_PENDING"', code)
+        self.assertIn('"EMPTY_NAMED_SUBJECT_PENDING"', code)
+
     def test_identity_resolver_version_rewinds_existing_articles(self):
         code = self.code
         self.assertIn(
@@ -364,7 +394,7 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 
     def test_article_associations_cannot_define_primary_artist(self):
         code = self.code
-        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=4;", code)
+        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=5;", code)
         identity = code.split("function eeFastArticleIdentity_", 1)[1].split(
             "function eeArticleType_", 1
         )[0]
