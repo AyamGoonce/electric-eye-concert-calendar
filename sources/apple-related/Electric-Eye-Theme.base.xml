@@ -20931,7 +20931,146 @@ if (!placedNearPlayer) {
     });
   }
 
+  function emptyStaticPayload(){
+    return {
+      schemaVersion:1,
+      postId:String(context.getAttribute("data-ee-post-id")||""),
+      categories:[]
+    };
+  }
+
+  function staticPayloadPage(payload,category,offset){
+    payload=payload||emptyStaticPayload();
+    category=String(category||"").toUpperCase();
+
+    var result={},groups=[];
+
+    [
+      "schemaVersion",
+      "generationVersion",
+      "postId",
+      "title",
+      "url",
+      "storefront",
+      "generatedAt",
+      "subject",
+      "identity"
+    ].forEach(function(key){
+      if(Object.prototype.hasOwnProperty.call(payload,key)){
+        result[key]=payload[key];
+      }
+    });
+
+    (payload.categories||[]).forEach(function(group){
+      var name=String(group.category||"").toUpperCase();
+
+      if(
+        ["LISTEN","WATCH","READ"].indexOf(name)===-1 ||
+        (category&&name!==category)
+      )return;
+
+      var all=Array.isArray(group.items)?group.items.slice():[],
+          start=category?Math.max(0,Number(offset)||0):0,
+          page=category
+            ?all.slice(start,start+CONFIG.revealStep)
+            :all;
+
+      if(!page.length&&!category)return;
+
+      groups.push({
+        category:name,
+        items:page,
+        total:all.length,
+        offset:start,
+        limit:category?CONFIG.revealStep:all.length,
+        hasMore:category?start+page.length<all.length:false,
+        nextOffset:category
+          ?Math.min(all.length,start+page.length)
+          :all.length
+      });
+    });
+
+    result.categories=groups;
+    return result;
+  }
+
+  function loadStaticPayload(done){
+    var postId=String(context.getAttribute("data-ee-post-id")||""),
+        script=document.createElement("script"),
+        settled=false,
+        timer=null;
+
+    window.__EE_APPLE_STATIC_READY__=false;
+    window.__EE_APPLE_STATIC_PAYLOAD__=null;
+
+    function finish(payload){
+      if(settled)return;
+      settled=true;
+
+      window.clearTimeout(timer);
+
+      window.__EE_APPLE_STATIC_PAYLOAD__=
+        payload&&Array.isArray(payload.categories)
+          ?payload
+          :emptyStaticPayload();
+
+      window.__EE_APPLE_STATIC_READY__=true;
+
+      try{delete window.__eeAppleStaticReceive;}catch(error){
+        window.__eeAppleStaticReceive=undefined;
+      }
+
+      if(script.parentNode)script.parentNode.removeChild(script);
+      done();
+    }
+
+    window.__eeAppleStaticReceive=function(payload){
+      finish(payload);
+    };
+
+    script.async=true;
+
+    script.onerror=function(){
+      finish(emptyStaticPayload());
+    };
+
+    script.onload=function(){
+      if(!settled){
+        finish(
+          window.__EE_APPLE_STATIC_PAYLOAD__||
+          emptyStaticPayload()
+        );
+      }
+    };
+
+    /*
+     * 15-minute URL bucket prevents stale CDN/browser copies without
+     * creating a unique URL on every visit.
+     */
+    script.src=
+      "https://archive.electriceyerock.com/proof/apple-payloads/"+
+      encodeURIComponent(postId)+
+      ".js?v="+
+      String(Math.floor(Date.now()/900000));
+
+    timer=window.setTimeout(function(){
+      finish(emptyStaticPayload());
+    },5000);
+
+    (document.head||document.documentElement).appendChild(script);
+  }
+
   function requestPage(category,offset){
+    if(window.__EE_APPLE_STATIC_READY__){
+      return Promise.resolve(
+        staticPayloadPage(
+          window.__EE_APPLE_STATIC_PAYLOAD__,
+          category,
+          offset
+        )
+      );
+    }
+
     var values={action:"payload",postId:context.getAttribute("data-ee-post-id"),offset:String(offset||0),limit:String(CONFIG.revealStep)};
     if(category)values.category=category;
     var params=new URLSearchParams(values);
@@ -20960,7 +21099,9 @@ if (!placedNearPlayer) {
     }
     postBody=document.querySelector(".is-post .post-body");
     if(!CONFIG.enabled||!context||!postBody||hasExistingSection())return;
-    requestPage("",0).then(function(payload){render(payload);}).catch(function(){});
+    loadStaticPayload(function(){
+      requestPage("",0).then(function(payload){render(payload);}).catch(function(){});
+    });
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",start,{once:true});else start();
 }());

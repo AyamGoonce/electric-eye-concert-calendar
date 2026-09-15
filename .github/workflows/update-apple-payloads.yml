@@ -1,0 +1,51 @@
+name: Update Apple Static Payloads
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: electric-eye-apple-static-payloads
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out production branch
+        uses: actions/checkout@v4
+        with:
+          ref: supersonic-scraper
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Export READY Apple payloads
+        run: python scripts/export_apple_payloads.py
+
+      - name: Publish changed static payloads
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- docs/proof/apple-payloads; then
+            echo "No Apple payload changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A docs/proof/apple-payloads
+          git commit -m "Refresh static Apple payloads"
+
+          git pull --rebase origin supersonic-scraper
+          git push origin HEAD:supersonic-scraper

@@ -202,6 +202,84 @@ function doGet(event) {
       }
     }
   }
+
+  /*
+   * Background static-export feed.
+   * This is consumed by GitHub Actions, never by article visitors.
+   * It exports stored READY cells in bounded row batches.
+   */
+  if(params.action==="payload-export"){
+    var exportSheet=eePayloadSheet_(),
+        exportLastRow=exportSheet.getLastRow(),
+        parsedStart=Number(params.startRow),
+        parsedExportLimit=Number(params.limit),
+        exportStart=
+          Number.isFinite(parsedStart)&&parsedStart>=2
+            ?Math.floor(parsedStart)
+            :2,
+        exportLimit=
+          Number.isFinite(parsedExportLimit)&&parsedExportLimit>0
+            ?Math.min(100,Math.floor(parsedExportLimit))
+            :100,
+        exportCount=
+          exportLastRow>=exportStart
+            ?Math.min(exportLimit,exportLastRow-exportStart+1)
+            :0,
+        exportRecords=[];
+
+    if(exportCount>0){
+      var exportValues=
+        exportSheet
+          .getRange(exportStart,1,exportCount,8)
+          .getValues();
+
+      exportValues.forEach(function(row,index){
+        var postIdValue=String(row[0]||""),
+            storedValue=String(row[4]||""),
+            statusValue=String(row[5]||"");
+
+        if(
+          !/^[0-9]+$/.test(postIdValue) ||
+          statusValue!=="READY" ||
+          !storedValue
+        )return;
+
+        var generatedValue=row[2];
+
+        if(generatedValue instanceof Date){
+          generatedValue=generatedValue.toISOString();
+        }else{
+          generatedValue=String(generatedValue||"");
+        }
+
+        exportRecords.push({
+          postId:postIdValue,
+          rowNumber:exportStart+index,
+          generatedAt:generatedValue,
+          payloadCell:storedValue
+        });
+      });
+    }
+
+    var exportEnd=
+          exportCount>0
+            ?exportStart+exportCount-1
+            :exportStart-1,
+        exportComplete=
+          exportEnd>=exportLastRow ||
+          exportLastRow<2;
+
+    output={
+      schemaVersion:1,
+      kind:"APPLE_STATIC_PAYLOAD_EXPORT",
+      startRow:exportStart,
+      endRow:exportEnd,
+      nextRow:exportComplete?0:exportEnd+1,
+      complete:exportComplete,
+      records:exportRecords
+    };
+  }
+
   var body=JSON.stringify(output);
   if(callback&&/^[A-Za-z_$][0-9A-Za-z_$]{0,80}$/.test(callback))return ContentService.createTextOutput(callback+"("+body+");").setMimeType(ContentService.MimeType.JAVASCRIPT);
   return ContentService.createTextOutput(body).setMimeType(ContentService.MimeType.JSON);
