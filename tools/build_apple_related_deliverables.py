@@ -209,7 +209,7 @@ function doGet(event) {
    * It exports stored READY cells in bounded row batches.
    */
   if(params.action==="payload-export"){
-    var exportSheet=eePayloadSheet_(),
+    var exportSheet=eeReadOnlySheet_("Apple Payloads"),
         exportLastRow=exportSheet.getLastRow(),
         parsedStart=Number(params.startRow),
         parsedExportLimit=Number(params.limit),
