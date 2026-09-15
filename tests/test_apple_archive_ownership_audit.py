@@ -1,4 +1,5 @@
 import importlib.util
+import gzip
 import json
 import tempfile
 import unittest
@@ -178,6 +179,60 @@ class AppleArchiveOwnershipAuditTests(unittest.TestCase):
             self.assertIn("1", static)
             self.assertEqual(before_snapshot, snapshot.read_bytes())
             self.assertEqual(before_static, static_file.read_bytes())
+
+    def test_snapshot_loader_accepts_gzip_and_ignores_optional_header_rows(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            snapshot = Path(temporary) / "snapshot.json.gz"
+            value = {
+                "payloadRows": [
+                    ["postId", "canonicalUrl", "generatedAt", "storefront", "payloadJson", "status", "error"],
+                    ["1", "/1", "2026", "FR", json.dumps({"postId": "1", "categories": []}), "READY", ""],
+                ],
+                "artistRows": [
+                    ["artistKey", "canonicalName", "registrySchemaVersion", "catalogueSchemaVersion", "appleArtistId", "musicBrainzId", "identityConfidence", "status", "catalogueJson"],
+                    ["artist", "Artist", 1, 1, "123", "", "HIGH", "RESOLVED", json.dumps({"categories": []})],
+                ],
+            }
+            with gzip.open(snapshot, "wt", encoding="utf-8") as target:
+                json.dump(value, target)
+
+            before = snapshot.read_bytes()
+            payload_rows, artist_rows = audit_module.load_backend_snapshot(snapshot)
+
+            self.assertEqual(["1"], [row["postId"] for row in payload_rows])
+            self.assertEqual(["artist"], [row["artistKey"] for row in artist_rows])
+            self.assertEqual(before, snapshot.read_bytes())
+
+    def test_exact_artist_label_corroborated_by_title_is_a_strong_subject_signal(self):
+        post = {
+            "postId": "1",
+            "title": "Doom Metal Legends The Obsessed in Paris in the Fall!",
+            "labels": ["The Obsessed", "Paris"],
+        }
+
+        detected = audit_module.detect_subject(post, self.registry)
+
+        self.assertEqual("ORDINARY_SINGLE_SUBJECT", detected["taxonomy"])
+        self.assertEqual("The Obsessed", detected["name"])
+
+    def test_v2_single_source_artist_corroborated_by_title_beats_context_label(self):
+        post = {
+            "postId": "1",
+            "title": "Doom Metal Legends The Obsessed in Paris in the Fall!",
+            "labels": ["Paris"],
+        }
+        current = payload(
+            "1", post["title"], ["The Obsessed"], "39276087",
+            [item("x", "The Obsessed", "39276087")], 2, ["the-obsessed"],
+        )
+        result = audit_module.build_audit(
+            [post], [{"postId": "1", "status": "READY", "payload": current}], [],
+            self.registry, {"1": current},
+        )
+
+        record = result["records"][0]
+        self.assertEqual("The Obsessed", record["detectedAuthoritativeSubject"])
+        self.assertIn("HEALTHY_V2", record["flags"])
 
 
 if __name__ == "__main__":

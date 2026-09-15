@@ -165,6 +165,8 @@ def decode_payload(value: Any) -> dict[str, Any] | None:
 
 def normalize_payload_row(row: Any, index: int) -> dict[str, Any] | None:
     if isinstance(row, list):
+        if row and str(row[0]).strip() == "postId":
+            return None
         row = {
             "postId": row[0] if len(row) > 0 else "",
             "url": row[1] if len(row) > 1 else "",
@@ -196,6 +198,8 @@ def normalize_payload_row(row: Any, index: int) -> dict[str, Any] | None:
 
 def normalize_artist_row(row: Any, index: int) -> dict[str, Any] | None:
     if isinstance(row, list):
+        if row and str(row[0]).strip() == "artistKey":
+            return None
         row = {
             "artistKey": row[0] if len(row) > 0 else "",
             "canonicalName": row[1] if len(row) > 1 else "",
@@ -228,7 +232,11 @@ def normalize_artist_row(row: Any, index: int) -> dict[str, Any] | None:
 
 
 def load_backend_snapshot(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    value = json.loads(path.read_text(encoding="utf-8"))
+    if path.suffix == ".gz":
+        with gzip.open(path, "rt", encoding="utf-8") as source:
+            value = json.load(source)
+    else:
+        value = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(value, dict):
         raise ValueError("Backend snapshot must be a JSON object")
     payload_rows = [
@@ -353,9 +361,19 @@ def detect_subject(post: dict[str, Any], registry: dict[str, Any]) -> dict[str, 
         return {"taxonomy": "PLAYLIST_MULTI_ARTIST", "name": None, "key": None, "evidence": ["playlist/roundup title or label"]}
     candidate = title_candidate(title, kind)
     structural = {norm(value) for value in registry.get("structuralLabels") or []}
+    by_key, by_name = registry_maps(registry)
+    if not candidate:
+        title_text = " " + norm(title) + " "
+        label_names = {norm(value) for value in labels}
+        corroborated = [
+            name
+            for name in by_name
+            if name in label_names and (" " + name + " ") in title_text
+        ]
+        if len(corroborated) == 1 and len(by_name[corroborated[0]]) == 1:
+            candidate = corroborated[0]
     if not candidate or norm(candidate) in structural:
         return {"taxonomy": "AMBIGUOUS_NO_CLEAR_TITLE", "name": None, "key": None, "evidence": []}
-    by_key, by_name = registry_maps(registry)
     matches = by_name.get(norm(candidate)) or []
     if len(matches) == 1:
         artist = matches[0]
@@ -539,6 +557,20 @@ def build_audit(
         current_keys = unique(diagnostics.get("artistKeys") or [])
         source_keys = unique(diagnostics.get("sourceArtistKeys") or [])
         ownership = diagnostics.get("ownershipVersion")
+        if (
+            exists
+            and int(ownership or 0) == 2
+            and len(current_primary) == 1
+            and len(source_keys) == 1
+            and (" " + norm(current_primary[0]) + " ") in (" " + norm(post.get("title")) + " ")
+        ):
+            detected = {
+                "taxonomy": "ORDINARY_SINGLE_SUBJECT",
+                "name": current_primary[0],
+                "key": source_keys[0],
+                "evidence": ["ownership-v2 single source artist corroborated by exact title text"],
+            }
+            taxonomy = detected["taxonomy"]
         backend_ids = payload_apple_ids(backend)
         key = detected.get("key")
         catalogue_lookup_key = (current_keys or [key or ""])[0]
