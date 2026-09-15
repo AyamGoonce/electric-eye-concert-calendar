@@ -2473,7 +2473,7 @@ function eeFastArticleIdentity_(post, registry) {
   // artist candidate instead of immediately falling back to generic Rock.
   //
   // Known ambiguous names (e.g. Wargasm) do NOT use this shortcut.
-  if(!override&&!playlistArticle&&!matches.length){
+  if(!override&&!playlistArticle){
     var unresolvedCandidate=String(
           eeTitleArtistCandidate_(title)||""
         ).trim(),
@@ -2486,12 +2486,28 @@ function eeFastArticleIdentity_(post, registry) {
           ).some(function(name){
             return eeNorm_(name)===normalizedCandidate;
           });
-        });
+        }),
+        knownCompositeCandidate=
+          /\s(?:and|&|\+)\s/i.test(unresolvedCandidate) &&
+          matches.filter(function(match){
+            var artist=(match||{}).artist||{};
+            return eeUnique_(
+              [artist.canonicalName]
+                .concat(artist.aliases||[])
+                .concat(artist.alternateSpellings||[])
+            ).some(function(name){
+              return eeExactEntityInText_(
+                unresolvedCandidate,
+                name
+              );
+            });
+          }).length>=2;
 
     if(
       unresolvedCandidate &&
       normalizedCandidate &&
       !knownCandidate &&
+      !knownCompositeCandidate &&
       !eeIdentityNonArtist_(unresolvedCandidate,structuralLabels)
     ){
       var unresolvedKey=normalizedCandidate
