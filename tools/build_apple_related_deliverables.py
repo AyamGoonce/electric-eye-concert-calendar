@@ -41,16 +41,65 @@ function eeCanonicalPayloadRowFromValues_(values,postId) {
 function eeGetPayload_(postId) {
   postId=String(postId||"");
   if(!/^[0-9]+$/.test(postId))return null;
+
+  var cache=null,
+      cacheKey="ee-payload-full-v1:"+postId,
+      cached=null;
+
+  try{
+    if(typeof CacheService!=="undefined"){
+      cache=CacheService.getScriptCache();
+      cached=cache.get(cacheKey);
+    }
+  }catch(cacheReadError){
+    cache=null;
+    cached=null;
+  }
+
+  if(cached){
+    try{
+      var cachedPayload=JSON.parse(cached);
+      if(eePayloadHasRecommendations_(cachedPayload)){
+        return cachedPayload;
+      }
+    }catch(cacheParseError){}
+  }
+
   var sheet=eePayloadSheet_(),lastRow=sheet.getLastRow();
   if(lastRow<2)return null;
-  var matches=sheet.getRange(2,1,lastRow-1,1).createTextFinder(postId).matchEntireCell(true).findAll(),best=null;
+
+  var matches=sheet.getRange(2,1,lastRow-1,1)
+        .createTextFinder(postId)
+        .matchEntireCell(true)
+        .findAll(),
+      best=null;
+
   (matches||[]).forEach(function(match){
-    var rowNumber=match.getRow(),row=sheet.getRange(rowNumber,1,1,8).getValues()[0];
+    var rowNumber=match.getRow(),
+        row=sheet.getRange(rowNumber,1,1,8).getValues()[0];
+
     if(String(row[0])!==postId)return;
+
     var candidate=eePayloadRowRecord_(row,rowNumber);
     if(eePayloadRowPreferred_(candidate,best))best=candidate;
   });
-  return best&&best.validReady?best.payload:null;
+
+  var payload=best&&best.validReady?best.payload:null;
+
+  if(payload&&cache){
+    try{
+      var text=JSON.stringify(payload);
+      if(text.length<90000){
+        cache.put(
+          cacheKey,
+          text,
+          EE_APPLE_CONFIG.payloadCacheSeconds
+        );
+      }
+    }catch(cacheWriteError){}
+  }
+
+  return payload;
 }
 
 function eePublicPayloadPage_(payload,category,offset,limit) {
@@ -73,10 +122,57 @@ function eePublicPayloadPage_(payload,category,offset,limit) {
 }
 
 function eeClearPublicPayloadCache_(postId,previousPayload,nextPayload) {
-  var cache=CacheService.getScriptCache(),lengths={LISTEN:0,WATCH:0,READ:0},keys=["ee-public-v3:"+[String(postId),"ALL","0","4"].join(":")];
-  [previousPayload,nextPayload].forEach(function(payload){((payload||{}).categories||[]).forEach(function(group){var category=String(group.category||"").toUpperCase();if(!Object.prototype.hasOwnProperty.call(lengths,category))return;lengths[category]=Math.max(lengths[category],Array.isArray(group.items)?group.items.length:0);});});
-  Object.keys(lengths).forEach(function(category){for(var offset=0;offset<lengths[category];offset+=4)keys.push("ee-public-v3:"+[String(postId),category,String(offset),"4"].join(":"));});
-  if(cache.removeAll){for(var start=0;start<keys.length;start+=100)cache.removeAll(keys.slice(start,start+100));}else keys.forEach(function(key){cache.remove(key);});
+  var cache=CacheService.getScriptCache(),
+      lengths={LISTEN:0,WATCH:0,READ:0},
+      keys=["ee-public-v3:"+[String(postId),"ALL","0","4"].join(":")];
+
+  [previousPayload,nextPayload].forEach(function(payload){
+    ((payload||{}).categories||[]).forEach(function(group){
+      var category=String(group.category||"").toUpperCase();
+
+      if(!Object.prototype.hasOwnProperty.call(lengths,category))return;
+
+      lengths[category]=Math.max(
+        lengths[category],
+        Array.isArray(group.items)?group.items.length:0
+      );
+    });
+  });
+
+  Object.keys(lengths).forEach(function(category){
+    for(var offset=0;offset<lengths[category];offset+=4){
+      keys.push(
+        "ee-public-v3:"+
+        [String(postId),category,String(offset),"4"].join(":")
+      );
+    }
+  });
+
+  if(cache.removeAll){
+    for(var start=0;start<keys.length;start+=100){
+      cache.removeAll(keys.slice(start,start+100));
+    }
+  }else{
+    keys.forEach(function(key){cache.remove(key);});
+  }
+
+  var fullKey="ee-payload-full-v1:"+String(postId);
+
+  try{cache.remove(fullKey);}catch(fullCacheRemoveError){}
+
+  if(eePayloadHasRecommendations_(nextPayload)){
+    try{
+      var fullText=JSON.stringify(nextPayload);
+
+      if(fullText.length<90000){
+        cache.put(
+          fullKey,
+          fullText,
+          EE_APPLE_CONFIG.payloadCacheSeconds
+        );
+      }
+    }catch(fullCacheWriteError){}
+  }
 }
 '''
 
