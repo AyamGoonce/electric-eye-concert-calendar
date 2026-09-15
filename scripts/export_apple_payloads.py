@@ -228,7 +228,7 @@ def main() -> int:
         start_row = next_row
 
     proof_dir = find_proof_dir()
-    output_dir = proof_dir / "apple-payloads"
+    output_dir = proof_dir
     temp_dir = proof_dir / ".apple-payloads.tmp"
 
     if temp_dir.exists():
@@ -253,7 +253,7 @@ def main() -> int:
             + ");\n"
         )
 
-        (temp_dir / f"{post_id}.js").write_text(
+        (temp_dir / f"apple-payload-{post_id}.js").write_text(
             javascript,
             encoding="utf-8",
         )
@@ -267,7 +267,7 @@ def main() -> int:
         "sourcePages": pages,
     }
 
-    (temp_dir / "manifest.json").write_text(
+    (temp_dir / "apple-payload-manifest.json").write_text(
         json.dumps(
             manifest,
             ensure_ascii=False,
@@ -277,10 +277,18 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    if output_dir.exists():
-        shutil.rmtree(output_dir)
+    for stale in proof_dir.glob("apple-payload-*.js"):
+        stale.unlink()
 
-    temp_dir.rename(output_dir)
+    manifest_path = proof_dir / "apple-payload-manifest.json"
+
+    if manifest_path.exists():
+        manifest_path.unlink()
+
+    for generated in temp_dir.iterdir():
+        generated.replace(proof_dir / generated.name)
+
+    shutil.rmtree(temp_dir)
 
     print(
         json.dumps(

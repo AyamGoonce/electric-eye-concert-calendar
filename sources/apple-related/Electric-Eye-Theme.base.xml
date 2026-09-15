@@ -21048,7 +21048,7 @@ if (!placedNearPlayer) {
      * creating a unique URL on every visit.
      */
     script.src=
-      "https://archive.electriceyerock.com/proof/apple-payloads/"+
+      "https://archive.electriceyerock.com/proof/apple-payload-"+
       encodeURIComponent(postId)+
       ".js?v="+
       String(Math.floor(Date.now()/900000));

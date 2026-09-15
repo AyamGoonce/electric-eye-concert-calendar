@@ -36,7 +36,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet -- output/automation/apple-payloads; then
+          if git diff --quiet -- 'output/automation/apple-payload-*.js' 'output/automation/apple-payload-manifest.json'; then
             echo "No Apple payload changes."
             exit 0
           fi
@@ -44,7 +44,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add -A output/automation/apple-payloads
+          git add -A -- 'output/automation/apple-payload-*.js' 'output/automation/apple-payload-manifest.json'
           git commit -m "Refresh static Apple payloads"
 
           git pull --rebase origin supersonic-scraper
