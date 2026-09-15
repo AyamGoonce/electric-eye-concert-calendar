@@ -4184,7 +4184,132 @@ function eeAuditContaminatedReadyPayloads() {
   var findings=[],existingById={},counts={totalReadyScanned:decoded.length,CLEAN:0,CONTAMINATED:0,ENRICHMENT_CANDIDATE:0,AMBIGUOUS:0,automaticRepairSafe:0,duplicateReadyPosts:Object.keys(duplicatePosts).length,structuralContamination:0,appleIdContradictions:0,creatorMismatches:0,lexicalCollisions:0};decoded.forEach(function(payload){var key=String(payload.postId||""),finding=eeReadyAuditFinding_(payload,registry,shared,artistStates,{duplicateCount:duplicateCounts[key]||1});existingById[key]=payload;counts[finding.classification]+=1;if(finding.automaticRepairSafe){counts.automaticRepairSafe+=1;if(!EE_APPLE_AUDIT_SKIP_PREVIEW)finding.replacementPreview=eeReadyAuditReplacementPreview_(finding,payload,registry);}counts.creatorMismatches+=finding.conflictingCreators.length;finding.reasons.forEach(function(reason){if(reason.indexOf("STRUCTURAL_")===0)counts.structuralContamination+=1;if(reason.indexOf("APPLE_")===0||reason.indexOf("SHEEPDOGS_")===0)counts.appleIdContradictions+=1;if(reason.indexOf("LEXICAL_")===0)counts.lexicalCollisions+=1;});if(finding.classification!=="CLEAN")findings.push(finding);});var result={status:"OK",dryRun:true,counts:counts,repairSafeRows:findings.filter(function(value){return value.automaticRepairSafe;}),excludedFromAutoRepair:findings.filter(function(value){return value.classification==="CONTAMINATED"&&!value.automaticRepairSafe;}).map(function(value){return {postId:value.postId,title:value.title,canonicalUrl:value.canonicalUrl,safetyBlocks:value.safetyBlocks,reasons:value.reasons,categoryReasons:value.categoryReasons};}),findings:findings};if(!EE_APPLE_AUDIT_SKIP_PREVIEW)console.log(JSON.stringify(result));return result;
 }
 
-function eeReadyQualityIssues_(payload,registry) {var finding=eeReadyAuditFinding_(payload,registry||eeArtistRegistry_(),{},{});return finding.classification==="CONTAMINATED"?finding.reasons:[];}
+function eeReadyQualityIssues_(payload,registry) {
+  payload=payload||{};
+  registry=registry||eeArtistRegistry_();
+
+  var diagnostics=payload.diagnostics||{},
+      ownershipVersion=Number(
+        diagnostics.ownershipVersion||0
+      );
+
+  if(ownershipVersion<2){
+    var legacy=eeReadyAuditFinding_(
+      payload,
+      registry,
+      {},
+      {}
+    );
+
+    return legacy.classification==="CONTAMINATED"
+      ?legacy.reasons
+      :[];
+  }
+
+  var subject=payload.subject||{},
+      names=(subject.primaryArtists||[]).slice(),
+      keys=(diagnostics.artistKeys||[]).slice(),
+      reasons=[];
+
+  if(!names.length||!keys.length){
+    reasons.push("OWNERSHIP_IDENTITY_INCOMPLETE");
+  }
+
+  if(names.length!==keys.length){
+    reasons.push("OWNERSHIP_IDENTITY_LENGTH_MISMATCH");
+  }
+
+  var artists=keys.map(function(key){
+        return (registry.artists||[]).filter(
+          function(artist){
+            return String(artist.slug)===String(key);
+          }
+        )[0]||null;
+      }),
+      resolved=artists.filter(Boolean);
+
+  if(resolved.length!==keys.length){
+    reasons.push("OWNERSHIP_ARTIST_KEY_UNRESOLVED");
+  }
+
+  keys.forEach(function(key,index){
+    var artist=artists[index];
+
+    if(
+      artist &&
+      names[index] &&
+      eeNorm_(artist.canonicalName)!==
+        eeNorm_(names[index])
+    ){
+      reasons.push(
+        "OWNERSHIP_ARTIST_KEY_CANONICAL_NAME_CONFLICT:"+
+        String(key)
+      );
+    }
+  });
+
+  var primaryIds=resolved.map(function(artist){
+        return String(artist.appleArtistId||"");
+      }).filter(Boolean),
+      identityId=String(
+        (payload.identity||{}).artistId||""
+      );
+
+  if(identityId)primaryIds.push(identityId);
+  primaryIds=eeUnique_(primaryIds);
+
+  var allowed=eeReadyAuditRelationshipNames_(
+    resolved,
+    registry
+  );
+
+  (payload.categories||[]).forEach(function(group){
+    (group.items||[]).forEach(function(item){
+      var provenance=String(
+        (item||{}).recommendationProvenance||""
+      );
+
+      if(provenance==="RELATIONSHIP_BACKFILL"){
+        return;
+      }
+
+      if(provenance==="EXACT_SUBJECT"){
+        if(
+          eePrimaryRecommendationRank_(
+            item,
+            names,
+            primaryIds
+          )!==0
+        ){
+          reasons.push(
+            String(group.category||"").toUpperCase()+
+            "_EXACT_SUBJECT_IDENTITY_CONFLICT:"+
+            String(item.title||item.stableId||"")
+          );
+        }
+
+        return;
+      }
+
+      var check=eeReadyAuditItemCheck_(
+        item,
+        group.category,
+        allowed,
+        names
+      );
+
+      if(!check.valid){
+        reasons.push(
+          String(group.category||"").toUpperCase()+
+          "_RECOMMENDATION_RELEVANCE_CONFLICT:"+
+          String(item.title||item.stableId||"")
+        );
+      }
+    });
+  });
+
+  return eeUnique_(reasons);
+}
 
 function eeQualityRepairItemValid_(item,allowedNames,allowedIds) {
   var creator=eeNorm_((item||{}).creator||""),artistId=String((item||{}).appleArtistId||"");
