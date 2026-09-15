@@ -1891,16 +1891,30 @@ JSON.stringify(keys);
         self.assertEqual('["ee-public-v3:42:LISTEN:0:4","ee-public-v3:42:LISTEN:4:4"]', result)
 
     def test_frontend_starts_early_and_uses_async_fetch_without_hidden_preload(self):
-        apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]
-        self.assertIn('document.addEventListener("DOMContentLoaded",start,{once:true})', apple)
-        self.assertIn('else start();', apple)
-        self.assertNotIn('window.addEventListener("load"', apple)
-        self.assertIn('try{fetch(CONFIG.endpoint+', apple)
-        self.assertIn('reject(new Error("Apple payload fetch timeout"))', apple)
-        self.assertIn('return requestPageJsonp(values);', apple)
-        self.assertIn('params.set("callback",callback)', apple)
-        self.assertIn('requestPage(group.category,requestedOffset)', apple)
-        self.assertNotIn('image.hidden', apple)
+        from pathlib import Path
+
+        theme = Path(
+            "deliverables/apple-related/Electric-Eye-Theme.xml"
+        ).read_text(encoding="utf-8")
+
+        marker = "ee-related-on-apple-candidate-js"
+        self.assertIn(marker, theme)
+
+        start = theme.index(marker)
+        end = theme.index("</script>", start)
+        apple = theme[start:end]
+
+        self.assertIn(
+            "https://archive.electriceyerock.com/proof/apple-payload-",
+            apple,
+        )
+        self.assertIn("script.async=true;", apple)
+        self.assertIn("loadStaticPayload(function(){", apple)
+        self.assertIn('requestPage("",0)', apple)
+
+        self.assertNotIn("fetch(CONFIG.endpoint+", apple)
+        self.assertNotIn('rel="preload"', apple)
+        self.assertNotIn("new Image()", apple)
 
     def test_frontend_server_cursor_advances_independently_of_duplicate_cards(self):
         apple = self.theme[self.theme.index('id=\'ee-related-on-apple-candidate-js\''):]

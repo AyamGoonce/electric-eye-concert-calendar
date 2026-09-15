@@ -21089,27 +21089,74 @@ if (!placedNearPlayer) {
     (document.head||document.documentElement).appendChild(script);
   }
 
-  function requestPage(category,offset){
-    if(window.__EE_APPLE_STATIC_READY__){
-      return Promise.resolve(
-        staticPayloadPage(
-          window.__EE_APPLE_STATIC_PAYLOAD__,
-          category,
-          offset
-        )
-      );
+  function requestPage(category,offset,limit){
+    var postId=String(context.getAttribute("data-ee-post-id")||"");
+    var full=(typeof staticPayload!=="undefined"&&staticPayload)
+      ?staticPayload
+      :window.__EE_APPLE_STATIC_PAYLOAD__;
+    var wanted=String(category||"").toUpperCase();
+    var allowed={LISTEN:true,WATCH:true,READ:true};
+    var parsedOffset=Number(offset);
+    var requestedOffset=
+      Number.isFinite(parsedOffset)&&parsedOffset>=0
+        ?Math.floor(parsedOffset)
+        :0;
+    var pageSize=wanted
+      ?Number(CONFIG.revealStep||4)
+      :Number(CONFIG.initialPerCategory||4);
+
+    pageSize=
+      Number.isFinite(pageSize)&&pageSize>0
+        ?Math.min(4,Math.floor(pageSize))
+        :4;
+
+    if(
+      !full||
+      String(full.postId||"")!==postId||
+      (wanted&&!allowed[wanted])
+    ){
+      return Promise.resolve({
+        schemaVersion:1,
+        postId:postId,
+        categories:[]
+      });
     }
 
-    var values={action:"payload",postId:context.getAttribute("data-ee-post-id"),offset:String(offset||0),limit:String(CONFIG.revealStep)};
-    if(category)values.category=category;
-    var params=new URLSearchParams(values);
-    var controller=typeof AbortController!=="undefined"?new AbortController():null;
-    var timeout,primary=new Promise(function(resolve,reject){
-      timeout=window.setTimeout(function(){if(controller)controller.abort();reject(new Error("Apple payload fetch timeout"));},CONFIG.callbackTimeout);
-      try{fetch(CONFIG.endpoint+"?"+params.toString(),{method:"GET",mode:"cors",credentials:"omit",signal:controller?controller.signal:undefined}).then(resolve,reject);}
-      catch(error){reject(error);}
+    var result={};
+
+    Object.keys(full).forEach(function(key){
+      if(key!=="categories")result[key]=full[key];
     });
-    return primary.then(function(response){if(!response.ok)throw new Error("Apple payload request failed");return response.json();}).then(function(data){window.clearTimeout(timeout);return data;},function(){window.clearTimeout(timeout);return requestPageJsonp(values);});
+
+    var groups=[];
+
+    (full.categories||[]).forEach(function(group){
+      var name=String(group.category||"").toUpperCase();
+
+      if(!allowed[name]||(wanted&&name!==wanted))return;
+
+      var items=Array.isArray(group.items)?group.items:[];
+      var startOffset=wanted?requestedOffset:0;
+      var page=items.slice(startOffset,startOffset+pageSize);
+      var total=items.length;
+
+      if(!wanted&&!page.length)return;
+
+      groups.push({
+        category:name,
+        items:page,
+        total:total,
+        offset:startOffset,
+        limit:pageSize,
+        hasMore:startOffset+page.length<total,
+        nextOffset:Math.min(total,startOffset+page.length)
+      });
+    });
+
+    result.postId=postId;
+    result.categories=groups;
+
+    return Promise.resolve(result);
   }
 
   function start(){
