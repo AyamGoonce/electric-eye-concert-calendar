@@ -4242,9 +4242,23 @@ function eeReadyQualityIssues_(payload,registry) {
           }
         )[0]||null;
       }),
-      resolved=artists.filter(Boolean);
+      resolved=artists.filter(Boolean),
+      identityId=String(
+        (payload.identity||{}).artistId||""
+      ),
+      syntheticSingleOwner=
+        names.length===1 &&
+        keys.length===1 &&
+        !!identityId &&
+        String(keys[0])===
+          eeNorm_(names[0])
+            .replace(/[^a-z0-9]+/g,"-")
+            .replace(/^-|-$/g,"");
 
-  if(resolved.length!==keys.length){
+  if(
+    resolved.length!==keys.length &&
+    !syntheticSingleOwner
+  ){
     reasons.push("OWNERSHIP_ARTIST_KEY_UNRESOLVED");
   }
 
@@ -4266,10 +4280,7 @@ function eeReadyQualityIssues_(payload,registry) {
 
   var primaryIds=resolved.map(function(artist){
         return String(artist.appleArtistId||"");
-      }).filter(Boolean),
-      identityId=String(
-        (payload.identity||{}).artistId||""
-      );
+      }).filter(Boolean);
 
   if(identityId)primaryIds.push(identityId);
   primaryIds=eeUnique_(primaryIds);
