@@ -20073,7 +20073,7 @@ if (!placedNearPlayer) {
 
   var title=document.createElement("span");
   title.className="ee-safe-affiliate__title";
-  title.textContent="Related on Apple";
+  title.textContent="Related";
 
   var disclosure=document.createElement("span");
   disclosure.className="ee-safe-affiliate__disclosure";
@@ -20709,11 +20709,11 @@ if (!placedNearPlayer) {
 
     var head=el("header","ee-apple-generated__head");
     var heading=el("div","ee-apple-generated__heading");
-    var title=el("h2","ee-apple-generated__title","Related on Apple");
+    var title=el("h2","ee-apple-generated__title","Related");
     title.id="ee-apple-generated-title";
     heading.appendChild(title);
     head.appendChild(heading);
-    head.appendChild(el("p","ee-apple-generated__disclosure","Some links are affiliate links."));
+    head.appendChild(el("p","ee-apple-generated__disclosure","Contains affiliate links"));
     module.appendChild(head);
 
     var readMore=document.getElementById("ee-read-more");
