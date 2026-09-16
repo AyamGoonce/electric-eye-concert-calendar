@@ -5146,6 +5146,89 @@ def build_code() -> str:
     '''
 
     BACKEND_SAFE_HISTORICAL_RECOVERY = r'''
+    function eeArchiveRepairEligibility_(evidence) {
+      evidence=evidence||{};
+
+      var taxonomy=String(evidence.taxonomy||""),
+          reasons=[],
+          ordinary=taxonomy==="ORDINARY_SINGLE_SUBJECT",
+          subject=String(evidence.authoritativeSubject||""),
+          subjectKey=String(evidence.authoritativeArtistKey||""),
+          catalogueKey=String(evidence.catalogueArtistKey||""),
+          catalogueName=String(evidence.catalogueArtistName||""),
+          catalogueId=String(evidence.catalogueAppleArtistId||""),
+          payloadId=String(evidence.payloadAppleArtistId||""),
+          confidence=String(evidence.identityConfidence||"");
+
+      if(
+        !ordinary||
+        evidence.bloggerExists===false||
+        !subject||
+        !subjectKey||
+        confidence!=="HIGH"
+      ){
+        return {
+          tier:"D",
+          reasons:["DEFERRED_NON_ORDINARY_OR_AMBIGUOUS"],
+          preserveValidatedContent:false
+        };
+      }
+
+      [
+        ["wrongPrimary","WRONG_PRIMARY"],
+        ["catalogueOwnerMismatch","CATALOGUE_OWNER_MISMATCH"],
+        ["contextPromotedAsArtist","CONTEXT_PROMOTED_AS_ARTIST"],
+        ["charliContamination","CHARLI_CONTAMINATION"],
+        ["suspiciousSharedAppleId","SUSPICIOUS_SHARED_APPLE_ID"],
+        ["unprovenHistoricalRecovery","UNPROVEN_HISTORICAL_RECOVERY"]
+      ].forEach(function(rule){
+        if(evidence[rule[0]])reasons.push(rule[1]);
+      });
+
+      if(reasons.length){
+        return {
+          tier:"A",
+          reasons:reasons,
+          preserveValidatedContent:!!evidence.existingContentValid
+        };
+      }
+
+      if(
+        !evidence.cataloguePresent||
+        !evidence.catalogueResolved||
+        !catalogueKey||
+        !catalogueName||
+        !catalogueId
+      ){
+        return {
+          tier:"C",
+          reasons:["CATALOGUE_UNRESOLVED"],
+          preserveValidatedContent:!!evidence.existingContentValid
+        };
+      }
+
+      if(
+        eeNorm_(subject)!==eeNorm_(catalogueName)||
+        subjectKey!==catalogueKey||
+        !payloadId||
+        payloadId!==catalogueId||
+        evidence.catalogueValid!==true||
+        evidence.exactSubjectEvidence!==true
+      ){
+        return {
+          tier:"A",
+          reasons:["INDEPENDENT_IDENTITY_EVIDENCE_INCOMPLETE_OR_CONFLICTING"],
+          preserveValidatedContent:!!evidence.existingContentValid
+        };
+      }
+
+      return {
+        tier:"B",
+        reasons:["INDEPENDENT_HEALTHY_LEGACY_IDENTITY"],
+        preserveValidatedContent:!!evidence.existingContentValid
+      };
+    }
+
     function eeHistoricalArtistCatalogueRecovery_(artist) {
       var values=eePayloadSheet_().getDataRange().getValues(),
           needle=eeNorm_((artist||{}).canonicalName||""),
@@ -5198,7 +5281,9 @@ def build_code() -> str:
           });
         });
 
-            ids[id]=true;
+        if(!exactEvidence)continue;
+
+        ids[id]=true;
 
         if(Object.keys(ids).length>1)return null;
 

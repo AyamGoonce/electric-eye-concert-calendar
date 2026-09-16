@@ -513,22 +513,107 @@ JSON.stringify({status:record.status,savedStatus:saved.status,artistId:record.ap
 ''')
         self.assertEqual('{"status":"DEFERRED","savedStatus":"DEFERRED","artistId":"","error":"APPLE_ARTIST_ID_UNRESOLVED","categories":1,"retryAfter":true,"immediateRetry":false}', result)
 
-    def test_historical_ready_payload_requires_one_agreed_artist_id(self):
+    def test_historical_ready_payload_requires_exact_evidence_and_one_agreed_artist_id(self):
         result = self.run_apps_script(r"""
 var rows=[
  ["postId","","","","payload","status"],
- ["1","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"a"}]}]}),"READY"],
- ["2","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"b"}]}]}),"READY"],
+ ["1","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"a",creator:"Example Artist",appleArtistId:"123"}]}]}),"READY"],
+ ["2","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"123"},categories:[{category:"LISTEN",items:[{stableId:"b",appleArtistId:"123"}]}]}),"READY"],
  ["3","","","",JSON.stringify({subject:{primaryArtists:["Other Artist"]},identity:{level:"HIGH",artistId:"999"},categories:[{category:"LISTEN",items:[{stableId:"c"}]}]}),"READY"]
 ];
 eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return rows;}};}};};
 eeDecodePayloadCell_=function(value){return JSON.parse(value);};
 var agreed=eeHistoricalArtistCatalogueRecovery_({canonicalName:"Example Artist"});
-rows.push(["4","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"456"},categories:[{category:"LISTEN",items:[{stableId:"d"}]}]}),"READY"]);
+rows.push(["4","","","",JSON.stringify({subject:{primaryArtists:["Example Artist"]},identity:{level:"HIGH",artistId:"456"},categories:[{category:"LISTEN",items:[{stableId:"d",creator:"Example Artist",appleArtistId:"456"}]}]}),"READY"]);
 var conflict=eeHistoricalArtistCatalogueRecovery_({canonicalName:"Example Artist"});
 JSON.stringify({agreed:agreed&&agreed.appleArtistId||"",conflict:conflict&&conflict.appleArtistId||""});
 """)
         self.assertEqual('{"agreed":"123","conflict":""}', result)
+
+    def test_historical_recovery_rejects_one_or_many_circular_contaminated_rows(self):
+        result = self.run_apps_script(r'''
+function recover(rows){
+ eePayloadSheet_=function(){return {getDataRange:function(){return {getValues:function(){return [["header"]].concat(rows);}};}};};
+ eeDecodePayloadCell_=function(value){return JSON.parse(value);};
+ var found=eeHistoricalArtistCatalogueRecovery_({canonicalName:"Target Artist"});
+ return found&&found.appleArtistId||"";
+}
+function row(id){return ["post","","","",JSON.stringify({subject:{primaryArtists:["Target Artist"]},identity:{level:"HIGH",artistId:id},categories:[{category:"LISTEN",items:[{stableId:"unrelated",creator:"Different Artist",appleArtistId:"999"}]}]}),"READY"];}
+JSON.stringify({one:recover([row("123")]),many:recover([row("123"),row("123"),row("123")])});
+''')
+        self.assertEqual('{"one":"","many":""}', result)
+
+    def test_archive_repair_eligibility_tiers_require_independent_identity_evidence(self):
+        result = self.run_apps_script(r'''
+var base={taxonomy:"ORDINARY_SINGLE_SUBJECT",bloggerExists:true,authoritativeSubject:"Anthrax",authoritativeArtistKey:"anthrax",identityConfidence:"HIGH",cataloguePresent:true,catalogueResolved:true,catalogueArtistKey:"anthrax",catalogueArtistName:"Anthrax",catalogueAppleArtistId:"80417",payloadAppleArtistId:"80417",catalogueValid:true,exactSubjectEvidence:true,existingContentValid:true};
+function classify(changes){var value={};Object.keys(base).forEach(function(key){value[key]=base[key];});Object.keys(changes||{}).forEach(function(key){value[key]=changes[key];});return eeArchiveRepairEligibility_(value);}
+JSON.stringify({
+ healthy:classify({}),
+ anthraxLegacyContext:classify({contextPromotedAsArtist:true}),
+ circular:classify({unprovenHistoricalRecovery:true}),
+ matchingWithoutEvidence:classify({exactSubjectEvidence:false}),
+ unresolved:classify({catalogueResolved:false,catalogueAppleArtistId:""}),
+ playlist:classify({taxonomy:"PLAYLIST_MULTI_ARTIST"})
+});
+''')
+        parsed = json.loads(result)
+        self.assertEqual("B", parsed["healthy"]["tier"])
+        self.assertTrue(parsed["healthy"]["preserveValidatedContent"])
+        self.assertEqual("A", parsed["anthraxLegacyContext"]["tier"])
+        self.assertIn("CONTEXT_PROMOTED_AS_ARTIST", parsed["anthraxLegacyContext"]["reasons"])
+        self.assertTrue(parsed["anthraxLegacyContext"]["preserveValidatedContent"])
+        self.assertEqual("A", parsed["circular"]["tier"])
+        self.assertEqual("A", parsed["matchingWithoutEvidence"]["tier"])
+        self.assertEqual("C", parsed["unresolved"]["tier"])
+        self.assertEqual("D", parsed["playlist"]["tier"])
+
+    def test_tattoo_planetarium_ownership_is_context_isolated_and_order_independent(self):
+        result = self.run_apps_script(r'''
+var registry={schemaVersion:1,structuralLabels:["concert","news"],articleOverrides:{},artists:[
+ {canonicalName:"Dopelord",slug:"dopelord",articleIds:[],ambiguityClass:"distinctive"},
+ {canonicalName:"The Varukers",slug:"the-varukers",aliases:["Varukers"],articleIds:[],ambiguityClass:"distinctive"},
+ {canonicalName:"Whiplash",slug:"whiplash",articleIds:[],ambiguityClass:"distinctive"},
+ {canonicalName:"Mondial du Tatouage",slug:"mondial-du-tatouage",articleIds:[],ambiguityClass:"distinctive"},
+ {canonicalName:"Paris",slug:"paris",articleIds:[],ambiguityClass:"distinctive"}
+]};
+var posts={
+ dopelord:{id:"5758447714051230467",title:"Dopelord @ Tattoo Planetarium, Paris",labels:["Dopelord","Concert"],content:"Mondial du Tatouage in Paris"},
+ varukers:{id:"5310330220034938391",title:"Varukers @ Tattoo Planetarium, Paris",labels:["Varukers","Concert"],content:"Mondial du Tatouage in Paris"},
+ whiplash:{id:"1969525538088714658",title:"Whiplash @ Tattoo Planetarium, Paris",labels:["Whiplash","Concert"],content:"Mondial du Tatouage in Paris"}
+};
+function processOrder(order){var out={};order.forEach(function(key){var a=eeFastArticleIdentity_(posts[key],registry);out[key]=[a.primaryArtists,a.primaryArtistKeys];});return out;}
+JSON.stringify([processOrder(["dopelord","varukers","whiplash"]),processOrder(["whiplash","dopelord","varukers"]),processOrder(["varukers","whiplash","dopelord"])]);
+''')
+        runs = json.loads(result)
+        expected = {
+            "dopelord": [["Dopelord"], ["dopelord"]],
+            "varukers": [["The Varukers"], ["the-varukers"]],
+            "whiplash": [["Whiplash"], ["whiplash"]],
+        }
+        self.assertEqual([expected, expected, expected], runs)
+
+    def test_anthrax_positive_control_preserves_exact_first_and_related_watch_read(self):
+        result = self.run_apps_script(r'''
+eeAppleSettings_=function(){return {storefront:"FR"};};
+var analysis={primaryArtistKeys:["anthrax"],primaryArtists:["Anthrax"],people:[],identityConfidence:"HIGH",articleType:"video"};
+var catalogue={artistKey:"anthrax",canonicalName:"Anthrax",appleArtistId:"80417",catalogue:{categories:[
+ {category:"LISTEN",items:[{stableId:"related-listen",title:"Silver Linings",creator:"Charlie Benante",appleArtistId:"34782629",relevanceScore:999},{stableId:"direct-listen",title:"Among the Living",creator:"Anthrax",appleArtistId:"80417",relevanceScore:96}]},
+ {category:"WATCH",items:[{stableId:"direct-watch",title:"Madhouse",creator:"Anthrax",appleArtistId:"80417",relevanceScore:88},{stableId:"related-watch",title:"Associated documentary",creator:"Scott Ian",appleArtistId:"34782634",relevanceScore:89}]},
+ {category:"READ",items:[{stableId:"direct-read",title:"NOT: The Illustrated Oral History of Anthrax",creator:"Steve Kurth",appleArtistId:"585651829",relevanceScore:94},{stableId:"related-read",title:"I'm the Man",creator:"Scott Ian",appleArtistId:"34782634",relevanceScore:89}]}
+]}};
+var payload=eeAssemblePayloadFromCatalogues_({id:"5964845062172455760",title:"Check out the new Anthrax video here",content:"",url:"/anthrax"},analysis,[catalogue]);
+JSON.stringify({owner:payload.subject.primaryArtists,keys:payload.diagnostics.artistKeys,categories:payload.categories.map(function(group){return [group.category,group.items.map(function(item){return item.stableId;}),group.items.map(function(item){return item.recommendationProvenance;})];})});
+''')
+        parsed = json.loads(result)
+        self.assertEqual(["Anthrax"], parsed["owner"])
+        self.assertEqual(["anthrax"], parsed["keys"])
+        categories = {row[0]: row for row in parsed["categories"]}
+        self.assertEqual("direct-listen", categories["LISTEN"][1][0])
+        self.assertIn("related-watch", categories["WATCH"][1])
+        self.assertIn("related-read", categories["READ"][1])
+        self.assertEqual("EXACT_SUBJECT", categories["LISTEN"][2][0])
+        self.assertIn("RELATIONSHIP_BACKFILL", categories["WATCH"][2])
+        self.assertIn("RELATIONSHIP_BACKFILL", categories["READ"][2])
 
     def test_poisoned_resolved_catalogue_recovers_then_reuses_direct_results(self):
         result = self.run_apps_script(r'''
