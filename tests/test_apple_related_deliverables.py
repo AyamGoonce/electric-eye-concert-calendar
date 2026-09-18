@@ -394,7 +394,7 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 
     def test_article_associations_cannot_define_primary_artist(self):
         code = self.code
-        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=5;", code)
+        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=6;", code)
         identity = code.split("function eeFastArticleIdentity_", 1)[1].split(
             "function eeArticleType_", 1
         )[0]
@@ -476,6 +476,57 @@ JSON.stringify({
             '"down":["down"],"possessed":["possessed"],"known":[],'
             '"multi":["anthrax","ga-20"],"distinct":["shadow-of-intent","monty-alexander","killer-kin","hackett-rothery"],"concert":["kris-barras-band"],'
             '"obituary":["frank-beard"],"festival":[],"provisional":["new-artist"]}',
+            result,
+        )
+
+    def test_colon_title_artist_requires_registry_or_catalogue_evidence(self):
+        result = self.run_apps_script(r"""
+var registry={
+  schemaVersion:1,
+  structuralLabels:["news","festival","concert","review"],
+  articleOverrides:{},
+  artists:[]
+};
+
+eeArtistRegistry_=function(){return registry;};
+eeAppleSettings_=function(){return {storefront:"FR"};};
+
+eeAppleSearch_=function(query){
+  if(query.term==="Sananda Maitreya"){
+    return {results:[
+      {
+        artistName:"Sananda Maitreya",
+        artistId:"12345",
+        collectionId:"album-1",
+        collectionName:"Album One"
+      },
+      {
+        artistName:"Sananda Maitreya",
+        artistId:"12345",
+        collectionId:"album-2",
+        collectionName:"Album Two"
+      }
+    ]};
+  }
+  return {results:[]};
+};
+
+function artists(title){
+  return eeFastArticleIdentity_(
+    {id:"test",title:title,labels:[],content:"",url:""},
+    registry
+  ).primaryArtists;
+}
+
+JSON.stringify({
+  sananda:artists("Sananda Maitreya: An Intimate Night at Café de la Danse"),
+  generic:artists("News: September concert announcements"),
+  venue:artists("Bataclan: September concert announcements"),
+  context:artists("Live in Paris: September concert announcements")
+});
+""")
+        self.assertEqual(
+            '{"sananda":["Sananda Maitreya"],"generic":[],"venue":[],"context":[]}',
             result,
         )
 

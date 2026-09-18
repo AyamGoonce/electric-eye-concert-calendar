@@ -1053,7 +1053,9 @@ function eeTitleArtistCandidate_(title) {
   var action=title.match(/^(.+?)\s+(?:announce|announces|release|releases|share|shares|unveil|unveils|return|returns|back|perform|performs|bring|brings|headline|headlines)\b/i);
   var infinitive=title.match(/^(.+?)\s+to\s+(?:celebrate|perform|play|bring|return|release|announce|headline|tour|mark)\b/i);
   var album=title.match(/^album review\s*(?::|[–-])\s*(.+?)(?:\s+[–-]\s+|$)/i);
-  return String((concert||action||infinitive||album||[])[1]||"").trim();
+  var colon=title.match(/^([^:]{1,80})\s*:\s+.+$/);
+
+  return String((concert||action||infinitive||album||colon||[])[1]||"").trim();
 }
 
 function eeIdentityNonArtist_(value,structuralLabels) {
@@ -1061,6 +1063,62 @@ function eeIdentityNonArtist_(value,structuralLabels) {
   if(!normalized)return true;
   if(structuralLabels&&structuralLabels[normalized])return true;
   return /^(?:news|review|music|concert|concert review|festival|tour|tour dates|video|album|album review|single|song|track|show|tickets?|playlist|friday'?s playlist|interview|obituary|opening act|opener|photo(?:graphy|s)?|pictures?|paris|new|rock|hard rock|classic rock|alternative rock|indie rock|progressive rock|prog|blues|blues rock|metal|heavy metal|death metal|black metal|thrash metal|doom metal|country|folk|americana|pop|punk|punk rock|hardcore|jazz|electronic|electronica|hip hop|rap|r&b|soul|funk|reggae|ska)$/i.test(normalized);
+}
+
+function eeColonTitleArtistValidated_(candidate,structuralLabels) {
+
+  candidate=String(candidate||"").trim();
+
+  var normalized=eeNorm_(candidate);
+
+  if(!normalized||eeIdentityNonArtist_(candidate,structuralLabels))return false;
+
+  var response;
+
+  try{
+
+    response=eeAppleSearch_({
+
+      term:candidate,
+
+      storefront:eeAppleSettings_().storefront,
+
+      media:"music",
+
+      entity:"album"
+
+    });
+
+  }catch(error){
+
+    return false;
+
+  }
+
+  var albumsByArtist={};
+
+  (response.results||[]).forEach(function(raw){
+
+    if(eeNorm_(raw.artistName||"")!==normalized)return;
+
+    var artistId=String(raw.artistId||raw.collectionArtistId||"");
+
+    var collectionId=String(raw.collectionId||"");
+
+    if(!artistId||!collectionId)return;
+
+    if(!albumsByArtist[artistId])albumsByArtist[artistId]={};
+
+    albumsByArtist[artistId][collectionId]=true;
+
+  });
+
+  return Object.keys(albumsByArtist).some(function(artistId){
+
+    return Object.keys(albumsByArtist[artistId]).length>=2;
+
+  });
+
 }
 
 function eeFastArticleIdentity_(post, registry) {
@@ -1296,6 +1354,9 @@ function eeFastArticleIdentity_(post, registry) {
           eeTitleArtistCandidate_(title)||""
         ).trim(),
         normalizedCandidate=eeNorm_(unresolvedCandidate),
+        colonPrefix=title.match(/^([^:]{1,80})\s*:\s+/),
+        colonDerived=!!colonPrefix&&
+          eeNorm_(colonPrefix[1])===normalizedCandidate,
         knownCandidate=(registry.artists||[]).some(function(artist){
           return eeUnique_(
             [artist.canonicalName]
@@ -1326,7 +1387,14 @@ function eeFastArticleIdentity_(post, registry) {
       normalizedCandidate &&
       !knownCandidate &&
       !knownCompositeCandidate &&
-      !eeIdentityNonArtist_(unresolvedCandidate,structuralLabels)
+      !eeIdentityNonArtist_(unresolvedCandidate,structuralLabels) &&
+      (
+        !colonDerived ||
+        eeColonTitleArtistValidated_(
+          unresolvedCandidate,
+          structuralLabels
+        )
+      )
     ){
       var unresolvedKey=normalizedCandidate
         .replace(/[^a-z0-9]+/g,"-")
@@ -1637,7 +1705,7 @@ function eeArticleIdentitySheet_() {return eeNamedSheet_("Apple Article Identity
 var EE_APPLE_ARTIST_TRANSIENT_RETRY_LIMIT=3;
 var EE_APPLE_ARTIST_DEFERRED_RETRY_MS=6*60*60*1000;
 var EE_APPLE_CLEAR_IDENTITY_RETRY_MS=15*60*1000;
-var EE_APPLE_IDENTITY_RESOLVER_VERSION=5;
+var EE_APPLE_IDENTITY_RESOLVER_VERSION=6;
 function eeArtistClearCanonical_(artist){return String((artist||{}).ambiguityClass||"")==="distinctive";}
 function eeArtistNeedsIdentityResolution_(record){
   if(!record)return true;
