@@ -394,7 +394,7 @@ JSON.stringify(eeFastArticleIdentity_({id:"manual",title:"A reviewed feature",la
 
     def test_article_associations_cannot_define_primary_artist(self):
         code = self.code
-        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=6;", code)
+        self.assertIn("var EE_APPLE_IDENTITY_RESOLVER_VERSION=7;", code)
         identity = code.split("function eeFastArticleIdentity_", 1)[1].split(
             "function eeArticleType_", 1
         )[0]
@@ -542,6 +542,21 @@ var second=eeGeneratePayload_({id:"2",title:"Sparks",labels:[],content:"",url:"/
 JSON.stringify({discovery:discovery,first:first.categories[0].items.length,second:second.categories[0].items.length,version:second.generationVersion});
 ''')
         self.assertEqual('{"discovery":0,"first":1,"second":1,"version":3}', result)
+
+    def test_unresolved_artist_recovery_keeps_identity_and_relationship_provenance_separate(self):
+        self.assertIn("function eeTrustedArtistIdentityRecovery_", self.code)
+        self.assertIn('"TRUSTED_ALIAS_APPLE_ARTIST"', self.code)
+        self.assertIn("function eeRelationshipRecommendationProvenance_", self.code)
+        self.assertIn('provenanceOnly&&categories.length?"RELATED"', self.code)
+        self.assertIn('record.status==="RESOLVED"||record.status==="RELATED"', self.code)
+        self.assertIn("recommendationProvenance", self.code)
+        self.assertIn("profile.relatedArtists||[]", self.code)
+        self.assertIn("profile.sideProjects||[]", self.code)
+        self.assertIn("profile.members||[]", self.code)
+        self.assertNotIn(
+            "appleArtistId:relationshipProvenance",
+            self.code,
+        )
 
     def test_resolved_catalogue_requires_nonempty_apple_artist_id(self):
         result = self.run_apps_script(r'''
@@ -784,7 +799,7 @@ eeGetPayload_=function(){return null;};eePutPayload_=function(post,payload,statu
 var worker=eeAssembleArticlePayloadsMaintenanceWorker_();JSON.stringify({processed:worker.processed,writes:writes,cursor:props.EE_APPLE_ASSEMBLY_INDEX});
 ''')
         self.assertEqual(
-            '{"processed":2,"writes":[["ready","READY"]],"cursor":"3"}',
+            '{"processed":2,"writes":[["ready","READY"]],"cursor":"1"}',
             result,
         )
 
@@ -802,8 +817,17 @@ JSON.stringify({firstProcessed:first.processed,firstSkipped:first.skippedNoSubje
 ''')
         self.assertEqual(
             '{"firstProcessed":25,"firstSkipped":25,"firstCursor":"26",'
-            '"secondProcessed":5,"secondCursor":"31","appleCalls":0,"logs":2,"nextCursor":31}',
+            '"secondProcessed":5,"secondCursor":"1","appleCalls":0,"logs":2,"nextCursor":1}',
             result,
+        )
+
+    def test_stale_enrichment_does_not_restart_article_assembly(self):
+        start = self.code.index("function eeRefreshStaleArtistsMaintenanceWorker_")
+        end = self.code.index("function eeAssembleArticlePayloadsMaintenanceWorker_", start)
+        refresh = self.code[start:end]
+        self.assertNotIn(
+            'setProperty("EE_APPLE_ASSEMBLY_INDEX","1")',
+            refresh,
         )
 
     def test_article_context_reranks_cached_items_without_mutating_catalogue(self):
@@ -1136,7 +1160,7 @@ JSON.stringify({http403:transient("APPLE_SEARCH_HTTP_403"),http429:transient("AP
         worker = self.code[self.code.index("function eeRefreshStaleArtistsMaintenanceWorker_") : self.code.index("function eeAssembleArticlePayloadsMaintenanceWorker_")]
         self.assertIn("EE_APPLE_STALE_REFRESH_INDEX", worker)
         self.assertIn('eeDiscoverArtistCatalogue_(artist,post,isVerifiedResolved)', worker)
-        self.assertIn('properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1")', worker)
+        self.assertNotIn('properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1")', worker)
         self.assertIn('status:"DEFERRED"', worker)
         self.assertIn('isVerifiedResolved?"ENRICHMENT_REFRESHED"', worker)
         self.assertIn('isDeferred?"DEFERRED_RETRIED":"IDENTITY_RETRIED"', worker)
@@ -1153,7 +1177,7 @@ var worker=eeRefreshStaleArtistsMaintenanceWorker_();JSON.stringify({status:work
 ''')
         self.assertEqual(
             '{"status":"ENRICHMENT_REFRESHED","terminalStatus":"RESOLVED",'
-            '"forceValues":[true],"cursor":"2","assembly":"1"}',
+            '"forceValues":[true],"cursor":"2"}',
             result,
         )
 
@@ -1169,7 +1193,7 @@ eeDiscoverArtistCatalogue_=function(artist,post,forceRefresh){forceValues.push(f
 var worker=eeRefreshStaleArtistsMaintenanceWorker_();JSON.stringify({status:worker.status,forceValues:forceValues,assembly:props.EE_APPLE_ASSEMBLY_INDEX});
 ''')
         self.assertEqual(
-            '{"status":"ENRICHMENT_REFRESHED","forceValues":[true],"assembly":"1"}',
+            '{"status":"ENRICHMENT_REFRESHED","forceValues":[true]}',
             result,
         )
 
@@ -1222,7 +1246,7 @@ eePutPayload_=function(){puts.push([].slice.call(arguments));};
 var result=eeAssembleArticlePayloadsMaintenanceWorker_();JSON.stringify({status:result.status,processed:result.processed,puts:puts.length,cursor:props.EE_APPLE_ASSEMBLY_INDEX});
 ''')
         self.assertEqual(
-            '{"status":"OK","processed":1,"puts":0,"cursor":"2"}',
+            '{"status":"OK","processed":1,"puts":0,"cursor":"1"}',
             result,
         )
 
@@ -2110,6 +2134,19 @@ stored.EE_APPLE_BACKFILL_INDEX;
 ''')
         self.assertEqual("77", result)
 
+    def test_artist_representative_post_has_live_article_fallback(self):
+        self.assertIn("function eeFetchArtistRepresentativePost_", self.code)
+        self.assertIn('message!==missingPrefix+preferred', self.code)
+        self.assertIn('((artist||{}).articleIds||[])', self.code)
+        self.assertIn('eeArticleIdentitySheet_().getDataRange().getValues()', self.code)
+        self.assertGreaterEqual(
+            self.code.count("eeFetchArtistRepresentativePost_("),
+            4,
+        )
+        retry_start = self.code.index("function eeRetryNextStaleArtistIdentity")
+        retry_end = self.code.index("function ee", retry_start + 20)
+        self.assertNotIn("NO_REPRESENTATIVE_POST", self.code[retry_start:retry_end])
+
     def test_fetch_post_by_id_pages_feed_returns_match_and_reports_exhaustion(self):
         helper = self.code[
             self.code.index("function eeFetchPostById_") :
@@ -2125,7 +2162,7 @@ stored.EE_APPLE_BACKFILL_INDEX;
             self.code.index("function eeDiscoverArtistsMaintenanceWorker_") :
             self.code.index("function eeRefreshStaleArtistsMaintenanceWorker_")
         ]
-        self.assertIn("eeFetchPostById_", discovery_worker)
+        self.assertIn("eeFetchArtistRepresentativePost_", discovery_worker)
 
         result = self.run_apps_script(r'''
 var calls=[];
