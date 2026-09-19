@@ -17,6 +17,8 @@ from concert_calendar.deduplication import TIME_SUFFIX_RE
 
 
 FEED_URL = "https://www.electriceyerock.com/feeds/posts/summary"
+CONCERT_REVIEWS_URL = "https://www.electriceyerock.com/p/concert-photos-reviews.html"
+CONCERT_REVIEW_ARRAY_NAMES = ("EE_NEW_REVIEWS", "EE_ARCHIVE_REVIEWS")
 REQUEST_TIMEOUT = 30
 MAX_POSTS = 3000
 HEADERS = {
@@ -156,6 +158,234 @@ def blogger_post_id(entry):
     return match.group(1) if match else None
 
 
+
+def _extract_javascript_array(source, name):
+    match = re.search(r"\bvar\s+" + re.escape(name) + r"\s*=", source)
+    if not match:
+        return ""
+
+    start = source.find("[", match.end())
+    if start < 0:
+        return ""
+
+    depth = 0
+    quote = None
+    escaped = False
+    line_comment = False
+    block_comment = False
+
+    index = start
+    while index < len(source):
+        char = source[index]
+        next_char = source[index + 1] if index + 1 < len(source) else ""
+
+        if line_comment:
+            if char == "\n":
+                line_comment = False
+            index += 1
+            continue
+
+        if block_comment:
+            if char == "*" and next_char == "/":
+                block_comment = False
+                index += 2
+                continue
+            index += 1
+            continue
+
+        if quote:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = None
+            index += 1
+            continue
+
+        if char == "/" and next_char == "/":
+            line_comment = True
+            index += 2
+            continue
+
+        if char == "/" and next_char == "*":
+            block_comment = True
+            index += 2
+            continue
+
+        if char in {'"', "'"}:
+            quote = char
+            index += 1
+            continue
+
+        if char == "[":
+            depth += 1
+        elif char == "]":
+            depth -= 1
+            if depth == 0:
+                return source[start:index + 1]
+
+        index += 1
+
+    return ""
+
+
+def _extract_javascript_objects(array_source):
+    objects = []
+    start = None
+    depth = 0
+    quote = None
+    escaped = False
+    line_comment = False
+    block_comment = False
+
+    index = 0
+    while index < len(array_source):
+        char = array_source[index]
+        next_char = array_source[index + 1] if index + 1 < len(array_source) else ""
+
+        if line_comment:
+            if char == "\n":
+                line_comment = False
+            index += 1
+            continue
+
+        if block_comment:
+            if char == "*" and next_char == "/":
+                block_comment = False
+                index += 2
+                continue
+            index += 1
+            continue
+
+        if quote:
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == quote:
+                quote = None
+            index += 1
+            continue
+
+        if char == "/" and next_char == "/":
+            line_comment = True
+            index += 2
+            continue
+
+        if char == "/" and next_char == "*":
+            block_comment = True
+            index += 2
+            continue
+
+        if char in {'"', "'"}:
+            quote = char
+            index += 1
+            continue
+
+        if char == "{":
+            if depth == 0:
+                start = index
+            depth += 1
+        elif char == "}" and depth:
+            depth -= 1
+            if depth == 0 and start is not None:
+                objects.append(array_source[start:index + 1])
+                start = None
+
+        index += 1
+
+    return objects
+
+
+def _javascript_string_field(source, field):
+    key = r'["\']?' + re.escape(field) + r'["\']?'
+    patterns = (
+        key + r'\s*:\s*"((?:\\.|[^"\\])*)"',
+        key + r"\s*:\s*'((?:\\.|[^'\\])*)'",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, source, flags=re.DOTALL)
+        if not match:
+            continue
+
+        value = match.group(1)
+        value = re.sub(
+            r"\\u([0-9a-fA-F]{4})",
+            lambda item: chr(int(item.group(1), 16)),
+            value,
+        )
+        return (
+            value
+            .replace(r"\/", "/")
+            .replace(r"\"", '"')
+            .replace(r"\'", "'")
+            .replace(r"\n", "\n")
+            .replace(r"\r", "\r")
+            .replace(r"\t", "\t")
+            .replace("\\\\", "\\")
+            .strip()
+        )
+
+    return ""
+
+
+def _canonical_electric_eye_article_url(value):
+    parsed = urlparse(str(value or "").strip())
+    host = parsed.netloc.lower().split(":", 1)[0]
+
+    if parsed.scheme not in {"http", "https"}:
+        return None
+    if host not in {"electriceyerock.com", "www.electriceyerock.com"}:
+        return None
+    if not parsed.path:
+        return None
+
+    path = parsed.path.rstrip("/") or "/"
+    return "https://www.electriceyerock.com" + path
+
+
+def parse_concert_review_associations(source):
+    associations = defaultdict(list)
+
+    for array_name in CONCERT_REVIEW_ARRAY_NAMES:
+        array_source = _extract_javascript_array(source, array_name)
+        if not array_source:
+            continue
+
+        for object_source in _extract_javascript_objects(array_source):
+            artist = _javascript_string_field(object_source, "artist")
+            url = _canonical_electric_eye_article_url(
+                _javascript_string_field(object_source, "url")
+            )
+
+            # Identity evidence must come from the explicit archive artist field.
+            # Do not reproduce the theme's title-prefix fallback here.
+            if not artist or not url:
+                continue
+
+            if artist not in associations[url]:
+                associations[url].append(artist)
+
+    return dict(associations)
+
+
+def fetch_concert_review_associations(session=None):
+    session = session or requests.Session()
+    response = session.get(
+        CONCERT_REVIEWS_URL,
+        headers=HEADERS,
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+
+    associations = parse_concert_review_associations(response.text)
+    if not associations:
+        raise RuntimeError("Concert Reviews archive contained no usable artist mappings")
+
+    return associations
+
+
 def fetch_entries(session=None):
     session = session or requests.Session()
     entries = []
@@ -279,9 +509,99 @@ def seed_artist_labels(entries):
     return seeds
 
 
-def build_index(entries, *, generated_at=None):
+
+def _concert_review_identity_text(value):
+    value = re.sub(
+        r"\s*\(\s*DJ\s+Set\s*\)\s*$",
+        "",
+        str(value or ""),
+        flags=re.IGNORECASE,
+    ).strip()
+    identity = normalize_artist(value)
+    words = identity.split()
+    if words and words[0] == "the":
+        words = words[1:]
+    return " ".join(words)
+
+
+def _concert_review_matches_existing(value, canonical):
+    subject = _concert_review_identity_text(value)
+    known = _concert_review_identity_text(canonical)
+
+    if not subject or not known:
+        return False
+
+    # The/Pineapple Thief type variation.
+    if subject == known:
+        return True
+
+    # Duff Mc Kagan / Duff McKagan and Earth Motion / EarthMotion.
+    if subject.replace(" ", "") == known.replace(" ", ""):
+        return True
+
+    # Touring/project descriptions which contain an already-established
+    # canonical artist as complete words:
+    # Brant Bjork Trio -> Brant Bjork
+    # The Warren Haynes Band -> Warren Haynes
+    # Lex Koritni -> Koritni
+    known_words = known.split()
+    if len(known) >= 5:
+        pattern = r"(?:^|\s)" + re.escape(known) + r"(?:$|\s)"
+        if re.search(pattern, subject):
+            return True
+
+    return False
+
+
+def _concert_review_existing_canonical(value, canonical_by_identity):
+    exact = canonical_by_identity.get(normalize_artist(value))
+    if exact:
+        return exact
+
+    canonicals = sorted(
+        set(canonical_by_identity.values()),
+        key=lambda item: len(_concert_review_identity_text(item)),
+        reverse=True,
+    )
+
+    for canonical in canonicals:
+        if _concert_review_matches_existing(value, canonical):
+            return canonical
+
+    return None
+
+
+def _concert_review_artist_can_seed(value):
+    value = re.sub(r"\s+", " ", str(value or "")).strip()
+    identity = normalize_artist(value)
+
+    if not identity or identity in GENERIC_LABELS:
+        return False
+
+    # Old archive rows occasionally stored part of the venue/title in artist.
+    # They remain useful when they resolve to an already-known artist, but they
+    # must never manufacture a new identity.
+    if "@" in value:
+        return False
+    if re.search(r"\s+-\s+[^,]+,\s*[^,]+$", value):
+        return False
+
+    # Composite/event billing is evidence about the article, not a new
+    # canonical Apple artist identity.
+    if re.search(r"\b(?:feat\.?|featuring)\b", value, flags=re.IGNORECASE):
+        return False
+    if re.search(r"\s+(?:\+|&|and|et)\s+", value, flags=re.IGNORECASE):
+        return False
+    if re.search(r"\b(?:hellfest|festival)\b", value, flags=re.IGNORECASE):
+        return False
+
+    return True
+
+
+def build_index(entries, *, generated_at=None, concert_review_associations=None):
     overrides = load_artist_identity_overrides()
     reviewed_artists = overrides.get("artists") or {}
+    concert_review_associations = concert_review_associations or {}
     seeds = seed_artist_labels(entries)
     canonical_by_identity = {}
     for label, _count in seeds.most_common():
@@ -294,6 +614,22 @@ def build_index(entries, *, generated_at=None):
         identity = normalize_artist(canonical)
         if identity:
             canonical_by_identity.setdefault(identity, canonical)
+    # The Concert Reviews page is a structured editorial source. Its
+    # explicit artist field may seed a simple canonical identity when Blogger
+    # metadata missed it. Composite/event billing cannot create a new identity.
+    for review_artists in concert_review_associations.values():
+        for canonical in review_artists:
+            existing = _concert_review_existing_canonical(
+                canonical,
+                canonical_by_identity,
+            )
+            if existing:
+                continue
+
+            identity = normalize_artist(canonical)
+            if identity and _concert_review_artist_can_seed(canonical):
+                canonical_by_identity.setdefault(identity, canonical)
+
     for override in (overrides.get("articleOverrides") or {}).values():
         for canonical in override.get("primaryArtists", []):
             identity = normalize_artist(canonical)
@@ -304,6 +640,25 @@ def build_index(entries, *, generated_at=None):
         canonical_identity = normalize_artist(canonical)
         if canonical_identity in canonical_by_identity:
             canonical_by_identity[normalize_artist(alias)] = canonical_by_identity[canonical_identity]
+
+    concert_review_canonicals = {}
+    for review_url, review_artists in concert_review_associations.items():
+        canonical_url = _canonical_electric_eye_article_url(review_url)
+        if not canonical_url:
+            continue
+        matched = []
+        for review_artist in review_artists:
+            if not _concert_review_artist_can_seed(review_artist):
+                continue
+
+            canonical = _concert_review_existing_canonical(
+                review_artist,
+                canonical_by_identity,
+            )
+            if canonical and canonical not in matched:
+                matched.append(canonical)
+        if matched:
+            concert_review_canonicals[canonical_url] = matched
 
     articles = []
     artist_article_ids = defaultdict(list)
@@ -332,6 +687,11 @@ def build_index(entries, *, generated_at=None):
         for canonical, manual_urls in MANUAL_ARTIST_ARTICLES.items():
             if url in manual_urls and canonical not in matched_names:
                 matched_names.append(canonical)
+        canonical_article_url = _canonical_electric_eye_article_url(url)
+        for canonical in concert_review_canonicals.get(canonical_article_url, []):
+            if canonical not in matched_names:
+                matched_names.append(canonical)
+
         reviewed_article = (overrides.get("articleOverrides") or {}).get(post_id or "") or {}
         for canonical in reviewed_article.get("primaryArtists", []):
             if canonical not in matched_names:
@@ -418,6 +778,15 @@ def build_index(entries, *, generated_at=None):
                         .get(articles[index].get("pi"), {})
                         .get("primaryArtists", [])
                     )
+                )
+            ],
+            "concertReviewArchiveArticleIds": [
+                articles[index].get("pi")
+                for index in article_ids
+                if articles[index].get("pi")
+                and canonical in concert_review_canonicals.get(
+                    _canonical_electric_eye_article_url(articles[index]["u"]),
+                    [],
                 )
             ],
             "articleUrls": [articles[index]["u"] for index in article_ids],
@@ -530,6 +899,7 @@ def write_artist_exports(output_dir, index):
         "appleArtistId", "appleIdentityConfidence", "ambiguityClass",
         "identityEvidence", "articleCount", "lastIdentityUpdatedAt",
         "lastAppleCatalogueUpdatedAt", "reviewedArticleIds",
+        "concertReviewArchiveArticleIds",
     ]
     with (destination / "artist-index.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=columns)

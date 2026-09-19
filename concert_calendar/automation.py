@@ -353,7 +353,18 @@ def build(args) -> int:
     print("Building Electric Eye editorial content index...")
     print("PHASE START | blogger_content_retrieval_indexing", flush=True)
     phase_started = time.perf_counter()
-    content_index = build_index(fetch_entries())
+    from concert_calendar.content_index import fetch_concert_review_associations
+
+    try:
+        concert_review_associations = fetch_concert_review_associations()
+    except Exception as error:
+        print(f"Concert Reviews identity evidence unavailable: {error}")
+        concert_review_associations = {}
+
+    content_index = build_index(
+        fetch_entries(),
+        concert_review_associations=concert_review_associations,
+    )
     print(f"PHASE COMPLETE | blogger_content_retrieval_indexing | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     print("PHASE START | content_index_enrichment", flush=True)
     phase_started = time.perf_counter()

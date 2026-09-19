@@ -179,6 +179,232 @@ class ContentIndexTests(unittest.TestCase):
         )
         self.assertNotIn("im", index["articles"][1])
 
+
+    def test_concert_review_archive_supplies_structured_artist_identity(self):
+        source = """
+var EE_NEW_REVIEWS=[
+  {title:"Earth @ Venue",artist:"Earth",url:"https://www.electriceyerock.com/2026/01/earth-review.html"},
+  {title:"Fish @ Venue",artist:"Fish",url:"https://www.electriceyerock.com/2026/01/fish-review.html"}
+];
+var EE_ARCHIVE_REVIEWS=[
+  {title:"Massacre @ Venue",artist:"Massacre",url:"https://www.electriceyerock.com/2026/01/massacre-review.html"},
+  {title:"Wargasm @ Venue",artist:"Wargasm",url:"https://www.electriceyerock.com/2026/01/wargasm-review.html"},
+  {title:"Composite",artist:"Earl Sweatshirt and MIKE",url:"https://www.electriceyerock.com/2026/01/composite-review.html"},
+  {title:"Context",artist:"Hellfest 2026",url:"https://www.electriceyerock.com/2026/01/hellfest-review.html"}
+];
+"""
+        associations = content_index.parse_concert_review_associations(source)
+
+        self.assertEqual(
+            associations["https://www.electriceyerock.com/2026/01/earth-review.html"],
+            ["Earth"],
+        )
+
+        entries = []
+        for offset, artist in enumerate(("Earth", "Fish", "Massacre", "Wargasm"), 1):
+            item = entry(
+                "A concert review whose Blogger metadata does not identify the act",
+                ["Concert Review"],
+                f"2026-01-{offset:02d}",
+            )
+            item["link"][0]["href"] = (
+                f"https://www.electriceyerock.com/2026/01/{artist.lower()}-review.html"
+            )
+            entries.append(item)
+
+        composite = entry(
+            "Composite billing",
+            ["Concert Review"],
+            "2026-01-05",
+        )
+        composite["link"][0]["href"] = (
+            "https://www.electriceyerock.com/2026/01/composite-review.html"
+        )
+        entries.append(composite)
+
+        context = entry(
+            "Festival context",
+            ["Concert Review"],
+            "2026-01-06",
+        )
+        context["link"][0]["href"] = (
+            "https://www.electriceyerock.com/2026/01/hellfest-review.html"
+        )
+        entries.append(context)
+
+        index = build_index(
+            entries,
+            generated_at="2026-01-07T00:00:00Z",
+            concert_review_associations=associations,
+        )
+
+        for slug in ("earth", "fish", "massacre", "wargasm"):
+            self.assertIn(slug, index["artists"])
+            self.assertEqual(
+                1,
+                len(index["artists"][slug]["identity"]["concertReviewArchiveArticleIds"]),
+            )
+
+        self.assertNotIn("earl-sweatshirt-and-mike", index["artists"])
+        self.assertNotIn("hellfest-2026", index["artists"])
+
+    def test_concert_review_archive_accepts_quoted_keys(self):
+        source = """
+var EE_NEW_REVIEWS=[];
+var EE_ARCHIVE_REVIEWS=[
+  {"url":"https://www.electriceyerock.com/2023/06/depeche-mode-stade-de-france-saint.html",
+   "title":"Depeche Mode @ Stade de France",
+   "artist":"Depeche Mode"}
+];
+"""
+        associations = content_index.parse_concert_review_associations(source)
+        self.assertEqual(
+            associations[
+                "https://www.electriceyerock.com/2023/06/depeche-mode-stade-de-france-saint.html"
+            ],
+            ["Depeche Mode"],
+        )
+
+    def test_concert_review_variants_reuse_existing_canonical_artist(self):
+        dolls_url = "https://www.electriceyerock.com/2026/01/dresden-dolls.html"
+        surf_url = "https://www.electriceyerock.com/2026/01/surf-gang.html"
+
+        dolls = entry(
+            "Dresden Dolls @ Venue",
+            ["Dresden Dolls", "Concert Review"],
+            "2026-01-01",
+        )
+        dolls["link"][0]["href"] = dolls_url
+
+        surf = entry(
+            "Surf Gang @ Venue",
+            ["Surf Gang", "Concert Review"],
+            "2026-01-02",
+        )
+        surf["link"][0]["href"] = surf_url
+
+        index = build_index(
+            [dolls, surf],
+            generated_at="2026-01-03T00:00:00Z",
+            concert_review_associations={
+                dolls_url: ["The Dresden Dolls"],
+                surf_url: ["Surf Gang (DJ Set)"],
+            },
+        )
+
+        self.assertIn("dresden-dolls", index["artists"])
+        self.assertNotIn("the-dresden-dolls", index["artists"])
+        self.assertIn("surf-gang", index["artists"])
+        self.assertNotIn("surf-gang-dj-set", index["artists"])
+
+    def test_concert_review_archive_reuses_longer_project_forms(self):
+        known = {
+            content_index.normalize_artist("The Pineapple Thief"): "The Pineapple Thief",
+            content_index.normalize_artist("Brant Bjork"): "Brant Bjork",
+            content_index.normalize_artist("Warren Haynes"): "Warren Haynes",
+            content_index.normalize_artist("Koritni"): "Koritni",
+            content_index.normalize_artist("Duff McKagan"): "Duff McKagan",
+            content_index.normalize_artist("EarthMotion"): "EarthMotion",
+        }
+
+        cases = {
+            "Pineapple Thief": "The Pineapple Thief",
+            "Brant Bjork Trio": "Brant Bjork",
+            "The Warren Haynes Band": "Warren Haynes",
+            "Lex Koritni": "Koritni",
+            "Duff Mc Kagan": "Duff McKagan",
+            "Earth Motion": "EarthMotion",
+        }
+
+        for archive_name, expected in cases.items():
+            self.assertEqual(
+                expected,
+                content_index._concert_review_existing_canonical(
+                    archive_name,
+                    known,
+                ),
+            )
+
+    def test_concert_review_archive_malformed_artist_cannot_seed_identity(self):
+        malformed = (
+            "Fleshgod Apocalypse@ la Machine du Moulin Rouge, Paris",
+            "KNOWER @Grande Halle de la Villette, Paris",
+            "Scary Goldings (Scary Pockets, Larry Goldings, John Scofield, MonoNeon) @Grande Halle de la Villette, Paris",
+            "Julien Gasc Duo / avec Nina Savary - Petit Bain, Paris",
+        )
+
+        for artist in malformed:
+            self.assertFalse(
+                content_index._concert_review_artist_can_seed(artist),
+                artist,
+            )
+
+    def test_concert_review_exact_identity_wins_over_variant(self):
+        known = {
+            content_index.normalize_artist("Pixies"): "Pixies",
+            content_index.normalize_artist("The Pixies"): "The Pixies",
+        }
+
+        self.assertEqual(
+            "Pixies",
+            content_index._concert_review_existing_canonical(
+                "Pixies",
+                known,
+            ),
+        )
+        self.assertEqual(
+            "The Pixies",
+            content_index._concert_review_existing_canonical(
+                "The Pixies",
+                known,
+            ),
+        )
+
+    def test_concert_review_composite_billing_does_not_add_secondary_artist(self):
+        url = "https://www.electriceyerock.com/2018/07/robert-plant-test.html"
+
+        item = entry(
+            "Robert Plant & the Sensational Space Shifters @ Venue",
+            ["Robert Plant", "Sensational Space Shifters", "Concert Review"],
+            "2018-07-23",
+        )
+        item["link"][0]["href"] = url
+
+        index = build_index(
+            [item],
+            generated_at="2018-07-24T00:00:00Z",
+            concert_review_associations={
+                url: ["Robert Plant & the Sensational Space Shifters"],
+            },
+        )
+
+        article = index["articles"][0]
+        self.assertIn("robert-plant", article["a"])
+        self.assertIn("sensational-space-shifters", article["a"])
+
+        # The archive mapping itself must not be what marks either identity
+        # as structurally supplied.
+        for slug in ("robert-plant", "sensational-space-shifters"):
+            self.assertEqual(
+                [],
+                index["artists"][slug]["identity"][
+                    "concertReviewArchiveArticleIds"
+                ],
+            )
+
+    def test_concert_review_archive_rejects_missing_artist_and_external_url(self):
+        source = """
+var EE_NEW_REVIEWS=[
+  {title:"Fallback-only",url:"https://www.electriceyerock.com/2026/01/no-artist.html"},
+  {title:"External",artist:"Wrong",url:"https://example.com/wrong.html"}
+];
+var EE_ARCHIVE_REVIEWS=[];
+"""
+        self.assertEqual(
+            {},
+            content_index.parse_concert_review_associations(source),
+        )
+
     def test_manual_artist_article_association_survives_automatic_miss(self):
         manual_url = "https://www.electriceyerock.com/2026/01/manual-artist.html"
         item = entry("A genuinely miscellaneous post", ["News"], "2026-01-04")
