@@ -25,28 +25,7 @@ MAX_ATTEMPTS = 6
 ALLOWED_CATEGORIES = {"LISTEN", "WATCH", "READ"}
 
 
-def find_proof_dir() -> Path:
-    preferred = Path("docs/proof")
-
-    if (preferred / "electric-eye-artist-lookup.js").exists():
-        return preferred
-
-    matches = sorted(
-        Path(".").rglob("electric-eye-artist-lookup.js"),
-        key=lambda value: (
-            0 if "docs" in value.parts else 1,
-            len(value.parts),
-            str(value),
-        ),
-    )
-
-    if not matches:
-        raise RuntimeError(
-            "Could not locate the existing proof static-asset directory."
-        )
-
-    return matches[0].parent
-
+OUTPUT_DIR = Path("output/automation")
 
 def fetch_json(params: dict[str, str | int]) -> dict:
     url = ENDPOINT + "?" + urllib.parse.urlencode(params)
@@ -227,9 +206,9 @@ def main() -> int:
 
         start_row = next_row
 
-    proof_dir = find_proof_dir()
-    output_dir = proof_dir
-    temp_dir = proof_dir / ".apple-payloads.tmp"
+    output_dir = OUTPUT_DIR
+    output_dir.mkdir(parents=True, exist_ok=True)
+    temp_dir = output_dir / ".apple-payloads.tmp"
 
     if temp_dir.exists():
         shutil.rmtree(temp_dir)
@@ -277,16 +256,16 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    for stale in proof_dir.glob("apple-payload-*.js"):
+    for stale in output_dir.glob("apple-payload-*.js"):
         stale.unlink()
 
-    manifest_path = proof_dir / "apple-payload-manifest.json"
+    manifest_path = output_dir / "apple-payload-manifest.json"
 
     if manifest_path.exists():
         manifest_path.unlink()
 
     for generated in temp_dir.iterdir():
-        generated.replace(proof_dir / generated.name)
+        generated.replace(output_dir / generated.name)
 
     shutil.rmtree(temp_dir)
 
