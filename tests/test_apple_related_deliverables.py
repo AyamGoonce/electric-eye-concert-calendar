@@ -803,6 +803,18 @@ var worker=eeAssembleArticlePayloadsMaintenanceWorker_();JSON.stringify({process
             result,
         )
 
+    def test_assembler_skips_permanently_deleted_blogger_posts(self):
+        self.assertIn("skippedMissingPost:0", self.code)
+        self.assertIn(
+            '==="Blogger post not found: "+postId',
+            self.code,
+        )
+        self.assertIn("totals.skippedMissingPost+=1;", self.code)
+        self.assertIn(
+            'properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));',
+            self.code,
+        )
+
     def test_assembler_is_bounded_and_resumes_without_apple_calls(self):
         result = self.run_apps_script(r'''
 var props={EE_APPLE_ASSEMBLY_INDEX:"1"},logs=[],appleCalls=0,rows=[["header"]];
