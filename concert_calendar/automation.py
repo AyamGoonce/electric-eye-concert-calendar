@@ -36,6 +36,8 @@ from concert_calendar.sources import load_events_with_report
 MINIMUM_EVENT_COUNT = 100
 MINIMUM_PUBLISHED_RATIO = 0.60
 MAXIMUM_PUBLISHED_RATIO = 2.50
+MINIMUM_VENUE_BASELINE_COUNT = 20
+MINIMUM_VENUE_PUBLISHED_RATIO = 0.50
 MINIMUM_GENRE_COVERAGE = 0.10
 CORE_SOURCES = {
     "AEG Presents France",
@@ -117,6 +119,176 @@ def read_pointer(path: Path) -> dict:
     ):
         raise ProductionValidationError(f"Malformed calendar pointer: {path}")
     return manifest
+
+
+def read_published_calendar_events(pointer_path: Path) -> list[dict]:
+    """Read the exact public event array referenced by a published pointer."""
+
+    manifest = read_pointer(pointer_path)
+    data_path = pointer_path.parent / manifest["data"]
+    if not data_path.is_file():
+        raise ProductionValidationError(
+            f"Published calendar data is missing: {data_path}"
+        )
+
+    match = re.search(
+        r"window\.ElectricEyeConcertData\s*=\s*Object\.freeze\((\[.*\])\);\s*$",
+        data_path.read_text(encoding="utf-8"),
+        re.DOTALL,
+    )
+    if not match:
+        raise ProductionValidationError(
+            f"Malformed published calendar data: {data_path}"
+        )
+
+    try:
+        events = json.loads(match.group(1))
+    except json.JSONDecodeError as error:
+        raise ProductionValidationError(
+            f"Malformed published calendar data: {data_path}"
+        ) from error
+
+    if not isinstance(events, list) or not all(
+        isinstance(event, dict) for event in events
+    ):
+        raise ProductionValidationError(
+            f"Published calendar data is not an event array: {data_path}"
+        )
+
+    return events
+
+
+def _venue_inventory_key(value: object) -> str:
+    return re.sub(r"\s+", " ", str(value or "").strip()).casefold()
+
+
+def _venue_product_counts(
+    events: list[dict],
+    *,
+    cutoff: date | None = None,
+) -> tuple[dict[str, int], dict[str, str]]:
+    """
+    Count public ticket products per venue.
+
+    A repeated same-date/headliner/ticket product counts once even if the
+    published representation contains several session times. This prevents
+    legitimate public-session collapsing from looking like catastrophic
+    inventory loss.
+    """
+
+    products: dict[str, set[tuple[str, str, str]]] = {}
+    display_names: dict[str, str] = {}
+
+    for event in events:
+        raw_date = str(event.get("d") or "")[:10]
+        try:
+            event_date = date.fromisoformat(raw_date)
+        except ValueError:
+            continue
+
+        if cutoff is not None and event_date < cutoff:
+            continue
+
+        venue_display = re.sub(
+            r"\s+", " ", str(event.get("v") or "").strip()
+        )
+        venue = _venue_inventory_key(venue_display)
+        if not venue:
+            continue
+
+        headliner = re.sub(
+            r"\s+", " ", str(event.get("h") or "").strip()
+        ).casefold()
+        ticket = str(event.get("t") or "").strip()
+
+        # A ticket URL identifies the public product. When no ticket URL is
+        # available, retain the session time so genuinely separate
+        # performances are not collapsed merely for validation.
+        discriminator = ticket or str(event.get("st") or "").strip()
+
+        products.setdefault(venue, set()).add(
+            (raw_date, headliner, discriminator)
+        )
+        display_names.setdefault(venue, venue_display)
+
+    return (
+        {venue: len(items) for venue, items in products.items()},
+        display_names,
+    )
+
+
+def validate_venue_inventory_regression(
+    candidate_events: list[dict],
+    published_events: list[dict],
+    *,
+    allow_large_change: bool = False,
+) -> None:
+    """
+    Refuse publication when a substantial venue catastrophically collapses.
+
+    This is intentionally independent of scraper/source health. It protects
+    the public calendar whether the loss came from a failed primary scraper,
+    an incomplete fallback, a parser regression, or a later pipeline stage.
+    """
+
+    if allow_large_change or not candidate_events or not published_events:
+        return
+
+    candidate_dates = []
+    for event in candidate_events:
+        try:
+            candidate_dates.append(
+                date.fromisoformat(str(event.get("d") or "")[:10])
+            )
+        except ValueError:
+            continue
+
+    if not candidate_dates:
+        return
+
+    # Compare only the horizon represented by the candidate. This prevents
+    # ordinary date rollover from being mistaken for venue inventory loss.
+    cutoff = min(candidate_dates)
+
+    published_counts, published_names = _venue_product_counts(
+        published_events,
+        cutoff=cutoff,
+    )
+    candidate_counts, _ = _venue_product_counts(
+        candidate_events,
+        cutoff=cutoff,
+    )
+
+    regressions = []
+
+    for venue, published_count in published_counts.items():
+        if published_count < MINIMUM_VENUE_BASELINE_COUNT:
+            continue
+
+        candidate_count = candidate_counts.get(venue, 0)
+        retained_ratio = candidate_count / published_count
+
+        if retained_ratio < MINIMUM_VENUE_PUBLISHED_RATIO:
+            regressions.append(
+                (
+                    published_names.get(venue, venue),
+                    candidate_count,
+                    published_count,
+                    retained_ratio,
+                )
+            )
+
+    if regressions:
+        details = "; ".join(
+            f"{venue}: {candidate}/{published} retained ({ratio:.0%})"
+            for venue, candidate, published, ratio in sorted(regressions)
+        )
+        raise ProductionValidationError(
+            "Catastrophic venue inventory regression: "
+            + details
+            + f"; minimum retained ratio is "
+            f"{MINIMUM_VENUE_PUBLISHED_RATIO:.0%}"
+        )
 
 
 def print_pointer_digest(args) -> int:
@@ -396,6 +568,17 @@ def build(args) -> int:
     phase_started = time.perf_counter()
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
+
+    if args.published_pointer and Path(args.published_pointer).exists():
+        published_events = read_published_calendar_events(
+            Path(args.published_pointer)
+        )
+        validate_venue_inventory_regression(
+            events_data,
+            published_events,
+            allow_large_change=args.allow_large_count_change,
+        )
+
     route_result = write_clean_routes(output_dir, content_index, events_data)
     print(
         f"Created {route_result['artists']} artist routes and "
