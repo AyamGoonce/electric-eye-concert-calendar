@@ -597,6 +597,14 @@
   vertical-align: 2px;
 }
 
+.ee-calendar-page #ee-concert-calendar .ee-calendar-event-context {
+  overflow-wrap: anywhere;
+  margin: 4px 0 0;
+  color: var(--ee-calendar-muted);
+  font-size: .82rem;
+  line-height: 1.35;
+}
+
 .ee-calendar-page #ee-concert-calendar .ee-calendar-openers {
   overflow-wrap: anywhere;
   margin: 4px 0 0;
