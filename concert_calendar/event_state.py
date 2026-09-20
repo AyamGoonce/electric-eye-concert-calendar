@@ -285,6 +285,36 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
         if programme in prior_performances:
             effective_discriminators[event_id] = programme
 
+    # A source may temporarily lose timing evidence for a performance that was
+    # already persisted with one unambiguous discriminator. Preserve that
+    # identity only when there is exactly one current row for the canonical
+    # base and exactly one prior non-empty performance discriminator across
+    # that base and its reviewed predecessors.
+    for base, group in current_by_base.items():
+        if len(group) != 1:
+            continue
+
+        event = group[0]
+        event_id = id(event)
+
+        if effective_discriminators[event_id]:
+            continue
+
+        bases = list(dict.fromkeys([
+            base,
+            *_reviewed_predecessor_identities(event),
+        ]))
+
+        prior_performances = {
+            record.get('performance')
+            for candidate in bases
+            for _, record in by_base.get(candidate, [])
+            if record.get('performance')
+        }
+
+        if len(prior_performances) == 1:
+            effective_discriminators[event_id] = next(iter(prior_performances))
+
     reserved_ids = {record.get('public_id', key[:16]) for key, record in previous.items()}
     used_keys, used_ids = set(), set()
     ordered = sorted(events, key=lambda e: (

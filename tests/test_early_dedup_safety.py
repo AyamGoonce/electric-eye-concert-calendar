@@ -159,6 +159,44 @@ class EarlyDedupSafetyTests(unittest.TestCase):
             survivor._public_id,
         )
 
+    def test_single_untimed_row_reuses_unique_prior_performance(self):
+        now = datetime(2026, 9, 20, tzinfo=timezone.utc)
+
+        timed = event(start_time="19:00")
+        previous = reconcile_state([timed], None, now=now)
+        original_id = timed._public_id
+
+        untimed = event()
+        reconcile_state(
+            [untimed],
+            previous,
+            now=datetime(2026, 9, 21, tzinfo=timezone.utc),
+        )
+
+        self.assertEqual(original_id, untimed._public_id)
+        self.assertEqual(
+            "19:00|",
+            untimed._state_performance_discriminator,
+        )
+
+    def test_untimed_row_does_not_guess_between_multiple_prior_performances(self):
+        now = datetime(2026, 9, 20, tzinfo=timezone.utc)
+
+        early = event(start_time="19:00")
+        late = event(start_time="21:00")
+        previous = reconcile_state([early, late], None, now=now)
+
+        untimed = event()
+
+        from concert_calendar.event_state import EventStateError
+
+        with self.assertRaises(EventStateError):
+            reconcile_state(
+                [untimed],
+                previous,
+                now=datetime(2026, 9, 21, tzinfo=timezone.utc),
+            )
+
     def test_single_untimed_programme_keeps_legacy_base_id(self):
         item = event()
         item.event_title = "Northern Tour"
