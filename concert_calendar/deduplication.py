@@ -13,6 +13,7 @@ import unicodedata
 from urllib.parse import parse_qsl, unquote, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.billing_semantics import apply_structured_performer_semantics
 from concert_calendar.event_titles import (
     artist_title_parts, contextual_title_parts, evidenced_series_prefixes, title_identity,
     separate_performance_marker,
@@ -1673,6 +1674,7 @@ def deduplicate_events(
 ) -> list[ConcertEvent]:
     """Collapse exact and explicitly reconcilable duplicate concerts."""
 
+    apply_structured_performer_semantics(events)
     _apply_reviewed_calendar_identity_fixes(events)
 
     initial_opener_state = defaultdict(list)
