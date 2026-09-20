@@ -321,28 +321,93 @@ def _base_generic_guest_title(value: str) -> str | None:
     return base if base != decoded.strip() else None
 
 
+def _presentation_wrapper_signature(value: str) -> tuple[str, str] | None:
+    """
+    Normalize only explicit presentation grammar.
+
+    This deliberately does not perform general title decomposition. It lets
+    reviewed event titles recognize equivalent language/spelling variants such
+    as "presents", "présente" and "presente".
+    """
+    match = re.fullmatch(
+        r"(?P<context>.+?)\s+"
+        r"(?:présente|présentent|presente|presentent|presents?)"
+        r"\s+(?P<artist>.+)",
+        unescape(value or "").strip(),
+        re.IGNORECASE,
+    )
+    if not match:
+        return None
+
+    return (
+        normalize_headliner(match.group("context")),
+        normalize_headliner(match.group("artist")),
+    )
+
+
+def _reviewed_event_title_for(event: ConcertEvent) -> str | None:
+    """
+    Resolve a reviewed event title without broadening reviewed equivalence.
+
+    Exact REVIEWED_EVENT_TITLES aliases retain their existing behavior.
+    Otherwise, an explicit presentation-wrapper variant may resolve only to a
+    reviewed canonical title on the same reviewed date and venue.
+    """
+    venue_identity = normalize_venue_key(event.venue)
+    artist_identity = normalize_artist_component(event.headliner)
+
+    reviewed_title = REVIEWED_EVENT_TITLES.get(
+        (event.date, venue_identity, artist_identity)
+    )
+    if reviewed_title:
+        return reviewed_title
+
+    signature = _presentation_wrapper_signature(event.headliner)
+    if not signature:
+        return None
+
+    candidates = {
+        canonical
+        for (date, venue, _artist), canonical in REVIEWED_EVENT_TITLES.items()
+        if date == event.date
+        and venue == venue_identity
+        and _presentation_wrapper_signature(canonical) == signature
+    }
+
+    if len(candidates) == 1:
+        return next(iter(candidates))
+
+    return None
+
+
 def _mark_reviewed_wrapper_semantics(
     events: list[ConcertEvent],
 ) -> None:
     """
-    Protect only an exact reviewed canonical title from generic decomposition.
+    Protect a reviewed canonical presentation wrapper, including an equivalent
+    explicit language/spelling variant, from generic decomposition.
 
-    REVIEWED_EVENT_TITLES also contains aliases used to establish equivalence.
-    Those aliases must remain eligible for normal canonical semantics.
+    Other reviewed aliases remain eligible for normal canonical semantics.
     """
     for event in events:
-        reviewed_title = REVIEWED_EVENT_TITLES.get(
-            (
-                event.date,
-                normalize_venue_key(event.venue),
-                normalize_artist_component(event.headliner),
-            )
-        )
-        if (
-            reviewed_title
-            and normalize_headliner(event.headliner)
+        reviewed_title = _reviewed_event_title_for(event)
+        if not reviewed_title:
+            continue
+
+        exact = (
+            normalize_headliner(event.headliner)
             == normalize_headliner(reviewed_title)
-        ):
+        )
+
+        event_signature = _presentation_wrapper_signature(event.headliner)
+        reviewed_signature = _presentation_wrapper_signature(reviewed_title)
+        wrapper_equivalent = (
+            event_signature is not None
+            and reviewed_signature is not None
+            and event_signature == reviewed_signature
+        )
+
+        if exact or wrapper_equivalent:
             event._reviewed_wrapper_semantics_locked = True
 
 
@@ -357,11 +422,7 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
             event.event_title = unescape(event.event_title)
         if event.series_name:
             event.series_name = unescape(event.series_name)
-        venue_identity = normalize_venue_key(event.venue)
-        artist_identity = normalize_artist_component(event.headliner)
-        reviewed_title = REVIEWED_EVENT_TITLES.get(
-            (event.date, venue_identity, artist_identity)
-        )
+        reviewed_title = _reviewed_event_title_for(event)
         if reviewed_title:
             if normalize_headliner(event.headliner) != normalize_headliner(
                 reviewed_title

@@ -263,6 +263,29 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
             ])),
         )
 
+    def test_reviewed_presentation_language_variant_preserves_canonical_title(self):
+        promoter = event(
+            "Wolfgang Voigt presents GAS live",
+            source="Promoter",
+        )
+        venue = event(
+            "Wolfgang Voigt présente GAS Live",
+            source="Venue",
+        )
+
+        for item in (promoter, venue):
+            item.date = "2026-09-23"
+            item.venue = "La Gaîté Lyrique"
+
+        result = deduplicate_events([promoter, venue])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(
+            "WOLFGANG VOIGT presents GAS live",
+            result[0].headliner,
+        )
+        self.assertIsNone(result[0].event_title)
+
     def test_reordered_festival_wrapper_merges_same_artist_bill(self):
         rich = event(
             "Pitchfork Music Festival: Ear + Guests", source="Venue"
