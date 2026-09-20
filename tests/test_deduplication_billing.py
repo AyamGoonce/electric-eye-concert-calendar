@@ -628,6 +628,21 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
 
         self.assertEqual(1, len(result))
 
+    def test_final_identity_collision_merges_after_source_metadata_converges(self):
+        left = event("Example Artist")
+        right = event("Example Artist")
+
+        # Earlier merges may leave both residual rows carrying the same
+        # combined provenance. That must not prevent final state-identity
+        # reconciliation.
+        shared_sources = ["Venue", "Promoter"]
+        left.source_names = list(shared_sources)
+        right.source_names = list(shared_sources)
+
+        result = _reconcile_final_identity_collisions([left, right])
+
+        self.assertEqual(1, len(result))
+
     def test_final_identity_collision_preserves_distinct_programmes(self):
         left = event("Example Artist")
         right = event("Example Artist")

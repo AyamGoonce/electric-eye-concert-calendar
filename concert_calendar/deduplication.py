@@ -2002,15 +2002,15 @@ def _reconcile_final_identity_collisions(
     context.
     """
 
+    # This is the final reconciliation boundary immediately before state
+    # allocation. Use the state allocator's own canonical identity so that
+    # deduplication and persistence cannot disagree about whether two rows
+    # collide.
+    from .event_state import canonical_event_identity
+
     grouped = defaultdict(list)
     for event in events:
-        grouped[
-            (
-                event.date,
-                normalize_venue_key(event.venue),
-                _normalized_billing_component(event.headliner),
-            )
-        ].append(event)
+        grouped[canonical_event_identity(event)].append(event)
 
     removed = set()
 
@@ -2027,6 +2027,12 @@ def _reconcile_final_identity_collisions(
                     continue
 
                 if _distinct_performance_evidence(left, right):
+                    continue
+
+                # Canonical state identity may intentionally normalize a tour
+                # suffix away. That normalization alone is not evidence that
+                # two listings are the same physical event.
+                if not _tour_normalization_allows_merge(left, right):
                     continue
 
                 left_programmes = {
@@ -2053,9 +2059,6 @@ def _reconcile_final_identity_collisions(
                     and right_programmes
                     and left_programmes.isdisjoint(right_programmes)
                 ):
-                    continue
-
-                if not _cross_source_evidence(left, right):
                     continue
 
                 preferred, other = sorted(
