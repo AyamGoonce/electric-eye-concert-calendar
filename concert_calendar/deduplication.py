@@ -565,7 +565,7 @@ def _primary_billing_set(event: ConcertEvent) -> frozenset[str]:
     wrapped = _festival_event_billing(event)
     if wrapped:
         return wrapped[1]
-    components = [event.headliner]
+    components = _split_full_bill(event.headliner) or [event.headliner]
     components.extend(event.co_headliners or [])
     return frozenset(
         identity
