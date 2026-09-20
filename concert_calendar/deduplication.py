@@ -1962,6 +1962,12 @@ def deduplicate_events(
 
     apply_structured_performer_semantics(reconciled)
 
+    # Final safety pass: semantic normalization can make two independently
+    # sourced representations identical only after the earlier reconciliation
+    # stages have run. Collapse those residual duplicates before state IDs are
+    # allocated, while preserving explicit performances/programmes.
+    reconciled = _reconcile_final_identity_collisions(reconciled)
+
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(
             diagnostics.get("festival_artist_rows_collapsed", 0),
@@ -1981,6 +1987,91 @@ def deduplicate_events(
         )
 
     return reconciled
+
+
+def _reconcile_final_identity_collisions(
+    events: list[ConcertEvent],
+) -> list[ConcertEvent]:
+    """
+    Merge residual cross-source duplicates before persistent identity allocation.
+
+    At this stage canonical artist semantics have already been resolved. Two
+    records with the same date, normalized venue, and normalized public
+    headliner represent the same physical event unless there is affirmative
+    evidence of a distinct performance or conflicting explicit programme
+    context.
+    """
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[
+            (
+                event.date,
+                normalize_venue_key(event.venue),
+                _normalized_billing_component(event.headliner),
+            )
+        ].append(event)
+
+    removed = set()
+
+    for group in grouped.values():
+        if len(group) < 2:
+            continue
+
+        for index, left in enumerate(group):
+            if id(left) in removed:
+                continue
+
+            for right in group[index + 1:]:
+                if id(right) in removed:
+                    continue
+
+                if _distinct_performance_evidence(left, right):
+                    continue
+
+                left_programmes = {
+                    _normalized_billing_component(value)
+                    for value in (
+                        left.event_title,
+                        left.series_name,
+                        left.festival_name,
+                    )
+                    if value
+                }
+                right_programmes = {
+                    _normalized_billing_component(value)
+                    for value in (
+                        right.event_title,
+                        right.series_name,
+                        right.festival_name,
+                    )
+                    if value
+                }
+
+                if (
+                    left_programmes
+                    and right_programmes
+                    and left_programmes.isdisjoint(right_programmes)
+                ):
+                    continue
+
+                if not _cross_source_evidence(left, right):
+                    continue
+
+                preferred, other = sorted(
+                    (left, right),
+                    key=_billing_richness,
+                    reverse=True,
+                )
+
+                merge_events(preferred, other)
+                _remove_billed_artists_from_support(preferred)
+                removed.add(id(other))
+
+                if other is left:
+                    left = preferred
+
+    return [event for event in events if id(event) not in removed]
 
 
 def suspicious_near_duplicate_pairs(events: list[ConcertEvent]) -> list[dict]:

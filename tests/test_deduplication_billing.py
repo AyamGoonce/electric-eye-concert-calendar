@@ -1,6 +1,6 @@
 import unittest
 
-from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.deduplication import deduplicate_events, _reconcile_final_identity_collisions
 from concert_calendar.models import ConcertEvent
 from concert_calendar.venues import normalize_event_venue
 
@@ -615,6 +615,30 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
         )
         self.assertEqual(1, len(result))
         self.assertEqual([], diagnostics["suspicious_near_duplicates"])
+
+    def test_final_cross_source_identical_untimed_rows_merge(self):
+        left = event("In Flames x Trivium")
+        right = event("In Flames x Trivium")
+        left.source_names = ["Le Zénith Paris – La Villette"]
+        right.source_names = ["Live Nation"]
+        left.ticket_url = "https://venue.example/in-flames-trivium"
+        right.ticket_url = "https://promoter.example/in-flames-trivium"
+
+        result = deduplicate_events([left, right])
+
+        self.assertEqual(1, len(result))
+
+    def test_final_identity_collision_preserves_distinct_programmes(self):
+        left = event("Example Artist")
+        right = event("Example Artist")
+        left.source_names = ["Venue"]
+        right.source_names = ["Promoter"]
+        left.event_title = "Programme One"
+        right.event_title = "Programme Two"
+
+        result = _reconcile_final_identity_collisions([left, right])
+
+        self.assertEqual(2, len(result))
 
 
 if __name__ == "__main__":
