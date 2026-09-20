@@ -262,6 +262,9 @@ VERIFIED_ARTIST_DISPLAY_NAMES = {
     "muna": "MUNA",
 }
 
+# This parser is intentionally restricted to validating a bill whose artist
+# identities were already supplied by structured source evidence. Flat titles
+# elsewhere in this module remain opaque.
 BILL_SEPARATOR_RE = re.compile(
     r"\s+(?:[+&×/•]|x|and|avec|with)\s+",
     re.IGNORECASE,
@@ -433,10 +436,7 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
                 ])
             event.headliner = reviewed_title
 
-        first_component = _split_full_bill(event.headliner)
-        move_artist = normalize_artist_component(
-            first_component[0] if first_component else event.headliner
-        )
+        move_artist = normalize_artist_component(event.headliner)
         for date, artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
             if (
                 event.date == date
@@ -621,8 +621,81 @@ def merge_events(
 
 
 def _split_full_bill(value: str) -> list[str]:
+    """Split only when a caller already has explicit performer identities."""
     parts = [part.strip() for part in BILL_SEPARATOR_RE.split(value or "")]
     return parts if len(parts) > 1 else []
+
+
+def _opaque_title_signature(value: str) -> str:
+    """Normalize a complete flat title without assigning artist identities."""
+
+    normalized = unicodedata.normalize("NFKD", unescape(value or ""))
+    normalized = "".join(
+        character
+        for character in normalized
+        if not unicodedata.combining(character)
+    ).casefold()
+    normalized = PROMOTIONAL_CITY_RE.sub("", normalized)
+    normalized = TIME_SUFFIX_RE.sub("", normalized)
+    normalized = re.sub(
+        r"\s*(?:\((?:live|uk|fr|us|usa)\)|(?:\s+|:\s*)20\d{2})\s*$",
+        "",
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    # Separator variants may describe the same complete source title. The
+    # marker is comparison-only: its segments are never returned as artists.
+    normalized = BILL_SEPARATOR_RE.sub(" | ", normalized)
+    normalized = re.sub(r"[^\w|]+", " ", normalized, flags=re.UNICODE)
+    normalized = re.sub(r"\s*\|\s*", " | ", normalized)
+    return re.sub(r"\s+", " ", normalized).strip()
+
+
+def _opaque_title_relation(left: str, right: str) -> str | None:
+    """Return equivalence/extension for complete opaque source titles."""
+
+    left_signature = _opaque_title_signature(left)
+    right_signature = _opaque_title_signature(right)
+    if not left_signature or not right_signature:
+        return None
+    if left_signature == right_signature:
+        return "equivalent"
+
+    # Extension is deliberately stricter than equivalence. Words such as
+    # "and", "avec", and "with" may belong to an artist name and therefore
+    # cannot turn a shorter opaque title into a presumed bill prefix.
+    def extension_text(value: str) -> str:
+        normalized = unicodedata.normalize("NFKD", unescape(value or ""))
+        normalized = "".join(
+            character
+            for character in normalized
+            if not unicodedata.combining(character)
+        ).casefold()
+        normalized = PROMOTIONAL_CITY_RE.sub("", normalized)
+        normalized = TIME_SUFFIX_RE.sub("", normalized)
+        normalized = re.sub(
+            r"\s*(?:\((?:live|uk|fr|us|usa)\)|(?:\s+|:\s*)20\d{2})\s*$",
+            "",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+        return re.sub(r"\s+", " ", normalized).strip()
+
+    left_text = extension_text(left)
+    right_text = extension_text(right)
+    boundary = re.compile(r"^\s*(?:[+&×/•]|x)\s+", re.IGNORECASE)
+
+    if right_text.startswith(left_text) and boundary.match(
+        right_text[len(left_text):]
+    ):
+        return "right_extends_left"
+
+    if left_text.startswith(right_text) and boundary.match(
+        left_text[len(right_text):]
+    ):
+        return "left_extends_right"
+
+    return None
 
 
 def _normalized_billing_component(value: str) -> str:
@@ -663,8 +736,9 @@ def _primary_billing_set(event: ConcertEvent) -> frozenset[str]:
     wrapped = _festival_event_billing(event)
     if wrapped:
         return wrapped[1]
-    components = _split_full_bill(event.headliner) or [event.headliner]
-    components.extend(event.co_headliners or [])
+    # Only canonical structured fields establish performer identities. A flat
+    # headliner such as "Alpha + Beta & Company" is one opaque value here.
+    components = [event.headliner, *(event.co_headliners or [])]
     return frozenset(
         identity
         for identity in map(_normalized_billing_component, components)
@@ -690,12 +764,8 @@ def _festival_wrapped_billing(value: str) -> tuple[str, frozenset[str]] | None:
     festival = festival_parts[0]
     billing = parts[1] if parts[0] == festival else parts[0]
     billing = GENERIC_GUEST_RE.sub("", billing).strip()
-    components = _split_full_bill(billing) or [billing]
-    artists = frozenset(
-        identity
-        for identity in map(_normalized_billing_component, components)
-        if identity
-    )
+    billing_identity = _opaque_title_signature(billing)
+    artists = frozenset([billing_identity]) if billing_identity else frozenset()
     festival_identity = _normalized_billing_component(festival)
     return (festival_identity, artists) if festival_identity and artists else None
 
@@ -822,9 +892,12 @@ def _same_primary_billing(left: ConcertEvent, right: ConcertEvent) -> bool:
     left_set, right_set = _primary_billing_set(left), _primary_billing_set(right)
     if left_set and left_set == right_set:
         return True
-    # A separately sourced singleton card commonly omits the co-bill printed on
-    # the venue card.  Preserve the fuller explicit bill without inventing a
-    # support hierarchy.
+    # A separately sourced title commonly omits the co-bill printed on the
+    # venue card. Compare complete opaque titles at the explicit boundary;
+    # never expose their comparison segments as performer identities.
+    if _opaque_title_relation(left.headliner, right.headliner):
+        return True
+    # Structured performer fields may safely establish subset semantics.
     if (
         left_set
         and right_set
@@ -852,6 +925,7 @@ def _billing_richness(event: ConcertEvent) -> tuple[int, ...]:
         len(event.electric_eye_links or []),
         len(_primary_billing_set(event)),
         len(event.openers or []) + len(event.co_headliners or []),
+        len(_opaque_title_signature(event.headliner)),
         int(bool(event.genre or event.genre_public)),
         int(bool(event.image_url)),
         int(bool(event.ticket_url)),
@@ -861,10 +935,10 @@ def _billing_richness(event: ConcertEvent) -> tuple[int, ...]:
 
 
 def _remove_billed_artists_from_support(event: ConcertEvent) -> None:
-    billed = _primary_billing_set(event)
+    headliner_evidence = _billing_evidence_key(event.headliner)
     event.openers = [
         opener for opener in (event.openers or [])
-        if _normalized_billing_component(opener) not in billed
+        if not _evidence_contains_artist(headliner_evidence, opener)
     ] or None
     if _festival_event_billing(event):
         event.co_headliners = [
@@ -1295,6 +1369,22 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
 
 
 def _reconcile_generic_guest_titles(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Resolve a terminal guest placeholder only inside a corroborated event.
+
+    ``Guests`` remains a real performer whenever structured source metadata
+    says that it is one. Flat wording alone never grants placeholder status.
+    """
+
+    def has_structured_guests(event: ConcertEvent) -> bool:
+        return any(
+            normalize_artist_component(artist) in {"guest", "guests", "special guest", "special guests"}
+            for artist in [
+                *(event.performers or []),
+                *(event.co_headliners or []),
+                *(event.openers or []),
+            ]
+        )
+
     grouped = defaultdict(list)
     for event in events:
         grouped[(event.date, normalize_venue_key(event.venue))].append(event)
@@ -1303,25 +1393,41 @@ def _reconcile_generic_guest_titles(events: list[ConcertEvent]) -> list[ConcertE
     for group in grouped.values():
         for marked in group:
             base = _base_generic_guest_title(marked.headliner)
-            if not base or id(marked) in removed:
+            if not base or id(marked) in removed or has_structured_guests(marked):
                 continue
             base_identity = normalize_artist_component(base)
-            for plain in group:
-                if plain is marked or id(plain) in removed:
+            candidates = []
+            for candidate in group:
+                if candidate is marked or id(candidate) in removed:
                     continue
-                if normalize_artist_component(plain.headliner) != base_identity:
+                exact_base = (
+                    normalize_artist_component(candidate.headliner)
+                    == base_identity
+                )
+                richer_bill = (
+                    _opaque_title_relation(base, candidate.headliner)
+                    == "right_extends_left"
+                )
+                if not (exact_base or richer_bill):
                     continue
                 if not (
-                    _same_event_specific_ticket(plain, marked)
-                    or _shared_promoter(plain, marked)
-                    or _official_and_aggregator_corroboration(plain, marked)
+                    _cross_source_evidence(candidate, marked)
+                    or _official_and_aggregator_corroboration(candidate, marked)
                 ):
                     continue
-                if _performance_conflict(plain, marked):
+                if _performance_conflict(candidate, marked):
                     continue
-                merge_events(plain, marked)
+                candidates.append((int(richer_bill), candidate))
+
+            if candidates:
+                # Prefer the source that replaces the placeholder with a
+                # specific named bill; otherwise retain the exact plain title.
+                _, preferred = max(
+                    candidates,
+                    key=lambda item: (item[0], _billing_richness(item[1])),
+                )
+                merge_events(preferred, marked)
                 removed.add(id(marked))
-                break
     return [event for event in events if id(event) not in removed]
 
 

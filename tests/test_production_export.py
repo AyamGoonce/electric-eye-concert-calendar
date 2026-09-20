@@ -88,6 +88,56 @@ class ProductionDataTests(unittest.TestCase):
 
         self.assertEqual(["Álpha", "Zulu"], [event["h"] for event in prepared])
 
+    def test_sunset_ticket_with_multiple_sessions_is_one_public_row(self):
+        events = [
+            make_event(
+                "2026-10-03",
+                "Lalo Zanelli & la Orquestra Modulable la Buena Union",
+                venue="Sunset/Sunside — Sunside",
+                ticket_url="https://billetterie.sunset-sunside.com/event/lalo",
+                start_time=start_time,
+                source_names=["Sunset/Sunside"],
+            )
+            for start_time in ("19:00", "21:30")
+        ]
+
+        prepared = prepare_upcoming_events(events, today=date(2026, 10, 1))
+
+        self.assertEqual(1, len(prepared))
+        self.assertIsNone(prepared[0]["st"])
+
+    def test_different_sunset_ticket_products_remain_separate(self):
+        events = [
+            make_event(
+                "2026-10-03",
+                "Example Trio",
+                venue="Sunset/Sunside — Sunside",
+                ticket_url=f"https://billetterie.sunset-sunside.com/event/{slug}",
+                start_time=start_time,
+            )
+            for slug, start_time in (("early", "19:00"), ("late", "21:30"))
+        ]
+
+        prepared = prepare_upcoming_events(events, today=date(2026, 10, 1))
+
+        self.assertEqual(2, len(prepared))
+
+    def test_shared_ticket_does_not_collapse_other_venue_performances(self):
+        events = [
+            make_event(
+                "2026-10-03",
+                "Example Trio",
+                venue="New Morning",
+                ticket_url="https://tickets.example/event/example-trio",
+                start_time=start_time,
+            )
+            for start_time in ("19:00", "21:30")
+        ]
+
+        prepared = prepare_upcoming_events(events, today=date(2026, 10, 1))
+
+        self.assertEqual(2, len(prepared))
+
     def test_production_fields_preserve_structured_city(self):
         event = make_event(
             "2026-09-01",

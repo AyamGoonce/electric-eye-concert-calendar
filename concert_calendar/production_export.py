@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from datetime import date, datetime, timezone
 import hashlib
 import html
@@ -194,6 +195,68 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
     }
 
 
+def _sunset_sunside_public_key(event: ConcertEvent) -> tuple | None:
+    """Identify one Sunset/Sunside ticket product without merging performances."""
+
+    venue = normalize_text(event.venue)
+    ticket = safe_ticket_url(event.ticket_url)
+    if not venue.startswith("sunset/sunside") or not ticket:
+        return None
+
+    parsed = urlparse(ticket)
+    normalized_ticket = parsed._replace(
+        path=re.sub(r"/+", "/", parsed.path).rstrip("/"),
+        fragment="",
+    ).geturl()
+    return (
+        event.date[:10],
+        venue,
+        normalize_text(event.headliner),
+        normalized_ticket,
+    )
+
+
+def _collapse_sunset_sunside_public_events(
+    events: list[ConcertEvent],
+) -> list[ConcertEvent]:
+    """Expose one public row when one Sunset ticket covers several sessions."""
+
+    grouped: dict[tuple, list[ConcertEvent]] = {}
+    for event in events:
+        key = _sunset_sunside_public_key(event)
+        if key is not None:
+            grouped.setdefault(key, []).append(event)
+
+    output: list[ConcertEvent] = []
+    emitted = set()
+    for event in events:
+        key = _sunset_sunside_public_key(event)
+        if key is None:
+            output.append(event)
+            continue
+        if key in emitted:
+            continue
+        emitted.add(key)
+        group = grouped[key]
+        if len(group) == 1:
+            output.append(event)
+            continue
+
+        # Work on a copy so internal performance records and IDs stay distinct.
+        # The shared ticket page offers the available sessions, so session time
+        # is intentionally omitted from the single public calendar entry.
+        representative = deepcopy(min(group, key=lambda item: item.start_time or "99:99"))
+        representative.start_time = None
+        representative.sold_out = all(item.sold_out for item in group)
+        if not representative.sold_out and any(
+            item.ticket_status == "tickets" for item in group
+        ):
+            representative.ticket_status = "tickets"
+        output.append(representative)
+
+    return output
+
+
 def prepare_upcoming_events(
     events: list[ConcertEvent],
     today: date | None = None,
@@ -226,7 +289,8 @@ def prepare_upcoming_events(
     # the same deterministic allocator rather than a separate collision policy.
     if any(not getattr(event, "_state_identity", None) for event in upcoming_events):
         assign_performance_identities(upcoming_events, preserve_public_ids=True)
-    return [event_to_data(event, rejected_images) for event in upcoming_events]
+    public_events = _collapse_sunset_sunside_public_events(upcoming_events)
+    return [event_to_data(event, rejected_images) for event in public_events]
 
 
 def serialize_data(value: object) -> str:

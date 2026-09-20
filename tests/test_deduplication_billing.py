@@ -254,6 +254,137 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
         self.assertEqual(1, len(result))
         self.assertEqual("Tramhaus & Leroy Se Meurt", result[0].headliner)
 
+    def test_word_conjunction_inside_artist_name_is_not_bill_extension(self):
+        short = event(
+            "The Devil",
+            source="Promoter",
+            venue="Backstage By The Mill",
+            date="2026-10-01",
+        )
+        full_name = event(
+            "The Devil And The Almighty Blues",
+            source="Backstage By The Mill",
+            venue="Backstage By The Mill",
+            date="2026-10-01",
+        )
+
+        result = deduplicate_events([short, full_name])
+
+        self.assertEqual(2, len(result))
+        self.assertEqual(
+            {
+                "The Devil",
+                "The Devil And The Almighty Blues",
+            },
+            {item.headliner for item in result},
+        )
+
+    def test_complete_artist_name_extends_to_richer_flat_bill_without_splitting(self):
+        short = event(
+            "The Devil And The Almighty Blues",
+            source="Backstage By The Mill",
+            venue="Backstage By The Mill",
+            date="2026-10-01",
+        )
+        rich = event(
+            "The Devil And The Almighty Blues + Skyjoggers",
+            source="Garmonbozia",
+            venue="Backstage By The Mill",
+            date="2026-10-01",
+        )
+
+        result = deduplicate_events([short, rich])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(
+            "The Devil And The Almighty Blues + Skyjoggers",
+            result[0].headliner,
+        )
+        self.assertIsNone(result[0].co_headliners)
+        self.assertEqual(
+            {"Backstage By The Mill", "Garmonbozia"},
+            set(result[0].source_names),
+        )
+
+    def test_generic_guest_placeholder_yields_to_correlated_named_bill(self):
+        placeholder = event(
+            "Bad Situation + Guests",
+            source="Le Trabendo",
+            venue="Le Trabendo",
+            date="2026-10-02",
+        )
+        rich = event(
+            "Bad Situation + Moonball + Monnekyn + Coal Noir",
+            source="Promoter",
+            venue="Le Trabendo",
+            date="2026-10-02",
+        )
+
+        result = deduplicate_events([placeholder, rich])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(rich.headliner, result[0].headliner)
+        self.assertIsNone(result[0].co_headliners)
+        self.assertIsNone(result[0].openers)
+
+    def test_flat_punctuation_names_remain_opaque_without_evidence(self):
+        names = (
+            "River & Mountain Collective",
+            "Fire And Memory Orchestra",
+            "Alpha + Beta Company",
+        )
+        for name in names:
+            with self.subTest(name=name):
+                result = deduplicate_events([event(name)])
+                self.assertEqual(name, result[0].headliner)
+                self.assertIsNone(result[0].co_headliners)
+                self.assertIsNone(result[0].openers)
+
+    def test_structured_semantics_do_not_cross_contaminate_same_day_venues(self):
+        duo = event(
+            "Simon & Garfunkel + Guests",
+            venue="Venue A",
+            source="Promoter A",
+        )
+        duo.performers = ["Simon & Garfunkel", "Guests"]
+        duo_flat = event(
+            "Simon & Garfunkel + Guests",
+            venue="Venue A",
+            source="DICE",
+        )
+
+        separate = event(
+            "Simon and Garfunkel + Guests",
+            venue="Venue B",
+            source="Promoter B",
+        )
+        separate.performers = ["Simon", "Garfunkel"]
+        separate_flat = event(
+            "Simon & Garfunkel + Guests",
+            venue="Venue B",
+            source="DICE",
+        )
+
+        result = deduplicate_events([duo, duo_flat, separate, separate_flat])
+
+        self.assertEqual(2, len(result))
+        by_venue = {item.venue: item for item in result}
+        self.assertEqual("Simon & Garfunkel", by_venue["Venue A"].headliner)
+        self.assertEqual(["Guests"], by_venue["Venue A"].co_headliners)
+        self.assertEqual("Simon", by_venue["Venue B"].headliner)
+        self.assertEqual(["Garfunkel"], by_venue["Venue B"].co_headliners)
+
+    def test_structured_artist_named_guests_is_not_treated_as_placeholder(self):
+        structured = event("Band + Guests", source="Venue")
+        structured.performers = ["Band", "Guests"]
+        flat = event("Band + Guests", source="Promoter")
+
+        result = deduplicate_events([structured, flat])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("Band", result[0].headliner)
+        self.assertEqual(["Guests"], result[0].co_headliners)
+
     def test_high_similarity_presentation_copy_merges(self):
         self.assertEqual(
             1,

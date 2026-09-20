@@ -61,12 +61,14 @@ class CalendarBillingHardeningTests(unittest.TestCase):
         payload['props']['pageProps']['entities']['ticketing']['description'] = 'La jam est animée par Bruna Hetzel.'
         parsed = parse_detail_payload(payload, 'https://example.test/bruna')
         events, state, rows = self.finish_pipeline(parsed, ['Bruna Hetzel', 'Chico Buarque'])
-        self.assertEqual(2, len(rows))
+        # Sunset/Sunside exposes one ticket page for both sessions. Keep both
+        # internal performance identities, but publish one calendar card.
+        self.assertEqual(1, len(rows))
         self.assertEqual(2, len(state['events']))
-        self.assertEqual(2, len({row['i'] for row in rows}))
-        for item, row in zip(events, rows):
-            self.assertEqual('Bruna Hetzel', row['h'])
-            self.assertEqual('Hommage à Chico Buarque + jam Brésil', row['et'])
+        self.assertIsNone(rows[0]['st'])
+        self.assertEqual('Bruna Hetzel', rows[0]['h'])
+        self.assertEqual('Hommage à Chico Buarque + jam Brésil', rows[0]['et'])
+        for item in events:
             self.assertEqual(['Bruna Hetzel'], [link['name'] for link in item.electric_eye_links])
             self.assertEqual('Electric Eye concert review', item.image_source)
 
