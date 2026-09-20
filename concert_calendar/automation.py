@@ -61,6 +61,7 @@ OPTIONAL_EVENT_KEYS = {
     "ch",
     "et",
     "sn",
+    "fn",
     "im",
     "is",
     "ee",
