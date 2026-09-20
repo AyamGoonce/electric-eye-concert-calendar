@@ -25,12 +25,14 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
 
         result = deduplicate_events([record])
 
-        # Dedup/state identity remains untouched.
+        # Resolve artist identity before linking; retain source context and
+        # its legacy spelling for persistent route/state migration.
         self.assertEqual(1, len(result))
-        self.assertEqual(original, result[0].headliner)
-        self.assertIsNone(result[0].event_title)
+        self.assertEqual("KATSEYE", result[0].headliner)
+        self.assertEqual(original, result[0].event_title)
+        self.assertIn(original, result[0].identity_aliases)
 
-        # Only the serialized public denomination is cleaned.
+        # Export formats the canonical fields without rediscovering artists.
         rows = prepare_upcoming_events(
             result,
             today=date(2026, 9, 1),
@@ -38,6 +40,22 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
 
         self.assertEqual("KATSEYE", rows[0]["h"])
         self.assertEqual(original, rows[0]["et"])
+
+    def test_tour_context_is_general_and_preserves_existing_programme(self):
+        from concert_calendar.billing_semantics import apply_structured_performer_semantics
+        record = ConcertEvent('2027-01-01', 'Example Artist – The Northern Lights Tour',
+                              'Example Venue', 'Paris', '75', event_title='Official programme')
+        apply_structured_performer_semantics([record])
+        self.assertEqual('Example Artist', record.headliner)
+        self.assertEqual('Official programme', record.event_title)
+        self.assertEqual('Example Artist – The Northern Lights Tour', record.raw_title)
+        apply_structured_performer_semantics([record])
+        self.assertEqual('Official programme', record.event_title)
+        record = ConcertEvent('2027-01-01', 'Example Artist - Unlabelled Words',
+                              'Example Venue', 'Paris', '75')
+        apply_structured_performer_semantics([record])
+        self.assertEqual('Example Artist - Unlabelled Words', record.headliner)
+        self.assertIsNone(record.event_title)
 
     def test_correlated_wrapper_spelling_variants_merge(self):
         plain = ConcertEvent(

@@ -48,16 +48,8 @@ def prismic_event_image(value):
 
 
 def split_bill(value):
-    artists = [
-        clean_text(part)
-        for part in re.split(r"\s+\+\s+", clean_text(value))
-    ]
-    artists = [artist for artist in artists if artist]
-
-    if not artists:
-        return "", None
-
-    return artists[0], artists[1:] or None
+    """A title alone does not establish individual artists or support roles."""
+    return clean_text(value), None
 
 
 def parse_document(document):

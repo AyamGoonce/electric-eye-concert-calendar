@@ -6,7 +6,7 @@ from concert_calendar.models import ConcertEvent
 from concert_calendar.scrapers.dice import parse_explicit_billing
 from concert_calendar.scrapers.radical import parse_card as parse_radical_card
 from concert_calendar.scrapers.rock_en_seine import parse_lineup
-from concert_calendar.sources import is_supported_event, is_ticket_product_title
+from concert_calendar.sources import classify_event_eligibility, is_ticket_product_title
 from concert_calendar.venues import normalize_event_venue
 
 
@@ -80,15 +80,15 @@ class SpecialBillingTests(unittest.TestCase):
         headliner, openers = parse_explicit_billing(
             "Le Beau Dimanche : Sahel Ménilmontant + Dj La Bise"
         )
-        self.assertEqual("Sahel Ménilmontant", headliner)
-        self.assertEqual(["Dj La Bise"], openers)
+        self.assertEqual("Sahel Ménilmontant + Dj La Bise", headliner)
+        self.assertIsNone(openers)
 
     def test_afters_suffix_is_metadata_not_artist_identity(self):
         headliner, openers = parse_explicit_billing(
             "KNATS • TUKAN [OPENING DES AFTERS JAZZ À LA VILLETTE #01]"
         )
-        self.assertEqual("KNATS", headliner)
-        self.assertEqual(["TUKAN"], openers)
+        self.assertEqual("KNATS • TUKAN", headliner)
+        self.assertIsNone(openers)
 
     def test_ordinary_dice_cobill_is_not_reinterpreted_as_support(self):
         headliner, openers = parse_explicit_billing("Artist A + Artist B")
@@ -130,12 +130,12 @@ class TicketProductTests(unittest.TestCase):
         ]
         self.assertTrue(all(is_ticket_product_title(title) for title in titles))
         self.assertTrue(
-            all(not is_supported_event(event(title, venue="Le Trabendo")) for title in titles)
+            all(not classify_event_eligibility(event(title, venue="Le Trabendo"))[0] for title in titles)
         )
 
     def test_artist_name_containing_package_token_is_not_excluded(self):
         self.assertFalse(is_ticket_product_title("The Package"))
-        self.assertTrue(is_supported_event(event("The Package", venue="Le Trabendo")))
+        self.assertTrue(classify_event_eligibility(event("The Package", venue="Le Trabendo"))[0])
 
 
 class WeakRawGenrePrecedenceTests(unittest.TestCase):

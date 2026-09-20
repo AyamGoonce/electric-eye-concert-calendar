@@ -321,6 +321,31 @@ def _base_generic_guest_title(value: str) -> str | None:
     return base if base != decoded.strip() else None
 
 
+def _mark_reviewed_wrapper_semantics(
+    events: list[ConcertEvent],
+) -> None:
+    """
+    Protect only an exact reviewed canonical title from generic decomposition.
+
+    REVIEWED_EVENT_TITLES also contains aliases used to establish equivalence.
+    Those aliases must remain eligible for normal canonical semantics.
+    """
+    for event in events:
+        reviewed_title = REVIEWED_EVENT_TITLES.get(
+            (
+                event.date,
+                normalize_venue_key(event.venue),
+                normalize_artist_component(event.headliner),
+            )
+        )
+        if (
+            reviewed_title
+            and normalize_headliner(event.headliner)
+            == normalize_headliner(reviewed_title)
+        ):
+            event._reviewed_wrapper_semantics_locked = True
+
+
 def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
     for event in events:
         event.headliner = unescape(event.headliner)
@@ -397,9 +422,6 @@ def merge_events(
     # and subsequently appear to be an official venue record itself.
     existing_official_venue = _has_official_venue_source(existing)
     incoming_official_venue = _has_official_venue_source(incoming)
-    venue_time_disagreement = _official_venue_time_disagreement(
-        existing, incoming
-    )
 
     existing.openers = _stable_unique(
         [*(existing.openers or []), *(incoming.openers or [])]
@@ -428,6 +450,26 @@ def merge_events(
     existing.first_seen = min(
         value for value in (existing.first_seen, incoming.first_seen) if value
     ) if existing.first_seen or incoming.first_seen else None
+
+    if (
+        getattr(existing, "_reviewed_wrapper_semantics_locked", False)
+        or getattr(incoming, "_reviewed_wrapper_semantics_locked", False)
+    ):
+        existing._reviewed_wrapper_semantics_locked = True
+
+    # Keep independent source evidence through reconciliation. It must remain
+    # available before content linking; the exporter cannot reconstruct it.
+    existing.performers = _stable_unique([
+        *(existing.performers or []), *(incoming.performers or [])
+    ]) or None
+    existing.tags = _stable_unique([
+        *(existing.tags or []), *(incoming.tags or [])
+    ]) or None
+    for field in ("raw_title", "event_type", "category", "performance_marker"):
+        if not getattr(existing, field) and getattr(incoming, field):
+            setattr(existing, field, getattr(incoming, field))
+    descriptions = _stable_unique([existing.description, incoming.description])
+    existing.description = "\n".join(descriptions or []) or None
 
     if not existing.genre and incoming.genre:
         existing.genre = incoming.genre
@@ -473,13 +515,7 @@ def merge_events(
     }
     if status_priority.get(incoming.ticket_status, 0) > status_priority.get(existing.ticket_status, 0):
         existing.ticket_status = incoming.ticket_status
-    if venue_time_disagreement:
-        # The venue's own clock time wins over an external ticketing/listing
-        # time once the two records have independently been accepted as one
-        # concert.
-        if incoming_official_venue and incoming.start_time:
-            existing.start_time = incoming.start_time
-    elif not existing.start_time and incoming.start_time:
+    if not existing.start_time and incoming.start_time:
         existing.start_time = incoming.start_time
 
     if not existing.event_title and incoming.event_title:
@@ -665,6 +701,54 @@ def _tour_base_identity(value: str) -> str | None:
     return _normalized_billing_component(match.group(1))
 
 
+def _tour_normalization_allows_merge(left: ConcertEvent, right: ConcertEvent) -> bool:
+    """Artist extraction must not manufacture same-performance evidence.
+
+    Compare original tour wording when canonical semantics removed it. Keep
+    reviewed equivalences and corroborated decorated/plain representations,
+    but do not equate two different programmes merely via their artist.
+    Date, venue, billing and performance-time gates remain the caller's job.
+    """
+    originals = []
+    normalized_tours = []
+    for event in (left, right):
+        raw = event.raw_title or event.headliner
+        extracted = (
+            title_identity(raw) != title_identity(event.headliner)
+            and _tour_base_identity(raw) == _normalized_billing_component(event.headliner)
+        )
+        originals.append(raw if extracted else event.headliner)
+        normalized_tours.append(extracted)
+    if not any(normalized_tours):
+        return True
+    if normalize_headliner(originals[0]) == normalize_headliner(originals[1]):
+        # Exact raw duplicates or the existing reviewed title-equivalence map.
+        return True
+    # Event-scoped reviewed rewrites are affirmative evidence too. Resolve
+    # original wording through that existing table before applying the generic
+    # guard; canonical artist extraction alone never grants this permission.
+    reviewed = [REVIEWED_EVENT_TITLES.get(
+        (event.date, normalize_venue_key(event.venue), normalize_artist_component(raw))
+    ) for event, raw in zip((left, right), originals)]
+    if (any(reviewed)
+            and left.date == right.date
+            and normalize_venue_key(left.venue) == normalize_venue_key(right.venue)
+            and normalize_headliner(reviewed[0] or originals[0])
+            == normalize_headliner(reviewed[1] or originals[1])):
+        return True
+    if _same_event_specific_ticket(left, right):
+        return True
+    left_sources, right_sources = set(left.source_names or []), set(right.source_names or [])
+    if not (left_sources and right_sources and left_sources != right_sources):
+        return False
+    # Independent sources can corroborate a decorated and a plain artist
+    # listing; different tour/programme titles are not mutual corroboration.
+    if sum(normalized_tours) != 1:
+        return False
+    marked = 0 if normalized_tours[0] else 1
+    return _tour_base_identity(originals[marked]) == _normalized_billing_component(originals[1 - marked])
+
+
 def _same_primary_billing(left: ConcertEvent, right: ConcertEvent) -> bool:
     left_festival = _festival_event_billing(left)
     right_festival = _festival_event_billing(right)
@@ -747,6 +831,8 @@ def _reconcile_cross_source_billing_variants(
             if _distinct_performance_evidence(left, right):
                 continue
             if not _cross_source_evidence(left, right):
+                continue
+            if not _tour_normalization_allows_merge(left, right):
                 continue
             if not _same_primary_billing(left, right):
                 continue
@@ -1100,20 +1186,14 @@ def _performance_conflict(left: ConcertEvent, right: ConcertEvent) -> bool:
         return True
     # Compare discriminators, rather than treating a single marker as a conflict.
     marker = r"\b(?:(?:1er|1re|2e|2ème|first|second)\s+(?:set|show|performance|séance)|matin[ée]e|evening|early show|late show)\b"
-    markers = [set(re.findall(marker, f"{event.headliner} {event.event_title or ''}".casefold()))
+    markers = [set(re.findall(marker, f"{event.headliner} {event.event_title or ''} {event.performance_marker or ''}".casefold()))
                for event in (left, right)]
     return bool(markers[0] and markers[1] and markers[0] != markers[1])
 
 
 def _same_exact_performance(left: ConcertEvent, right: ConcertEvent) -> bool:
-    # Venue pages and external ticketing services frequently describe the
-    # same concert using different clock semantics (for example doors vs
-    # performance time). Once date, normalized artist and normalized venue
-    # are an exact identity match, that disagreement alone is not evidence
-    # of a second performance when exactly one source is the venue itself.
-    if _official_venue_time_disagreement(left, right):
-        return True
-    return not _performance_conflict(left, right)
+    return (not _performance_conflict(left, right)
+            and _tour_normalization_allows_merge(left, right))
 
 
 def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
@@ -1324,6 +1404,10 @@ def _has_official_venue_source(event: ConcertEvent) -> bool:
     )
 
 
+
+
+
+
 def _has_explicit_performance_discriminator(event: ConcertEvent) -> bool:
     """Protect records explicitly identified as separate sets or performances."""
     value = f"{event.headliner} {event.event_title or ''}"
@@ -1344,8 +1428,10 @@ def _official_venue_time_disagreement(
     right: ConcertEvent,
 ) -> bool:
     """
-    Treat a venue-vs-external time disagreement as source semantics,
+    Treat an official-venue vs external clock disagreement as source semantics,
     not automatic proof of two performances.
+
+    Explicitly labelled sets/shows remain separate.
     """
     if (
         not left.start_time
@@ -1390,6 +1476,8 @@ def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
 
                 if not _matches_structured_bill(structured, full_bill):
                     continue
+                if not _tour_normalization_allows_merge(structured, full_bill):
+                    continue
 
                 venue_time_disagreement = _official_venue_time_disagreement(
                     structured,
@@ -1402,19 +1490,14 @@ def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
                 ):
                     continue
 
-                # Once the bill has independently matched, prefer the venue's
-                # own stated time over an external ticketing-source time.
+                # Once the bill has independently matched, prefer the
+                # official venue's stated time over an external source time.
                 if venue_time_disagreement:
                     if (
                         _has_official_venue_source(full_bill)
                         and full_bill.start_time
                     ):
                         structured.start_time = full_bill.start_time
-                    elif (
-                        _has_official_venue_source(structured)
-                        and structured.start_time
-                    ):
-                        pass
 
                 merge_events(structured, full_bill)
                 removed.add(id(full_bill))
@@ -1576,6 +1659,7 @@ def _normalize_event_title_wrappers(events):
                       and not _distinct_performance_evidence(event, other)
                       and not separate_performance_marker(event)
                       and not separate_performance_marker(other)
+                      and _tour_normalization_allows_merge(event, other)
                       and (_same_event_specific_ticket(event, other)
                            or ((id(event) in changed or id(other) in changed)
                                and _cross_source_evidence(event, other))
@@ -1674,6 +1758,7 @@ def deduplicate_events(
 ) -> list[ConcertEvent]:
     """Collapse exact and explicitly reconcilable duplicate concerts."""
 
+    _mark_reviewed_wrapper_semantics(events)
     apply_structured_performer_semantics(events)
     _apply_reviewed_calendar_identity_fixes(events)
 
@@ -1707,6 +1792,8 @@ def deduplicate_events(
     # structured/full-bill reconciler one final opportunity to merge those
     # now-comparable cross-source records.
     reconciled = _reconcile_full_bills(reconciled)
+
+    apply_structured_performer_semantics(reconciled)
 
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(

@@ -177,43 +177,6 @@ def is_ticket_product_title(title):
     return any(re.search(pattern, normalized) for pattern in product_patterns)
 
 
-def is_supported_event(event):
-    """
-    Return True only for events that belong in the calendar.
-
-    Comedy, stand-up, one-person shows and spoken-word events are
-    supported and will remain in the calendar.
-    """
-
-    # Temporary reviewed exclusion: Olympia lists Ronnie Wood only on
-    # 2026-09-05. A phantom 2026-09-06 occurrence is currently emitted
-    # upstream and must not reach the public calendar.
-    if (
-        (event.date or "")[:10] == "2026-09-06"
-        and normalize_headliner(event.headliner)
-        == normalize_headliner("Ronnie Wood")
-    ):
-        return False
-
-    eligible, _ = classify_event_eligibility(event)
-    if not eligible:
-        return False
-
-    normalized_title = normalize_text_for_matching(event.headliner)
-    normalized_genre = normalize_text_for_matching(event.genre or "")
-
-    excluded_scope_patterns = [
-        r"\btheatre\b",
-        r"\bconference\b",
-        r"\bmasterclass\b",
-    ]
-
-    combined_text = f"{normalized_title} {normalized_genre}"
-
-    return not any(
-        re.search(pattern, combined_text)
-        for pattern in excluded_scope_patterns
-    )
 
 
 NON_CONCERT_TYPES = {

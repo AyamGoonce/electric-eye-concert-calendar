@@ -46,6 +46,7 @@ class EventTitleIdentityTests(unittest.TestCase):
 
     def test_existing_dice_neutral_bill_retains_descriptor_free_entities(self):
         parsed = parse_event({"id": "fixture", "name": "Kanaan (Psychedelic Rock - Norvège) + Caduta Massi",
+                              "artists": [{"name": "Kanaan"}, {"name": "Caduta Massi"}],
                               "dates": {"event_start_date": "2027-03-29T20:00:00+02:00"},
                               "venues": [{"name": "Casino de Paris", "city": {"name": "Paris"}}]})
         row = serialized([parsed])[0]

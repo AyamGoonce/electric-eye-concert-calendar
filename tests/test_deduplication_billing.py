@@ -122,6 +122,58 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
         second = event("Artist – The Final World Tour", source="Same source")
         self.assertEqual(2, len(deduplicate_events([first, second])))
 
+    def test_tour_artist_cleanup_is_not_single_source_merge_evidence(self):
+        from itertools import permutations
+        for titles in permutations(('Artist', 'Artist – Northern Tour', 'Artist – Southern Tour')):
+            records = [event(title, source='Same source') for title in titles]
+            result = deduplicate_events(records)
+            self.assertEqual(3, len(result))
+            self.assertEqual({'Artist'}, {item.headliner for item in result})
+            self.assertEqual({None, 'Artist – Northern Tour', 'Artist – Southern Tour'},
+                             {item.event_title for item in result})
+
+    def test_different_tour_programmes_are_not_cross_source_corroboration(self):
+        first = event('Artist – Northern Tour', source='Venue')
+        second = event('Artist – Southern Tour', source='Promoter')
+        self.assertEqual(2, len(deduplicate_events([first, second])))
+
+    def test_shared_event_ticket_can_corroborate_tour_but_not_different_times(self):
+        for different_times in (False, True):
+            first = event('Artist', source='Same source')
+            second = event('Artist – Northern Tour', source='Same source')
+            first.ticket_url = 'https://tickets.example/concert/unique-product?utm_source=one'
+            second.ticket_url = 'https://tickets.example/concert/unique-product'
+            first.start_time = '19:00'
+            second.start_time = '21:00' if different_times else '19:00'
+            self.assertEqual(2 if different_times else 1, len(deduplicate_events([first, second])))
+
+    def test_exact_source_tour_representations_still_collapse(self):
+        first = event('Artist – Northern Tour', source='Same source')
+        second = event('Artist – Northern Tour', source='Same source')
+        result = deduplicate_events([first, second])
+        self.assertEqual(1, len(result))
+        self.assertEqual('Artist', result[0].headliner)
+        self.assertEqual('Artist – Northern Tour', result[0].event_title)
+
+    def test_reviewed_tour_equivalence_precedes_guard_but_not_time_safety(self):
+        from unittest.mock import patch
+        from concert_calendar.deduplication import REVIEWED_EVENT_TITLES
+        from concert_calendar.venues import normalize_venue_key
+        reviewed_date = '2027-01-10'
+        venue = normalize_venue_key(event('Artist').venue)
+        rule = {(reviewed_date, venue, 'artist – northern tour'): 'Artist'}
+        with patch.dict(REVIEWED_EVENT_TITLES, rule):
+            for day, times, expected in (
+                (reviewed_date, (None, None), 1),
+                ('2027-01-11', (None, None), 2),
+                (reviewed_date, ('19:00', '21:00'), 2),
+            ):
+                with self.subTest(day=day, times=times):
+                    plain = event('Artist', source='Same source', date=day)
+                    marked = event('Artist – Northern Tour', source='Same source', date=day)
+                    plain.start_time, marked.start_time = times
+                    self.assertEqual(expected, len(deduplicate_events([plain, marked])))
+
     def test_punctuation_accent_and_case_variants_merge_cross_source(self):
         left = event("Beyoncé!", source="Venue")
         right = event("BEYONCE", source="Promoter")

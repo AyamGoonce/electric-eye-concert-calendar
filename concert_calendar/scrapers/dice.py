@@ -174,59 +174,17 @@ def parse_explicit_billing(title):
     if not has_reviewed_structure:
         return title, None
 
-    components = [
-        clean_text(value)
-        for value in re.split(r"\s+(?:\+|•)\s+", title)
-    ]
-
-    if len(components) < 2:
-        return title, None
-
-    return components[0], components[1:]
+    return title, None
 
 
 def parse_neutral_cobill(title):
-    """Split explicit equal-billing artist lists without inventing support hierarchy."""
-
-    title = clean_text(title)
-    # A project/description parenthetical is not an explicit flat artist list.
+    """A title alone does not establish individual artists or support roles."""
     if re.search(r"\([^)]*[+•][^)]*\)", title):
-        return title, None
-    components = [
-        clean_text(value)
-        for value in re.split(r"\s+(?:\+|•)\s+", title)
-    ]
-
-    if len(components) < 2:
-        return title, None
-
-    non_artist_patterns = (
-        r"^1(?:er|re|ère|e)\s+partie$",
-        r"^(?:guest|guests)$",
-        r"^(?:support|supports)$",
-        r"^(?:special guest|special guests)$",
-        r"^(?:opening act|opening acts)$",
-        r"^(?:tba|to be announced)$",
-        r"^guests?\s+(?:surprise|suprise)$",
-    )
-
-    # Preserve the existing explicit "1ère partie" representation; it is
-    # descriptive billing metadata, not an artist placeholder to rewrite.
-    if any(re.fullmatch(non_artist_patterns[0], component, flags=re.IGNORECASE) for component in components):
-        return title, None
-
-    components = [
-        component for component in components
-        if not any(
-            re.fullmatch(pattern, component, flags=re.IGNORECASE)
-            for pattern in non_artist_patterns
-        )
-    ]
-
-    if len(components) < 2:
-        return components[0] if components else title, None
-
-    return components[0], components[1:]
+        return clean_text(title), None
+    # Anonymous guest placeholders are not artist identities. This does not
+    # split or assign roles to any of the remaining named text.
+    title = re.sub(r"\s+\+\s+guests?(?:\s+(?:surprise|suprise))?\s*$", "", clean_text(title), flags=re.I)
+    return title, None
 
 
 def parse_mardi_jazz_lineup(description):
@@ -438,6 +396,11 @@ def parse_event(data):
         co_headliners=co_headliners,
         promoters=None,
         genre=None,
+        raw_title=event_name,
+        performers=list(dict.fromkeys(
+            clean_text(item.get('name')) for item in (data.get('artists') or data.get('performers') or [])
+            if isinstance(item, dict) and clean_text(item.get('name'))
+        )) or None,
         facebook_event_url=None,
         ticket_url=f"https://dice.fm/event/{event_id}",
         sold_out=(raw_status == "sold-out"),

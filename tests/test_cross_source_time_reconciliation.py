@@ -42,9 +42,7 @@ class CrossSourceTimeReconciliationTests(unittest.TestCase):
                 event_title="Alpha + Beta",
             ),
         ]
-
         result = deduplicate_events(events)
-
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0].headliner, "Alpha")
         self.assertEqual(result[0].co_headliners, ["Beta"])

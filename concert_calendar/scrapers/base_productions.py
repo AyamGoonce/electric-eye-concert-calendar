@@ -49,25 +49,8 @@ def parse_date(value):
 
 
 def parse_lineup(value):
-    artists = [
-        clean_text(artist)
-        for artist in clean_text(value).split("+")
-        if clean_text(artist)
-    ]
-
-    if not artists:
-        return "", None
-
-    openers = [
-        artist
-        for artist in artists[1:]
-        if artist.casefold() not in {
-            "guest",
-            "guests",
-        }
-    ]
-
-    return artists[0], openers[:5] or None
+    """A title alone does not establish individual artists or support roles."""
+    return clean_text(value), None
 
 
 def split_venue_city(value):

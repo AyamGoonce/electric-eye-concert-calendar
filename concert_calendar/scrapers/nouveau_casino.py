@@ -22,7 +22,15 @@ def parse_items(soup, *, today=None):
         try: event_date=date(year,month,day_number)
         except ValueError: continue
         for card in day.select("li.event_item[data-type='concert']"):
-            title=clean((card.select_one(".event_header h3") or card).get_text(" ",strip=True))
+            title_node = card.select_one(".event_header h3") or card
+            title=clean(title_node.get_text(" ",strip=True))
+            # The official billing field uses explicit line breaks for artists.
+            # Punctuation within each line belongs to that artist's name.
+            performers = None
+            if title_node.find("br"):
+                lines = [clean(BeautifulSoup(part, "html.parser").get_text(" ", strip=True))
+                         for part in re.split(r"<br\s*/?>", title_node.decode_contents(), flags=re.I)]
+                performers = [line for line in lines if line] or None
             sold=bool(re.search(r"\[(?:sold out|complet)\]",title,re.I))
             title=clean(re.sub(r"\s*\[(?:sold out|complet)\]\s*","",title,flags=re.I))
             if not title or event_date < cutoff: continue
@@ -33,6 +41,7 @@ def parse_items(soup, *, today=None):
             image=element_image_url(card.select_one("picture img"),base_url=PROGRAMME_URL)
             result.append(ConcertEvent(date=event_date.isoformat(),headliner=title,venue=SOURCE_NAME,
                 city="Paris",department="75",genre=", ".join(genres) or None,
+                raw_title=title, performers=performers,
                 ticket_url=ticket.get("href") if ticket else PROGRAMME_URL,
                 ticket_status="sold_out" if sold else "tickets",sold_out=sold,
                 start_time=clean(start.get_text()) if start else None,image_url=image,

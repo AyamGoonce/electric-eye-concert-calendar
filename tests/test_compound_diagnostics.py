@@ -18,7 +18,8 @@ class CompoundDiagnosticsTests(TestCase):
         self.assertEqual(event.date, diagnostic["final_date"])
         self.assertEqual(event.venue, diagnostic["final_venue"])
         self.assertEqual(event.ticket_url, diagnostic["detail_url"])
-        self.assertEqual(["ABORTED"], diagnostic["parsed_openers"])
+        self.assertIsNone(diagnostic["parsed_openers"])
+        self.assertEqual("SHADOW OF INTENT + ABORTED", event.headliner)
 
     @freeze_date("concert_calendar.scrapers.elysee_montmartre")
     def test_elysee_compound_diagnostic_does_not_change_event(self):

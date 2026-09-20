@@ -25,8 +25,8 @@ class DiceBillingNormalizationTests(TestCase):
         self.assertEqual("LEYA", parsed.headliner)
         self.assertEqual(["Aesthesis"], parsed.openers)
         parsed = event("Pass 2 Jours Trabendo : ear + Bassvictim — Pitchfork Music Festival 2026")
-        self.assertEqual("ear", parsed.headliner)
-        self.assertEqual(["Bassvictim"], parsed.co_headliners)
+        self.assertEqual("ear + Bassvictim", parsed.headliner)
+        self.assertIsNone(parsed.co_headliners)
         self.assertEqual("Pitchfork Music Festival 2026", parsed.series_name)
 
     def test_named_guest_is_support(self):
@@ -49,7 +49,8 @@ class DiceBillingNormalizationTests(TestCase):
         ):
             parsed = event(title)
             if "GUEST SUPRISE" in title:
-                self.assertEqual(["BROWER (US)", "ROBERTA LIPS"], parsed.co_headliners)
+                self.assertEqual("THE PRIZE (AUS) + BROWER (US) + ROBERTA LIPS", parsed.headliner)
+                self.assertIsNone(parsed.co_headliners)
             else:
                 self.assertFalse(parsed.co_headliners)
                 self.assertFalse(parsed.openers)
@@ -65,7 +66,8 @@ class DiceBillingNormalizationTests(TestCase):
             parsed = event(title)
             self.assertTrue(parsed.headliner)
         parsed = event("Artist A + Artist B + Artist C")
-        self.assertEqual(["Artist B", "Artist C"], parsed.co_headliners)
+        self.assertEqual("Artist A + Artist B + Artist C", parsed.headliner)
+        self.assertIsNone(parsed.co_headliners)
 
     def test_unrecognized_dash_title_is_not_stripped(self):
         parsed = event("Artist — A Night To Remember")

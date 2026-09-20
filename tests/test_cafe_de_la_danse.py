@@ -23,7 +23,7 @@ from concert_calendar.scrapers.cafe_de_la_danse import (
     load_events,
     parse_card,
 )
-from concert_calendar.sources import is_supported_event
+from concert_calendar.sources import classify_event_eligibility
 from concert_calendar.venues import normalize_event_venue
 
 
@@ -105,7 +105,7 @@ class CafeDeLaDanseTests(unittest.TestCase):
             ),
             venue="Café de la Danse", city="Paris", department="75",
         )
-        self.assertTrue(is_supported_event(event))
+        self.assertTrue(classify_event_eligibility(event)[0])
 
     def test_bounded_pagination_and_internal_duplicate_protection(self):
         responses = [Response(fixture("programme.html")), Response(fixture("page-2.html"))]

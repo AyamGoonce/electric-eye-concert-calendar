@@ -29,7 +29,7 @@ from concert_calendar.scraper_loader import (
     discover_scrapers,
     discover_scrapers_with_issues,
 )
-from concert_calendar.sources import is_supported_event
+from concert_calendar.sources import classify_event_eligibility
 from concert_calendar.venues import normalize_event_venue
 from concert_calendar.scrapers.olympia import parse_item as parse_olympia_item
 from concert_calendar.scrapers.seine_musicale import parse_detail as parse_seine_detail
@@ -67,7 +67,11 @@ class ArtistNormalizationTests(unittest.TestCase):
         merged = deduplicate_events([katseye, tour])
 
         self.assertEqual(1, len(merged))
-        self.assertEqual("KATSEYE - THE WILDWORLD TOUR", merged[0].headliner)
+        self.assertEqual("KATSEYE", merged[0].headliner)
+        self.assertEqual("KATSEYE - THE WILDWORLD TOUR", merged[0].event_title)
+        from concert_calendar.production_export import event_to_data
+        self.assertEqual("KATSEYE", event_to_data(merged[0])["h"])
+        self.assertEqual("KATSEYE - THE WILDWORLD TOUR", event_to_data(merged[0])["et"])
         self.assertTrue(merged[0].ticket_url)
         self.assertEqual("sold_out", merged[0].ticket_status)
 
@@ -299,6 +303,7 @@ class BillingReconciliationTests(unittest.TestCase):
 
         self.assertEqual(1, len(result))
         self.assertEqual("WOLFGANG VOIGT presents GAS live", result[0].headliner)
+        self.assertIsNone(result[0].event_title)
 
     def test_reviewed_augusta_full_band_titles_merge_and_keep_sold_out(self):
         plain = make_event("Augusta", "Le Hasard Ludique")
@@ -502,7 +507,7 @@ class BillingReconciliationTests(unittest.TestCase):
         late = make_event("TIGERCUB – 20H", "La Boule Noire")
         result = deduplicate_events([plain, early, late])
         self.assertEqual(2, len(result))
-        self.assertEqual({"TIGERCUB – 16H", "TIGERCUB – 20H"}, {x.headliner for x in result})
+        self.assertEqual({"TIGERCUB", "TIGERCUB – 20H"}, {x.headliner for x in result})
 
     def test_generic_parent_does_not_create_third_multi_set_performance(self):
         parent = make_event("Mark Guiliana", "New Morning")
@@ -828,44 +833,44 @@ class ReviewedMoveTests(unittest.TestCase):
 class EventScopeTests(unittest.TestCase):
     def test_release_party_concert_is_supported(self):
         self.assertTrue(
-            is_supported_event(make_event("Artist – Album Release Party"))
+            classify_event_eligibility(make_event("Artist – Album Release Party"))[0]
         )
 
     def test_dice_style_release_party_cobill_is_supported(self):
         self.assertTrue(
-            is_supported_event(
+            classify_event_eligibility(
                 make_event("ARTIST (RELEASE PARTY) + GUEST")
-            )
+            )[0]
         )
 
     def test_bloc_party_artist_is_supported(self):
         self.assertTrue(
-            is_supported_event(make_event("Bloc Party + Interpol"))
+            classify_event_eligibility(make_event("Bloc Party + Interpol"))[0]
         )
 
     def test_bloc_party_night_is_not_artist_exception(self):
         self.assertFalse(
-            is_supported_event(make_event("Bloc Party Night"))
+            classify_event_eligibility(make_event("Bloc Party Night"))[0]
         )
 
     def test_generic_party_remains_excluded(self):
-        self.assertFalse(is_supported_event(make_event("Friday Party")))
+        self.assertFalse(classify_event_eligibility(make_event("Friday Party"))[0])
 
     def test_named_party_live_tour_is_supported(self):
         self.assertTrue(
-            is_supported_event(make_event("Niall Horan - Dinner Party Live On Tour"))
+            classify_event_eligibility(make_event("Niall Horan - Dinner Party Live On Tour"))[0]
         )
 
     def test_dj_release_party_remains_excluded(self):
         self.assertFalse(
-            is_supported_event(
+            classify_event_eligibility(
                 make_event("Album Release Party – DJ Set")
-            )
+            )[0]
         )
 
     def test_viewing_party_remains_excluded(self):
         self.assertFalse(
-            is_supported_event(make_event("Finale Viewing Party"))
+            classify_event_eligibility(make_event("Finale Viewing Party"))[0]
         )
 
 
@@ -1096,6 +1101,7 @@ class SourceQualityTests(unittest.TestCase):
             {
                 "id": "automatic-test",
                 "name": "AUTOMATIC (US) + LEO VINCENT",
+                "artists": [{"name": "AUTOMATIC"}, {"name": "LEO VINCENT"}],
                 "status": "sold-out",
                 "images": {
                     "square": "https://dice-media.imgix.net/automatic.jpg"
@@ -1109,13 +1115,12 @@ class SourceQualityTests(unittest.TestCase):
             }
         )
 
-        self.assertEqual("AUTOMATIC (US)", event.headliner)
+        from concert_calendar.billing_semantics import apply_structured_performer_semantics
+        apply_structured_performer_semantics([event])
+        self.assertEqual("AUTOMATIC", event.headliner)
         self.assertEqual(["LEO VINCENT"], event.co_headliners)
         self.assertIsNone(event.openers)
-        self.assertEqual(
-            "AUTOMATIC (US) + LEO VINCENT",
-            event.event_title,
-        )
+        self.assertIsNone(event.event_title)
         self.assertEqual("19:30", event.start_time)
         self.assertEqual("sold_out", event.ticket_status)
         self.assertTrue(event.sold_out)
@@ -1538,7 +1543,8 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
         )
 
         self.assertEqual("https://supersonic-club.fr/event/example-band/", event.ticket_url)
-        self.assertEqual(["Support"], event.openers)
+        self.assertEqual("Example Band • Support", event.headliner)
+        self.assertIsNone(event.openers)
 
     def test_radical_cancelled_event_has_status_without_fake_ticket(self):
         card = BeautifulSoup(

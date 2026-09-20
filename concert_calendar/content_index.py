@@ -13,7 +13,6 @@ from urllib.parse import urlparse
 
 import requests
 
-from concert_calendar.deduplication import TIME_SUFFIX_RE
 
 
 FEED_URL = "https://www.electriceyerock.com/feeds/posts/summary"
@@ -835,9 +834,6 @@ def enrich_events(events, index):
         co_headliner_count = len(event.co_headliners or [])
         for position, name in enumerate(names):
             comparable = name
-            match = TIME_SUFFIX_RE.search(comparable)
-            if match:
-                comparable = comparable[:match.start()].strip()
             slug = lookup.get(normalize_content_identity(comparable))
             if not slug or slug in {item["slug"] for item in links}:
                 continue

@@ -73,7 +73,7 @@ def parse_card(card):
         venue="File7",
         city="Magny-le-Hongre",
         department="77",
-        openers=openers,
+        co_headliners=openers,
         promoters=None,
         genre=None,
         facebook_event_url=None,

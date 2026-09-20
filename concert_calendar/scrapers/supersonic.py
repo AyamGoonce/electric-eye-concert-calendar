@@ -80,18 +80,13 @@ def parse_event_row(row, page_url):
     if not full_title or is_non_concert_event(full_title):
         return None
 
-    artists = [
-        artist.strip()
-        for artist in full_title.split("•")
-        if artist.strip()
-    ]
-    headliner = artists[0] if artists else full_title
+    headliner = full_title
     href = (title_link.get("href") or "").strip()
 
     return ConcertEvent(
         date=(date_element.get("datetime", "").strip() if date_element else ""),
         headliner=headliner,
-        openers=artists[1:6] or None,
+        raw_title=full_title,
         venue=(
             venue_element.get_text(" ", strip=True)
             if venue_element else "Supersonic"

@@ -32,14 +32,20 @@ class RemainingOutputTests(unittest.TestCase):
             if not different_time:
                 self.assertEqual("Carpenter Brut", rows[0]["h"])
 
-    def test_heavy_lungs_current_source_preserves_structure(self):
+    def test_heavy_lungs_title_only_source_does_not_invent_structure(self):
         parsed = parse_event({"id": "6a314dc1e947e50001325e21",
                               "name": "HEAVY LUNGS + JOE & THE SHITBOYS",
                               "dates": {"event_start_date": "2026-10-30T20:00:00+02:00"},
                               "venues": [{"name": "Le Plan", "city": {"name": "Paris"}}]})
         rows = output(deduplicate_events([parsed]))
-        self.assertEqual("Heavy Lungs", rows[0]["h"])
-        self.assertEqual(["Joe & The Shitboys"], rows[0]["ch"])
+        # This fixture contains only a title, date and venue: no independent
+        # artist array, lineup markup or support-role evidence.
+        self.assertEqual("HEAVY LUNGS + JOE & THE SHITBOYS", parsed.raw_title)
+        self.assertIsNone(parsed.performers)
+        self.assertEqual(1, len(rows))
+        self.assertEqual("Heavy Lungs + Joe & The Shitboys", rows[0]["h"])
+        self.assertFalse(rows[0].get("ch"))
+        self.assertFalse(rows[0].get("o"))
 
     def test_unordered_taxonomy_retains_raw_without_three_public_genres(self):
         for title, raw in (("Keziah Jones Symphonique", "Jazz, Musiques du monde, Soul, Funk"),

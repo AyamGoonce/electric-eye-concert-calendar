@@ -96,6 +96,7 @@ def parse_detail_payload(payload, detail_url, listing_item=None):
         if isinstance(listing_category, dict):
             category = clean_text(listing_category.get("name"))
     picture = image_url(ticketing)
+    description = clean_text(ticketing.get("description"))
     if not headliner or not venue:
         return []
 
@@ -134,16 +135,10 @@ def parse_detail_payload(payload, detail_url, listing_item=None):
             start_time=start.strftime("%H:%M"),
             image_url=picture,
             image_source=SOURCE_NAME if picture else None,
+            event_title=headliner,
+            description=description or None,
         ))
 
-    same_identity = {}
-    for event in parsed:
-        key = (event.date, event.headliner.casefold(), event.venue.casefold())
-        same_identity.setdefault(key, []).append(event)
-    for group in same_identity.values():
-        if len(group) > 1:
-            for event in group:
-                event.headliner = f"{event.headliner} – {event.start_time.replace(':', 'h')}"
     return parsed
 
 

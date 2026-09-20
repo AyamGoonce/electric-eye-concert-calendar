@@ -4,13 +4,14 @@ from concert_calendar.deduplication import (
     _apply_display_capitalization,
     _display_candidates,
 )
+from concert_calendar.billing_semantics import apply_structured_performer_semantics
 from concert_calendar.event_titles import is_non_artist_event_title
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import _display_title_parts, event_to_data
 
 
 def event(headliner, *, co_headliners=None, event_title=None):
-    return ConcertEvent(
+    item = ConcertEvent(
         date="2030-01-01",
         headliner=headliner,
         venue="Example Hall",
@@ -20,6 +21,9 @@ def event(headliner, *, co_headliners=None, event_title=None):
         co_headliners=co_headliners,
         event_title=event_title,
     )
+
+    apply_structured_performer_semantics([item])
+    return item
 
 
 class NomenclatureCompletionTests(unittest.TestCase):
@@ -76,7 +80,7 @@ class NomenclatureCompletionTests(unittest.TestCase):
             ("Lea Jacta Est", "Release Party"),
         )
 
-    def test_new_album_suffix_moves_out_of_artist(self):
+    def test_explicit_new_album_suffix_is_canonical_context(self):
         item = event(
             'Chloé Cassandre & Primetime Jazz - '
             'Nouvel album "Rêves fous"'
@@ -89,62 +93,43 @@ class NomenclatureCompletionTests(unittest.TestCase):
             ),
         )
 
-    def test_live_performance_title_moves_out_of_artist(self):
+    def test_live_performance_title_requires_independent_evidence(self):
         item = event("Cotonete - Sunday School (Live)")
-        self.assertEqual(
-            _display_title_parts(item),
-            ("Cotonete", "Sunday School (Live)"),
-        )
+        self.assertEqual(_display_title_parts(item), (item.headliner, None))
 
-    def test_quoted_programme_moves_out_of_artist(self):
+    def test_quoted_programme_requires_independent_evidence(self):
         item = event(
             "Yann Benoist “des bises et des shows”"
         )
-        self.assertEqual(
-            _display_title_parts(item),
-            ("Yann Benoist", "des bises et des shows"),
-        )
+        self.assertEqual(_display_title_parts(item), (item.headliner, None))
 
     def test_reversed_tribute_keeps_only_performers_on_main_line(self):
         item = event(
             "HOMMAGE À RAY CHARLES avec "
             "Big Dez + Jam blues"
         )
-        self.assertEqual(
-            _display_title_parts(item),
-            (
-                "Big Dez + Jam blues",
-                "HOMMAGE À RAY CHARLES",
-            ),
-        )
+        self.assertEqual(_display_title_parts(item), (item.headliner, None))
 
-    def test_live_programme_list_becomes_artist_bill(self):
+    def test_live_programme_list_requires_independent_evidence(self):
         item = event(
             "Deadbeat Dubtechno Special: "
             "Tikiman live, Neida live, re:ni"
         )
-        self.assertEqual(
-            _display_title_parts(item),
-            (
-                "Tikiman + Neida + re:ni",
-                "Deadbeat Dubtechno Special",
-            ),
-        )
+        self.assertEqual(_display_title_parts(item), (item.headliner, None))
 
     def test_structured_coheadliners_are_not_rendered_twice(self):
         item = event(
-            "FRENCH V.I.P. Women : Marie Amali",
+            "Marie Amali",
             co_headliners=["Sopycal", "Illa"],
             event_title=(
-                "FRENCH V.I.P. Women : "
-                "Marie Amali + Sopycal + Illa"
+                "FRENCH V.I.P. Women"
             ),
         )
 
         self.assertEqual(
             _display_title_parts(item),
             (
-                "Marie Amali + Sopycal + Illa",
+                "Marie Amali",
                 "FRENCH V.I.P. Women",
             ),
         )
@@ -153,9 +138,9 @@ class NomenclatureCompletionTests(unittest.TestCase):
 
         self.assertEqual(
             public["h"],
-            "Marie Amali + Sopycal + Illa",
+            "Marie Amali",
         )
-        self.assertNotIn("ch", public)
+        self.assertEqual(["Sopycal", "Illa"], public["ch"])
 
     def test_slash_theme_night_is_non_artist_event(self):
         self.assertTrue(

@@ -42,3 +42,5 @@ class ConcertEvent:
     tags: Optional[list[str]] = None
     performers: Optional[list[str]] = None
     description: Optional[str] = None
+    raw_title: Optional[str] = None
+    performance_marker: Optional[str] = None

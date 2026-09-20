@@ -12,6 +12,7 @@ SOURCE_NAME = "La Machine du Moulin Rouge"
 PROGRAMME_URL = "https://www.lamachinedumoulinrouge.com/agenda/"
 REQUEST_TIMEOUT = 30
 MAX_DIAGNOSTICS = 200
+MAX_BILLING_DETAILS = 12
 _DIAGNOSTICS = []
 HEADERS = {
     "User-Agent": (
@@ -95,7 +96,19 @@ def load_events():
     response.raise_for_status()
 
     unique = {}
+    detail_count = 0
     for event in parse_events(BeautifulSoup(response.text, "html.parser")):
+        if detail_count < MAX_BILLING_DETAILS and re.search(r"\s[+&/]\s", event.headliner):
+            detail_count += 1
+            try:
+                detail = session.get(event.ticket_url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+                detail.raise_for_status()
+                event.performers = detail_performers(detail.text) or None
+            except requests.RequestException:
+                # Keep the authoritative agenda record intact when optional
+                # billing evidence is unavailable; never guess from its '+'.
+                event.performers = None
+            event.raw_title = event.headliner
         unique.setdefault((event.date, event.start_time, event.headliner.casefold()), event)
     result = discard_repeated_generic_images(list(unique.values()))
     print(f"Created {len(result)} La Machine du Moulin Rouge ConcertEvent records")
@@ -104,3 +117,11 @@ def load_events():
 
 def get_diagnostics():
     return list(_DIAGNOSTICS)
+
+
+def detail_performers(html):
+    """Use the venue's artist biography headings, never the title separators."""
+    soup = BeautifulSoup(html, "html.parser")
+    return list(dict.fromkeys(_clean(node.get_text(" ", strip=True))
+                             for node in soup.select("h2.nomartiste")
+                             if _clean(node.get_text(" ", strip=True))))

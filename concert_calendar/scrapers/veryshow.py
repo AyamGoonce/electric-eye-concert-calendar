@@ -124,12 +124,6 @@ def get_headliner(post):
 
     title = clean_text(post.get("title"))
 
-    if " – " in title:
-        return title.split(" – ", 1)[0].strip()
-
-    if " - " in title:
-        return title.split(" - ", 1)[0].strip()
-
     return title
 
 

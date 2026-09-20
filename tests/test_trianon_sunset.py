@@ -108,7 +108,7 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         self.assertEqual({event.venue for event in events}, {"Sunset/Sunside — Sunset"})
         self.assertEqual({event.start_time for event in events}, {"19:00", "21:30"})
         self.assertEqual(len(deduplicate_events(events)), 2)
-        self.assertTrue(all(" – " in event.headliner for event in events))
+        self.assertTrue(all(event.headliner == "Example Trio" for event in events))
         self.assertEqual(_unresolved_candidates(events), [])
         self.assertEqual({event.genre for event in events}, {"Jazz actuel"})
 

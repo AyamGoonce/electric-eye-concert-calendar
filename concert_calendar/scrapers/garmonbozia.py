@@ -32,16 +32,8 @@ def clean_text(value):
 
 
 def parse_lineup(value):
-    artists = [
-        clean_text(artist)
-        for artist in clean_text(value).split("+")
-        if clean_text(artist)
-    ]
-
-    if not artists:
-        return "", None
-
-    return artists[0], artists[1:6] or None
+    """A title alone does not establish individual artists or support roles."""
+    return clean_text(value), None
 
 
 def parse_city(value):
