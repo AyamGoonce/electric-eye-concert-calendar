@@ -565,7 +565,7 @@ def _primary_billing_set(event: ConcertEvent) -> frozenset[str]:
     wrapped = _festival_event_billing(event)
     if wrapped:
         return wrapped[1]
-    components = _split_full_bill(event.headliner) or [event.headliner]
+    components = [event.headliner]
     components.extend(event.co_headliners or [])
     return frozenset(
         identity
@@ -1598,11 +1598,82 @@ def _wrapper_identity_evidence(event):
     return False
 
 
+
+# ---------------------------------------------------------------------------
+# Reviewed calendar identity fixes.
+#
+# These are evidence-backed exceptions, not punctuation heuristics.
+# ---------------------------------------------------------------------------
+
+REVIEWED_CALENDAR_HEADLINER_ALIASES = {
+    "bootleg beatles": "The Bootleg Beatles",
+    "the bootleg beatles": "The Bootleg Beatles",
+}
+
+REVIEWED_CALENDAR_MULTI_ARTIST_BILLS = {
+    (
+        "2026-10-10",
+        "la maroquinerie",
+        "monolord + dopelord",
+    ): (
+        "Monolord",
+        ["Dopelord"],
+    ),
+}
+
+
+def _apply_reviewed_calendar_identity_fixes(
+    events: list[ConcertEvent],
+) -> None:
+    for event in events:
+        original_headliner = event.headliner
+
+        alias_key = normalize_artist_component(original_headliner)
+        reviewed_display = REVIEWED_CALENDAR_HEADLINER_ALIASES.get(alias_key)
+
+        if reviewed_display:
+            if original_headliner != reviewed_display:
+                event.identity_aliases = _stable_unique([
+                    *(event.identity_aliases or []),
+                    original_headliner,
+                ])
+            event.headliner = reviewed_display
+
+        billing_key = (
+            event.date,
+            normalize_venue_key(event.venue),
+            normalize_artist_component(event.headliner),
+        )
+
+        reviewed_bill = REVIEWED_CALENDAR_MULTI_ARTIST_BILLS.get(
+            billing_key
+        )
+
+        if not reviewed_bill:
+            continue
+
+        reviewed_headliner, reviewed_co_headliners = reviewed_bill
+
+        if event.headliner != reviewed_headliner:
+            event.identity_aliases = _stable_unique([
+                *(event.identity_aliases or []),
+                event.headliner,
+            ])
+
+        event.headliner = reviewed_headliner
+        event.co_headliners = _stable_unique([
+            *(event.co_headliners or []),
+            *reviewed_co_headliners,
+        ])
+
+
 def deduplicate_events(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
 ) -> list[ConcertEvent]:
     """Collapse exact and explicitly reconcilable duplicate concerts."""
+
+    _apply_reviewed_calendar_identity_fixes(events)
 
     initial_opener_state = defaultdict(list)
 

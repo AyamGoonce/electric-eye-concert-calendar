@@ -10602,6 +10602,24 @@
       "evidence_type": "multi_source_genre_consensus",
       "review_date": "2026-09-10",
       "notes": "Exact-label identity reviewed; Apple Music and Bandcamp independently resolve to Metal / Hard Rock."
+    },
+    {
+      "artist": "Monolord",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Official/current event description and reviewed exact artist catalog",
+      "evidence_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2238/monolord-dopelord/?of=28",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed artist identity inherited from the reviewed Monolord + Dopelord concert billing."
+    },
+    {
+      "artist": "Dopelord",
+      "genre": "Metal / Hard Rock",
+      "evidence_source": "Official/current event description and reviewed exact artist catalog",
+      "evidence_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2238/monolord-dopelord/?of=28",
+      "evidence_type": "editorial_review",
+      "review_date": "2026-08-27",
+      "notes": "Reviewed artist identity inherited from the reviewed Monolord + Dopelord concert billing."
     }
   ],
   "overrides": [
