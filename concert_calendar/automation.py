@@ -291,6 +291,90 @@ def validate_venue_inventory_regression(
         )
 
 
+def load_published_content_index(calendar_pointer: Path) -> dict:
+    """
+    Load the last-known-good published Electric Eye content index.
+
+    Used only as a fallback when live Concert Reviews identity evidence is
+    temporarily unavailable. This prevents a transient upstream failure from
+    deleting established artist/article associations during an otherwise
+    healthy calendar publication.
+    """
+
+    proof = calendar_pointer.parent
+    content_pointer = proof / "electric-eye-content-current.js"
+
+    if not content_pointer.is_file():
+        raise ProductionValidationError(
+            "Published Electric Eye content pointer is unavailable"
+        )
+
+    match = re.search(
+        r"ElectricEyeContentManifest\s*=\s*Object\.freeze\((\{.*?\})\)",
+        content_pointer.read_text(encoding="utf-8"),
+        re.DOTALL,
+    )
+    if not match:
+        raise ProductionValidationError(
+            "Published Electric Eye content pointer is malformed"
+        )
+
+    try:
+        manifest = json.loads(match.group(1))
+    except json.JSONDecodeError as error:
+        raise ProductionValidationError(
+            "Published Electric Eye content pointer is malformed"
+        ) from error
+
+    filename = manifest.get("data")
+    expected_digest = manifest.get("sha256")
+
+    if not isinstance(filename, str) or not filename:
+        raise ProductionValidationError(
+            "Published Electric Eye content pointer has no data asset"
+        )
+
+    data_path = proof / filename
+    if not data_path.is_file():
+        raise ProductionValidationError(
+            f"Published Electric Eye content asset is missing: {data_path}"
+        )
+
+    body = data_path.read_bytes()
+    if (
+        isinstance(expected_digest, str)
+        and re.fullmatch(r"[0-9a-f]{64}", expected_digest)
+        and hashlib.sha256(body).hexdigest() != expected_digest
+    ):
+        raise ProductionValidationError(
+            "Published Electric Eye content asset hash is invalid"
+        )
+
+    data_match = re.search(
+        r"window\.ElectricEyeContentIndex\s*=\s*Object\.freeze\((\{.*\})\);\s*$",
+        body.decode("utf-8"),
+        re.DOTALL,
+    )
+    if not data_match:
+        raise ProductionValidationError(
+            "Published Electric Eye content asset is malformed"
+        )
+
+    try:
+        index = json.loads(data_match.group(1))
+    except json.JSONDecodeError as error:
+        raise ProductionValidationError(
+            "Published Electric Eye content asset is malformed"
+        ) from error
+
+    if not isinstance(index, dict) or not isinstance(index.get("artists"), dict):
+        raise ProductionValidationError(
+            "Published Electric Eye content index is invalid"
+        )
+
+    return index
+
+
 def print_pointer_digest(args) -> int:
     print(read_pointer(Path(args.pointer))["sha256"])
     return 0
@@ -531,13 +615,23 @@ def build(args) -> int:
     try:
         concert_review_associations = fetch_concert_review_associations()
     except Exception as error:
-        print(f"Concert Reviews identity evidence unavailable: {error}")
-        concert_review_associations = {}
-
-    content_index = build_index(
-        fetch_entries(),
-        concert_review_associations=concert_review_associations,
-    )
+        print(
+            "Concert Reviews identity evidence unavailable; "
+            f"reusing published content index: {error}"
+        )
+        if not args.published_pointer:
+            raise ProductionValidationError(
+                "Concert Reviews identity evidence unavailable and no "
+                "published content fallback exists"
+            ) from error
+        content_index = load_published_content_index(
+            Path(args.published_pointer)
+        )
+    else:
+        content_index = build_index(
+            fetch_entries(),
+            concert_review_associations=concert_review_associations,
+        )
     print(f"PHASE COMPLETE | blogger_content_retrieval_indexing | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     print("PHASE START | content_index_enrichment", flush=True)
     phase_started = time.perf_counter()
