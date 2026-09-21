@@ -317,6 +317,11 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
 
     reserved_ids = {record.get('public_id', key[:16]) for key, record in previous.items()}
     used_keys, used_ids = set(), set()
+
+    # Temporary production diagnostic bookkeeping.
+    # This must not participate in allocation decisions.
+    used_key_owners = {}
+    used_id_owners = {}
     ordered = sorted(events, key=lambda e: (
         canonical_event_identity(e),
         e.first_seen or '9999',
@@ -350,6 +355,91 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
             key, public_id = base, base[:16]
         else:
             if not discriminator:
+                def _diagnostic_event(item):
+                    if item is None:
+                        return None
+                    fields = (
+                        'date',
+                        'headliner',
+                        'venue',
+                        'city',
+                        'start_time',
+                        'raw_title',
+                        'event_title',
+                        'series_name',
+                        'festival_name',
+                        'performance_marker',
+                        'source_names',
+                        'ticket_url',
+                        'promoters',
+                        'identity_aliases',
+                        'performers',
+                        'co_headliners',
+                        'openers',
+                    )
+                    return {
+                        name: getattr(item, name, None)
+                        for name in fields
+                    }
+
+                predecessor_bases = _reviewed_predecessor_identities(event)
+
+                diagnostic = {
+                    'current_event': _diagnostic_event(event),
+                    'allocation': {
+                        'base': base,
+                        'discriminator': discriminator,
+                        'bases': bases,
+                        'reviewed_predecessor_bases': predecessor_bases,
+                        'candidates': candidates,
+                        'ranked': ranked,
+                        'selected': selected,
+                    },
+                    'collision_state': {
+                        'base_in_used_keys': base in used_keys,
+                        'base_in_previous': base in previous,
+                        'base_public_id': base[:16],
+                        'base_public_id_in_reserved_ids': base[:16] in reserved_ids,
+                        'base_public_id_in_used_ids': base[:16] in used_ids,
+                        'base_public_id_in_supplied_routes': base[:16] in supplied_routes,
+                        'supplied_route_for_current_event': supplied,
+                    },
+                    'previous_records_by_candidate_base': {
+                        candidate_base: by_base.get(candidate_base, [])
+                        for candidate_base in bases
+                    },
+                    'current_owner_of_base_key': _diagnostic_event(
+                        used_key_owners.get(base)
+                    ),
+                    'current_owner_of_base_public_id': _diagnostic_event(
+                        used_id_owners.get(base[:16])
+                    ),
+                    'current_events_supplying_base_public_id': [
+                        _diagnostic_event(other)
+                        for other in events
+                        if other is not event
+                        and supplied_ids.get(id(other)) == base[:16]
+                    ],
+                }
+
+                import pprint
+                print(
+                    '\n===== EVENT_STATE ALLOCATION FAILURE DIAGNOSTIC =====',
+                    flush=True,
+                )
+                print(
+                    pprint.pformat(
+                        diagnostic,
+                        width=160,
+                        sort_dicts=False,
+                    ),
+                    flush=True,
+                )
+                print(
+                    '===== END EVENT_STATE ALLOCATION FAILURE DIAGNOSTIC =====\n',
+                    flush=True,
+                )
+
                 raise EventStateError('Unresolved duplicate without a performance discriminator: ' + event.headliner)
             key = hashlib.sha256((base + '\x1fperformance\x1f' + discriminator).encode()).hexdigest()
             public_id = key[:16]
@@ -360,6 +450,10 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
         event._state_identity, event._public_id = key, public_id
         used_keys.add(key)
         used_ids.add(public_id)
+
+        # Temporary diagnostic ownership only; does not affect allocation.
+        used_key_owners[key] = event
+        used_id_owners[public_id] = event
 
 
 def reconcile_state(
