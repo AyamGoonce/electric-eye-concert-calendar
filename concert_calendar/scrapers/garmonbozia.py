@@ -36,6 +36,63 @@ def parse_lineup(value):
     return clean_text(value), None
 
 
+def parse_structured_billing(value, *, structured_artists=None, info_text=""):
+    """Use a '+' bill only when Garmonbozia supplies explicit current-role evidence."""
+
+    title = clean_text(value)
+    parts = [
+        clean_text(part)
+        for part in re.split(r"\s+\+\s+", title)
+        if clean_text(part)
+    ]
+    if len(parts) < 2:
+        return None
+
+    structured_keys = {
+        clean_text(artist).casefold()
+        for artist in (structured_artists or [])
+        if clean_text(artist)
+    }
+    part_keys = {part.casefold() for part in parts}
+
+    # Hidden metadata is corroboration, not a complete artist list:
+    # Garmonbozia occasionally omits a billed artist from this field.
+    if (
+        len(structured_keys.intersection(part_keys)) < 2
+        or parts[0].casefold() not in structured_keys
+    ):
+        return None
+
+    info = clean_text(info_text).casefold()
+    openers = []
+
+    for part in parts[1:]:
+        artist = re.escape(part.casefold())
+        role_pattern = (
+            r"(?:l['’]ouverture de soirée\s+)?"
+            r"sera assur(?:ée|e) par\s+"
+            + artist
+            + r"(?=$|[\s(,.;:!?\-])"
+        )
+        if re.search(role_pattern, info, re.IGNORECASE):
+            openers.append(part)
+
+    # Do not reinterpret the bill unless a billed artist has an explicit
+    # current-event opening role in Garmonbozia's own description.
+    if not openers:
+        return None
+
+    performers = [
+        part
+        for part in parts
+        if part not in openers
+    ]
+    if not performers:
+        return None
+
+    return performers[0], openers, performers
+
+
 def parse_city(value):
     city = clean_text(value).lstrip("- ").strip()
 
@@ -68,6 +125,12 @@ def parse_card(card):
     ticket_element = card.select_one(
         "a.evenementReserver[href]"
     )
+    artists_element = card.select_one(
+        ".evenementInfoArtists"
+    )
+    info_element = card.select_one(
+        ".evenementInfo"
+    )
 
     title = (
         clean_text(
@@ -77,6 +140,31 @@ def parse_card(card):
         else ""
     )
     headliner, openers = parse_lineup(title)
+    performers = None
+
+    structured_artists = (
+        [
+            clean_text(artist)
+            for artist in artists_element.get_text(",", strip=True).split(",")
+            if clean_text(artist)
+        ]
+        if artists_element
+        else []
+    )
+    info_text = (
+        clean_text(info_element.get_text(" ", strip=True))
+        if info_element
+        else ""
+    )
+
+    structured_billing = parse_structured_billing(
+        title,
+        structured_artists=structured_artists,
+        info_text=info_text,
+    )
+    if structured_billing:
+        headliner, openers, performers = structured_billing
+
     event_date = (
         clean_text(date_element.get("datetime"))[:10]
         if date_element
@@ -120,9 +208,15 @@ def parse_card(card):
             "raw_venue": clean_text(venue_element.get_text(" ", strip=True)) if venue_element else None,
             "final_venue": venue,
             "final_city": city,
-            "parser_billing_path": "plus_title_split" if "+" in title else "plain_compound_title",
+            "parser_billing_path": (
+                "explicit_role_evidence"
+                if performers
+                else "plus_title_split"
+                if "+" in title
+                else "plain_compound_title"
+            ),
             "parsed_headliner": headliner,
-            "parsed_co_headliners": None,
+            "parsed_co_headliners": performers[1:] if performers else None,
             "parsed_openers": openers,
         })
         del _DIAGNOSTICS[MAX_DIAGNOSTICS:]
@@ -142,6 +236,7 @@ def parse_card(card):
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
+        performers=performers,
         venue=venue,
         city=city,
         department="",
