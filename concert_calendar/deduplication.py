@@ -994,6 +994,54 @@ def _remove_billed_artists_from_support(event: ConcertEvent) -> None:
         ] or None
 
 
+def _corroborated_single_plus_extension(
+    left: ConcertEvent,
+    right: ConcertEvent,
+) -> tuple[str, str] | None:
+    """Resolve one '+' extension only when another source proves the primary."""
+
+    for primary_event, extended_event in ((left, right), (right, left)):
+        if (
+            primary_event.openers
+            or primary_event.co_headliners
+            or extended_event.openers
+            or extended_event.co_headliners
+        ):
+            continue
+
+        primary = re.sub(
+            r"\s+",
+            " ",
+            unescape(primary_event.headliner or ""),
+        ).strip()
+        extended = re.sub(
+            r"\s+",
+            " ",
+            unescape(extended_event.headliner or ""),
+        ).strip()
+
+        if not primary or not extended:
+            continue
+
+        match = re.fullmatch(
+            rf"{re.escape(primary)}\s+\+\s+(?P<additional>.+)",
+            extended,
+            re.IGNORECASE,
+        )
+        if not match:
+            continue
+
+        additional = match.group("additional").strip()
+
+        # Multiple explicit '+' separators deliberately remain opaque.
+        if not additional or re.search(r"\s+\+\s+", additional):
+            continue
+
+        return primary_event.headliner, additional
+
+    return None
+
+
 def _reconcile_cross_source_billing_variants(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
@@ -1018,13 +1066,27 @@ def _reconcile_cross_source_billing_variants(
                 continue
             if not _same_primary_billing(left, right):
                 continue
+            corroborated_extension = _corroborated_single_plus_extension(
+                left,
+                right,
+            )
+
             preferred, incoming = sorted(
                 (left, right), key=_billing_richness, reverse=True
             )
             canonical_display = _prefer_canonical_display_headliner(preferred, incoming)
             merge_events(preferred, incoming)
-            if canonical_display:
+
+            if corroborated_extension:
+                primary, additional = corroborated_extension
+                preferred.headliner = primary
+                preferred.co_headliners = _stable_unique([
+                    *(preferred.co_headliners or []),
+                    additional,
+                ]) or None
+            elif canonical_display:
                 preferred.headliner = canonical_display
+
             _remove_billed_artists_from_support(preferred)
             removed.add(id(incoming))
             merged_count += 1

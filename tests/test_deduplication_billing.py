@@ -334,10 +334,10 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
 
         self.assertEqual(1, len(result))
         self.assertEqual(
-            "The Devil And The Almighty Blues + Skyjoggers",
+            "The Devil And The Almighty Blues",
             result[0].headliner,
         )
-        self.assertIsNone(result[0].co_headliners)
+        self.assertEqual(["Skyjoggers"], result[0].co_headliners)
         self.assertEqual(
             {"Backstage By The Mill", "Garmonbozia"},
             set(result[0].source_names),

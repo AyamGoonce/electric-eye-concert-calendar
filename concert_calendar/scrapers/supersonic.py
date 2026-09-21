@@ -81,12 +81,24 @@ def parse_event_row(row, page_url):
         return None
 
     headliner = full_title
+
+    # Supersonic uses the bullet glyph as an explicit artist separator.
+    # Keep this source-specific: no other punctuation is interpreted here.
+    performers = [
+        part.strip()
+        for part in re.split(r"\s*•\s*", full_title)
+        if part.strip()
+    ]
+    if len(performers) < 2:
+        performers = None
+
     href = (title_link.get("href") or "").strip()
 
     return ConcertEvent(
         date=(date_element.get("datetime", "").strip() if date_element else ""),
         headliner=headliner,
         raw_title=full_title,
+        performers=performers,
         venue=(
             venue_element.get_text(" ", strip=True)
             if venue_element else "Supersonic"

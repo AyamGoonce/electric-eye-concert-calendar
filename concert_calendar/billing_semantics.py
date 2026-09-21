@@ -119,6 +119,24 @@ def normalize_event_semantics(event):
     # Strong grammatical wrappers are source semantics, not punctuation guesses.
     value = event.headliner
 
+    # Terminal unnamed guest wording is presentation copy, not artist identity.
+    # A named guest is deliberately untouched because the pattern must end here.
+    unnamed_special_guest = (
+        None
+        if reviewed_wrapper_lock
+        else re.fullmatch(
+            r"(?P<artist>.+?)\s+with\s+(?:very\s+)?special\s+guests?\s*",
+            value,
+            re.IGNORECASE,
+        )
+    )
+    if unnamed_special_guest:
+        original = value
+        _retain_original(event, original)
+        event.headliner = unnamed_special_guest.group("artist").strip()
+        event.event_title = event.event_title or original
+        value = event.headliner
+
     # "Series/Promoter presents Artist"
     presentation = None if reviewed_wrapper_lock else re.fullmatch(
         r"(?P<context>.+?)\s+"
