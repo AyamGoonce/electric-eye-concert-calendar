@@ -334,6 +334,18 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
         bases = list(dict.fromkeys([base, *_reviewed_predecessor_identities(event)]))
         candidates = {key: record for candidate in bases for key, record in by_base.get(candidate, [])
                       if not record.get('performance') or record['performance'] == discriminator}
+
+        # A stable historical state key may itself become the canonical base
+        # again after an intervening representation used another base_identity.
+        # Reclaim that exact key rather than treating the event as a duplicate.
+        if base in previous:
+            historical = previous[base]
+            if (
+                not historical.get('performance')
+                or historical['performance'] == discriminator
+            ):
+                candidates.setdefault(base, historical)
+
         ranked = sorted(candidates, key=lambda key: (
             candidates[key].get('performance') != discriminator,
             candidates[key].get('base_identity', key) != base,
