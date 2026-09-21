@@ -132,7 +132,7 @@ def read_published_calendar_events(pointer_path: Path) -> list[dict]:
         )
 
     match = re.search(
-        r"window\.ElectricEyeConcertData\s*=\s*Object\.freeze\((\[.*\])\);\s*$",
+        r"window\.ElectricEyeConcertData\s*=\s*Object\.freeze\((\[.*\])\);",
         data_path.read_text(encoding="utf-8"),
         re.DOTALL,
     )

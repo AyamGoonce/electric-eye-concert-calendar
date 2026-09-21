@@ -16,6 +16,7 @@ from concert_calendar.automation import (
     publish,
     promote_verified,
     read_pointer,
+    read_published_calendar_events,
     stage_candidate,
     validate_count_regression,
     validate_genre_coverage,
@@ -107,6 +108,18 @@ def write_generated_publication(destination, marker="candidate"):
 
 
 class AutomationValidationTests(unittest.TestCase):
+    def test_reads_calendar_data_asset_produced_by_current_writer(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            generated = Path(tmp)
+            write_generated_publication(generated)
+
+            events = read_published_calendar_events(
+                generated / "calendar-current.js"
+            )
+
+            self.assertEqual(100, len(events))
+            self.assertEqual("Artist 0", events[0]["h"])
+
     def test_source_timing_is_streamed_for_attempts_and_completion(self):
         event = ConcertEvent(
             date="2027-01-01", headliner="Artist", venue="La CLEF",
