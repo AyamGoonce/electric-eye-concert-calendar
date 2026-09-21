@@ -304,6 +304,8 @@ def load_events():
             headers=HEADERS,
             timeout=REQUEST_TIMEOUT,
         )
+        if page > 1 and response.status_code == 404:
+            break
         response.raise_for_status()
 
         soup = BeautifulSoup(
