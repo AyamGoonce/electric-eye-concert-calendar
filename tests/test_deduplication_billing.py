@@ -279,6 +279,43 @@ class CrossSourceBillingDeduplicationTests(unittest.TestCase):
             {item.headliner for item in result},
         )
 
+    def test_reordered_cross_source_coheadline_bill_merges(self):
+        venue = event(
+            "In Flames x Trivium",
+            source="Le Zénith Paris – La Villette",
+            venue="Le Zénith Paris – La Villette",
+            date="2027-04-07",
+        )
+        venue.ticket_url = (
+            "https://le-zenith.com/shows/In%20Flames%20x%20Trivium-21756"
+        )
+
+        promoter = event(
+            "Trivium + In Flames",
+            source="Live Nation",
+            venue="Le Zénith Paris – La Villette",
+            date="2027-04-07",
+        )
+        promoter.ticket_url = (
+            "https://www.ticketmaster.fr/fr/liste/"
+            "in-flames-trivium-billet/idlist/6446/idtier/4827637"
+        )
+        promoter.promoters = ["Live Nation"]
+        promoter.openers = [
+            "Trivium",
+            "In Flames",
+            "Paleface Swiss",
+            "VOLA",
+        ]
+
+        result = deduplicate_events([venue, promoter])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(
+            {"Le Zénith Paris – La Villette", "Live Nation"},
+            set(result[0].source_names),
+        )
+
     def test_complete_artist_name_extends_to_richer_flat_bill_without_splitting(self):
         short = event(
             "The Devil And The Almighty Blues",

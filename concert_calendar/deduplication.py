@@ -698,6 +698,45 @@ def _opaque_title_relation(left: str, right: str) -> str | None:
     return None
 
 
+def _reordered_explicit_coheadline_titles(
+    left: str,
+    right: str,
+) -> bool:
+    """
+    Compare reordered flat co-headline titles without creating artist identities.
+
+    Require explicit x/× billing evidence from at least one source. The
+    complete-title normalization may then compare the already-delimited
+    segments as an unordered set. This remains comparison-only.
+    """
+    explicit_x = re.compile(r"\s+(?:x|×)\s+", re.IGNORECASE)
+
+    if not (
+        explicit_x.search(unescape(left or ""))
+        or explicit_x.search(unescape(right or ""))
+    ):
+        return False
+
+    def parts(value: str) -> list[str]:
+        signature = _opaque_title_signature(value)
+        values = [
+            part.strip()
+            for part in signature.split(" | ")
+            if part.strip()
+        ]
+        return values if len(values) >= 2 else []
+
+    left_parts = parts(left)
+    right_parts = parts(right)
+
+    return bool(
+        left_parts
+        and right_parts
+        and len(left_parts) == len(right_parts)
+        and frozenset(left_parts) == frozenset(right_parts)
+    )
+
+
 def _normalized_billing_component(value: str) -> str:
     """Normalize punctuation only inside an explicitly parsed artist bill."""
 
@@ -896,6 +935,14 @@ def _same_primary_billing(left: ConcertEvent, right: ConcertEvent) -> bool:
     # venue card. Compare complete opaque titles at the explicit boundary;
     # never expose their comparison segments as performer identities.
     if _opaque_title_relation(left.headliner, right.headliner):
+        return True
+
+    # Explicit co-headline notation can be reordered across independent
+    # sources. This is comparison-only and never creates performer identities.
+    if _reordered_explicit_coheadline_titles(
+        left.headliner,
+        right.headliner,
+    ):
         return True
     # Structured performer fields may safely establish subset semantics.
     if (
