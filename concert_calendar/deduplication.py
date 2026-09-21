@@ -40,6 +40,7 @@ def image_source_priority(source):
 ARTIST_ALIASES = {
     "alison’s halo": "alison's halo",
     "day we ran": "dayweran",
+    "dexys midnight runners": "dexys",
     "etran de l'aïr": "étran de l'aïr",
     "f.f.f.": "fff",
     "the flamin' groovies": "flamin' groovies",
@@ -1418,10 +1419,20 @@ def _deduplicate_exact(events: list[ConcertEvent]) -> list[ConcertEvent]:
 
 
 def _performance_times(event: ConcertEvent) -> set[int]:
-    values = [event.start_time or "", event.headliner, event.event_title or ""]
+    values = [
+        event.start_time or "",
+        event.headliner,
+        event.event_title or "",
+        event.raw_title or "",
+        *(event.identity_aliases or []),
+    ]
     return {int(m[1]) * 60 + int(m[2] or 0)
             for value in values
-            for m in re.finditer(r"(?<!\w)([01]?\d|2[0-3])\s*[:h]\s*([0-5]\d)?(?!\d)", value)}
+            for m in re.finditer(
+                r"(?<!\w)([01]?\d|2[0-3])\s*[:h]\s*([0-5]\d)?(?!\d)",
+                value,
+                re.IGNORECASE,
+            )}
 
 
 def _performance_conflict(left: ConcertEvent, right: ConcertEvent) -> bool:
@@ -1780,6 +1791,187 @@ def _reconcile_full_bills(events: list[ConcertEvent]) -> list[ConcertEvent]:
 
     return [event for event in events if id(event) not in removed]
 
+
+def _embedded_cross_source_title_relation(
+    left: ConcertEvent,
+    right: ConcertEvent,
+) -> tuple[ConcertEvent, ConcertEvent] | None:
+    """Return ``(richer, shorter)`` for a corroborated physical event.
+
+    This is comparison-only. It never splits the richer title or assigns
+    roles from punctuation. The independent source's complete artist title
+    must occur as a whole phrase inside the richer source title, on the same
+    canonical date/venue, without conflicting performance evidence.
+    """
+
+    if (
+        left.date != right.date
+        or normalize_venue_key(left.venue) != normalize_venue_key(right.venue)
+        or _distinct_performance_evidence(left, right)
+        or left.festival_name
+        or right.festival_name
+    ):
+        return None
+
+    left_sources = set(left.source_names or [])
+    right_sources = set(right.source_names or [])
+    if (
+        not left_sources
+        or not right_sources
+        or not left_sources.isdisjoint(right_sources)
+    ):
+        return None
+
+    left_programmes = {
+        _normalized_billing_component(value)
+        for value in (left.event_title, left.series_name)
+        if value
+    }
+    right_programmes = {
+        _normalized_billing_component(value)
+        for value in (right.event_title, right.series_name)
+        if value
+    }
+    if (
+        left_programmes
+        and right_programmes
+        and left_programmes.isdisjoint(right_programmes)
+    ):
+        return None
+
+    left_title = _billing_evidence_key(left.headliner)
+    right_title = _billing_evidence_key(right.headliner)
+    if not left_title or not right_title or left_title == right_title:
+        return None
+
+    richer, shorter = (
+        (left, right)
+        if len(left_title) > len(right_title)
+        else (right, left)
+    )
+    richer_title = _billing_evidence_key(richer.headliner)
+    shorter_title = _billing_evidence_key(shorter.headliner)
+
+    if len(shorter_title) < 4:
+        return None
+    if not re.search(
+        rf"(?<![a-z0-9]){re.escape(shorter_title)}(?![a-z0-9])",
+        richer_title,
+    ):
+        return None
+
+    # A bare artist-name prefix followed only by more ordinary words is not
+    # sufficient evidence: it may be one longer artist name (for example,
+    # "The Devil And The Almighty Blues") or venue copy.  Prefix variants
+    # need visible title punctuation or a conventional production/tour cue.
+    richer_display = (richer.headliner or "").strip()
+    shorter_display = (shorter.headliner or "").strip()
+    if richer_display.casefold().startswith(shorter_display.casefold() + " "):
+        suffix = richer_display[len(shorter_display):].lstrip()
+        suffix_key = _billing_evidence_key(suffix)
+        if not (
+            suffix.startswith(("-", "–", "—", ":", "|", "/"))
+            or re.search(
+                r"\b(?:anniversary|celebration|concert|live|pres(?:ents)?|"
+                r"release|show|symphony|tour|world)\b",
+                suffix_key,
+            )
+        ):
+            return None
+
+    return richer, shorter
+
+
+def high_confidence_collision_pairs(
+    events: list[ConcertEvent],
+) -> list[dict]:
+    """Return unresolved physical-event collisions with explicit evidence."""
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    collisions = []
+    for (date, _venue_key), group in grouped.items():
+        for left, right in combinations(group, 2):
+            relation = _embedded_cross_source_title_relation(left, right)
+            if not relation:
+                continue
+            richer, shorter = relation
+            structured = (
+                bool(left.openers or left.co_headliners or left.performers)
+                != bool(right.openers or right.co_headliners or right.performers)
+            )
+            collisions.append({
+                "classification": (
+                    "STRUCTURED_VS_FLAT_BILL"
+                    if structured
+                    else "SAME_PHYSICAL_EVENT_TITLE_VARIANT"
+                ),
+                "confidence": "HIGH",
+                "date": date,
+                "venue": richer.venue,
+                "titles": [left.headliner, right.headliner],
+                "sources": [
+                    list(left.source_names or []),
+                    list(right.source_names or []),
+                ],
+                "times": [left.start_time, right.start_time],
+                "ticket_urls": [left.ticket_url, right.ticket_url],
+                "source_event_ids": [None, None],
+                "reason": (
+                    "same canonical date and venue; compatible performance "
+                    "evidence; independent source title is a whole-phrase "
+                    "subset of the richer source title"
+                ),
+                "richer_title": richer.headliner,
+                "shorter_title": shorter.headliner,
+            })
+    return collisions
+
+
+def _reconcile_embedded_cross_source_titles(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Merge demonstrated title variants while retaining the richer row."""
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    removed = set()
+    merged_count = 0
+    for group in grouped.values():
+        for left, right in combinations(group, 2):
+            if id(left) in removed or id(right) in removed:
+                continue
+            relation = _embedded_cross_source_title_relation(left, right)
+            if not relation:
+                continue
+            richer, shorter = relation
+            richer_structured = bool(
+                richer.openers or richer.co_headliners or richer.performers
+            )
+            shorter_structured = bool(
+                shorter.openers or shorter.co_headliners or shorter.performers
+            )
+            preferred, incoming = (
+                (shorter, richer)
+                if shorter_structured and not richer_structured
+                else (richer, shorter)
+            )
+            if preferred is shorter and not preferred.event_title:
+                preferred.event_title = richer.headliner
+            merge_events(preferred, incoming)
+            _remove_billed_artists_from_support(preferred)
+            removed.add(id(incoming))
+            merged_count += 1
+
+    if diagnostics is not None:
+        diagnostics["physical_event_title_variants_merged"] = merged_count
+    return [event for event in events if id(event) not in removed]
+
 def _collapse_explicit_support_cards(
     events: list[ConcertEvent],
 ) -> list[ConcertEvent]:
@@ -2068,6 +2260,10 @@ def deduplicate_events(
     # structured/full-bill reconciler one final opportunity to merge those
     # now-comparable cross-source records.
     reconciled = _reconcile_full_bills(reconciled)
+    reconciled = _reconcile_embedded_cross_source_titles(
+        reconciled,
+        diagnostics,
+    )
 
     apply_structured_performer_semantics(reconciled)
 

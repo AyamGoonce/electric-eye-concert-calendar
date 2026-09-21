@@ -14,6 +14,7 @@ SOURCE_NAME = "Élysée Montmartre"
 PROGRAMME_URL = "https://www.elyseemontmartre.com/fr/programmation/"
 REQUEST_TIMEOUT = 30
 MAX_PAGES = 6
+MAX_DETAIL_PAGES = 20
 MAX_DIAGNOSTICS = 200
 _DIAGNOSTICS = []
 HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Safari/537.36"}
@@ -70,9 +71,37 @@ def parse_card(card):
     return events
 
 
+def detail_performers(html, title):
+    """Confirm a '+' bill only from independent official detail-page labels."""
+
+    components = [clean(value) for value in re.split(r"\s+\+\s+", title)]
+    if len(components) < 2 or any(
+        re.fullmatch(r"(?:special\s+)?guests?", value, re.I)
+        for value in components
+    ):
+        return []
+
+    soup = BeautifulSoup(html or "", "html.parser")
+    evidenced = {}
+    for node in soup.select(".part.css_text strong"):
+        value = clean(node.get_text(" ", strip=True))
+        if value:
+            evidenced.setdefault(folded(value), value)
+
+    performers = []
+    for component in components:
+        matched = evidenced.get(folded(component))
+        if not matched:
+            return []
+        performers.append(matched)
+    return performers
+
+
 def load_events():
     _DIAGNOSTICS.clear()
     events = {}
+    detail_cache = {}
+    detail_count = 0
     session = requests.Session()
     for page in range(1, MAX_PAGES + 1):
         url = PROGRAMME_URL if page == 1 else urljoin(PROGRAMME_URL, f"page/{page}/")
@@ -83,7 +112,49 @@ def load_events():
         if not cards:
             break
         for card in cards:
-            for event in parse_card(card):
+            parsed_events = parse_card(card)
+            if (
+                parsed_events
+                and re.search(r"\s+\+\s+", parsed_events[0].headliner)
+                and detail_count < MAX_DETAIL_PAGES
+            ):
+                detail_url = parsed_events[0].ticket_url
+                if detail_url not in detail_cache:
+                    detail_count += 1
+                    try:
+                        detail_response = session.get(
+                            detail_url,
+                            headers=HEADERS,
+                            timeout=REQUEST_TIMEOUT,
+                        )
+                        detail_response.raise_for_status()
+                    except requests.RequestException as error:
+                        detail_cache[detail_url] = []
+                        _DIAGNOSTICS.append({
+                            "source_event_id": None,
+                            "listing_url": PROGRAMME_URL,
+                            "detail_url": detail_url,
+                            "raw_event_title": parsed_events[0].headliner,
+                            "final_date": parsed_events[0].date,
+                            "raw_venue": SOURCE_NAME,
+                            "final_venue": SOURCE_NAME,
+                            "parser_billing_path": "detail_fetch_failed",
+                            "diagnostic_error": (
+                                f"{type(error).__name__}: {error}"
+                            ),
+                        })
+                    else:
+                        detail_cache[detail_url] = detail_performers(
+                            detail_response.text,
+                            parsed_events[0].headliner,
+                        )
+                performers = detail_cache.get(detail_url, [])
+                if performers:
+                    for event in parsed_events:
+                        event.performers = list(performers)
+                        event.event_title = event.headliner
+                        event.raw_title = event.headliner
+            for event in parsed_events:
                 events.setdefault((event.date, event.headliner.casefold(), event.venue.casefold()), event)
         if not soup.select_one("link[rel='next']"):
             break

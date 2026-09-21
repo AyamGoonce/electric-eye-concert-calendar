@@ -30,6 +30,7 @@ from concert_calendar.event_state import (
     write_state,
 )
 from concert_calendar.content_index import build_index, enrich_events, fetch_entries, write_assets
+from concert_calendar.deduplication import high_confidence_collision_pairs
 from concert_calendar.sources import load_events_with_report
 
 
@@ -535,6 +536,29 @@ def validate_source_report(report) -> None:
         raise ProductionValidationError("Pipeline produced a zero event count")
 
 
+def validate_semantic_collisions(events) -> None:
+    """Fail publication when a demonstrated physical event remains doubled."""
+
+    collisions = high_confidence_collision_pairs(events)
+    if not collisions:
+        return
+
+    details = []
+    for collision in collisions:
+        details.append(
+            f"date={collision['date']}; venue={collision['venue']}; "
+            f"titles={collision['titles']}; sources={collision['sources']}; "
+            f"times={collision['times']}; "
+            f"ticket_urls={collision['ticket_urls']}; "
+            f"source_event_ids={collision['source_event_ids']}; "
+            f"reason={collision['reason']}"
+        )
+    raise ProductionValidationError(
+        "Unresolved high-confidence physical-event collision(s): "
+        + " | ".join(details)
+    )
+
+
 def validate_count_regression(
     new_count: int,
     published_count: int | None,
@@ -605,6 +629,7 @@ def build(args) -> int:
     events, pipeline_report = load_events_with_report()
     print(f"PHASE COMPLETE | source_and_pipeline_loading | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     validate_source_report(pipeline_report)
+    validate_semantic_collisions(events)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     print("Building Electric Eye editorial content index...")
