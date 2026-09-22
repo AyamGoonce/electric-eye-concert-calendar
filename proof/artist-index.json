@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-22T11:51:47Z",
+  "generatedAt": "2026-09-22T17:04:34Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -8253,11 +8253,12 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 14,
+      "articleCount": 15,
       "articleIds": [
         "6241465018394648188",
         "5219093234440112331",
         "5252192306441347807",
+        "4757958665710785093",
         "7471660502597003041",
         "4868829360120189881",
         "7989545750155558787",
@@ -8280,6 +8281,7 @@
         "https://www.electriceyerock.com/2026/08/eric-clapton-recreates-his-most-iconic.html",
         "https://www.electriceyerock.com/2026/02/christies-auctions-jim-irsay-collection.html",
         "https://www.electriceyerock.com/2025/05/eric-clapton-accor-arena-paris-may-31st.html",
+        "https://www.electriceyerock.com/2025/01/eric-claptons-unplugged-over-thirty.html",
         "https://www.electriceyerock.com/2024/12/eric-clapton-to-return-to-paris-in-2025.html",
         "https://www.electriceyerock.com/2024/05/eric-clapton-accor-arena-paris-may-27th.html",
         "https://www.electriceyerock.com/2024/05/eric-clapton-accor-arena-paris-may-26th.html",
@@ -9612,7 +9614,9 @@
         "4332823696767421207"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "5234475963389878611"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html",
         "https://www.electriceyerock.com/2026/03/a-conversation-with-fred-wesley-video.html",
@@ -10107,9 +10111,7 @@
         "5234475963389878611"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "5234475963389878611"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html"
       ],
@@ -18799,8 +18801,9 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
+      "articleCount": 2,
       "articleIds": [
+        "8718292862472502427",
         "6077129048719759732"
       ],
       "reviewedArticleIds": [],
@@ -18808,6 +18811,7 @@
         "6077129048719759732"
       ],
       "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/oranssi-pazuzu-return-to-paris-in.html",
         "https://www.electriceyerock.com/2026/06/oranssi-pazuzu-hellfest-clisson-june.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -27721,6 +27725,38 @@
       "articleUrls": [
         "https://www.electriceyerock.com/2026/06/uncle-acid-and-deadbeats-hellfest.html",
         "https://www.electriceyerock.com/2025/01/uncle-acid-and-deadbeats-alhambra-paris.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Unplugged",
+      "slug": "unplugged",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "articleIds": [
+        "4757958665710785093"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/01/eric-claptons-unplugged-over-thirty.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null

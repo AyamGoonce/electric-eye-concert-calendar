@@ -213,9 +213,11 @@
             "genre_source": "Reviewed stable artist classification, 2026-08-23",
             "genres_public": null,
             "headliner": "Pale Waves",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "PALE WAVES"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/pale-waves-les-etoiles-600x300-1.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -225,10 +227,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.aegpresents.fr/event/pale-waves/",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/pale-waves/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -2302,6 +2304,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-10-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "R'n'b",
+            "genre_evidence": [
+              {
+                "raw": "R'n'b",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Salle Pleyel",
+            "genres_public": null,
+            "headliner": "Khalid",
+            "identity_aliases": [
+              "KHALID"
+            ],
+            "image_source": "Salle Pleyel",
+            "image_url": "https://www.sallepleyel.com/app/uploads/2026/07/Khalid_Paris2026_717x1024-333x483.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.sallepleyel.com/evenement/khalid/",
+            "venue": "Salle Pleyel"
+          },
+          "first_seen": "2026-09-01T13:15:20Z",
+          "public_id": "6e827433b2a39d72",
+          "state_identity": "6e827433b2a39d72ddc72235b04a0d5e1c3ac97c531a238e7386e4e2e04ff191"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-10-20",
             "department": "75",
             "event_title": null,
@@ -2554,48 +2605,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "23e5f4f67c2c6835",
           "state_identity": "23e5f4f67c2c683502e76f37a1aaf5e4ac84dc69c67989c9f46e3b39c2dc61d0"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "R&B / Soul / Funk",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "Khalid",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/Khalid-AEG26",
-            "venue": "Salle Pleyel"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "307166275e83d730",
-          "state_identity": "307166275e83d7301186961baf4faf406b260ae6310419dec723a96acd5d38c8"
         },
         {
           "event": {
@@ -4307,11 +4316,9 @@
             "genre_source": "Apple Music exact artist catalog",
             "genres_public": null,
             "headliner": "Martin Luke Brown",
-            "identity_aliases": [
-              "MARTIN LUKE BROWN"
-            ],
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/mlb_polaroid_7-2560x2560.webp",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -4321,10 +4328,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/martin-luke-brown/",
+            "ticket_status": null,
+            "ticket_url": "https://bit.ly/MartinLukeBrown-AEG26",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -7240,7 +7247,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -12277,7 +12284,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -13100,7 +13107,7 @@
           "state_identity": "859d56ca3f2ce06eb0edc1fa9aa3b6f25ee2bcc2250a53333dcb971981c3c972"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -15753,7 +15760,7 @@
           "state_identity": "d5b24331641d72c7d996d5ebe3ed23e5a0298ceea4991f93a5f7461f0fb01d38"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -18009,7 +18016,7 @@
           "state_identity": "ea626d1be279d65e98519c6318870336921012280de3fff331c877452bc1f034"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -18550,7 +18557,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -18913,51 +18920,6 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-28",
-            "department": "75",
-            "event_title": null,
-            "event_type": "Alternative",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Alternative",
-            "genre_evidence": [
-              {
-                "raw": "Alternative",
-                "source": "Backstage By The Mill"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "MusicBrainz artist tags via exact Wikidata identity",
-            "genres_public": null,
-            "headliner": "GHØSTKID",
-            "identity_aliases": null,
-            "image_source": "Backstage By The Mill",
-            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/CARRE-MEV.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.backstage-btm.com/agenda/ghostkid/",
-            "venue": "Backstage By The Mill"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "dec12806e87bcf49",
-          "state_identity": "dec12806e87bcf4942fe9dd36b709f957ab020db307b6fa4b4df1fb5d8f1963c"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
             "co_headliners": [
               "STARMONGER"
             ],
@@ -19165,6 +19127,104 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Post Metal",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
+              {
+                "raw": "Post Metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "COLTAINE",
+            "identity_aliases": [
+              "COLTAINE + Guest"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/Coltaine_Brighton-e1790081521802.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/coltaine-guest/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-17T11:52:37Z",
+          "public_id": "720b3615bf506bc2",
+          "state_identity": "720b3615bf506bc23086fac895a1135b07c97e91bb0cb5847f0d90f3e843c4c3"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-06",
+            "department": "75",
+            "event_title": null,
+            "event_type": "PROGRESSIVE METAL",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "PROGRESSIVE METAL",
+            "genre_evidence": [
+              {
+                "raw": "PROGRESSIVE METAL",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "SHINING",
+            "identity_aliases": null,
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/Shining-2015-e1438969312148.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/shining/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "f3fabbcdaa15613f",
+          "state_identity": "f3fabbcdaa15613f2d8ef83171688ffcfcd6b520db54ffe21eca9050080cf9be"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-09",
             "department": "75",
             "event_title": null,
@@ -19202,6 +19262,55 @@
           "first_seen": "2026-09-03T08:19:39Z",
           "public_id": "bad81dd4b30ddaf1",
           "state_identity": "bad81dd4b30ddaf102646d44555a57c2bbc715c388dd159f383b36599b3c17e1"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-11",
+            "department": "75",
+            "event_title": null,
+            "event_type": "metal",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "metal",
+            "genre_evidence": [
+              {
+                "raw": "metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "CAGE FIGHT",
+            "identity_aliases": [
+              "CAGE FIGHT"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/CARRE-MEV-3.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Base Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/cage-fight/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-08-24T13:21:23Z",
+          "public_id": "225085b80a4b7780",
+          "state_identity": "225085b80a4b77807ea687bb7579c6d8e90d7f466729880ab8ea155c997536a5"
         },
         {
           "event": {
@@ -19476,7 +19585,7 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Backstage By The Mill",
             "genres_public": null,
-            "headliner": "BLACKGOLD",
+            "headliner": "BLACKGOLD + SUMO CYCO + HYRO THE HERO",
             "identity_aliases": [
               "BLACKGOLD"
             ],
@@ -19708,6 +19817,153 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Alt/indie",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alt/indie",
+            "genre_evidence": [
+              {
+                "raw": "Alt/indie",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "MOTHICA",
+            "identity_aliases": [
+              "MOTHICA"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuU-VKn7kxNZPu1FtG1SwR6Ad7KoXwRCntqKRQMTidfKNj6fpn6ULJbe54hL5-9wFXq2WelpAl4VwUFQE_TSMj0_jQmcUeu3ut2Ehj7m7YeFd6WLBQwIS-66IT5v_HWcrGjrbyhWQreti8i6y_bTLpZCQ_HWnOoDAT83iTGqMnig2NZ1cQScMayaskh80/s72-w640-h426-c/Mothica061223La%20CigaleParis%2018_1.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/mothica-2/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-14T16:52:08Z",
+          "public_id": "a320727348220173",
+          "state_identity": "a320727348220173ec6ad4df176f72167916bb8098b405b387d960aea148c859"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-19",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Groove metal",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Groove metal",
+            "genre_evidence": [
+              {
+                "raw": "Groove metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "LOST SOCIETY + HOKKA",
+            "identity_aliases": [
+              "LOST SOCIETY + HOKKA"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/CARRE-MEV-4.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Base Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/lost-society-hokka/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-20T17:25:09Z",
+          "public_id": "6f44c9c84082e9b9",
+          "state_identity": "6f44c9c84082e9b916a652011cf6430dfa54fc12d263fbcdb9e416bae775d593"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Alt/indie",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alt/indie",
+            "genre_evidence": [
+              {
+                "raw": "Alt/indie",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "LAUREN SANDERSON",
+            "identity_aliases": [
+              "LAUREN SANDERSON"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/Lauren-Sanderson-Tour-Press-Photo-e1790078986263.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/lauren-sanderson/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-02T17:45:45Z",
+          "public_id": "3bdf33a034c96dbf",
+          "state_identity": "3bdf33a034c96dbf0ec65ade313515dd31624c3c797f74794ecedf008b09e2b3"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-23",
             "department": "75",
             "event_title": null,
@@ -19803,6 +20059,55 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Alt rock",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alt rock",
+            "genre_evidence": [
+              {
+                "raw": "Alt rock",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "THE INTERSPHERE",
+            "identity_aliases": [
+              "THE INTERSPHERE"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/2-The-Intersphere-2026-Credit-Bennet-Carstens-scaled-e1790084707809.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/the-intersphere/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-18T16:32:58Z",
+          "public_id": "18af49f15f9557f7",
+          "state_identity": "18af49f15f9557f778620742c633efd6b22de9266791639de09015cf1ceb8f55"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Rock",
             "city": "Paris",
             "co_headliners": null,
@@ -19851,9 +20156,152 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "cdb5ff0607d03f8b",
           "state_identity": "cdb5ff0607d03f8b2e099992ba6ec31eae06b692a69b1931177481c13ac5988e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": "metalcore",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "metalcore",
+            "genre_evidence": [
+              {
+                "raw": "metalcore",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "BREAKDOWN OF SANITY",
+            "identity_aliases": null,
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/BoS-2025-scaled-e1790085603463.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/breakdown-of-sanity/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "bb608ed85091f934",
+          "state_identity": "bb608ed85091f934425c4fc76d7fef1042a592b79901b196555b3ac202bf98cd"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-23",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Alternative",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alternative",
+            "genre_evidence": [
+              {
+                "raw": "Alternative",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "[CHANGEMENT DE DATE] GHØSTKID",
+            "identity_aliases": [
+              "GHØSTKID"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/CARRE-MEV.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Base Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/ghostkid/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-18T11:27:26Z",
+          "public_id": "614412856cc82c7e",
+          "state_identity": "614412856cc82c7e3e509bc6705476423975559128f72b49511e8e8f4499ebff"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2028-01-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": "metal",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "metal",
+            "genre_evidence": [
+              {
+                "raw": "metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "ATLAS",
+            "identity_aliases": [
+              "ATLAS"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/04/b26ad937-905f-47a5-93a3-ffa727172ec3-scaled-e1776765248606.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/atlas/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "76b0d54487c520bb",
+          "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Backstage By The Mill"
     },
     "Base Productions": {
@@ -20716,19 +21164,26 @@
             "date": "2026-11-11",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "metal",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre": "metal",
+            "genre_evidence": [
+              {
+                "raw": "metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
             "genre_public": "Metal / Hard Rock",
-            "genre_source": "Bandcamp",
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "CAGE FIGHT",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "CAGE FIGHT"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/CARRE-MEV-3.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -20740,8 +21195,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.base-productions.com/concerts/cage-fight/",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/cage-fight/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-08-24T13:21:23Z",
@@ -20816,7 +21271,7 @@
               "ICE SEALED EYES"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-ICE-SEALED-EYES.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Design-sans-titre-15.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -20904,7 +21359,7 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Backstage By The Mill",
             "genres_public": null,
-            "headliner": "BLACKGOLD",
+            "headliner": "BLACKGOLD + SUMO CYCO + HYRO THE HERO",
             "identity_aliases": [
               "BLACKGOLD"
             ],
@@ -21395,19 +21850,26 @@
             "date": "2027-02-19",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "Groove metal",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
+            "genre": "Groove metal",
+            "genre_evidence": [
+              {
+                "raw": "Groove metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
             "genre_method": null,
             "genre_public": null,
-            "genre_source": null,
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "LOST SOCIETY + HOKKA",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "LOST SOCIETY + HOKKA"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/CARRE-MEV-4.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -21419,8 +21881,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.base-productions.com/concerts/lost-society-hokka/",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/lost-society-hokka/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-09-20T17:25:09Z",
@@ -21579,19 +22041,26 @@
             "date": "2027-04-23",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "Alternative",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
+            "genre": "Alternative",
+            "genre_evidence": [
+              {
+                "raw": "Alternative",
+                "source": "Backstage By The Mill"
+              }
+            ],
             "genre_method": null,
             "genre_public": null,
-            "genre_source": null,
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "[CHANGEMENT DE DATE] GHØSTKID",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "GHØSTKID"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/CARRE-MEV.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -21603,8 +22072,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.base-productions.com/concerts/ghostkid/",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/ghostkid/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-09-18T11:27:26Z",
@@ -21656,7 +22125,7 @@
           "state_identity": "17696eef4d846182603c33aa9ee054a99b1a4df659913b3a965db691b2bd597d"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -23795,7 +24264,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -25100,6 +25569,46 @@
             "category": "concert",
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Too Many ZooZ",
+            "identity_aliases": null,
+            "image_source": "Cabaret Sauvage",
+            "image_url": "https://cdn.prod.website-files.com/5f2042d4b94d37519c34f8ae/6ab25b4884546bc71feee9d6_SITE.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.cabaretsauvage.com/work/too-many-zooz",
+            "venue": "Cabaret Sauvage"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "437cf55368867f80",
+          "state_identity": "437cf55368867f80a1d5b301fd2a3be015deb60d40811a0aeaf360e091261b10"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-16",
             "department": "75",
             "event_title": null,
@@ -25218,7 +25727,7 @@
           "state_identity": "8a1970796dc413904c9dfc8e573d04564d33fb36e57327b931e0b4e4a1406c0e"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -26994,7 +27503,7 @@
           "state_identity": "5c79119326bc5556a07dcdc31e783b9d0d9e767791019995f4a80559ad02489a"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -28214,7 +28723,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -28750,7 +29259,7 @@
           "state_identity": "b83f7032e595a01ef4687947c42d1e20afdbc8b7bf0117c869b75b632a270f49"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -29379,7 +29888,7 @@
           "state_identity": "f7b0549113a9fb9718777e3b34e61d479a1f359148ffdd9cdc42400b5a69071e"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -30454,7 +30963,7 @@
             "date": "2026-11-05",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "Post Metal",
             "facebook_event_url": null,
             "festival_name": null,
             "genre": "Dark / Metal",
@@ -30462,6 +30971,10 @@
               {
                 "raw": "Dark / Metal",
                 "source": "Garmonbozia"
+              },
+              {
+                "raw": "Post Metal",
+                "source": "Backstage By The Mill"
               }
             ],
             "genre_method": "source_mapping",
@@ -30469,9 +30982,11 @@
             "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "COLTAINE",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "COLTAINE + Guest"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/Coltaine_Brighton-e1790081521802.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -30483,8 +30998,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://web.digitick.com/coltaine-concert-dark-metal-css5-garmonbozia-pg51-ei1134731.html",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/coltaine-guest/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-09-17T11:52:37Z",
@@ -31811,7 +32326,7 @@
           "state_identity": "5c7d59a0c6c7827900df81d3361b9bf5eff72c81749dcdaa5366a13ce256f5a5"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -32542,7 +33057,7 @@
           "state_identity": "1de5e8c96d04fb458f7cba1219f0df454d57dd852008bb04cc9a2fc85c48567c"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -35723,7 +36238,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -36141,6 +36656,46 @@
           "first_seen": "2026-09-03T08:19:39Z",
           "public_id": "a5ce5422d71d9386",
           "state_identity": "a5ce5422d71d9386161a6565f1c06324132ae59d76017355f518bd09e02a5502"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Café Concert : Diez Cuerdas",
+            "identity_aliases": null,
+            "image_source": "La Bellevilloise",
+            "image_url": "https://www.labellevilloise.com/uploads/2026/09/diez-cuerdas-1-1440x954.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.labellevilloise.com/evenement/cafe-concert-diez-cuerdas/",
+            "venue": "La Bellevilloise"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "ff1e77440270928b",
+          "state_identity": "ff1e77440270928b023d53adf63b0a2fc9069f6b5cc32f18ffefe68c32f69e47"
         },
         {
           "event": {
@@ -37051,7 +37606,7 @@
           "state_identity": "0d848c1c6ea4c2ad818ee0aab794435928c58a30b1296ffcf7412ef01114de20"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -38981,7 +39536,7 @@
               "ICE SEALED EYES"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-ICE-SEALED-EYES.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Design-sans-titre-15.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -40339,7 +40894,7 @@
           "state_identity": "ff4988e6a448161d0e065d971172f0f5f07f358b9df669b261b87d5daa35c06d"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -43405,7 +43960,7 @@
             "headliner": "Jersey",
             "identity_aliases": null,
             "image_source": "La Cigale",
-            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/01_045-copie.jpg",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/01_045-copie-e1790082631611.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -45352,7 +45907,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -46660,7 +47215,7 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -48415,7 +48970,7 @@
           "state_identity": "7e4d8819bda9a74e5b806b0895e3f2087de6a72249cdaa2291e5d5e410fa226d"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -53177,7 +53732,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2376/robin/?of=15",
+            "ticket_url": "https://linktr.ee/RobinLaMaro2027?fbclid=IwY2xjawUfXyFwZG9mAWV4dG4DYWVtAjEwAGJyaWQRME1kQ1VUTzZDZG52RzdYZlRzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeQAh6xHZCvPY4qgiPwqykaPVIMokpbEKgAMPBhr0dhA26nElcdzpmvIX_v9g_aem_yLmmkKatEuE_2ZRc1KZ5tA",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-09-18T11:27:26Z",
@@ -54273,7 +54828,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -56307,7 +56862,7 @@
           "state_identity": "72434f67ad4b02eb07d286a2824a2cfd205a5a82dc5208b77425a4a128a76a61"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -56997,7 +57552,7 @@
           "state_identity": "e28482f2d5ea17bc20aeb6e323158d164af94d5ed67709360dc477b4035db9cd"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -58003,7 +58558,7 @@
           "state_identity": "36bd41503e16a4f390821b354251c780c6903e54ee16583fb2cf291dd87c40cc"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -59703,7 +60258,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -62007,7 +62562,7 @@
           "state_identity": "320a8d830683b29a6fd30cf9612fa6d43c1fab9aa144ed5dc9acbd79c0fe7751"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -64324,6 +64879,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": "https://www.facebook.com/events/1634872651639006",
+            "festival_name": null,
+            "genre": "folk",
+            "genre_evidence": [
+              {
+                "raw": "folk",
+                "source": "Le Trabendo"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Le Trabendo",
+            "genres_public": null,
+            "headliner": "Radie Peat",
+            "identity_aliases": [
+              "RADIE PEAT"
+            ],
+            "image_source": "Le Trabendo",
+            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/09/Image-site-Trabendo-8-1500x844.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Vedettes"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.letrabendo.net/programmation/radie-peat/",
+            "venue": "Le Trabendo"
+          },
+          "first_seen": "2026-09-15T17:08:03Z",
+          "public_id": "2ab7a354b7e2498e",
+          "state_identity": "2ab7a354b7e2498e059f0c37e0091a4bb0f52940e2c9d7bbe9a7a78e02adb9bf"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-02",
             "department": "75",
             "event_title": null,
@@ -65300,7 +65904,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -66837,7 +67441,7 @@
           "state_identity": "c80ce5237a6ac7a8de90d8c6b5e509b902b4d8c9803b84284e46bcf22c86bae0"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -71646,7 +72250,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -71658,29 +72262,73 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-09-27",
+            "date": "2026-09-23",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Country",
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Reviewed stable artist classification, 2026-08-23",
+            "genres_public": null,
+            "headliner": "Pale Waves",
+            "identity_aliases": [
+              "PALE WAVES"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/pale-waves-les-etoiles-600x300-1.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/pale-waves/",
+            "venue": "Les Étoiles"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "dbb085ef74e78b87",
+          "state_identity": "dbb085ef74e78b87ab2f121e87cf03f35aae0b0d08e2350b0b7c4fb02a10f3df"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-09-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Hip Hop / Rap",
             "genre_evidence": [
               {
-                "raw": "Country",
+                "raw": "Hip Hop / Rap",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
-            "genre_public": "Folk / Country",
+            "genre_public": "Hip-hop / Rap",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "The Longest Johns",
+            "headliner": "Pi'erre Bourne",
             "identity_aliases": [
-              "The Longest Johns"
+              "Pi'erre Bourne"
             ],
             "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/08/Ends-of-the-earth-promo-photo-2560x1440.webp",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/processed-CDDC63A9-57FC-4565-BEC5-4F2EB6B30759.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -71690,15 +72338,15 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/the-longest-johns/",
+            "ticket_url": "https://www.etoiles.paris/evenement/pierre-bourne/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "32a3698e2089696f",
-          "state_identity": "32a3698e2089696f6162cd6608e8e849c371a98e908b702b64a8f67248711512"
+          "public_id": "4b7b8b88646e3962",
+          "state_identity": "4b7b8b88646e3962ed0bfddbf2847677f7ff36d582c326fe73b8d07b1f93ab3b"
         },
         {
           "event": {
@@ -71707,69 +72355,32 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-10-11",
+            "date": "2026-10-02",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Eli",
-            "identity_aliases": null,
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/08/R890_NA_R3_3-3-26-ELI1261_ADOBERGB_V2-1-2560x3838.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/eli/",
-            "venue": "Les Étoiles"
-          },
-          "first_seen": "2026-09-03T08:19:39Z",
-          "public_id": "883fbac9f2face6b",
-          "state_identity": "883fbac9f2face6b9b6732ac934a7c4e350ccc6297e96fc5eeef78b2566eac08"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-12",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Pop",
+            "genre": "Pop, RnB / Soul",
             "genre_evidence": [
               {
-                "raw": "Pop",
+                "raw": "Pop, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
-            "genre_method": "source_explicit",
+            "genre_method": "source_mapping",
             "genre_public": "Pop",
             "genre_source": "Live Nation",
-            "genres_public": null,
-            "headliner": "Eli",
+            "genres_public": [
+              "Pop",
+              "R&B / Soul / Funk"
+            ],
+            "headliner": "Soulidified",
             "identity_aliases": [
-              "Eli"
+              "Soulidified"
             ],
             "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/08/R890_NA_R3_3-3-26-ELI1261_ADOBERGB_V2-1-2560x3838.webp",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/Capture-d-ecran-2026-06-16-103423.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -71782,12 +72393,12 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/eli/",
+            "ticket_url": "https://www.etoiles.paris/evenement/soulidified/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "2a17ca06679ac5d3",
-          "state_identity": "2a17ca06679ac5d30001fb910a52838475d322eb1397b78ab4079e11b1d946d7"
+          "public_id": "fd6f7e969c696b9e",
+          "state_identity": "fd6f7e969c696b9ee80b916fd20d3483a0b6dab18fcf5e76850b0f4b1a082b3e"
         },
         {
           "event": {
@@ -71796,38 +72407,47 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-10-17",
+            "date": "2026-10-21",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Alternative and Indie, Rock",
+            "genre_evidence": [
+              {
+                "raw": "Alternative and Indie, Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "GOLDFISH",
-            "identity_aliases": null,
+            "headliner": "The Guest List",
+            "identity_aliases": [
+              "The Guest List"
+            ],
             "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/GoldFish_17Oct2026_Final-Flyer-Design-1-e1788961301294-2560x3200.webp",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/THE-GUEST-LIST-ALBUM-COVER.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Live Nation"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/goldfish/",
+            "ticket_url": "https://www.etoiles.paris/evenement/the-guest-list/",
             "venue": "Les Étoiles"
           },
-          "first_seen": "2026-09-09T18:30:51Z",
-          "public_id": "a5ae76d9dfc7abf6",
-          "state_identity": "a5ae76d9dfc7abf604b766abe7b734632273d4d029fdbac385af38984ae30d43"
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "42bab643b98bcf69",
+          "state_identity": "42bab643b98bcf69baccabd22f77dab51a0893067defdcc1656a1c211ffb9f2b"
         },
         {
           "event": {
@@ -71888,59 +72508,7 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-10-27",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Pop, Rock",
-            "genre_evidence": [
-              {
-                "raw": "Pop, Rock",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Live Nation",
-            "genres_public": [
-              "Pop",
-              "Rock / Indie / Punk"
-            ],
-            "headliner": "Benjamin Steer",
-            "identity_aliases": [
-              "Benjamin Steer"
-            ],
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/benjamin-steer_Octobre-26_Les-Etoiles_Paris_4x5.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/benjamin-steer/",
-            "venue": "Les Étoiles"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "9371c4942b29f6d3",
-          "state_identity": "9371c4942b29f6d3ddcf54f5ccc4430f23c49a3caeabdb055722cb48dff09703"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-13",
+            "date": "2026-10-31",
             "department": "75",
             "event_title": null,
             "event_type": null,
@@ -71952,10 +72520,10 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "NAYTH SHITNA",
+            "headliner": "PHILIPP",
             "identity_aliases": null,
             "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/08/890d2f65-25b4-4b49-88d8-96a355084660.webp",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/IMG_2289-1.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -71963,15 +72531,95 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/nayth-shitna/",
+            "ticket_url": "https://www.etoiles.paris/evenement/philipp/",
+            "venue": "Les Étoiles"
+          },
+          "first_seen": "2026-09-03T21:15:57Z",
+          "public_id": "abead2691421e0c4",
+          "state_identity": "abead2691421e0c47810288155c4b120bc5c819c0d95d9780dc972f30033c768"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-04",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "AIGEL",
+            "identity_aliases": null,
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/05/WhatsApp-Image-2026-05-27-at-211445.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/aigel/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-09-03T08:19:39Z",
-          "public_id": "56a9aa8fba5028cb",
-          "state_identity": "56a9aa8fba5028cb4880ca2ff18c548460fad0cdbf5fd6ffc91bcba4e0333ff4"
+          "public_id": "850d31db6d397526",
+          "state_identity": "850d31db6d397526ac59173c5ff2fcb0df2ac407fb18542a2046d784c2fe17e4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "MANON LISA",
+            "identity_aliases": null,
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/Manon-Lisa-1-credit-Baptiste-Henry-2560x3840.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/manon-lisa/",
+            "venue": "Les Étoiles"
+          },
+          "first_seen": "2026-09-03T08:19:39Z",
+          "public_id": "8500cc39f890abec",
+          "state_identity": "8500cc39f890abecae8e06c80c67e74b946641d6d086bbd14fb9fb5494765fee"
         },
         {
           "event": {
@@ -72012,50 +72660,6 @@
           "first_seen": "2026-09-03T12:50:16Z",
           "public_id": "25733398293edba0",
           "state_identity": "25733398293edba03bfafd92e8609d5cf202b72544ff72fb726cce528d79937f"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-20",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Apple Music exact artist catalog",
-            "genres_public": null,
-            "headliner": "Martin Luke Brown",
-            "identity_aliases": [
-              "MARTIN LUKE BROWN"
-            ],
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/mlb_polaroid_7-2560x2560.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/martin-luke-brown/",
-            "venue": "Les Étoiles"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "620eec76735f1194",
-          "state_identity": "620eec76735f1194dfe462067c648c3e8908dea148a35c6a0ff6ba8247bc78ae"
         },
         {
           "event": {
@@ -72113,7 +72717,7 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-12-02",
+            "date": "2026-11-26",
             "department": "75",
             "event_title": null,
             "event_type": null,
@@ -72125,10 +72729,10 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "ESTL",
+            "headliner": "WHITIES",
             "identity_aliases": null,
             "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/05/ESTL-c-Clara-Ruby.webp",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/04/Photo-officielle-Realite-On-Tour-Paris-V1-OK-2560x2560.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72136,18 +72740,67 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/whities/",
+            "venue": "Les Étoiles"
+          },
+          "first_seen": "2026-09-03T08:19:39Z",
+          "public_id": "14575a53fc3bf90d",
+          "state_identity": "14575a53fc3bf90dd4c00332d1a720f24bb6d2334004896a3c8a9f5a5716a944"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "LEAP",
+            "identity_aliases": [
+              "LEAP"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/LEAP_03_LiamMaxwell-1-2560x1384.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
             "start_time": "19:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/estl/",
+            "ticket_url": "https://www.etoiles.paris/evenement/leap/",
             "venue": "Les Étoiles"
           },
-          "first_seen": "2026-09-03T13:49:19Z",
-          "public_id": "c0050ac32c300b58",
-          "state_identity": "c0050ac32c300b5844dc1cd4f31ae0ec47a975eec66dbfea1ac4576e9a3e4419"
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "f684e8f9a57fb997",
+          "state_identity": "f684e8f9a57fb9977a09a120d38d75523f21bba2a758c52d622f4252de04963b"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72228,9 +72881,11 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Pi'erre Bourne",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/y/x/k/a9724b4c-adf1-4276-b5cd-73122fcb47c2.png",
+            "identity_aliases": [
+              "Pi'erre Bourne"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/processed-CDDC63A9-57FC-4565-BEC5-4F2EB6B30759.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72240,10 +72895,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/pi-erre-bourne-billet/idmanif/664947/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/pierre-bourne/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -72494,11 +73149,9 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "The Longest Johns",
-            "identity_aliases": [
-              "The Longest Johns"
-            ],
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/08/Ends-of-the-earth-promo-photo-2560x1440.webp",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/y/a/e/696ceae8-baf6-468d-97ea-67fb9c27fee4.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72508,10 +73161,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/the-longest-johns/",
+            "ticket_status": null,
+            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/the-longest-johns-billet/idmanif/655027/idtier/4827637",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -72750,9 +73403,11 @@
               "R&B / Soul / Funk"
             ],
             "headliner": "Soulidified",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/z/w/v/bf49b267-3944-4f89-83c4-7e3611f060cf.jpg",
+            "identity_aliases": [
+              "Soulidified"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/Capture-d-ecran-2026-06-16-103423.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72762,10 +73417,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/soulidified-billet/idlist/6499/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/soulidified/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -73096,11 +73751,9 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Eli",
-            "identity_aliases": [
-              "Eli"
-            ],
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/08/R890_NA_R3_3-3-26-ELI1261_ADOBERGB_V2-1-2560x3838.webp",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/b/c/d/ed1d50d1-98da-4c34-84b4-ca9f541fbad9.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -73110,10 +73763,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/eli/",
+            "ticket_status": null,
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/eli-billet/idlist/6435/idtier/4827637",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -73719,9 +74372,11 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "The Guest List",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/e/v/j/adf34904-3463-4177-9a2d-fbc87dc48b23.jpg",
+            "identity_aliases": [
+              "The Guest List"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/THE-GUEST-LIST-ALBUM-COVER.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -73731,10 +74386,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/the-guest-list-billet/idmanif/659351/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/the-guest-list/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74398,11 +75053,9 @@
               "Rock / Indie / Punk"
             ],
             "headliner": "Benjamin Steer",
-            "identity_aliases": [
-              "Benjamin Steer"
-            ],
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/09/benjamin-steer_Octobre-26_Les-Etoiles_Paris_4x5.webp",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/j/t/m/87dce3f3-65c1-4328-9ecc-f5612a9fe7d3.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -74412,10 +75065,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/benjamin-steer/",
+            "ticket_status": null,
+            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/benjamin-steer-billet/idmanif/664323/idtier/4827637",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -77678,9 +78331,11 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "LEAP",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/e/r/d/e5512b86-7a7a-4ead-bfd3-0b940ffd4e52.jpg",
+            "identity_aliases": [
+              "LEAP"
+            ],
+            "image_source": "Les Étoiles",
+            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/06/LEAP_03_LiamMaxwell-1-2560x1384.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -77690,10 +78345,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/leap-billet/idlist/6119/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.etoiles.paris/evenement/leap/",
             "venue": "Les Étoiles"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -82715,7 +83370,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Live Nation"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -87315,7 +87970,7 @@
           "state_identity": "8f5604aeb409a9add816a319fa6e0ee8926de8523238a3e5739845b904833f87"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -90360,7 +91015,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -91331,7 +91986,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Nouveau Casino"
     },
     "Petit Bain": {
@@ -91891,49 +92546,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "2f35de1d16b1db95",
           "state_identity": "2f35de1d16b1db957caccc29527880e1a8173eaf9ac117afdbc81bc2e00dd53d"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-13",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Official/current event description and reviewed exact artist catalog",
-            "genres_public": null,
-            "headliner": "Tenside",
-            "identity_aliases": null,
-            "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/04/tenside-affiche-square.png",
-            "openers": [
-              "Aurorawave",
-              "Sugar Spine"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://petitbain.org/evenement/tenside/",
-            "venue": "Petit Bain"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "53b00f120fdb67e7",
-          "state_identity": "53b00f120fdb67e78909a180c423aa54931c2c6a299fb6deec81354e17285223"
         },
         {
           "event": {
@@ -93458,6 +94070,86 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-01-30",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Depresión Sonora",
+            "identity_aliases": null,
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/09/depresion-sonora-paris-feed2-800x800.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://petitbain.org/evenement/depresion-sonora/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "8749808a2214e5fd",
+          "state_identity": "8749808a2214e5fd4e8d847d03cfeead5fa6beb2f29912c7f3174b296bd9a008"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Night Tempo",
+            "identity_aliases": null,
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/09/tmo-square-nighttempo-paris.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://petitbain.org/evenement/night-tempo/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "a6037a9cc72e84c6",
+          "state_identity": "a6037a9cc72e84c6df8074363ed8ac44120e4a97fb2d1c30ff0e77d8375aff4e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-19",
             "department": "75",
             "event_title": null,
@@ -93744,7 +94436,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -94922,7 +95614,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -94975,6 +95667,51 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "50c473b49b5c41b6",
           "state_identity": "50c473b49b5c41b6d95d435dc8556b329505cde5d28f66b55201929dfb178551"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-09-23",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rap",
+            "genre_evidence": [
+              {
+                "raw": "Rap",
+                "source": "Point Éphémère"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Hip-hop / Rap",
+            "genre_source": "Point Éphémère",
+            "genres_public": null,
+            "headliner": "Back to School - Powered by The Room",
+            "identity_aliases": null,
+            "image_source": "Point Éphémère",
+            "image_url": "https://images.prismic.io/pointf/d3NZ_IMzZOOdp8ba_visuel_instagram.png?auto=format,compress",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://shotgun.live/fr/events/the-room-back-to-school",
+            "venue": "Point Éphémère"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "a003b4c04d81b543",
+          "state_identity": "a003b4c04d81b543585fb68a7061c47b96d8d183c2db13621b161f2e216e5cba"
         },
         {
           "event": {
@@ -96680,7 +97417,7 @@
           "state_identity": "d4c2db7324b7373b21de42fd42fe9a194ddd613170ab16aa92ceaced335de365"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -97752,12 +98489,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -98077,13 +98814,17 @@
             "genre_source": "Salle Pleyel",
             "genres_public": null,
             "headliner": "Khalid",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "KHALID"
+            ],
             "image_source": "Salle Pleyel",
             "image_url": "https://www.sallepleyel.com/app/uploads/2026/07/Khalid_Paris2026_717x1024-333x483.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -101223,7 +101964,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -101429,7 +102170,7 @@
           "state_identity": "a8b42feb4776965526a7340ecc438df477497f648d7e416def551de6d3e9ff59"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -107052,6 +107793,51 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-06",
+            "department": "75",
+            "event_title": "Fayçal Salhi",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz world",
+            "genre_evidence": [
+              {
+                "raw": "Jazz world",
+                "source": "Sunset/Sunside"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Sunset/Sunside",
+            "genres_public": null,
+            "headliner": "Fayçal Salhi",
+            "identity_aliases": null,
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/9/22/6ab286b413e16-salhi-faycal-dr.jpeg_thumbs/340-340.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/851632-faycal-salhi",
+            "venue": "Sunset/Sunside — Sunside"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "38f8fed6e008bd3a",
+          "state_identity": "38f8fed6e008bd3afc0a2a14dda4656bbbf49c4a5ab45d567f0cbb47bbfea3a5"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-07",
             "department": "75",
             "event_title": "Sacha Boutros & Lady Ellington",
@@ -107318,6 +108104,51 @@
           "first_seen": "2026-08-28T19:25:05Z",
           "public_id": "9b6df8170f8f1381",
           "state_identity": "9b6df8170f8f13817330d2b19de5cf671f63e0abba1ecc0648b0b8777aec0471"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": "Dictame",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz New Talent",
+            "genre_evidence": [
+              {
+                "raw": "Jazz New Talent",
+                "source": "Sunset/Sunside"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Sunset/Sunside",
+            "genres_public": null,
+            "headliner": "Dictame",
+            "identity_aliases": null,
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/9/22/6ab27ccb39772-photo-dictame.jpeg_thumbs/340-340.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/851569-dictame",
+            "venue": "Sunset/Sunside — Sunside"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "20c9b252f1f86bfa",
+          "state_identity": "20c9b252f1f86bfaa57ded9644aec245a7b96a1cc014d8923b576e3d4198e825"
         },
         {
           "event": {
@@ -108198,6 +109029,51 @@
           "first_seen": "2026-09-09T18:30:51Z",
           "public_id": "4eae4b91fb983fc8",
           "state_identity": "4eae4b91fb983fc8ab867b59b9b79274dc6c6046097bd2b8ed2e6b1f34c0a569"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-17",
+            "department": "75",
+            "event_title": "The Horizons",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz actuel",
+            "genre_evidence": [
+              {
+                "raw": "Jazz actuel",
+                "source": "Sunset/Sunside"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Sunset/Sunside",
+            "genres_public": null,
+            "headliner": "The Horizons",
+            "identity_aliases": null,
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/9/22/6ab2a7df9f6ba-format-carre.png_thumbs/340-340.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/851870-the-horizons",
+            "venue": "Sunset/Sunside — Sunside"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "c2169c77516938f5",
+          "state_identity": "c2169c77516938f5ea08c44866c60e0d0e9e9d53eeb6f2090dbb6fbe76f82035"
         },
         {
           "event": {
@@ -110443,7 +111319,7 @@
           "state_identity": "aabd4efab034afaa75a07a6ca06919cf6a426178eb4541c83c1b25bf44e6fb52"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -113111,7 +113987,7 @@
           "state_identity": "7d08800830f8e8ed12327f6a3b8f14c8d3d9600e7543832eca7386b3bb4a30bc"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Supersonic"
     },
     "Vedettes": {
@@ -114001,16 +114877,23 @@
             "event_type": null,
             "facebook_event_url": "https://www.facebook.com/events/1634872651639006",
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "folk",
+            "genre_evidence": [
+              {
+                "raw": "folk",
+                "source": "Le Trabendo"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Le Trabendo",
             "genres_public": null,
-            "headliner": "RADIE PEAT",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "headliner": "Radie Peat",
+            "identity_aliases": [
+              "RADIE PEAT"
+            ],
+            "image_source": "Le Trabendo",
+            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/09/Image-site-Trabendo-8-1500x844.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -114023,7 +114906,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://link.dice.fm/d29a21359608",
+            "ticket_url": "https://www.letrabendo.net/programmation/radie-peat/",
             "venue": "Le Trabendo"
           },
           "first_seen": "2026-09-15T17:08:03Z",
@@ -114413,7 +115296,7 @@
           "state_identity": "475448b492c7886cf42661e1cfc473cbad981a23ac482992e59d7fbe9b2ed3ca"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -115664,6 +116547,48 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "CARSICK",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://bit.ly/Carsick_Paris26",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "6fc440ff51f2d0b6",
+          "state_identity": "6fc440ff51f2d0b60285a66d94b42aa394f7c44dd70bd97cf4d3c80d984beb74"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
             "city": "Savigny-le-Temple",
             "co_headliners": null,
             "date": "2026-11-19",
@@ -116449,6 +117374,48 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Bandcamp",
+            "genres_public": null,
+            "headliner": "ASHEN",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/les-foudres-billet/idmanif/672010",
+            "venue": "Bataclan"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "6e0d6bf8026d9966",
+          "state_identity": "6e0d6bf8026d99665de069fec54672c53e271b3e2dcf9f0fc74943602b6e8f1a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
             "city": "Savigny-le-Temple",
             "co_headliners": null,
             "date": "2026-12-12",
@@ -116990,17 +117957,24 @@
             "date": "2027-02-13",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "Alt/indie",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Alt/indie",
+            "genre_evidence": [
+              {
+                "raw": "Alt/indie",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "MOTHICA",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "MOTHICA"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjuU-VKn7kxNZPu1FtG1SwR6Ad7KoXwRCntqKRQMTidfKNj6fpn6ULJbe54hL5-9wFXq2WelpAl4VwUFQE_TSMj0_jQmcUeu3ut2Ehj7m7YeFd6WLBQwIS-66IT5v_HWcrGjrbyhWQreti8i6y_bTLpZCQ_HWnOoDAT83iTGqMnig2NZ1cQScMayaskh80/s72-w640-h426-c/Mothica061223La%20CigaleParis%2018_1.jpg",
             "openers": null,
@@ -117014,8 +117988,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "http://bit.ly/Mothica_Paris27",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/mothica-2/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-09-14T16:52:08Z",
@@ -117211,19 +118185,26 @@
             "date": "2027-02-22",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "Alt/indie",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Apple Music + Bandcamp",
+            "genre": "Alt/indie",
+            "genre_evidence": [
+              {
+                "raw": "Alt/indie",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "LAUREN SANDERSON",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "LAUREN SANDERSON"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/Lauren-Sanderson-Tour-Press-Photo-e1790078986263.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -117235,8 +118216,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "http://bit.ly/LaurenSanderson_Paris27",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/lauren-sanderson/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-09-02T17:45:45Z",
@@ -117532,19 +118513,26 @@
             "date": "2027-03-16",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "Alt rock",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Alt rock",
+            "genre_evidence": [
+              {
+                "raw": "Alt rock",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "THE INTERSPHERE",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "THE INTERSPHERE"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/2-The-Intersphere-2026-Credit-Bennet-Carstens-scaled-e1790084707809.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -117556,8 +118544,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/TheIntersphere_Paris27",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/the-intersphere/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-09-18T16:32:58Z",
@@ -117942,19 +118930,26 @@
             "date": "2028-01-25",
             "department": "75",
             "event_title": null,
-            "event_type": null,
+            "event_type": "metal",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "metal",
+            "genre_evidence": [
+              {
+                "raw": "metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "ATLAS",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "ATLAS"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/04/b26ad937-905f-47a5-93a3-ffa727172ec3-scaled-e1776765248606.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -117966,8 +118961,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/Atlas_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/atlas/",
             "venue": "Backstage By The Mill"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -117975,7 +118970,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -119805,7 +120800,7 @@
           "state_identity": "fe4e5cf42711a2a47fb3c0fee31e8303ceef1cc54ba38ddbce524480f02f7d0b"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -122775,10 +123770,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-09-22T11:50:12Z",
+      "last_successful_at": "2026-09-22T17:01:11Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-09-22T11:50:12Z",
+  "updated_at": "2026-09-22T17:01:11Z",
   "version": 1
 }
