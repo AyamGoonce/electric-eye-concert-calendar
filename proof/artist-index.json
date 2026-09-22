@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-22T05:11:23Z",
+  "generatedAt": "2026-09-22T11:35:19Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -8253,12 +8253,11 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 15,
+      "articleCount": 14,
       "articleIds": [
         "6241465018394648188",
         "5219093234440112331",
         "5252192306441347807",
-        "4757958665710785093",
         "7471660502597003041",
         "4868829360120189881",
         "7989545750155558787",
@@ -8281,7 +8280,6 @@
         "https://www.electriceyerock.com/2026/08/eric-clapton-recreates-his-most-iconic.html",
         "https://www.electriceyerock.com/2026/02/christies-auctions-jim-irsay-collection.html",
         "https://www.electriceyerock.com/2025/05/eric-clapton-accor-arena-paris-may-31st.html",
-        "https://www.electriceyerock.com/2025/01/eric-claptons-unplugged-over-thirty.html",
         "https://www.electriceyerock.com/2024/12/eric-clapton-to-return-to-paris-in-2025.html",
         "https://www.electriceyerock.com/2024/05/eric-clapton-accor-arena-paris-may-27th.html",
         "https://www.electriceyerock.com/2024/05/eric-clapton-accor-arena-paris-may-26th.html",
@@ -9614,7 +9612,9 @@
         "4332823696767421207"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "5234475963389878611"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html",
         "https://www.electriceyerock.com/2026/03/a-conversation-with-fred-wesley-video.html",
@@ -10109,9 +10109,7 @@
         "5234475963389878611"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "5234475963389878611"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html"
       ],
@@ -11291,8 +11289,9 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
+      "articleCount": 2,
       "articleIds": [
+        "4272502325403483269",
         "9007875994632076088"
       ],
       "reviewedArticleIds": [],
@@ -11300,6 +11299,7 @@
         "9007875994632076088"
       ],
       "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/heather-nova-plants-orchard-in-paris.html",
         "https://www.electriceyerock.com/2022/10/heather-nova-alhambra-paris-october-8th.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -22679,8 +22679,9 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 3,
+      "articleCount": 4,
       "articleIds": [
+        "5663728455277355545",
         "7011001846009085407",
         "4805434841715920754",
         "8920245158921729825"
@@ -22691,6 +22692,7 @@
         "8920245158921729825"
       ],
       "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/simple-plan-headlining-accor-arena-next.html",
         "https://www.electriceyerock.com/2026/09/fridays-playlist-mtv-bubblegum-punk.html",
         "https://www.electriceyerock.com/2026/08/simple-plan-capital-one-city-parks.html",
         "https://www.electriceyerock.com/2024/01/simple-plan-bataclan-paris-january-18th.html"
@@ -27719,38 +27721,6 @@
       "articleUrls": [
         "https://www.electriceyerock.com/2026/06/uncle-acid-and-deadbeats-hellfest.html",
         "https://www.electriceyerock.com/2025/01/uncle-acid-and-deadbeats-alhambra-paris.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Unplugged",
-      "slug": "unplugged",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "articleIds": [
-        "4757958665710785093"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2025/01/eric-claptons-unplugged-over-thirty.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
