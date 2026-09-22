@@ -32,6 +32,15 @@ from concert_calendar.event_state import (
 from concert_calendar.content_index import build_index, enrich_events, fetch_entries, write_assets
 from concert_calendar.deduplication import high_confidence_collision_pairs
 from concert_calendar.sources import load_events_with_report
+from concert_calendar.source_retention import (
+    SOURCE_STATE_FILENAME,
+    SourceStateError,
+    build_source_state,
+    load_source_state,
+    validate_retained_identities,
+    validate_source_state,
+    write_source_state,
+)
 
 
 MINIMUM_EVENT_COUNT = 100
@@ -119,7 +128,31 @@ def read_pointer(path: Path) -> dict:
         or not isinstance(manifest.get("count"), int)
     ):
         raise ProductionValidationError(f"Malformed calendar pointer: {path}")
+    if "sourceState" in manifest or "sourceStateSha256" in manifest:
+        if (
+            manifest.get("sourceState") != SOURCE_STATE_FILENAME
+            or not isinstance(manifest.get("sourceStateSha256"), str)
+            or not re.fullmatch(r"[0-9a-f]{64}", manifest["sourceStateSha256"])
+        ):
+            raise ProductionValidationError(f"Malformed source-state pointer: {path}")
     return manifest
+
+
+def read_published_source_state(pointer_path: Path | None) -> dict | None:
+    """Migrate safely from a publication that predates source ownership."""
+
+    if pointer_path is None or not pointer_path.exists():
+        return None
+    manifest = read_pointer(pointer_path)
+    if "sourceState" not in manifest:
+        return None
+    path = pointer_path.parent / SOURCE_STATE_FILENAME
+    if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != manifest["sourceStateSha256"]:
+        raise ProductionValidationError("Published source state hash does not match pointer")
+    try:
+        return load_source_state(path)
+    except SourceStateError as error:
+        raise ProductionValidationError(f"Published source state is invalid: {error}") from error
 
 
 def read_published_calendar_events(pointer_path: Path) -> list[dict]:
@@ -605,6 +638,17 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
     state_digest = hashlib.sha256(state_path.read_bytes()).hexdigest()
     if pointer.get("state") != STATE_FILENAME or pointer.get("stateSha256") != state_digest:
         raise ProductionValidationError("Generated event state hash does not match pointer")
+    source_state_path = output_dir / SOURCE_STATE_FILENAME
+    if not source_state_path.is_file():
+        raise ProductionValidationError("Generated source state is missing")
+    source_state_digest = hashlib.sha256(source_state_path.read_bytes()).hexdigest()
+    if (pointer.get("sourceState") != SOURCE_STATE_FILENAME
+            or pointer.get("sourceStateSha256") != source_state_digest):
+        raise ProductionValidationError("Generated source state hash does not match pointer")
+    try:
+        load_source_state(source_state_path)
+    except SourceStateError as error:
+        raise ProductionValidationError(f"Generated source state is invalid: {error}") from error
 
     renderer = (output_dir / "calendar-renderer.js").read_text(encoding="utf-8")
     styles = (output_dir / "calendar.css").read_text(encoding="utf-8")
@@ -624,9 +668,18 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
 
 
 def build(args) -> int:
+    now = datetime.now(timezone.utc).replace(microsecond=0)
+    previous_source_state = read_published_source_state(
+        Path(args.published_pointer) if args.published_pointer else None
+    )
     print("PHASE START | source_and_pipeline_loading", flush=True)
     phase_started = time.perf_counter()
-    events, pipeline_report = load_events_with_report()
+    try:
+        events, pipeline_report = load_events_with_report(
+            prior_source_state=previous_source_state, now=now,
+        )
+    except SourceStateError as error:
+        raise ProductionValidationError(f"Source retention is invalid: {error}") from error
     print(f"PHASE COMPLETE | source_and_pipeline_loading | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     validate_source_report(pipeline_report)
     validate_semantic_collisions(events)
@@ -665,22 +718,30 @@ def build(args) -> int:
     print(f"PHASE COMPLETE | content_index_enrichment | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     print("PHASE START | state_export", flush=True)
     phase_started = time.perf_counter()
-    now = datetime.now(timezone.utc).replace(microsecond=0)
     try:
         previous_state = load_state(
             Path(args.published_state) if args.published_state else None
         )
         candidate_state = reconcile_state(events, previous_state, now=now)
+        validate_retained_identities(events, candidate_state, pipeline_report.retained_snapshots)
         change_report = build_change_report(events, previous_state, candidate_state, now=now)
         state_digest = write_state(output_dir / STATE_FILENAME, candidate_state)
-    except EventStateError as error:
-        raise ProductionValidationError(f"Persistent event state is invalid: {error}") from error
+        candidate_source_state = build_source_state(
+            events, pipeline_report.source_health, previous_source_state,
+            now=now, retained_snapshots=pipeline_report.retained_snapshots,
+        )
+        source_state_digest = write_source_state(
+            output_dir / SOURCE_STATE_FILENAME, candidate_source_state,
+        )
+    except (EventStateError, SourceStateError) as error:
+        raise ProductionValidationError(f"Persistent publication state is invalid: {error}") from error
     published_at = candidate_state["updated_at"]
     result = export_integration_prototype(
         events,
         output_dir=args.output_dir,
         published_at=published_at,
         state_sha256=state_digest,
+        source_state_sha256=source_state_digest,
     )
     print(f"PHASE COMPLETE | state_export | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     print("PHASE START | render_validation", flush=True)
@@ -716,14 +777,19 @@ def build(args) -> int:
         allow_large_change=args.allow_large_count_change,
     )
 
+    report_fields = asdict(pipeline_report)
+    report_fields.pop("retained_snapshots")
     report = {
-        **asdict(pipeline_report),
+        **report_fields,
         "published_baseline_count": published_count,
         "data_filename": pointer["data"],
         "sha256": pointer["sha256"],
         "event_count": pointer["count"],
         "state_event_count": len(candidate_state["events"]),
         "state_sha256": state_digest,
+        "source_state_sha256": source_state_digest,
+        "source_state_version": candidate_source_state["version"],
+        "source_state_bootstrapped": previous_source_state is None,
         "published_at": published_at,
         "state_bootstrapped": previous_state is None,
         "genre_report": pipeline_report.genre_report,
@@ -777,6 +843,7 @@ def validated_publication_files(source: Path) -> tuple[dict, list[Path]]:
     pointer = read_pointer(pointer_path)
     data = source / pointer["data"]
     state = source / pointer.get("state", "")
+    source_state = source / pointer.get("sourceState", "")
     if not data.is_file() or hashlib.sha256(data.read_bytes()).hexdigest() != pointer["sha256"]:
         raise ProductionValidationError("Refusing to publish invalid generated data")
     if (
@@ -784,8 +851,18 @@ def validated_publication_files(source: Path) -> tuple[dict, list[Path]]:
         or hashlib.sha256(state.read_bytes()).hexdigest() != pointer.get("stateSha256")
     ):
         raise ProductionValidationError("Refusing to publish invalid event state")
+    if (
+        pointer.get("sourceState") != SOURCE_STATE_FILENAME
+        or not source_state.is_file()
+        or hashlib.sha256(source_state.read_bytes()).hexdigest() != pointer.get("sourceStateSha256")
+    ):
+        raise ProductionValidationError("Refusing to publish invalid source state")
+    try:
+        load_source_state(source_state)
+    except SourceStateError as error:
+        raise ProductionValidationError(f"Refusing to publish invalid source state: {error}") from error
 
-    files = [pointer_path, data, state]
+    files = [pointer_path, data, state, source_state]
     for stable_name in PUBLIC_STABLE_ASSETS:
         stable = source / stable_name
         if not stable.is_file():
@@ -866,9 +943,11 @@ def publish(args) -> int:
     )
     new_data = generated / new_pointer["data"]
     new_state = generated / new_pointer.get("state", "")
+    new_source_state = generated / new_pointer["sourceState"]
 
     shutil.copyfile(new_data, proof / new_data.name)
     shutil.copyfile(new_state, proof / STATE_FILENAME)
+    shutil.copyfile(new_source_state, proof / SOURCE_STATE_FILENAME)
     for stable_name in PUBLIC_STABLE_ASSETS:
         source = generated / stable_name
         target = proof / stable_name
@@ -960,6 +1039,23 @@ def verify_hosted(args) -> int:
                 or "json" not in state_type
             ):
                 raise ProductionValidationError("Hosted event state is invalid")
+            if (manifest.get("sourceState") != SOURCE_STATE_FILENAME
+                    or not isinstance(manifest.get("sourceStateSha256"), str)
+                    or not re.fullmatch(r"[0-9a-f]{64}", manifest["sourceStateSha256"])):
+                raise ProductionValidationError("Hosted source state pointer is invalid")
+            source_state_body, source_state_type = fetch(
+                args.base_url.rstrip("/") + "/" + manifest["sourceState"]
+                + f"?verify={args.sha256[:16]}"
+            )
+            if (
+                hashlib.sha256(source_state_body).hexdigest() != manifest["sourceStateSha256"]
+                or "json" not in source_state_type
+            ):
+                raise ProductionValidationError("Hosted source state is invalid")
+            try:
+                validate_source_state(json.loads(source_state_body))
+            except (SourceStateError, UnicodeError, json.JSONDecodeError) as error:
+                raise ProductionValidationError("Hosted source state is invalid") from error
             for stable in ("calendar-renderer.js", "calendar.css"):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"

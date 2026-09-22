@@ -11,7 +11,9 @@ from unittest.mock import Mock, patch
 from concert_calendar import sources
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import prepare_upcoming_events
-from datetime import date
+from concert_calendar.event_state import reconcile_state
+from concert_calendar.source_retention import build_source_state
+from datetime import date, datetime, timezone
 
 
 def event(name):
@@ -24,13 +26,38 @@ def source(name, loader):
                            get_diagnostics=lambda: [{"marker": name}])
 
 
-def run(modules, workers=4):
+def run(modules, workers=4, *, prior_source_state=None, now=None):
     with patch.object(sources, "discover_scrapers_with_issues", return_value=(modules, {})), \
          patch.object(sources, "SOURCE_WORKERS", workers), redirect_stdout(io.StringIO()):
-        return sources.load_events_with_report(scraper_attempts=3, retry_delay_seconds=0)
+        return sources.load_events_with_report(
+            scraper_attempts=3, retry_delay_seconds=0,
+            prior_source_state=prior_source_state, now=now,
+        )
 
 
 class SourceConcurrencyTests(unittest.TestCase):
+    def test_failed_source_replay_is_identical_serial_and_parallel(self):
+        now = datetime(2026, 9, 22, 10, tzinfo=timezone.utc)
+        retained = event("Retained")
+        retained.source_names = ["failed"]
+        reconcile_state([retained], None, now=now)
+        prior = build_source_state(
+            [retained], [{"source_name": "failed", "status": "ok"}], None,
+            now=now, retained_snapshots={},
+        )
+
+        def modules():
+            return [
+                source("failed", Mock(side_effect=RuntimeError("offline"))),
+                source("healthy", Mock(return_value=[event("Current")])),
+            ]
+
+        left, serial = run(modules(), 1, prior_source_state=prior, now=now)
+        right, parallel = run(modules(), 4, prior_source_state=prior, now=now)
+        self.assertEqual(asdict(serial), asdict(parallel))
+        self.assertEqual([asdict(row) for row in left], [asdict(row) for row in right])
+        self.assertEqual(["Current", "Retained"], [row.headliner for row in left])
+
     def test_four_workers_and_ordered_output(self):
         barrier = Barrier(4)
         lock = Lock()

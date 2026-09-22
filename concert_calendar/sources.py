@@ -3,6 +3,7 @@ import time
 import unicodedata
 from dataclasses import dataclass
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
 
 from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.deduplication import normalize_headliner
@@ -13,6 +14,7 @@ from concert_calendar.geography import (
 from concert_calendar.genres import enrich_event_genres
 from concert_calendar.promoters import normalize_event_promoters
 from concert_calendar.scraper_loader import discover_scrapers_with_issues
+from concert_calendar.source_retention import SourceStateError, hydrate_failed_sources
 from concert_calendar.venues import normalize_event_venue
 from concert_calendar.venues import normalize_venue_key
 
@@ -80,6 +82,8 @@ class PipelineReport:
     suspicious_near_duplicate_candidates: list[dict]
     genre_report: dict
     source_diagnostics: list[dict]
+    retained_snapshots: dict[str, list[dict]]
+    retention_details: list[dict]
 
 
 def normalize_text_for_matching(text):
@@ -214,7 +218,10 @@ def load_events_with_report(
     *,
     scraper_attempts: int = 3,
     retry_delay_seconds: float = 2.0,
+    prior_source_state: dict | None = None,
+    now: datetime | None = None,
 ):
+    now = now or datetime.now(timezone.utc)
     raw_events = []
     source_health = []
     source_counts = {}
@@ -243,6 +250,10 @@ def load_events_with_report(
             attempt_started = time.perf_counter()
             try:
                 scraper_events = scraper.load_events()
+                # A completed retry is healthy even when it legitimately
+                # returns an empty inventory. An earlier exception must not
+                # turn that successful result into a failed-source fallback.
+                last_error = None
                 if scraper_events or attempt == scraper_attempts:
                     elapsed = max(0.0, time.perf_counter() - attempt_started)
                     print(
@@ -405,6 +416,11 @@ def load_events_with_report(
         normalize_event_promoters(event)
         normalized_events.append(event)
 
+    retained_events, retained_snapshots, retention_details = hydrate_failed_sources(
+        prior_source_state, source_health, normalized_events, now=now,
+    )
+    normalized_events.extend(retained_events)
+
     enrich_official_venue_images(normalized_events)
 
     deduplication_diagnostics = {}
@@ -412,6 +428,15 @@ def load_events_with_report(
         normalized_events,
         diagnostics=deduplication_diagnostics,
     )
+    failed_names = {item["source_name"] for item in source_health if item["status"] == "failed"}
+    healthy_names = {item["source_name"] for item in source_health if item["status"] != "failed"}
+    for event in deduplicated_events:
+        names = set(event.source_names or [])
+        if names & failed_names and names & healthy_names:
+            raise SourceStateError(
+                "Retained failed-source row merged with healthy current evidence: "
+                f"{event.date[:10]} {event.headliner} — {event.venue}"
+            )
     print(
         f"PHASE COMPLETE | deduplication | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s",
         flush=True,
@@ -476,6 +501,8 @@ def load_events_with_report(
         ),
         genre_report=genre_report,
         source_diagnostics=source_diagnostics[:1000],
+        retained_snapshots=retained_snapshots,
+        retention_details=retention_details,
     )
 
     return deduplicated_events, report

@@ -347,17 +347,20 @@ def build_current_pointer(
     *,
     published_at: str | None = None,
     state_sha256: str | None = None,
+    source_state_sha256: str | None = None,
 ) -> str:
-    manifest = serialize_data(
-        {
+    fields = {
             "data": data_filename,
             "sha256": digest,
             "count": count,
             "publishedAt": published_at or "",
             "state": "calendar-state.json" if state_sha256 else "",
             "stateSha256": state_sha256 or "",
-        }
-    )
+    }
+    if source_state_sha256:
+        fields["sourceState"] = "calendar-source-state.json"
+        fields["sourceStateSha256"] = source_state_sha256
+    manifest = serialize_data(fields)
 
     return f"""(function(){{
   "use strict";
@@ -566,6 +569,7 @@ def export_integration_prototype(
     today: date | None = None,
     published_at: str | None = None,
     state_sha256: str | None = None,
+    source_state_sha256: str | None = None,
 ) -> dict[str, Path | str | int]:
     upcoming = prepare_upcoming_events(events, today=today)
     destination = Path(output_dir)
@@ -584,6 +588,7 @@ def export_integration_prototype(
             len(upcoming),
             published_at=published_at,
             state_sha256=state_sha256,
+            source_state_sha256=source_state_sha256,
         ),
         encoding="utf-8",
     )

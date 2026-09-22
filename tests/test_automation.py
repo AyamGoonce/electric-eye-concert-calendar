@@ -16,14 +16,18 @@ from concert_calendar.automation import (
     publish,
     promote_verified,
     read_pointer,
+    read_published_source_state,
     read_published_calendar_events,
     stage_candidate,
     validate_count_regression,
     validate_genre_coverage,
     validate_events,
     validate_source_report,
+    validated_publication_files,
+    verify_hosted,
 )
 from concert_calendar.production_export import build_current_pointer, build_data_asset
+from concert_calendar.source_retention import SOURCE_STATE_FILENAME, write_source_state
 from concert_calendar.event_state import (
     EventStateError,
     canonical_event_identity,
@@ -73,6 +77,10 @@ def write_generated_publication(destination, marker="candidate"):
     )
     state = {"version": 1, "updated_at": "2026-08-23T10:00:00Z", "events": {}}
     state_digest = write_state(destination / "calendar-state.json", state)
+    source_state_digest = write_source_state(
+        destination / SOURCE_STATE_FILENAME,
+        {"version": 1, "updated_at": "2026-08-23T10:00:00Z", "sources": {}},
+    )
     filename, digest, asset = build_data_asset(
         [valid_event(index) for index in range(100)],
         published_at="2026-08-23T10:00:00Z",
@@ -83,6 +91,7 @@ def write_generated_publication(destination, marker="candidate"):
             filename, digest, 100,
             published_at="2026-08-23T10:00:00Z",
             state_sha256=state_digest,
+            source_state_sha256=source_state_digest,
         ),
         encoding="utf-8",
     )
@@ -108,6 +117,124 @@ def write_generated_publication(destination, marker="candidate"):
 
 
 class AutomationValidationTests(unittest.TestCase):
+    def test_publication_pointer_requires_source_state_fields_as_a_pair(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            generated = Path(tmp)
+            write_generated_publication(generated)
+            pointer = generated / "calendar-current.js"
+            value = pointer.read_text(encoding="utf-8")
+            self.assertEqual(SOURCE_STATE_FILENAME, read_pointer(pointer)["sourceState"])
+            pointer.write_text(value.replace('"sourceStateSha256":', '"missingSourceStateSha256":'),
+                               encoding="utf-8")
+            with self.assertRaises(ProductionValidationError):
+                read_pointer(pointer)
+
+    def test_source_state_digest_is_required_for_candidate_stage_and_publish(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            generated = root / "generated"
+            pages = root / "pages"
+            write_generated_publication(generated)
+            (generated / SOURCE_STATE_FILENAME).write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(ProductionValidationError, "source state"):
+                validated_publication_files(generated)
+            with self.assertRaises(ProductionValidationError):
+                stage_candidate(type("Args", (), {
+                    "generated_dir": str(generated), "pages_dir": str(pages),
+                    "candidate_id": "a" * 64 + "-1",
+                })())
+            self.assertFalse((pages / "proof" / "candidates").exists())
+
+    def test_published_source_state_bootstrap_and_malformed_hash_behavior(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            old_pointer = root / "old-calendar-current.js"
+            old_pointer.write_text(
+                build_current_pointer("calendar-data.old.js", "a" * 64, 100,
+                                      state_sha256="b" * 64), encoding="utf-8",
+            )
+            self.assertIsNone(read_published_source_state(old_pointer))
+            generated = root / "generated"
+            write_generated_publication(generated)
+            pointer = generated / "calendar-current.js"
+            self.assertEqual({}, read_published_source_state(pointer)["sources"])
+            (generated / SOURCE_STATE_FILENAME).write_text("{}", encoding="utf-8")
+            with self.assertRaisesRegex(ProductionValidationError, "source state hash"):
+                read_published_source_state(pointer)
+
+    def test_hosted_verification_checks_source_state_digest(self):
+        from concert_calendar import automation
+
+        with tempfile.TemporaryDirectory() as tmp:
+            generated = Path(tmp)
+            _, digest = write_generated_publication(generated)
+            base = "https://example.invalid/candidate"
+
+            def fetch(url):
+                name = url.split("?", 1)[0].removeprefix(base + "/")
+                body = (generated / name).read_bytes()
+                kind = "application/json" if name.endswith(".json") else (
+                    "text/html" if name.endswith(".html") else
+                    "text/css" if name.endswith(".css") else "application/javascript"
+                )
+                return body, kind
+
+            args = type("Args", (), {"base_url": base, "sha256": digest, "timeout": .1})()
+            with patch.object(automation, "fetch", side_effect=fetch):
+                self.assertEqual(0, verify_hosted(args))
+            (generated / SOURCE_STATE_FILENAME).write_text("{}", encoding="utf-8")
+            with patch.object(automation, "fetch", side_effect=fetch), \
+                 patch.object(automation.time, "sleep", return_value=None):
+                with self.assertRaisesRegex(ProductionValidationError, "source state"):
+                    verify_hosted(args)
+
+    def test_failed_promotion_advances_neither_event_nor_source_state(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            pages = root / "pages"
+            old_generated = root / "old"
+            new_generated = root / "new"
+            write_generated_publication(old_generated, marker="old")
+            publish(type("Args", (), {
+                "generated_dir": str(old_generated), "pages_dir": str(pages),
+            })())
+            proof = pages / "proof"
+            prior_event_state = (proof / "calendar-state.json").read_bytes()
+            prior_source_state = (proof / SOURCE_STATE_FILENAME).read_bytes()
+
+            _, digest = write_generated_publication(new_generated, marker="new")
+            event_digest = write_state(
+                new_generated / "calendar-state.json",
+                {"version": 1, "updated_at": "2026-08-24T10:00:00Z", "events": {}},
+            )
+            source_digest = write_source_state(
+                new_generated / SOURCE_STATE_FILENAME,
+                {"version": 1, "updated_at": "2026-08-24T10:00:00Z", "sources": {}},
+            )
+            manifest = read_pointer(new_generated / "calendar-current.js")
+            (new_generated / "calendar-current.js").write_text(
+                build_current_pointer(
+                    manifest["data"], digest, manifest["count"],
+                    published_at="2026-08-24T10:00:00Z",
+                    state_sha256=event_digest,
+                    source_state_sha256=source_digest,
+                ), encoding="utf-8",
+            )
+            candidate_id = digest + "-2"
+            stage_candidate(type("Args", (), {
+                "generated_dir": str(new_generated), "pages_dir": str(pages),
+                "candidate_id": candidate_id,
+            })())
+            candidate = proof / "candidates" / candidate_id
+            with self.assertRaisesRegex(ProductionValidationError, "hosted failed"):
+                promote_verified(type("Args", (), {
+                    "candidate_dir": str(candidate), "pages_dir": str(pages),
+                })(), verifier=lambda _: (_ for _ in ()).throw(
+                    ProductionValidationError("hosted failed")
+                ))
+            self.assertEqual(prior_event_state, (proof / "calendar-state.json").read_bytes())
+            self.assertEqual(prior_source_state, (proof / SOURCE_STATE_FILENAME).read_bytes())
+
     def test_reads_calendar_data_asset_produced_by_current_writer(self):
         with tempfile.TemporaryDirectory() as tmp:
             generated = Path(tmp)
@@ -475,6 +602,8 @@ class AutomationValidationTests(unittest.TestCase):
             self.assertEqual(read_pointer(proof / "calendar-current.js")["data"], filename)
             self.assertEqual(len(list(proof.glob("calendar-data.*.js"))), 3)
             self.assertEqual((proof / "calendar-state.json").read_text(), (generated / "calendar-state.json").read_text())
+            self.assertEqual((proof / SOURCE_STATE_FILENAME).read_bytes(),
+                             (generated / SOURCE_STATE_FILENAME).read_bytes())
 
     def test_candidate_failure_leaves_live_release_and_success_promotes(self):
         with tempfile.TemporaryDirectory() as temporary:
@@ -505,6 +634,8 @@ class AutomationValidationTests(unittest.TestCase):
                 "candidate_id": candidate_id,
             })())
             candidate = proof / "candidates" / candidate_id
+            self.assertEqual((candidate / SOURCE_STATE_FILENAME).read_bytes(),
+                             (generated / SOURCE_STATE_FILENAME).read_bytes())
             promote_args = type("Args", (), {
                 "candidate_dir": str(candidate), "pages_dir": str(pages),
                 "base_url": "https://example.invalid/candidate",
@@ -517,9 +648,13 @@ class AutomationValidationTests(unittest.TestCase):
             with self.assertRaises(ProductionValidationError):
                 promote_verified(promote_args, verifier=fail_verification)
             self.assertEqual(read_pointer(proof / "calendar-current.js")["data"], old_name)
+            self.assertFalse((proof / SOURCE_STATE_FILENAME).exists())
 
             promote_verified(promote_args, verifier=lambda _args: 0)
             self.assertEqual(read_pointer(proof / "calendar-current.js")["data"], filename)
+            self.assertEqual((proof / SOURCE_STATE_FILENAME).read_bytes(),
+                             (candidate / SOURCE_STATE_FILENAME).read_bytes() if candidate.exists()
+                             else (generated / SOURCE_STATE_FILENAME).read_bytes())
             self.assertFalse(any((proof / stale).exists() for stale in STALE_PUBLIC_TEST_ASSETS))
             self.assertFalse((proof / "candidates").exists())
 

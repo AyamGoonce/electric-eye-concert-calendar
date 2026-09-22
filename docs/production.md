@@ -55,6 +55,30 @@ copied before the pointer and committed atomically with the data. A scrape,
 test, or validation failure cannot advance published state or Last updated.
 The pointer contains the state hash, and hosted verification checks it.
 
+`proof/calendar-source-state.json` is a separate version-1, per-source
+last-known-good inventory. It records each configured source's last successful
+time, whitelisted future ConcertEvent fields, and non-authoritative public/state
+identity hints. It never stores derived Electric Eye content links or scraper
+internals. The pointer includes `sourceState` and `sourceStateSha256`; candidate
+staging, promotion, and hosted verification validate that digest alongside the
+event-state digest. A publication predating this sidecar is a valid bootstrap:
+no source ownership is inferred from its calendar rows, so a failed source has
+no fallback until it has completed a successful publication with the sidecar.
+
+Only an explicitly `failed` source can replay its own snapshot. A successful
+non-empty scrape replaces that source's inventory, and a legitimate
+`ALLOW_EMPTY` scrape clears it. An unexpected empty result remains a build
+failure. A failed source retains its original last-success time; replay never
+extends the 72-hour wall-clock limit. Past event dates are excluded using
+Europe/Paris, including after a snapshot has aged while unpublished. Before
+replay, the pipeline suppresses a retained row when current healthy evidence
+identifies the same concert under existing conservative deduplication rules;
+stale metadata cannot enrich the healthy row. Remaining rows enter normal
+deduplication and event-state reconciliation. Expired, past, superseded, and
+removed-source rows are pruned from the next source-state sidecar. The report
+keeps per-source fallback counts, unavailability/expiry diagnostics, and a
+bounded retained-row detail list.
+
 State records retain `first_seen`, `last_seen`, and event date. Past identities
 are retained for 180 days, allowing temporarily missing events to return without
 immediately losing identity while bounding growth. The state schema can later
@@ -73,11 +97,17 @@ after building and validating the candidate data and never publishes it.
 
 ## Last-known-good protection
 
-Publication is skipped if tests fail, a scraper exhausts its retries, a core
-source returns zero, required counts are zero, fewer than 100 final events are
+Publication is skipped if tests fail, a non-empty core source unexpectedly
+returns zero, required counts are zero, fewer than 100 final events are
 produced, the public renderer contract is malformed, dates or ticket URLs are
 invalid, public genres are unknown, duplicate renderer records remain, or an
 asset hash/pointer is inconsistent.
+
+A scraper that exhausts retries is reported as degraded, but does not by
+itself block publication. Its eligible snapshot rows can be retained for up to
+72 hours under the rules above; with no valid snapshot (or after expiry), they
+are absent from the candidate. Global count and other validation guards still
+apply. Source degradation is not interpreted as cancellation or sold out.
 
 The new final count must normally remain between 60% and 250% of the currently
 published manifest count. The lower bound catches a severe source collapse but
@@ -109,9 +139,10 @@ public fixtures or diagnostic harnesses; those fixtures remain available only
 in local generated test output.
 
 To roll back, restore `proof/calendar-current.js` from the desired known-good
-`gh-pages` commit together with its `calendar-state.json` and referenced data
-hash, commit that change to
-`gh-pages`, and verify both URLs. Reverting the most recent Pages publication
+`gh-pages` commit together with its `calendar-state.json`,
+`calendar-source-state.json` (if that pointer references one), and referenced
+data hash, commit that change to `gh-pages`, and verify all referenced hashes.
+Reverting the most recent Pages publication
 commit is the simplest option when its predecessor is known good.
 
 ## Operations and diagnosis

@@ -532,6 +532,15 @@ class IntegrationAssetTests(unittest.TestCase):
         self.assertIn('"ee:concert-data-error"', pointer)
         self.assertIn('"data asset unavailable"', pointer)
 
+    def test_pointer_carries_separate_source_state_integrity_fields(self):
+        filename, digest, _ = build_data_asset(self.prepared)
+        pointer = build_current_pointer(
+            filename, digest, len(self.prepared),
+            state_sha256="a" * 64, source_state_sha256="b" * 64,
+        )
+        self.assertIn('"sourceState":"calendar-source-state.json"', pointer)
+        self.assertIn('"sourceStateSha256":"' + "b" * 64 + '"', pointer)
+
     def test_fixture_models_blogger_mount_and_both_load_orders(self):
         renderer_first = build_fixture_html("renderer-first")
         data_first = build_fixture_html("data-first")
