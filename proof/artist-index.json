@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-23T13:13:00Z",
+  "generatedAt": "2026-09-23T17:19:39Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -8256,16 +8256,13 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 15,
+      "articleCount": 12,
       "articleIds": [
         "6241465018394648188",
         "5219093234440112331",
         "5252192306441347807",
-        "4757958665710785093",
-        "7471660502597003041",
         "4868829360120189881",
         "7989545750155558787",
-        "7158798416174351964",
         "7499260740496628830",
         "1988428375764235494",
         "5232616791650033278",
@@ -8284,11 +8281,8 @@
         "https://www.electriceyerock.com/2026/08/eric-clapton-recreates-his-most-iconic.html",
         "https://www.electriceyerock.com/2026/02/christies-auctions-jim-irsay-collection.html",
         "https://www.electriceyerock.com/2025/05/eric-clapton-accor-arena-paris-may-31st.html",
-        "https://www.electriceyerock.com/2025/01/eric-claptons-unplugged-over-thirty.html",
-        "https://www.electriceyerock.com/2024/12/eric-clapton-to-return-to-paris-in-2025.html",
         "https://www.electriceyerock.com/2024/05/eric-clapton-accor-arena-paris-may-27th.html",
         "https://www.electriceyerock.com/2024/05/eric-clapton-accor-arena-paris-may-26th.html",
-        "https://www.electriceyerock.com/2023/01/jeff-beck-1944-2023.html",
         "https://www.electriceyerock.com/2023/01/rip-jeff-beck.html",
         "https://www.electriceyerock.com/2021/11/fridays-mondays-playlist-george.html",
         "https://www.electriceyerock.com/2021/10/fridays-playlist-mixing-desk-hero-tom.html",
@@ -9617,7 +9611,9 @@
         "4332823696767421207"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "5234475963389878611"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html",
         "https://www.electriceyerock.com/2026/03/a-conversation-with-fred-wesley-video.html",
@@ -10112,9 +10108,7 @@
         "5234475963389878611"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "5234475963389878611"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html"
       ],
@@ -12650,10 +12644,9 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 10,
+      "articleCount": 9,
       "articleIds": [
         "4841738979345471099",
-        "7158798416174351964",
         "6587838000013709121",
         "7499260740496628830",
         "258061909540315964",
@@ -12671,7 +12664,6 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/01/watch-jeff-beck-auction-live.html",
-        "https://www.electriceyerock.com/2023/01/jeff-beck-1944-2023.html",
         "https://www.electriceyerock.com/2023/01/fridays-playlist-ripjb.html",
         "https://www.electriceyerock.com/2023/01/rip-jeff-beck.html",
         "https://www.electriceyerock.com/2022/07/jeff-beck-feat-johnny-depp-olympia.html",
@@ -21317,9 +21309,7 @@
         "189464433969378974"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "6738311452493419943"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/05/ronnie-wood-at-olympia-with-imelda-may.html",
         "https://www.electriceyerock.com/2026/05/the-rolling-stones-officially-share-new.html",
@@ -26349,6 +26339,7 @@
         "461484123954871059",
         "5699155883436583836",
         "7600704829710541376",
+        "6738311452493419943",
         "189464433969378974"
       ],
       "articleUrls": [
@@ -27728,38 +27719,6 @@
       "articleUrls": [
         "https://www.electriceyerock.com/2026/06/uncle-acid-and-deadbeats-hellfest.html",
         "https://www.electriceyerock.com/2025/01/uncle-acid-and-deadbeats-alhambra-paris.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Unplugged",
-      "slug": "unplugged",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "articleIds": [
-        "4757958665710785093"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2025/01/eric-claptons-unplugged-over-thirty.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
