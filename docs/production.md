@@ -65,19 +65,28 @@ event-state digest. A publication predating this sidecar is a valid bootstrap:
 no source ownership is inferred from its calendar rows, so a failed source has
 no fallback until it has completed a successful publication with the sidecar.
 
-Only an explicitly `failed` source can replay its own snapshot. A successful
-non-empty scrape replaces that source's inventory, and a legitimate
+An explicitly `failed` source can replay its own snapshot. A scraper can also
+report that a non-empty result came from a same-run fallback rather than its
+primary path. That fallback is classified `partial` only when it is missing at
+least 20 future rows and retains less than 50% of its recent last-known-good
+source inventory. Requiring both explicit fallback provenance and a large
+absolute and relative collapse avoids treating ordinary inventory decreases as
+source failures. A fallback above those conservative limits remains healthy.
+
+A successful healthy scrape replaces that source's inventory, and a legitimate
 `ALLOW_EMPTY` scrape clears it. An unexpected empty result remains a build
-failure. A failed source retains its original last-success time; replay never
-extends the 72-hour wall-clock limit. Past event dates are excluded using
-Europe/Paris, including after a snapshot has aged while unpublished. Before
-replay, the pipeline suppresses a retained row when current healthy evidence
-identifies the same concert under existing conservative deduplication rules;
-stale metadata cannot enrich the healthy row. Remaining rows enter normal
-deduplication and event-state reconciliation. Expired, past, superseded, and
-removed-source rows are pruned from the next source-state sidecar. The report
-keeps per-source fallback counts, unavailability/expiry diagnostics, and a
-bounded retained-row detail list.
+failure. Failed and partial sources retain the original last-success time;
+replay never extends the 72-hour wall-clock limit. Fresh partial-fallback rows
+remain authoritative, while unmatched future rows from the last healthy
+snapshot supplement them. Past event dates are excluded using Europe/Paris,
+including after a snapshot has aged while unpublished. Before replay, the
+pipeline suppresses a retained row when current evidence identifies the same
+concert under existing conservative deduplication rules; stale metadata cannot
+enrich the fresh row. Remaining rows enter normal deduplication and event-state
+reconciliation. Expired, past, superseded, and removed-source rows are pruned
+from the next source-state sidecar. The report keeps load-path provenance,
+per-source fallback counts, inventory comparisons, unavailability/expiry
+diagnostics, and a bounded retained-row detail list.
 
 State records retain `first_seen`, `last_seen`, and event date. Past identities
 are retained for 180 days, allowing temporarily missing events to return without

@@ -1,4 +1,5 @@
 import re
+from threading import local
 import unicodedata
 from datetime import date
 from urllib.parse import urljoin
@@ -16,6 +17,24 @@ PROGRAMME_URL = "https://le-zenith.com/"
 REQUEST_TIMEOUT = 30
 HEADERS = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Safari/537.36"}
 MONTHS = {"janv": 1, "fevr": 2, "mars": 3, "avr": 4, "mai": 5, "juin": 6, "juil": 7, "aout": 8, "sept": 9, "oct": 10, "nov": 11, "dec": 12}
+_LOAD_CONTEXT = local()
+
+
+def _set_load_metadata(path, fallback_source=None):
+    _LOAD_CONTEXT.metadata = {
+        "path": path,
+        "fallback_source": fallback_source,
+    }
+
+
+def get_load_metadata():
+    """Return machine-readable provenance for the caller's latest load."""
+
+    return getattr(
+        _LOAD_CONTEXT,
+        "metadata",
+        {"path": "primary", "fallback_source": None},
+    ).copy()
 
 
 def clean(value):
@@ -87,6 +106,7 @@ def load_events():
     try:
         events = load_primary_events()
         if events:
+            _set_load_metadata("primary")
             return events
         primary_error = RuntimeError("primary source returned zero future events")
     except requests.RequestException as error:
@@ -108,4 +128,5 @@ def load_events():
             "returned zero future Zénith Paris events"
         )
     print(f"Le Zénith fallback Live Nation recovered {len(events)} events")
+    _set_load_metadata("fallback", "Live Nation")
     return events

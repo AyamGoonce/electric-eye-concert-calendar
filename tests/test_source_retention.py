@@ -12,7 +12,11 @@ from contextlib import redirect_stdout
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
-from concert_calendar.automation import ProductionValidationError, validate_source_report
+from concert_calendar.automation import (
+    ProductionValidationError,
+    validate_source_report,
+    validate_venue_inventory_regression,
+)
 from concert_calendar.event_state import reconcile_state
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import prepare_upcoming_events
@@ -42,12 +46,25 @@ def event(name="Meryl Streek", *, date="2027-01-20", venue="La Cigale", **change
     return row
 
 
-def scraper(name, response, *, allow_empty=False):
-    return SimpleNamespace(
+def scraper(
+    name,
+    response,
+    *,
+    allow_empty=False,
+    load_path=None,
+    fallback_source=None,
+):
+    module = SimpleNamespace(
         SOURCE_NAME=name, __name__=name, ALLOW_EMPTY=allow_empty,
         load_events=Mock(side_effect=response) if isinstance(response, Exception)
         else Mock(return_value=deepcopy(response)),
     )
+    if load_path is not None:
+        module.get_load_metadata = Mock(return_value={
+            "path": load_path,
+            "fallback_source": fallback_source,
+        })
+    return module
 
 
 def run(sources, prior=None, *, now=NOW):
@@ -73,7 +90,266 @@ def source_state(name="DICE", rows=None, *, now=NOW, previous=None):
     return state, rows
 
 
+def inventory(count, *, prefix="Prior", date="2027-01-20", **changes):
+    return [
+        event(
+            f"{prefix} {index}",
+            date=date,
+            ticket_url=f"https://tickets.example/{prefix.casefold()}/{index}",
+            **changes,
+        )
+        for index in range(count)
+    ]
+
+
 class SourceRetentionTests(unittest.TestCase):
+    def test_partial_same_run_fallback_replays_missing_inventory_and_keeps_fresh_overlap(self):
+        prior_rows = inventory(40, openers=["Stale Support"])
+        prior, _ = source_state("Venue", prior_rows)
+        fresh = inventory(10, openers=["Fresh Support"])
+
+        rows, report = run([
+            scraper(
+                "Venue",
+                fresh,
+                load_path="fallback",
+                fallback_source="Alternate Listings",
+            )
+        ], prior)
+
+        self.assertEqual(40, len(rows))
+        health = report.source_health[0]
+        self.assertEqual("partial", health["status"])
+        self.assertEqual("fallback", health["load_path"])
+        self.assertEqual("Alternate Listings", health["fallback_source"])
+        self.assertEqual(40, health["fallback_prior_event_count"])
+        self.assertEqual(10, health["fresh_event_count"])
+        self.assertEqual(30, health["fallback_event_count"])
+        overlap = next(row for row in rows if row.headliner == "Prior 0")
+        self.assertEqual(["Fresh Support"], overlap.openers)
+        self.assertEqual("https://tickets.example/prior/0", overlap.ticket_url)
+
+    def test_healthy_primary_refreshes_snapshot_normally(self):
+        prior, _ = source_state("Venue", inventory(40))
+        fresh = inventory(10, prefix="Current")
+
+        rows, report = run([
+            scraper("Venue", fresh, load_path="primary")
+        ], prior, now=NOW + timedelta(hours=6))
+        reconcile_state(rows, None, now=NOW + timedelta(hours=6))
+        candidate = build_source_state(
+            rows,
+            report.source_health,
+            prior,
+            now=NOW + timedelta(hours=6),
+            retained_snapshots=report.retained_snapshots,
+        )
+
+        self.assertEqual("ok", report.source_health[0]["status"])
+        self.assertEqual("primary", report.source_health[0]["load_path"])
+        self.assertEqual(10, len(candidate["sources"]["Venue"]["events"]))
+        self.assertEqual(
+            "2026-09-22T16:00:00Z",
+            candidate["sources"]["Venue"]["last_successful_at"],
+        )
+
+    def test_fallback_without_material_collapse_remains_healthy(self):
+        prior, _ = source_state("Venue", inventory(40))
+        fresh = inventory(25)
+
+        rows, report = run([
+            scraper(
+                "Venue",
+                fresh,
+                load_path="fallback",
+                fallback_source="Alternate Listings",
+            )
+        ], prior, now=NOW + timedelta(hours=6))
+        reconcile_state(rows, None, now=NOW + timedelta(hours=6))
+        candidate = build_source_state(
+            rows,
+            report.source_health,
+            prior,
+            now=NOW + timedelta(hours=6),
+            retained_snapshots=report.retained_snapshots,
+        )
+
+        self.assertEqual("ok", report.source_health[0]["status"])
+        self.assertEqual(25, len(rows))
+        self.assertEqual(0, report.source_health[0]["fallback_event_count"])
+        self.assertEqual(25, len(candidate["sources"]["Venue"]["events"]))
+        self.assertEqual(
+            "2026-09-22T16:00:00Z",
+            candidate["sources"]["Venue"]["last_successful_at"],
+        )
+
+    def test_partial_fallback_preserves_good_snapshot_and_success_clock(self):
+        prior, _ = source_state("Venue", inventory(40))
+        fresh = inventory(10)
+        at_partial = NOW + timedelta(hours=6)
+
+        rows, report = run([
+            scraper(
+                "Venue",
+                fresh,
+                load_path="fallback",
+                fallback_source="Alternate Listings",
+            )
+        ], prior, now=at_partial)
+        reconcile_state(rows, None, now=at_partial)
+        candidate = build_source_state(
+            rows,
+            report.source_health,
+            prior,
+            now=at_partial,
+            retained_snapshots=report.retained_snapshots,
+        )
+
+        self.assertEqual("partial", report.source_health[0]["status"])
+        self.assertEqual(
+            prior["sources"]["Venue"]["last_successful_at"],
+            candidate["sources"]["Venue"]["last_successful_at"],
+        )
+        self.assertEqual(
+            prior["sources"]["Venue"]["events"],
+            candidate["sources"]["Venue"]["events"],
+        )
+
+    def test_partial_fallback_keeps_new_fresh_event_and_old_future_event(self):
+        prior, _ = source_state("Venue", inventory(40))
+        fresh = inventory(9) + inventory(1, prefix="New")
+
+        rows, report = run([
+            scraper(
+                "Venue",
+                fresh,
+                load_path="fallback",
+                fallback_source="Alternate Listings",
+            )
+        ], prior)
+
+        self.assertEqual("partial", report.source_health[0]["status"])
+        self.assertEqual(41, len(rows))
+        self.assertEqual(1, sum(row.headliner == "Prior 0" for row in rows))
+        self.assertIn("New 0", {row.headliner for row in rows})
+        self.assertIn("Prior 39", {row.headliner for row in rows})
+
+    def test_partial_fallback_never_restores_past_snapshot_row(self):
+        prior_rows = inventory(40) + inventory(
+            1,
+            prefix="Past",
+            date="2026-09-21",
+        )
+        prior, _ = source_state("Venue", prior_rows, now=NOW - timedelta(days=2))
+
+        rows, report = run([
+            scraper(
+                "Venue",
+                inventory(10),
+                load_path="fallback",
+                fallback_source="Alternate Listings",
+            )
+        ], prior)
+
+        self.assertEqual("partial", report.source_health[0]["status"])
+        self.assertNotIn("Past 0", {row.headliner for row in rows})
+        self.assertEqual(1, report.source_health[0]["fallback_excluded_past_count"])
+
+    def test_partial_fallback_retention_expires_after_72_hours(self):
+        prior, _ = source_state("Venue", inventory(40), now=NOW)
+        after_expiry = NOW + timedelta(hours=72, microseconds=1)
+
+        rows, report = run([
+            scraper(
+                "Venue",
+                inventory(10),
+                load_path="fallback",
+                fallback_source="Alternate Listings",
+            )
+        ], prior, now=after_expiry)
+
+        self.assertEqual("partial", report.source_health[0]["status"])
+        self.assertEqual(10, len(rows))
+        self.assertEqual(40, report.source_health[0]["fallback_expired_count"])
+        self.assertEqual(0, report.source_health[0]["fallback_event_count"])
+        reconcile_state(rows, None, now=after_expiry)
+        candidate = build_source_state(
+            rows,
+            report.source_health,
+            prior,
+            now=after_expiry,
+            retained_snapshots=report.retained_snapshots,
+        )
+        self.assertEqual([], candidate["sources"]["Venue"]["events"])
+        self.assertEqual(
+            prior["sources"]["Venue"]["last_successful_at"],
+            candidate["sources"]["Venue"]["last_successful_at"],
+        )
+
+    def test_non_fallback_inventory_decrease_does_not_activate_partial_retention(self):
+        prior, _ = source_state("Venue", inventory(40))
+
+        rows, report = run([
+            scraper("Venue", inventory(10), load_path="primary")
+        ], prior)
+
+        self.assertEqual("ok", report.source_health[0]["status"])
+        self.assertEqual(10, len(rows))
+        self.assertEqual(0, report.source_health[0]["fallback_event_count"])
+
+    def test_production_shaped_partial_fallback_passes_venue_guard_naturally(self):
+        venue = "Le Zénith Paris – La Villette"
+        prior_rows = inventory(112, prefix="Zenith", venue=venue)
+        prior, published_rows = source_state(venue, prior_rows)
+        published_state = reconcile_state(published_rows, None, now=NOW)
+        prior_identity = {
+            row.headliner: (row._public_id, row.first_seen)
+            for row in published_rows
+        }
+
+        rows, report = run([
+            scraper(
+                venue,
+                inventory(25, prefix="Zenith", venue=venue),
+                load_path="fallback",
+                fallback_source="Live Nation",
+            )
+        ], prior, now=NOW + timedelta(hours=6))
+        candidate_state = reconcile_state(
+            rows,
+            published_state,
+            now=NOW + timedelta(hours=6),
+        )
+        candidate_source_state = build_source_state(
+            rows,
+            report.source_health,
+            prior,
+            now=NOW + timedelta(hours=6),
+            retained_snapshots=report.retained_snapshots,
+        )
+
+        health = report.source_health[0]
+        self.assertEqual("partial", health["status"])
+        self.assertEqual(25, health["fallback_current_event_count"])
+        self.assertEqual(112, health["fallback_prior_event_count"])
+        self.assertEqual(87, health["fallback_event_count"])
+        self.assertEqual(112, len(rows))
+        self.assertEqual(112, len({row.headliner for row in rows}))
+        for row in rows:
+            self.assertEqual(
+                prior_identity[row.headliner],
+                (row._public_id, row.first_seen),
+            )
+        self.assertEqual(112, len(candidate_state["events"]))
+        self.assertEqual(
+            prior["sources"][venue]["last_successful_at"],
+            candidate_source_state["sources"][venue]["last_successful_at"],
+        )
+        validate_venue_inventory_regression(
+            prepare_upcoming_events(rows),
+            prepare_upcoming_events(published_rows),
+        )
+
     def test_failed_source_restores_future_row_and_keeps_failed_status(self):
         prior, _ = source_state()
         rows, report = run([scraper("DICE", RuntimeError("HTTP 403"))], prior)
@@ -315,6 +591,13 @@ class SourceRetentionTests(unittest.TestCase):
         fresh = [event("New", openers=["New Support"])]
         with_retention, report = run([scraper("DICE", fresh)], prior)
         without_retention, _ = run([scraper("DICE", fresh)], None)
+        left_state = reconcile_state(with_retention, None, now=NOW)
+        right_state = reconcile_state(without_retention, None, now=NOW)
+        self.assertEqual(left_state, right_state)
+        self.assertEqual(
+            [(row._public_id, row.first_seen) for row in with_retention],
+            [(row._public_id, row.first_seen) for row in without_retention],
+        )
         self.assertEqual(prepare_upcoming_events(with_retention),
                          prepare_upcoming_events(without_retention))
         self.assertEqual(0, report.source_health[0]["fallback_event_count"])

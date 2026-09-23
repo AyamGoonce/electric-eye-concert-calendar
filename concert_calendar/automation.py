@@ -536,6 +536,17 @@ def validate_source_report(report) -> None:
             "SOURCE DEGRADATION: scrapers exhausted retries and contributed "
             f"no fresh records: {failed}"
         )
+    partial = sorted(
+        item["source_name"]
+        for item in report.source_health
+        if item["status"] == "partial"
+    )
+    if partial:
+        print(
+            "SOURCE DEGRADATION: materially incomplete same-run fallbacks "
+            "were supplemented from bounded source state: "
+            + ", ".join(partial)
+        )
     exercised = {item["source_name"] for item in report.source_health}
     unexercised = sorted(set(report.configured_sources) - exercised)
     if unexercised:

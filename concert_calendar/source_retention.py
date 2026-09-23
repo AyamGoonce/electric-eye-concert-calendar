@@ -26,6 +26,8 @@ from concert_calendar.venues import normalize_event_venue
 SOURCE_STATE_FILENAME = "calendar-source-state.json"
 SOURCE_STATE_VERSION = 1
 RETENTION_WINDOW = timedelta(hours=72)
+MIN_PARTIAL_FALLBACK_MISSING_EVENTS = 20
+MIN_PARTIAL_FALLBACK_INVENTORY_RATIO = 0.50
 PARIS = ZoneInfo("Europe/Paris")
 MAX_RETENTION_DETAILS = 100
 
@@ -188,7 +190,7 @@ def hydrate_failed_sources(
     *,
     now: datetime,
 ) -> tuple[list[ConcertEvent], dict[str, list[dict]], list[dict]]:
-    """Admit only unexpired, future, healthy-unsuperseded failed-source rows."""
+    """Admit safe snapshot rows for failed or materially partial sources."""
 
     if prior_state is not None:
         validate_source_state(prior_state)
@@ -196,24 +198,53 @@ def hydrate_failed_sources(
     today = now.astimezone(PARIS).date()
     restored = []
     healthy_by_date = defaultdict(list)
+    fresh_by_source = defaultdict(list)
     for fresh in healthy_events:
         healthy_by_date[fresh.date[:10]].append(fresh)
+        for source in fresh.source_names or []:
+            fresh_by_source[source].append(fresh)
     retained_snapshots: dict[str, list[dict]] = {}
     details = []
     for health in source_health:
         name = health["source_name"]
         prior = (prior_state or {}).get("sources", {}).get(name)
         last_success = prior["last_successful_at"] if prior else None
+        prior_future_count = sum(
+            _event_date(snapshot["event"]["date"]) >= today
+            for snapshot in (prior or {}).get("events", [])
+        )
+        current_fresh_count = len(fresh_by_source[name])
+        missing_count = max(0, prior_future_count - current_fresh_count)
+        inventory_ratio = (
+            current_fresh_count / prior_future_count
+            if prior_future_count else None
+        )
+        if (
+            health["status"] == "ok"
+            and health.get("load_path") == "fallback"
+            and inventory_ratio is not None
+            and inventory_ratio < MIN_PARTIAL_FALLBACK_INVENTORY_RATIO
+            and missing_count >= MIN_PARTIAL_FALLBACK_MISSING_EVENTS
+        ):
+            health["status"] = "partial"
         health.update({
-            "last_successful_at": last_success if health["status"] == "failed" else utc_iso(now),
+            "last_successful_at": (
+                last_success
+                if health["status"] in {"failed", "partial"}
+                else utc_iso(now)
+            ),
             "source_state_version": SOURCE_STATE_VERSION,
+            "fallback_prior_event_count": prior_future_count,
+            "fallback_current_event_count": current_fresh_count,
+            "fallback_missing_event_count": missing_count,
+            "fallback_inventory_ratio": inventory_ratio,
             "fallback_suppressed_count": 0,
             "fallback_excluded_past_count": 0,
             "fallback_expired_count": 0,
             "fallback_excluded_geography_count": 0,
             "fallback_unavailable": False,
         })
-        if health["status"] != "failed":
+        if health["status"] not in {"failed", "partial"}:
             continue
         retained_snapshots[name] = []
         if prior is None or not prior["events"] or last_success is None:
@@ -237,10 +268,22 @@ def hydrate_failed_sources(
                 health["fallback_excluded_geography_count"] += 1
                 continue
             # Compare on copies: any stale merge must never enrich a live row.
-            if any(
-                len(deduplicate_events([deepcopy(fresh), deepcopy(retained)])) == 1
+            matching_fresh = [
+                fresh
                 for fresh in healthy_by_date[retained.date[:10]]
-            ):
+                if len(deduplicate_events([
+                    deepcopy(fresh), deepcopy(retained),
+                ])) == 1
+            ]
+            if matching_fresh:
+                # A partial source's current fallback row wins in the public
+                # calendar, while its prior primary snapshot remains the
+                # last-known-good inventory for later bounded replay.
+                if health["status"] == "partial" and any(
+                    name in (fresh.source_names or [])
+                    for fresh in matching_fresh
+                ):
+                    retained_snapshots[name].append(deepcopy(snapshot))
                 health["fallback_suppressed_count"] += 1
                 continue
             restored.append(retained)
@@ -267,7 +310,7 @@ def build_source_state(
     now: datetime,
     retained_snapshots: dict[str, list[dict]],
 ) -> dict:
-    """Replace successful inventories; carry only admitted failed snapshots."""
+    """Replace successful inventories; carry admitted degraded snapshots."""
 
     if previous is not None:
         validate_source_state(previous)
@@ -285,7 +328,7 @@ def build_source_state(
                 key=_snapshot_sort_key,
             ) if status == "ok" else []
             last_success = now_text
-        elif status == "failed":
+        elif status in {"failed", "partial"}:
             prior = (previous or {}).get("sources", {}).get(name)
             snapshots = sorted(
                 (deepcopy(record) for record in retained_snapshots.get(name, [])

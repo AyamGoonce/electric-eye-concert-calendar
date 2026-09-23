@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, timezone
 import unittest
 from unittest.mock import patch
 
@@ -8,8 +9,10 @@ from concert_calendar.automation import (
     validate_source_report,
 )
 from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.event_state import reconcile_state
 from concert_calendar.models import ConcertEvent
 from concert_calendar.scrapers import zenith_paris
+from concert_calendar.source_retention import build_source_state
 from concert_calendar.sources import load_events_with_report
 from concert_calendar.venues import normalize_event_venue
 
@@ -37,6 +40,10 @@ class ZenithFallbackTests(unittest.TestCase):
         ):
             self.assertIs(primary, zenith_paris.load_events())
         fallback.assert_not_called()
+        self.assertEqual(
+            {"path": "primary", "fallback_source": None},
+            zenith_paris.get_load_metadata(),
+        )
 
     def test_primary_timeout_uses_successful_fallback(self):
         recovered = [event()]
@@ -51,6 +58,68 @@ class ZenithFallbackTests(unittest.TestCase):
             ),
         ):
             self.assertEqual(recovered, zenith_paris.load_events())
+        self.assertEqual(
+            {"path": "fallback", "fallback_source": "Live Nation"},
+            zenith_paris.get_load_metadata(),
+        )
+
+    def test_materially_incomplete_fallback_is_partial_in_central_pipeline(self):
+        now = datetime(2026, 9, 22, 10, tzinfo=timezone.utc)
+        names = [
+            f"Zenith {chr(65 + index // 26)}{chr(65 + index % 26)}"
+            for index in range(40)
+        ]
+        prior_rows = [event(name) for name in names]
+        for row in prior_rows:
+            row.ticket_url = f"https://tickets.example/prior/{row.headliner}"
+            row.image_url = f"https://images.example/prior/{row.headliner}.jpg"
+            row.promoters = []
+            row.source_names = [zenith_paris.SOURCE_NAME]
+        reconcile_state(prior_rows, None, now=now)
+        prior = build_source_state(
+            prior_rows,
+            [{"source_name": zenith_paris.SOURCE_NAME, "status": "ok"}],
+            None,
+            now=now,
+            retained_snapshots={},
+        )
+        recovered = [event(name) for name in names[:10]]
+        for row in recovered:
+            row.ticket_url = f"https://tickets.example/fresh/{row.headliner}"
+            row.image_url = f"https://images.example/fresh/{row.headliner}.jpg"
+            row.promoters = []
+
+        with (
+            patch(
+                "concert_calendar.sources.discover_scrapers_with_issues",
+                return_value=([zenith_paris], {}),
+            ),
+            patch.object(
+                zenith_paris,
+                "load_primary_events",
+                side_effect=requests.Timeout("timed out"),
+            ),
+            patch.object(
+                zenith_paris,
+                "load_fallback_events",
+                return_value=recovered,
+            ),
+        ):
+            rows, report = load_events_with_report(
+                scraper_attempts=1,
+                retry_delay_seconds=0,
+                prior_source_state=prior,
+                now=now + timedelta(hours=6),
+            )
+
+        self.assertEqual(40, len(rows))
+        self.assertEqual("partial", report.source_health[0]["status"])
+        self.assertEqual("fallback", report.source_health[0]["load_path"])
+        self.assertEqual(30, report.source_health[0]["fallback_event_count"])
+        self.assertEqual(
+            prior["sources"][zenith_paris.SOURCE_NAME]["last_successful_at"],
+            report.source_health[0]["last_successful_at"],
+        )
 
     def test_primary_and_fallback_failure_remains_unhealthy(self):
         with (

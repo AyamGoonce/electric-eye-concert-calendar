@@ -23,6 +23,29 @@ IMAGE_ENRICHMENT_MODULES = ()
 SOURCE_WORKERS = 4
 
 
+def _load_metadata(scraper) -> dict:
+    """Read optional same-run source-path provenance from a scraper."""
+
+    getter = getattr(scraper, "get_load_metadata", None)
+    metadata = getter() if callable(getter) else {
+        "path": "primary",
+        "fallback_source": None,
+    }
+    if not isinstance(metadata, dict):
+        raise ValueError("get_load_metadata() must return a mapping")
+    path = metadata.get("path")
+    fallback_source = metadata.get("fallback_source")
+    if path not in {"primary", "fallback"}:
+        raise ValueError(f"unsupported source load path: {path!r}")
+    if path == "fallback":
+        if not isinstance(fallback_source, str) or not fallback_source.strip():
+            raise ValueError("fallback load metadata requires fallback_source")
+        fallback_source = fallback_source.strip()
+    elif fallback_source is not None:
+        raise ValueError("primary load metadata cannot name fallback_source")
+    return {"path": path, "fallback_source": fallback_source}
+
+
 def enrich_official_venue_images(events):
     """Fill blank images from exact official venue-listing identities only."""
 
@@ -241,6 +264,7 @@ def load_events_with_report(
         print(f"Loading {scraper.SOURCE_NAME}...")
 
         scraper_events = None
+        load_metadata = {"path": None, "fallback_source": None}
         last_error = None
         attempts_made = 0
         source_started = time.perf_counter()
@@ -249,7 +273,10 @@ def load_events_with_report(
             attempts_made = attempt
             attempt_started = time.perf_counter()
             try:
-                scraper_events = scraper.load_events()
+                loaded_events = scraper.load_events()
+                loaded_metadata = _load_metadata(scraper)
+                scraper_events = loaded_events
+                load_metadata = loaded_metadata
                 # A completed retry is healthy even when it legitimately
                 # returns an empty inventory. An earlier exception must not
                 # turn that successful result into a failed-source fallback.
@@ -332,7 +359,8 @@ def load_events_with_report(
         print(
             f"SOURCE COMPLETE | {scraper.SOURCE_NAME} | status={source_status} | "
             f"attempts={attempts_made} | records={len(scraper_events)} | "
-            f"elapsed={max(0.0, time.perf_counter() - source_started):.2f}s",
+            f"elapsed={max(0.0, time.perf_counter() - source_started):.2f}s | "
+            f"load_path={load_metadata['path'] or 'unavailable'}",
             flush=True,
         )
 
@@ -350,6 +378,8 @@ def load_events_with_report(
             "attempt_count": attempts_made,
             "retry_count": max(0, attempts_made - 1),
             "fresh_event_count": len(scraper_events),
+            "load_path": load_metadata["path"],
+            "fallback_source": load_metadata["fallback_source"],
             "fallback_event_count": 0,
             "last_successful_at": None,
         })
@@ -419,6 +449,17 @@ def load_events_with_report(
     retained_events, retained_snapshots, retention_details = hydrate_failed_sources(
         prior_source_state, source_health, normalized_events, now=now,
     )
+    for health in source_health:
+        if health["status"] == "partial":
+            print(
+                f"SOURCE RETENTION | {health['source_name']} | status=partial | "
+                f"load_path={health['load_path']} | "
+                f"fresh={health['fallback_current_event_count']} | "
+                f"prior={health['fallback_prior_event_count']} | "
+                f"retained={health['fallback_event_count']} | "
+                f"ratio={health['fallback_inventory_ratio']:.0%}",
+                flush=True,
+            )
     normalized_events.extend(retained_events)
 
     enrich_official_venue_images(normalized_events)
