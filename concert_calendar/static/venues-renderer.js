@@ -431,27 +431,96 @@
     parent.append(block);
   }
 
+  function setCardOpen(article, open) {
+    var summary = article.querySelector(".ee-v-card-summary");
+    var details = article.querySelector(".ee-v-card-details");
+    var symbol = article.querySelector(".ee-v-card-chevron");
+
+    if (!summary || !details) return;
+
+    article.classList.toggle("ee-v-card-open", open);
+    summary.setAttribute("aria-expanded", String(open));
+    details.hidden = !open;
+
+    if (symbol) {
+      symbol.textContent = open ? "−" : "+";
+    }
+  }
+
   function card(record) {
     var article = el("article", "ee-v-card");
     article.id = "venue-" + record.slug;
 
-    var head = el("div", "ee-v-card-head");
-    var titleRow = el("div", "ee-v-card-title-row");
-    titleRow.append(el("h3", "", record.name));
-    head.append(titleRow);
+    var summary = el("button", "ee-v-card-summary");
+    summary.type = "button";
+    summary.setAttribute("aria-expanded", "false");
+
+    var main = el("div", "ee-v-card-summary-main");
+    main.append(el("h3", "", record.name));
 
     var locationParts = [];
-    if (record.address) locationParts.push(record.address);
-    else if (record.city) locationParts.push(record.city);
 
-    if (record.address && record.city &&
-        normalize(record.address).indexOf(normalize(record.city)) === -1) {
+    if (record.address) {
+      locationParts.push(record.address);
+    } else if (record.city) {
+      locationParts.push(record.city);
+    }
+
+    if (
+      record.address &&
+      record.city &&
+      normalize(record.address).indexOf(normalize(record.city)) === -1
+    ) {
       locationParts.push(record.city);
     }
 
     if (locationParts.length) {
-      head.append(el("p", "ee-v-location", locationParts.join(" · ")));
+      main.append(
+        el("p", "ee-v-location", locationParts.join(" · "))
+      );
     }
+
+    var side = el("div", "ee-v-card-summary-side");
+    var compactCounts = el("div", "ee-v-card-summary-counts");
+
+    compactCounts.append(
+      el(
+        "span",
+        "",
+        record.events.length +
+          (record.events.length === 1 ? " concert" : " concerts")
+      ),
+      el(
+        "span",
+        "",
+        record.articles.length +
+          (record.articles.length === 1 ? " article" : " articles")
+      )
+    );
+
+    side.append(
+      compactCounts,
+      el("span", "ee-v-card-chevron", "+")
+    );
+
+    summary.append(main, side);
+
+    var details = el("div", "ee-v-card-details");
+    details.id = "venue-details-" + record.slug;
+    details.hidden = true;
+
+    summary.setAttribute("aria-controls", details.id);
+    summary.setAttribute(
+      "aria-label",
+      "Open details for " + record.name
+    );
+
+    summary.addEventListener("click", function () {
+      setCardOpen(
+        article,
+        !article.classList.contains("ee-v-card-open")
+      );
+    });
 
     var actions = el("div", "ee-v-card-actions");
 
@@ -464,21 +533,31 @@
     }
 
     if (record.mapReady) {
-      var mapButton = el("button", "ee-v-map-button", "Show on map");
+      var mapButton = el(
+        "button",
+        "ee-v-map-button",
+        "Show on map"
+      );
+
       mapButton.type = "button";
+
       mapButton.addEventListener("click", function () {
         var marker = markers.get(record.slug);
+
         if (!map || !marker) return;
 
         map.flyTo([record.lat, record.lng], 15, {
           duration: 0.6
         });
+
         marker.openPopup();
+
         controls.mapNode.scrollIntoView({
           behavior: "smooth",
           block: "center"
         });
       });
+
       actions.append(mapButton);
     }
 
@@ -486,28 +565,13 @@
     permalink.href = venueHref(record);
     actions.append(permalink);
 
-    head.append(actions);
-
-    var counts = el("div", "ee-v-counts");
-    counts.append(
-      el(
-        "span",
-        "",
-        record.events.length + (record.events.length === 1 ? " upcoming" : " upcoming")
-      ),
-      el(
-        "span",
-        "",
-        record.articles.length + (record.articles.length === 1 ? " article" : " articles")
-      )
-    );
-    head.append(counts);
-
     var body = el("div", "ee-v-card-body");
     eventList(body, record);
     articleList(body, record);
 
-    article.append(head, body);
+    details.append(actions, body);
+    article.append(summary, details);
+
     return article;
   }
 
@@ -577,6 +641,7 @@
     });
 
     target.classList.add("ee-v-highlight");
+    setCardOpen(target, true);
 
     if (scroll !== false) {
       target.scrollIntoView({
