@@ -155,7 +155,7 @@
 
 .ee-venues-page #ee-venues .ee-v-map {
   width: 100%;
-  height: 320px;
+  height: 220px;
   border: 1px solid var(--ee-v-line);
   background: #161616;
   transition: height .22s ease;
@@ -367,9 +367,9 @@
   border-left: 1px solid var(--ee-v-line);
 }
 
-.ee-venues-page #ee-venues .ee-v-block h4 {
+.ee-venues-page #ee-venues .ee-v-card .ee-v-block h4 {
   margin: 0 0 12px;
-  color: var(--ee-v-red);
+  color: var(--ee-v-red) !important;
   font-size: .68rem;
   font-weight: 700;
   letter-spacing: .1em;
@@ -614,7 +614,7 @@
   }
 
   .ee-venues-page #ee-venues .ee-v-map {
-    height: 280px;
+    height: 200px;
   }
 
   .ee-venues-page #ee-venues .ee-v-map-wrap.ee-v-map-expanded .ee-v-map {
