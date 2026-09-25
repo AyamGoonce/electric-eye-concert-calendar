@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-25T10:41:54Z",
+  "generatedAt": "2026-09-25T12:00:43Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -9081,7 +9081,9 @@
         "7941436331954190478"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "7941436331954190478"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/01/fleshgod-apocalypse-la-machine-du.html"
       ],
@@ -21343,9 +21345,7 @@
         "189464433969378974"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "6738311452493419943"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/05/ronnie-wood-at-olympia-with-imelda-may.html",
         "https://www.electriceyerock.com/2026/05/the-rolling-stones-officially-share-new.html",
@@ -26423,6 +26423,7 @@
         "461484123954871059",
         "5699155883436583836",
         "7600704829710541376",
+        "6738311452493419943",
         "189464433969378974"
       ],
       "articleUrls": [
