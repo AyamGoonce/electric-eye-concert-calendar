@@ -149,11 +149,39 @@
   font-size: 14px;
 }
 
+.ee-venues-page #ee-venues .ee-v-map-wrap {
+  position: relative;
+}
+
 .ee-venues-page #ee-venues .ee-v-map {
   width: 100%;
-  height: clamp(430px, 58vw, 680px);
+  height: 320px;
   border: 1px solid var(--ee-v-line);
   background: #161616;
+  transition: height .22s ease;
+}
+
+.ee-venues-page #ee-venues .ee-v-map-wrap.ee-v-map-expanded .ee-v-map {
+  height: clamp(520px, 58vw, 680px);
+}
+
+.ee-venues-page #ee-venues .ee-v-map-toggle {
+  display: block;
+  min-height: 42px;
+  margin: 10px 0 0 auto;
+  padding: 8px 13px;
+  border: 1px solid var(--ee-v-line);
+  border-radius: 0;
+  background: var(--ee-v-panel);
+  color: #fff;
+  cursor: pointer;
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.ee-venues-page #ee-venues .ee-v-map-toggle:hover {
+  border-color: var(--ee-v-red);
+  background: var(--ee-v-red);
 }
 
 .ee-venues-page #ee-venues .leaflet-container {
@@ -241,12 +269,14 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
+  align-items: start;
 }
 
 .ee-venues-page #ee-venues .ee-v-card {
   min-width: 0;
+  align-self: start;
   border: 1px solid var(--ee-v-line);
-  background: var(--ee-v-panel);
+  background: rgba(255,255,255,.035);
   scroll-margin-top: 90px;
 }
 
@@ -339,7 +369,7 @@
 
 .ee-venues-page #ee-venues .ee-v-block h4 {
   margin: 0 0 12px;
-  color: var(--ee-v-secondary);
+  color: var(--ee-v-red);
   font-size: .68rem;
   font-weight: 700;
   letter-spacing: .1em;
@@ -509,6 +539,14 @@
   color: var(--ee-v-text);
 }
 
+.ee-venues-page #ee-venues .ee-v-card-body.ee-v-card-body-single {
+  grid-template-columns: 1fr;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-body.ee-v-card-body-single .ee-v-block {
+  border-left: 0;
+}
+
 .ee-venues-page #ee-venues .ee-v-block {
   padding: 15px 16px 17px;
 }
@@ -576,6 +614,10 @@
   }
 
   .ee-venues-page #ee-venues .ee-v-map {
+    height: 280px;
+  }
+
+  .ee-venues-page #ee-venues .ee-v-map-wrap.ee-v-map-expanded .ee-v-map {
     height: 500px;
   }
 }
