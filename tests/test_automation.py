@@ -27,6 +27,7 @@ from concert_calendar.automation import (
     verify_hosted,
 )
 from concert_calendar.production_export import build_current_pointer, build_data_asset
+from concert_calendar.venue_export import build_venue_current_pointer
 from concert_calendar.source_retention import SOURCE_STATE_FILENAME, write_source_state
 from concert_calendar.event_state import (
     EventStateError,
@@ -63,7 +64,10 @@ def valid_event(index=0):
 def write_generated_publication(destination, marker="candidate"):
     destination.mkdir(parents=True, exist_ok=True)
     for stable in PUBLIC_STABLE_ASSETS:
-        if stable != "electric-eye-content-current.js":
+        if stable not in {
+            "electric-eye-content-current.js",
+            "venue-current.js",
+        }:
             (destination / stable).write_text(stable, encoding="utf-8")
     content_body = f"content-{marker}".encode()
     content_digest = hashlib.sha256(content_body).hexdigest()
@@ -75,6 +79,24 @@ def write_generated_publication(destination, marker="candidate"):
         + ");\n",
         encoding="utf-8",
     )
+    venue_body = (
+        "(function(){\n"
+        '  "use strict";\n'
+        '  window.ElectricEyeVenueData = Object.freeze({"Test Venue":{}});\n'
+        "}());\n"
+    ).encode("utf-8")
+    venue_digest = hashlib.sha256(venue_body).hexdigest()
+    venue_name = f"venue-data.{venue_digest[:16]}.js"
+    (destination / venue_name).write_bytes(venue_body)
+    (destination / "venue-current.js").write_text(
+        build_venue_current_pointer(
+            venue_name,
+            venue_digest,
+            1,
+        ),
+        encoding="utf-8",
+    )
+
     state = {"version": 1, "updated_at": "2026-08-23T10:00:00Z", "events": {}}
     state_digest = write_state(destination / "calendar-state.json", state)
     source_state_digest = write_source_state(

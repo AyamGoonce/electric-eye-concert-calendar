@@ -94,7 +94,9 @@ DESCRIPTIVE_VENUE_RE = re.compile(
     re.IGNORECASE,
 )
 PUBLIC_STABLE_ASSETS = (
-    "calendar-renderer.js", "calendar.css", "artist-page.js",
+    "calendar-renderer.js", "calendar.css",
+    "venues-renderer.js", "venues.css", "venue-current.js",
+    "artist-page.js",
     "artist-page.css", "artist-autolinker.js", "artist.html",
     "coverage-page.js", "coverage.html",
     "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
@@ -701,6 +703,8 @@ def build(args) -> int:
     phase_started = time.perf_counter()
     from concert_calendar.content_index import fetch_concert_review_associations
 
+    blogger_entries = None
+
     try:
         concert_review_associations = fetch_concert_review_associations()
     except Exception as error:
@@ -717,8 +721,9 @@ def build(args) -> int:
             Path(args.published_pointer)
         )
     else:
+        blogger_entries = fetch_entries()
         content_index = build_index(
-            fetch_entries(),
+            blogger_entries,
             concert_review_associations=concert_review_associations,
         )
     print(f"PHASE COMPLETE | blogger_content_retrieval_indexing | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
@@ -759,6 +764,47 @@ def build(args) -> int:
     phase_started = time.perf_counter()
     events_data = prepare_upcoming_events(events)
     validate_events(events_data)
+
+    print("PHASE START | venue_index_export", flush=True)
+    venue_phase_started = time.perf_counter()
+
+    from concert_calendar.venue_articles import build_venue_article_associations
+    from concert_calendar.venue_export import write_venue_assets
+    from concert_calendar.venue_index import build_venue_index
+
+    if blogger_entries is None:
+        blogger_entries = fetch_entries()
+
+    venue_articles, venue_article_diagnostics = build_venue_article_associations(
+        blogger_entries,
+        include_diagnostics=True,
+    )
+
+    venue_index, venue_diagnostics = build_venue_index(
+        events_data,
+        articles=venue_articles,
+        include_diagnostics=True,
+    )
+
+    venue_result = write_venue_assets(output_dir, venue_index)
+
+    venue_static_dir = Path(__file__).with_name("static")
+    for venue_asset in ("venues-renderer.js", "venues.css"):
+        source = venue_static_dir / venue_asset
+        if not source.is_file():
+            raise ProductionValidationError(
+                f"Venue frontend asset is missing: {venue_asset}"
+            )
+        shutil.copyfile(source, output_dir / venue_asset)
+
+    print(
+        "PHASE COMPLETE | venue_index_export | "
+        f"venues={venue_diagnostics['canonicalVenueCount']} | "
+        f"mapped={venue_diagnostics['mapReadyVenueCount']} | "
+        f"articles={venue_diagnostics['articleAssociations']} | "
+        f"elapsed={max(0.0, time.perf_counter() - venue_phase_started):.2f}s",
+        flush=True,
+    )
 
     if args.published_pointer and Path(args.published_pointer).exists():
         published_events = read_published_calendar_events(
@@ -810,6 +856,17 @@ def build(args) -> int:
             "diagnostics": content_index["diagnostics"],
             "compact_bytes": (output_dir / "electric-eye-artist-lookup.js").stat().st_size,
             "full_bytes": (output_dir / content_result["filename"]).stat().st_size,
+        },
+        "venues": {
+            "canonical_count": venue_diagnostics["canonicalVenueCount"],
+            "map_ready_count": venue_diagnostics["mapReadyVenueCount"],
+            "with_upcoming_events": venue_diagnostics["venuesWithUpcomingEvents"],
+            "with_articles": venue_diagnostics["venuesWithArticles"],
+            "article_associations": venue_diagnostics["articleAssociations"],
+            "unknown_event_venues": venue_diagnostics["unknownEventVenues"],
+            "unresolved_reviews": venue_article_diagnostics["unresolvedReviews"],
+            "data_filename": venue_result["filename"],
+            "sha256": venue_result["sha256"],
         },
     }
     report_path = output_dir / "automation-report.json"
@@ -897,6 +954,28 @@ def validated_publication_files(source: Path) -> tuple[dict, list[Path]]:
         raise ProductionValidationError("Generated content index hash is invalid")
     files.append(content_data)
 
+    venue_pointer = source / "venue-current.js"
+    if not venue_pointer.is_file():
+        raise ProductionValidationError("Generated venue pointer is missing")
+
+    venue_match = POINTER_PATTERN.search(
+        venue_pointer.read_text(encoding="utf-8")
+    )
+    if not venue_match:
+        raise ProductionValidationError("Generated venue pointer is malformed")
+
+    venue_manifest = json.loads(venue_match.group(1))
+    venue_data = source / venue_manifest.get("data", "")
+
+    if (
+        not venue_data.is_file()
+        or hashlib.sha256(venue_data.read_bytes()).hexdigest()
+        != venue_manifest.get("sha256")
+    ):
+        raise ProductionValidationError("Generated venue data hash is invalid")
+
+    files.append(venue_data)
+
     for root_name in PUBLIC_ROOT_ASSETS:
         root_asset = source / root_name
         if not root_asset.is_file():
@@ -965,7 +1044,7 @@ def publish(args) -> int:
         if not target.exists() or source.read_bytes() != target.read_bytes():
             shutil.copyfile(source, target)
     for source in publication_files:
-        if source.name.startswith("electric-eye-content."):
+        if source.name.startswith(("electric-eye-content.", "venue-data.")):
             shutil.copyfile(source, proof / source.name)
     shutil.copyfile(generated / "calendar-current.js", proof / "calendar-current.js")
 
@@ -999,6 +1078,15 @@ def publish(args) -> int:
     )
     for candidate in content_candidates[3:]:
         candidate.unlink()
+
+    venue_candidates = sorted(
+        proof.glob("venue-data.*.js"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    for candidate in venue_candidates[3:]:
+        candidate.unlink()
+
     for stale_name in STALE_PUBLIC_TEST_ASSETS:
         stale = proof / stale_name
         if stale.exists():
@@ -1067,7 +1155,12 @@ def verify_hosted(args) -> int:
                 validate_source_state(json.loads(source_state_body))
             except (SourceStateError, UnicodeError, json.JSONDecodeError) as error:
                 raise ProductionValidationError("Hosted source state is invalid") from error
-            for stable in ("calendar-renderer.js", "calendar.css"):
+            for stable in (
+                "calendar-renderer.js",
+                "calendar.css",
+                "venues-renderer.js",
+                "venues.css",
+            ):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"
                 )
@@ -1106,6 +1199,36 @@ def verify_hosted(args) -> int:
                 or "javascript" not in content_type
             ):
                 raise ProductionValidationError("Hosted content index is invalid")
+            venue_pointer_body, venue_pointer_type = fetch(
+                args.base_url.rstrip("/") + "/venue-current.js"
+                + f"?verify={args.sha256[:16]}"
+            )
+            venue_match = POINTER_PATTERN.search(
+                venue_pointer_body.decode("utf-8")
+            )
+            if not venue_match:
+                raise ProductionValidationError(
+                    "Hosted venue pointer is malformed"
+                )
+
+            venue_manifest = json.loads(venue_match.group(1))
+            venue_body, venue_type = fetch(
+                args.base_url.rstrip("/")
+                + "/"
+                + venue_manifest["data"]
+                + f"?verify={args.sha256[:16]}"
+            )
+
+            if (
+                hashlib.sha256(venue_body).hexdigest()
+                != venue_manifest.get("sha256")
+                or "javascript" not in venue_pointer_type
+                or "javascript" not in venue_type
+            ):
+                raise ProductionValidationError(
+                    "Hosted venue data is invalid"
+                )
+
             print(
                 f"Hosted publication verified: {manifest['count']} events, "
                 f"SHA-256 {args.sha256}"
