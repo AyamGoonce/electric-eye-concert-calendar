@@ -1,13 +1,13 @@
 .ee-venues-page #ee-venues {
-  --ee-v-bg: var(--ee-bg, #090909);
-  --ee-v-panel: var(--ee-panel, #151515);
-  --ee-v-panel-2: var(--ee-panel-2, #1b1b1b);
-  --ee-v-text: var(--ee-text, #faf8f4);
-  --ee-v-secondary: var(--ee-secondary, #d6d2cb);
-  --ee-v-muted: var(--ee-muted, #a39d95);
-  --ee-v-red: var(--ee-red, #d82323);
-  --ee-v-line: var(--ee-line, rgba(255,255,255,.13));
-  --ee-v-shell: var(--ee-shell, 1280px);
+  --ee-v-bg: #090909;
+  --ee-v-panel: #151515;
+  --ee-v-panel-2: #1b1b1b;
+  --ee-v-text: #faf8f4;
+  --ee-v-secondary: #d6d2cb;
+  --ee-v-muted: #a39d95;
+  --ee-v-red: #d82323;
+  --ee-v-line: rgba(255,255,255,.13);
+  --ee-v-shell: 1280px;
   width: 100%;
   margin: 0;
   padding: 0 0 80px;
@@ -409,6 +409,134 @@
 .ee-venues-page #ee-venues :focus-visible {
   outline: 2px solid var(--ee-v-red);
   outline-offset: 3px;
+}
+
+
+/* Compact expandable venue cards */
+.ee-venues-page #ee-venues .ee-v-grid {
+  gap: 10px;
+}
+
+.ee-venues-page #ee-venues .ee-v-card {
+  color: var(--ee-v-text);
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  min-height: 72px;
+  padding: 13px 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ee-v-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary:hover {
+  background: rgba(255,255,255,.025);
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary-main {
+  min-width: 0;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -.018em;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary .ee-v-location {
+  margin: 4px 0 0;
+  color: var(--ee-v-muted);
+  font-size: .72rem;
+  line-height: 1.25;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary-side {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-summary-counts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--ee-v-secondary);
+  font-size: .68rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-chevron {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-details {
+  border-top: 1px solid var(--ee-v-line);
+  color: var(--ee-v-text);
+}
+
+.ee-venues-page #ee-venues .ee-v-card-details[hidden] {
+  display: none !important;
+}
+
+.ee-venues-page #ee-venues .ee-v-card-actions {
+  margin: 0;
+  padding: 11px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+
+.ee-venues-page #ee-venues .ee-v-card-body {
+  color: var(--ee-v-text);
+}
+
+.ee-venues-page #ee-venues .ee-v-block {
+  padding: 15px 16px 17px;
+}
+
+.ee-venues-page #ee-venues .ee-v-card a,
+.ee-venues-page #ee-venues .ee-v-card button,
+.ee-venues-page #ee-venues .ee-v-card h3,
+.ee-venues-page #ee-venues .ee-v-card h4 {
+  color: var(--ee-v-text);
+}
+
+.ee-venues-page #ee-venues .ee-v-card-actions a,
+.ee-venues-page #ee-venues .ee-v-map-button {
+  color: var(--ee-v-secondary);
+}
+
+.ee-venues-page #ee-venues .ee-v-event-title,
+.ee-venues-page #ee-venues .ee-v-article-title {
+  color: #fff;
+}
+
+.ee-venues-page #ee-venues .ee-v-item-meta,
+.ee-venues-page #ee-venues .ee-v-empty-block {
+  color: var(--ee-v-muted);
+}
+
+.ee-venues-page #ee-venues .ee-v-more {
+  color: var(--ee-v-red);
 }
 
 @media (max-width: 900px) {
