@@ -579,10 +579,6 @@
       actions.append(mapButton);
     }
 
-    var permalink = el("a", "", "Permalink");
-    permalink.href = venueHref(record);
-    actions.append(permalink);
-
     var body = el("div", "ee-v-card-body");
 
     if (!record.events.length || !record.articles.length) {
