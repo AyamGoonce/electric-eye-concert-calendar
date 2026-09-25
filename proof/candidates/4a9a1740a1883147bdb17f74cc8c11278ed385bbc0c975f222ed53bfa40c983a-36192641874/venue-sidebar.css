@@ -1,0 +1,60 @@
+#ee-sb-root .ee-sb-venue-map-name {
+  display: block;
+  padding: 0;
+  color: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+#ee-sb-root .ee-sb-venue-map-name:hover {
+  text-decoration: underline;
+}
+
+#ee-sb-root .ee-sb-venue-map-frame {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: #e9e9e9;
+}
+
+#ee-sb-root .ee-sb-venue-map-frame.leaflet-container {
+  font-family: "Instrument Sans", Arial, Helvetica, sans-serif;
+}
+
+#ee-sb-root .ee-sb-venue-map-frame .leaflet-control-attribution {
+  font-size: 8px;
+}
+
+#ee-sb-root .ee-sb-venue-popup {
+  min-width: 150px;
+  color: #171717;
+  font-family: "Instrument Sans", Arial, Helvetica, sans-serif;
+  line-height: 1.3;
+}
+
+#ee-sb-root .ee-sb-venue-popup strong {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+#ee-sb-root .ee-sb-venue-popup-location {
+  margin-bottom: 6px;
+  color: #666;
+  font-size: 11px;
+}
+
+#ee-sb-root .ee-sb-venue-popup a {
+  color: #d82323;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+#ee-sb-root .ee-sb-venue-popup a:hover {
+  text-decoration: underline;
+}
