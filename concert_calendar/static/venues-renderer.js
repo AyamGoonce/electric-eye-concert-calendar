@@ -59,7 +59,7 @@
   }
 
   function calendarHref(event) {
-    return "/p/calendar.html#event-" + encodeURIComponent(event.eventId);
+    return "/p/paris-area-concert-calendar.html#event-" + encodeURIComponent(event.eventId);
   }
 
   function publicRecords(raw) {
