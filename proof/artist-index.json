@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-25T05:07:14Z",
+  "generatedAt": "2026-09-25T10:41:54Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -2347,7 +2347,9 @@
         "2302323202018545515"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "2302323202018545515"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2019/08/beck-forest-hills-stadium-new-york-usa.html"
       ],
@@ -5075,6 +5077,40 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Convention",
+      "slug": "convention",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 2,
+      "articleIds": [
+        "1873072782694013076",
+        "8072057726927151075"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/01/mondial-du-tatouage-grande-halle-de-la.html",
+        "https://www.electriceyerock.com/2025/02/mondial-du-tatouage-grande-halle-de-la.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Coroner",
       "slug": "coroner",
       "aliases": [],
@@ -7102,8 +7138,9 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
+      "articleCount": 2,
       "articleIds": [
+        "4317221484861879576",
         "5758447714051230467"
       ],
       "reviewedArticleIds": [],
@@ -7111,6 +7148,7 @@
         "5758447714051230467"
       ],
       "articleUrls": [
+        "https://www.electriceyerock.com/2026/04/monolord-and-dopelord-double-down-on.html",
         "https://www.electriceyerock.com/2026/01/dopelord-tattoo-planetarium-paris.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -10769,7 +10807,8 @@
         "3977085606551960666",
         "8472647389343679710",
         "1428002177371234943",
-        "2309681460263700270"
+        "2309681460263700270",
+        "6486312901441181457"
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/09/ozzys-final-goodbye-comes-to-big-screen.html",
@@ -11176,38 +11215,6 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Heartbreakers",
-      "slug": "heartbreakers",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "articleIds": [
-        "2606464944899579426"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2012/06/tom-petty-grand-rex-paris-june-27th-2012.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
       "canonicalName": "Heartworms",
       "slug": "heartworms",
       "aliases": [],
@@ -11226,10 +11233,9 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 3,
+      "articleCount": 2,
       "articleIds": [
         "520693944237701025",
-        "5834258027679208885",
         "4605552941596605267"
       ],
       "reviewedArticleIds": [],
@@ -11238,7 +11244,6 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/03/heartworms-petit-bain-paris-march-1st.html",
-        "https://www.electriceyerock.com/2025/02/heartworms-will-play-petit-bain-in.html",
         "https://www.electriceyerock.com/2025/02/album-review-heartworms-glutton-for.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -17432,7 +17437,10 @@
         "8072057726927151075"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "1873072782694013076",
+        "8072057726927151075"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/01/mondial-du-tatouage-grande-halle-de-la.html",
         "https://www.electriceyerock.com/2026/01/the-paris-tattoo-planetarium-will-hold.html",
@@ -24692,6 +24700,44 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Tatouage",
+      "slug": "tatouage",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 4,
+      "articleIds": [
+        "1873072782694013076",
+        "497807291216761012",
+        "8072057726927151075",
+        "4721961661219449034"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/01/mondial-du-tatouage-grande-halle-de-la.html",
+        "https://www.electriceyerock.com/2026/01/the-paris-tattoo-planetarium-will-hold.html",
+        "https://www.electriceyerock.com/2025/02/mondial-du-tatouage-grande-halle-de-la.html",
+        "https://www.electriceyerock.com/2024/06/an-interview-with-suffocation.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Teddy Swims",
       "slug": "teddy-swims",
       "aliases": [],
@@ -27105,38 +27151,6 @@
       "articleUrls": [
         "https://www.electriceyerock.com/2025/02/black-sabbath-reunites-again.html",
         "https://www.electriceyerock.com/2024/06/tom-morello-accor-arena-paris-june-16th.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Tom Petty",
-      "slug": "tom-petty",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "articleIds": [
-        "2606464944899579426"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2012/06/tom-petty-grand-rex-paris-june-27th-2012.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
