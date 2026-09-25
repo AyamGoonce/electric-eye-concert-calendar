@@ -145,10 +145,32 @@
     );
     mapShell.append(mapHead);
 
+    var mapWrap = el("div", "ee-v-map-wrap");
+
     var mapNode = el("div", "ee-v-map");
     mapNode.id = "ee-v-map";
     mapNode.setAttribute("aria-label", "Map of Electric Eye venues");
-    mapShell.append(mapNode);
+
+    var mapToggle = el("button", "ee-v-map-toggle", "Expand map");
+    mapToggle.type = "button";
+    mapToggle.setAttribute("aria-expanded", "false");
+    mapToggle.setAttribute("aria-controls", "ee-v-map");
+
+    mapToggle.addEventListener("click", function () {
+      var expanded = mapWrap.classList.toggle("ee-v-map-expanded");
+
+      mapToggle.textContent = expanded ? "Collapse map" : "Expand map";
+      mapToggle.setAttribute("aria-expanded", String(expanded));
+
+      if (map) {
+        setTimeout(function () {
+          map.invalidateSize();
+        }, 0);
+      }
+    });
+
+    mapWrap.append(mapNode, mapToggle);
+    mapShell.append(mapWrap);
     mapSection.append(mapShell);
     mount.append(mapSection);
 
@@ -329,16 +351,12 @@
   }
 
   function eventList(parent, record) {
-    var block = el("div", "ee-v-block");
-    block.append(el("h4", "", "Upcoming concerts"));
-
     if (!record.events.length) {
-      block.append(
-        el("div", "ee-v-empty-block", "No upcoming concerts currently indexed.")
-      );
-      parent.append(block);
       return;
     }
+
+    var block = el("div", "ee-v-block");
+    block.append(el("h4", "", "Upcoming concerts"));
 
     var list = el("ul", "ee-v-list");
     var limit = 4;
@@ -566,6 +584,11 @@
     actions.append(permalink);
 
     var body = el("div", "ee-v-card-body");
+
+    if (!record.events.length || !record.articles.length) {
+      body.classList.add("ee-v-card-body-single");
+    }
+
     eventList(body, record);
     articleList(body, record);
 
