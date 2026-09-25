@@ -95,7 +95,7 @@ DESCRIPTIVE_VENUE_RE = re.compile(
 )
 PUBLIC_STABLE_ASSETS = (
     "calendar-renderer.js", "calendar.css",
-    "venues-renderer.js", "venues.css", "venue-current.js",
+    "venues-renderer.js", "venues.css", "venue-sidebar.js", "venue-sidebar.css", "venue-current.js",
     "artist-page.js",
     "artist-page.css", "artist-autolinker.js", "artist.html",
     "coverage-page.js", "coverage.html",
@@ -789,7 +789,12 @@ def build(args) -> int:
     venue_result = write_venue_assets(output_dir, venue_index)
 
     venue_static_dir = Path(__file__).with_name("static")
-    for venue_asset in ("venues-renderer.js", "venues.css"):
+    for venue_asset in (
+        "venues-renderer.js",
+        "venues.css",
+        "venue-sidebar.js",
+        "venue-sidebar.css",
+    ):
         source = venue_static_dir / venue_asset
         if not source.is_file():
             raise ProductionValidationError(
@@ -1160,6 +1165,8 @@ def verify_hosted(args) -> int:
                 "calendar.css",
                 "venues-renderer.js",
                 "venues.css",
+                "venue-sidebar.js",
+                "venue-sidebar.css",
             ):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"
