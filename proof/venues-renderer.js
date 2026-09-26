@@ -136,12 +136,7 @@
     var mapShell = el("div", "ee-v-shell");
     var mapHead = el("div", "ee-v-section-head");
     mapHead.append(
-      el("h2", "", "Venue map"),
-      el(
-        "p",
-        "",
-        "Select a marker to open its venue entry. Historical and unmapped locations remain available in the directory below."
-      )
+      el("h2", "", "Venue map")
     );
     mapShell.append(mapHead);
 
@@ -501,23 +496,33 @@
     var side = el("div", "ee-v-card-summary-side");
     var compactCounts = el("div", "ee-v-card-summary-counts");
 
-    compactCounts.append(
-      el(
-        "span",
-        "",
-        record.events.length +
-          (record.events.length === 1 ? " concert" : " concerts")
-      ),
-      el(
-        "span",
-        "",
-        record.articles.length +
-          (record.articles.length === 1 ? " article" : " articles")
-      )
-    );
+    if (record.events.length) {
+      compactCounts.append(
+        el(
+          "span",
+          "",
+          record.events.length +
+            (record.events.length === 1 ? " concert" : " concerts")
+        )
+      );
+    }
+
+    if (record.articles.length) {
+      compactCounts.append(
+        el(
+          "span",
+          "",
+          record.articles.length +
+            (record.articles.length === 1 ? " article" : " articles")
+        )
+      );
+    }
+
+    if (compactCounts.childNodes.length) {
+      side.append(compactCounts);
+    }
 
     side.append(
-      compactCounts,
       el("span", "ee-v-card-chevron", "+")
     );
 

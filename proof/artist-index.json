@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-25T17:20:49Z",
+  "generatedAt": "2026-09-26T05:14:07Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -5129,13 +5129,17 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
+      "articleCount": 2,
       "articleIds": [
+        "1646207549918916486",
         "3265522625659533761"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "1646207549918916486"
+      ],
       "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/coroner-la-machine-du-moulin-rouge.html",
         "https://www.electriceyerock.com/2026/03/coroner-returns-to-paris-after-three.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -22269,6 +22273,40 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2023/11/scary-pockets-elysee-montmartre-paris.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Schizophrenia",
+      "slug": "schizophrenia",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "articleIds": [
+        "9104386191241284731"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "9104386191241284731"
+      ],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/schizophrenia-la-machine-du-moulin.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
