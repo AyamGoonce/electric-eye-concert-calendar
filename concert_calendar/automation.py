@@ -29,7 +29,13 @@ from concert_calendar.event_state import (
     reconcile_state,
     write_state,
 )
-from concert_calendar.content_index import build_index, enrich_events, fetch_entries, write_assets
+from concert_calendar.content_index import (
+    build_index,
+    enrich_events,
+    fetch_entries,
+    normalize_artist,
+    write_assets,
+)
 from concert_calendar.deduplication import high_confidence_collision_pairs
 from concert_calendar.sources import load_events_with_report
 from concert_calendar.source_retention import (
@@ -407,6 +413,15 @@ def load_published_content_index(calendar_pointer: Path) -> dict:
         raise ProductionValidationError(
             "Published Electric Eye content index is invalid"
         )
+
+    # The published full asset intentionally omits this derived lookup table.
+    # Reconstruct it when reusing the asset as the production fallback.
+    index["lookup"] = {
+        normalize_artist(name): slug
+        for slug, artist in index["artists"].items()
+        for name in [artist["n"], *(artist.get("al") or [])]
+        if normalize_artist(name)
+    }
 
     return index
 

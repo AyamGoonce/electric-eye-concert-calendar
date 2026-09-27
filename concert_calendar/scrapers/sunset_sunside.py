@@ -182,11 +182,18 @@ def load_events():
                     events_by_key.setdefault(event_key(event), event)
             except Exception as exc:
                 errors.append(f"{item.get('slug')}: {exc}")
-    if errors:
-        raise RuntimeError(
-            f"{len(errors)} Sunset/Sunside detail pages failed; first: {errors[0]}"
-        )
     events = list(events_by_key.values())
+
+    if errors:
+        if not events:
+            raise RuntimeError(
+                f"{len(errors)} Sunset/Sunside detail pages failed; first: {errors[0]}"
+            )
+        print(
+            f"Sunset/Sunside partial scrape: {len(errors)} detail page(s) failed; "
+            f"keeping {len(events)} successfully parsed events. First error: {errors[0]}"
+        )
+
     if not events:
         raise RuntimeError("Sunset/Sunside returned zero dated performances")
     print(f"Created {len(events)} Sunset/Sunside ConcertEvent records")
