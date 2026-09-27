@@ -593,7 +593,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Musique alternative / Indé",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-06",
@@ -602,18 +602,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre": "Musique alternative / Indé",
+            "genre_evidence": [
+              {
+                "raw": "Musique alternative / Indé",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Father of Peace",
             "identity_aliases": [
               "Father of Peace"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607201257230.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -622,10 +627,10 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.aegpresents.fr/event/father-of-peace/",
             "venue": "La Maroquinerie"
           },
@@ -948,7 +953,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Musique alternative / Indé",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-10",
@@ -957,14 +962,21 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Wikidata genre statements (P136)",
+            "genre": "Musique alternative / Indé",
+            "genre_evidence": [
+              {
+                "raw": "Musique alternative / Indé",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Paris Jackson",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "PARIS JACKSON"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/a/AVvXsEhaYtUgQajEZZj6wslP3Lqp6YoKifXFe97LOFYqT0xZiCjVEty2GwxXWVRFpxpsoq9yaVG1JloE74x809I_4GUVmgTJQHwk1PD1dKW1DbwvH7Dy8Amham7hvT6XdNoTbW6uSlUzgDLfKnfZLH59s0UGfef56bMNfagL1ceYwhCLPe1qfFvG_fKE9fDPCw=s72-w640-h426-c",
             "openers": null,
@@ -975,10 +987,10 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.aegpresents.fr/event/paris-jackson/",
             "venue": "La Bellevilloise"
           },
@@ -3211,7 +3223,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "POP",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-12",
@@ -3220,16 +3232,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Official/current event description and reviewed exact artist catalog",
+            "genre": "POP",
+            "genre_evidence": [
+              {
+                "raw": "POP",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Haute & Freddy",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "HAUTE & FREDDY"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2606251707520.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -3238,10 +3257,10 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.aegpresents.fr/event/haute-freddy/",
             "venue": "L'Alhambra"
           },
@@ -4428,7 +4447,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "R&B / SOUL",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-12-09",
@@ -4437,16 +4456,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Apple Music exact artist catalog",
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Gotts Street Park",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "GOTTS STREET PARK"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605131045150.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -4458,7 +4484,7 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://bit.ly/GottsStreetPark-AEG26",
             "venue": "L'Alhambra"
           },
@@ -4512,7 +4538,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "R&B / SOUL",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-12-12",
@@ -4521,16 +4547,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Sekou",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "SEKOU"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609011839450.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -4542,7 +4575,7 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://bit.ly/Sekou-ParisAEG26",
             "venue": "L'Alhambra"
           },
@@ -4770,7 +4803,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "ROCK / METAL",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-01-26",
@@ -4779,16 +4812,26 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
+            "genre": "ROCK / METAL",
+            "genre_evidence": [
+              {
+                "raw": "ROCK / METAL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Metal / Hard Rock",
+              "Rock / Indie / Punk"
+            ],
             "headliner": "Dead Poet Society",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "DEAD POET SOCIETY"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2606301044330.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -4800,7 +4843,7 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://www.aegpresents.fr/event/dead-poet-society/",
             "venue": "L'Alhambra"
           },
@@ -5860,7 +5903,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Rock",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-03-18",
@@ -5869,23 +5912,27 @@
             "event_type": "Alternative",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Alternative",
+            "genre": "Rock",
             "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Alternative",
                 "source": "Backstage By The Mill"
               }
             ],
-            "genre_method": "artist_mapping",
+            "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "South Arcade",
             "identity_aliases": [
               "SOUTH ARCADE"
             ],
-            "image_source": "Backstage By The Mill",
-            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/LEAD-e1781694008343.jpg",
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607151107300.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -6621,7 +6668,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11711,7 +11758,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -12530,7 +12577,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -12680,6 +12727,55 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "Musique alternative / Indé",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-06",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Musique alternative / Indé",
+            "genre_evidence": [
+              {
+                "raw": "Musique alternative / Indé",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Father of Peace",
+            "identity_aliases": [
+              "Father of Peace"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607201257230.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": true,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.aegpresents.fr/event/father-of-peace/",
+            "venue": "La Maroquinerie"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "8f51c236b9cd75e9",
+          "state_identity": "8f51c236b9cd75e9a8bf2d92beffade11af59ba10e5955fb78dfb70777087b75"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Musique du monde",
             "city": "Paris",
             "co_headliners": null,
@@ -12765,6 +12861,55 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "03e801535162182e",
           "state_identity": "03e801535162182e0c2aca7ac63f4cc39573255aba701aa8dd1840b69368fc7e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Musique alternative / Indé",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Musique alternative / Indé",
+            "genre_evidence": [
+              {
+                "raw": "Musique alternative / Indé",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Paris Jackson",
+            "identity_aliases": [
+              "PARIS JACKSON"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/a/AVvXsEhaYtUgQajEZZj6wslP3Lqp6YoKifXFe97LOFYqT0xZiCjVEty2GwxXWVRFpxpsoq9yaVG1JloE74x809I_4GUVmgTJQHwk1PD1dKW1DbwvH7Dy8Amham7hvT6XdNoTbW6uSlUzgDLfKnfZLH59s0UGfef56bMNfagL1ceYwhCLPe1qfFvG_fKE9fDPCw=s72-w640-h426-c",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": true,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.aegpresents.fr/event/paris-jackson/",
+            "venue": "La Bellevilloise"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "e9c956ca9f316f16",
+          "state_identity": "e9c956ca9f316f1643d120590824731e31518d375b77a611aaa9ba6a63288fad"
         },
         {
           "event": {
@@ -12858,6 +13003,58 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "f3e1b2d9ee913537",
           "state_identity": "f3e1b2d9ee91353768e1d52881672a8307e7d2d8288b2b148bdb32ddd9759792"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "POP ELECTRO",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP ELECTRO",
+            "genre_evidence": [
+              {
+                "raw": "POP ELECTRO",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Electronic",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Electronic",
+              "Pop"
+            ],
+            "headliner": "KÄÄRIJÄ",
+            "identity_aliases": [
+              "KÄÄRIJÄ"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2604301127340.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/kaarija-lo4380.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "c2955c2163588dcb",
+          "state_identity": "c2955c2163588dcb71adb4c6e25b697891b3ea2f7e0b387d8f682fa2646b3764"
         },
         {
           "event": {
@@ -13001,6 +13198,157 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "Pop Rock",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "LENAÏG",
+            "identity_aliases": [
+              "LENAÏG"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605041156480.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/lenaig-lo4527.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "ca8be86c1559d8af",
+          "state_identity": "ca8be86c1559d8af5266768e0c97d95c3325ebbf76d8c4da12e6969c8f5e2238"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Musique alternative / Indé",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Musique alternative / Indé",
+            "genre_evidence": [
+              {
+                "raw": "Musique alternative / Indé",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "SCHUR",
+            "identity_aliases": [
+              "SCHUR"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605201154290.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Base Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/schur-lo4557.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "dff024a3a35e58fb",
+          "state_identity": "dff024a3a35e58fb2afa0508f9d06132674e182ae0e3463dd7cc35b88159e478"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Rock",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "THE WATCH PLAYS GENESIS",
+            "identity_aliases": [
+              "THE WATCH PLAYS GENESIS"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605041149580.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/the-watch-plays-genesis-lo4521.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "769fc6b315b91aac",
+          "state_identity": "769fc6b315b91aac016ca61b78beb26b3ce2f16cf041458c753b2c0860f313d0"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Hard Rock / Metal / Punk",
             "city": "Paris",
             "co_headliners": null,
@@ -13044,6 +13392,59 @@
           "first_seen": "2026-09-03T11:32:28Z",
           "public_id": "62d59a81f1be0427",
           "state_identity": "62d59a81f1be04274970850dc217fbda777302f5de7a25fdd8e004d9fd512840"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "K-pop",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-31",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "K-pop",
+            "genre_evidence": [
+              {
+                "raw": "K-pop",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Pop",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Big Ocean",
+            "identity_aliases": [
+              "Big Ocean"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609111511110.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/big-ocean-lo4677.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-09-11T16:36:56Z",
+          "public_id": "7d3e704d733d01d2",
+          "state_identity": "7d3e704d733d01d258bb79ced68e7075996fe979494a3d70b76704310e40b942"
         },
         {
           "event": {
@@ -13097,6 +13498,59 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "Pop Rock",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-06",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Latin",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Ed Maverick",
+            "identity_aliases": [
+              "Ed Maverick"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2608061648400.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/ed-maverick-lo4640.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "7f7fb3e968ab3e42",
+          "state_identity": "7f7fb3e968ab3e42766616c9f98ed01f57ccf952aecb2d697de73700bb428fab"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "K-pop",
             "city": "Paris",
             "co_headliners": null,
@@ -13137,6 +13591,106 @@
           "first_seen": "2026-09-15T17:08:03Z",
           "public_id": "c3273c463a16fbe4",
           "state_identity": "c3273c463a16fbe400e279b9bb7edf18c5b310834ce4b48644be6cedc7361ee1"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Folk",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Folk",
+            "genre_evidence": [
+              {
+                "raw": "Folk",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "AMISTAT",
+            "identity_aliases": [
+              "AMISTAT"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605071139070.png",
+            "openers": [
+              "Orange Oak"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/amistat-lo4544.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "bd37b2b27e140ba4",
+          "state_identity": "bd37b2b27e140ba48cde3d66a111fec9b397c60b68b2ee631f0cff7c96083eae"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "POP",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP",
+            "genre_evidence": [
+              {
+                "raw": "POP",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Haute & Freddy",
+            "identity_aliases": [
+              "HAUTE & FREDDY"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2606251707520.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": true,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.aegpresents.fr/event/haute-freddy/",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "c50130fb22bdef83",
+          "state_identity": "c50130fb22bdef83b887ef5c11a3a84864b631c7014943372c3bf0f155d051df"
         },
         {
           "event": {
@@ -13235,6 +13789,59 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "ROCK / METAL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "ROCK / METAL",
+            "genre_evidence": [
+              {
+                "raw": "ROCK / METAL",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Alternative and Indie, Electronic, Pop",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Neoni",
+            "identity_aliases": [
+              "Neoni"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609011159170.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/neoni-lo4660.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-09-01T13:15:20Z",
+          "public_id": "bc801eb8e6122e25",
+          "state_identity": "bc801eb8e6122e25840ff5e949676c8e23b7f9ef80b3c01c00313d71cc5bb767"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Rock",
             "city": "Paris",
             "co_headliners": null,
@@ -13320,6 +13927,58 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "b72603fd9eedc567",
           "state_identity": "b72603fd9eedc5674356d2c2469a88fb3d79bd7092db605ee4475d01c2608b2a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Hard Rock / Metal / Punk",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Hard Rock / Metal / Punk",
+            "genre_evidence": [
+              {
+                "raw": "Hard Rock / Metal / Punk",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Metal / Hard Rock",
+              "Rock / Indie / Punk"
+            ],
+            "headliner": "ZEBRAHEAD",
+            "identity_aliases": [
+              "ZEBRAHEAD"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607241723450.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/zebrahead-lo4633.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "ec76839ddb5a207d",
+          "state_identity": "ec76839ddb5a207d494eba88473d8670e1f70ba52550ccd26a4c86f2cb4e7b09"
         },
         {
           "event": {
@@ -13415,6 +14074,115 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "ROCK / METAL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-24",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "ROCK / METAL",
+            "genre_evidence": [
+              {
+                "raw": "ROCK / METAL",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "ML",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Metal / Hard Rock",
+              "Rock / Indie / Punk"
+            ],
+            "headliner": "SOEN",
+            "identity_aliases": [
+              "SOEN"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605041151460.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/soen-lo4520.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-23T16:46:51Z",
+          "public_id": "ec067eb5750df9cf",
+          "state_identity": "ec067eb5750df9cf109f199c46b6ba583147280d33cf4c0399ef71616c02fa67"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Rap / Hip hop",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rap / Hip hop",
+            "genre_evidence": [
+              {
+                "raw": "Rap / Hip hop",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Pop, Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Tinie Tempah",
+            "identity_aliases": [
+              "Tinie Tempah"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607151710040.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/tinie-tempah-lo4626.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "4b9fd7a35632ad6e",
+          "state_identity": "4b9fd7a35632ad6e49f9aaffd05d332908ba7978d0d1def9ba4b51a731610127"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Rap / Hip hop",
             "city": "Paris",
             "co_headliners": null,
@@ -13455,6 +14223,108 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "1855f6bba8c146fd",
           "state_identity": "1855f6bba8c146fd4169b4a0b077daa6c2f2b7a7fbbb516a6f6f5ccd953a9eb7"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Rap / Hip hop",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rap / Hip hop",
+            "genre_evidence": [
+              {
+                "raw": "Rap / Hip hop",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Electronic, Pop",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "MNEK",
+            "identity_aliases": [
+              "MNEK"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607061103450.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/mnek-lo4618.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "8dabff006e4045db",
+          "state_identity": "8dabff006e4045db0120aa6ff720e658d495a48b6a4e67358bc1d6ebb87e0682"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "R&B / SOUL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Tank And The Bangas",
+            "identity_aliases": [
+              "Tank And The Bangas"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607071846150.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/tank-and-the-bangas-lo4622.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "4657c02408284d55",
+          "state_identity": "4657c02408284d555642c55fcd130f7dfb0a8662448a622278973e1958617d3d"
         },
         {
           "event": {
@@ -13505,6 +14375,55 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "R&B / SOUL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-09",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Gotts Street Park",
+            "identity_aliases": [
+              "GOTTS STREET PARK"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605131045150.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/GottsStreetPark-AEG26",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "0bdfd84c5b672d1e",
+          "state_identity": "0bdfd84c5b672d1e3519c2eb14b6b0d2ae93a8a427b52b6e97937d16b145d838"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Pop Rock",
             "city": "Paris",
             "co_headliners": null,
@@ -13545,6 +14464,55 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "f795d04fb10fc92b",
           "state_identity": "f795d04fb10fc92b972a7667cb5e15e3691bc9af714c9955d392d9dfa2d9c497"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "R&B / SOUL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Sekou",
+            "identity_aliases": [
+              "SEKOU"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609011839450.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/Sekou-ParisAEG26",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-09-02T17:45:45Z",
+          "public_id": "d0e2e677ad6f24fc",
+          "state_identity": "d0e2e677ad6f24fcd995923ba87c1e83c1e6b151164b7fe0543fa802ebaa4e58"
         },
         {
           "event": {
@@ -13640,6 +14608,58 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "ROCK / METAL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-26",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "ROCK / METAL",
+            "genre_evidence": [
+              {
+                "raw": "ROCK / METAL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Metal / Hard Rock",
+              "Rock / Indie / Punk"
+            ],
+            "headliner": "Dead Poet Society",
+            "identity_aliases": [
+              "DEAD POET SOCIETY"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2606301044330.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.aegpresents.fr/event/dead-poet-society/",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "a9af06703712cc3d",
+          "state_identity": "a9af06703712cc3d2c510ef29cba10cc5786f909b4c3dc1662d67bbba23fe6f2"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Pop / Indie",
             "city": "Paris",
             "co_headliners": null,
@@ -13683,6 +14703,57 @@
           "first_seen": "2026-09-03T11:32:28Z",
           "public_id": "18bb54f9e50e90cc",
           "state_identity": "18bb54f9e50e90cc2277ca42af83956e20eb263585e397780e2ed8bbec82927b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Folk",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Folk",
+            "genre_evidence": [
+              {
+                "raw": "Folk",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Adam Green",
+            "identity_aliases": [
+              "Adam Green"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609231113410.png",
+            "openers": [
+              "Turner Cody & The Soldiers of Love"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Radical Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/adam-green-lo4692.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-09-23T11:45:49Z",
+          "public_id": "df82a87d515357a5",
+          "state_identity": "df82a87d515357a5169335dd0e383344b920be74797cdc8421ad797f81a49dfb"
         },
         {
           "event": {
@@ -13821,6 +14892,59 @@
           "first_seen": "2026-09-16T10:59:28Z",
           "public_id": "81c25c2f27e5a490",
           "state_identity": "81c25c2f27e5a490ede87b5524b8e438fe5d62d9559656c1ccf3000b81236f02"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Rock",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Alternative",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Alhambra"
+              },
+              {
+                "raw": "Alternative",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "South Arcade",
+            "identity_aliases": [
+              "SOUTH ARCADE"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607151107300.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": true,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://bit.ly/SouthArcade-AEG27%20",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "cdb5ff0607d03f8b",
+          "state_identity": "cdb5ff0607d03f8b2e099992ba6ec31eae06b692a69b1931177481c13ac5988e"
         },
         {
           "event": {
@@ -14003,7 +15127,7 @@
           "state_identity": "d5b24331641d72c7d996d5ebe3ed23e5a0298ceea4991f93a5f7461f0fb01d38"
         }
       ],
-      "last_successful_at": "2026-09-26T11:35:42Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -15227,7 +16351,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "R&B / SOUL",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-12-02",
@@ -15236,16 +16360,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
             "genre_public": "R&B / Soul / Funk",
-            "genre_source": "MusicBrainz artist tags",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Tank And The Bangas",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "Tank And The Bangas"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607071846150.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -15257,8 +16388,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://tix.to/TATBFR26SI/esfkd",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/tank-and-the-bangas-lo4622.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -16246,7 +17377,7 @@
           "state_identity": "7756190357f9e408f8343007be639f53016d8dfd0dfe036e7caf15262310901a"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16701,7 +17832,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -18305,7 +19436,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Rock",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-03-18",
@@ -18314,23 +19445,27 @@
             "event_type": "Alternative",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Alternative",
+            "genre": "Rock",
             "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Alternative",
                 "source": "Backstage By The Mill"
               }
             ],
-            "genre_method": "artist_mapping",
+            "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "South Arcade",
             "identity_aliases": [
               "SOUTH ARCADE"
             ],
-            "image_source": "Backstage By The Mill",
-            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/LEAD-e1781694008343.jpg",
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607151107300.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -18494,7 +19629,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Backstage By The Mill"
     },
     "Base Productions": {
@@ -19071,7 +20206,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Musique alternative / Indé",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-28",
@@ -19080,16 +20215,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre": "Musique alternative / Indé",
+            "genre_evidence": [
+              {
+                "raw": "Musique alternative / Indé",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Apple Music exact artist catalog",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "SCHUR",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "SCHUR"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605201154290.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -19101,8 +20243,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.base-productions.com/concerts/schur-2/",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/schur-lo4557.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -20264,7 +21406,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -22270,7 +23412,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -23733,7 +24875,7 @@
           "state_identity": "8a1970796dc413904c9dfc8e573d04564d33fb36e57327b931e0b4e4a1406c0e"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -25516,7 +26658,7 @@
           "state_identity": "22a4cfcae44eef4a18d3baf54d454f8a26d8ac7a34c5898369f8feb5f23b52e6"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -26736,7 +27878,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -27274,7 +28416,7 @@
           "state_identity": "b83f7032e595a01ef4687947c42d1e20afdbc8b7bf0117c869b75b632a270f49"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -27861,7 +29003,7 @@
           "state_identity": "f7b0549113a9fb9718777e3b34e61d479a1f359148ffdd9cdc42400b5a69071e"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -28503,7 +29645,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Rock",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-29",
@@ -28512,8 +29654,12 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Pop Rock",
+            "genre": "Rock",
             "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Pop Rock",
                 "source": "Garmonbozia"
@@ -28521,12 +29667,14 @@
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Garmonbozia",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "THE WATCH PLAYS GENESIS",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "THE WATCH PLAYS GENESIS"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605041149580.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -28538,8 +29686,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://web.digitick.com/the-watch-plays-genesis-concert-pop-rock-css5-garmonbozia-pg51-ei1112503.html",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/the-watch-plays-genesis-lo4521.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -30397,7 +31545,7 @@
           "state_identity": "5c7d59a0c6c7827900df81d3361b9bf5eff72c81749dcdaa5366a13ce256f5a5"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -31088,7 +32236,7 @@
           "state_identity": "1de5e8c96d04fb458f7cba1219f0df454d57dd852008bb04cc9a2fc85c48567c"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -32317,7 +33465,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "ROCK / METAL",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-24",
@@ -32326,21 +33474,30 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "ML",
+            "genre": "ROCK / METAL",
             "genre_evidence": [
+              {
+                "raw": "ROCK / METAL",
+                "source": "Alhambra"
+              },
               {
                 "raw": "ML",
                 "source": "Gérard Drouot Productions"
               }
             ],
-            "genre_method": "artist_mapping",
+            "genre_method": "source_mapping",
             "genre_public": "Metal / Hard Rock",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Metal / Hard Rock",
+              "Rock / Indie / Punk"
+            ],
             "headliner": "SOEN",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "SOEN"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605041151460.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -32352,8 +33509,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.gdp.fr/fr/catalogue/soen-paris-2026-11-24",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/soen-lo4520.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -34214,7 +35371,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -35616,7 +36773,7 @@
           "state_identity": "0d848c1c6ea4c2ad818ee0aab794435928c58a30b1296ffcf7412ef01114de20"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -38692,7 +39849,7 @@
           "state_identity": "ff4988e6a448161d0e065d971172f0f5f07f358b9df669b261b87d5daa35c06d"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -43746,7 +44903,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -44265,9 +45422,49 @@
           "first_seen": "2026-09-01T13:15:20Z",
           "public_id": "96b369c0917f45d5",
           "state_identity": "96b369c0917f45d51e84e01541619395c9c0c1620dde61c0e692a229d99d42e3"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Wikidata genre statements (P136)",
+            "genres_public": null,
+            "headliner": "Nilusi",
+            "identity_aliases": null,
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/wxxi8i3uc8dur2we9r6v10qgz9xy?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.gaite-lyrique.net/agenda/2026/nilusi/",
+            "venue": "La Gaîté Lyrique"
+          },
+          "first_seen": "2026-09-01T13:15:20Z",
+          "public_id": "2037256fc6464995",
+          "state_identity": "2037256fc64649952b38cead1918e2c0263657f0dc7b70ac35f37692e278ee6a"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -45981,7 +47178,7 @@
           "state_identity": "7e4d8819bda9a74e5b806b0895e3f2087de6a72249cdaa2291e5d5e410fa226d"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -51709,7 +52906,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -53743,7 +54940,7 @@
           "state_identity": "72434f67ad4b02eb07d286a2824a2cfd205a5a82dc5208b77425a4a128a76a61"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -54393,7 +55590,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -55350,7 +56547,7 @@
           "state_identity": "ae46e191645929b4dbde3ad7ee86223b611389e7ba8e97b307fa9a598f0690e0"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -57046,7 +58243,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -59226,7 +60423,7 @@
           "state_identity": "320a8d830683b29a6fd30cf9612fa6d43c1fab9aa144ed5dc9acbd79c0fe7751"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -62420,7 +63617,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -63961,7 +65158,7 @@
           "state_identity": "150deefd461fe9adc6f76b29e1c21db0df0aefbe7e16c9d4cb4b59cc9d2e45c8"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -68948,7 +70145,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -69841,7 +71038,7 @@
           "state_identity": "c0050ac32c300b5844dc1cd4f31ae0ec47a975eec66dbfea1ac4576e9a3e4419"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72318,7 +73515,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "K-pop",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-31",
@@ -72327,8 +73524,12 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Pop",
+            "genre": "K-pop",
             "genre_evidence": [
+              {
+                "raw": "K-pop",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Pop",
                 "source": "Live Nation"
@@ -72336,12 +73537,14 @@
             ],
             "genre_method": "source_explicit",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Big Ocean",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "Big Ocean"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609111511110.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72353,8 +73556,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/big-ocean-billet/idlist/6543/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/big-ocean-lo4677.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-09-11T16:36:56Z",
@@ -72884,7 +74087,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Pop Rock",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-06",
@@ -72893,21 +74096,27 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Latin",
+            "genre": "Pop Rock",
             "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Latin",
                 "source": "Live Nation"
               }
             ],
-            "genre_method": "source_mapping",
-            "genre_public": "World / Latin",
-            "genre_source": "Live Nation",
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Ed Maverick",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/y/q/i/db56109a-1c5f-4594-9459-75adfd699575.jpg",
+            "identity_aliases": [
+              "Ed Maverick"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2608061648400.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72919,8 +74128,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/ed-maverick-billet/idmanif/669647/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/ed-maverick-lo4640.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74059,7 +75268,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "ROCK / METAL",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-16",
@@ -74068,25 +75277,27 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Alternative and Indie, Electronic, Pop",
+            "genre": "ROCK / METAL",
             "genre_evidence": [
+              {
+                "raw": "ROCK / METAL",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Alternative and Indie, Electronic, Pop",
                 "source": "Live Nation"
               }
             ],
-            "genre_method": "source_mapping",
-            "genre_public": "Electronic",
-            "genre_source": "Live Nation",
-            "genres_public": [
-              "Electronic",
-              "Pop",
-              "Rock / Indie / Punk"
-            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
             "headliner": "Neoni",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/k/h/o/d090550a-f4c2-405f-acaa-55241fac70e0.jpg",
+            "identity_aliases": [
+              "Neoni"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609011159170.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -74098,8 +75309,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/neoni-billet/idmanif/670979/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/neoni-lo4660.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-09-01T13:15:20Z",
@@ -74875,7 +76086,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Rap / Hip hop",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-25",
@@ -74884,24 +76095,27 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Pop, Rock",
+            "genre": "Rap / Hip hop",
             "genre_evidence": [
+              {
+                "raw": "Rap / Hip hop",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Pop, Rock",
                 "source": "Live Nation"
               }
             ],
-            "genre_method": "source_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Live Nation",
-            "genres_public": [
-              "Pop",
-              "Rock / Indie / Punk"
-            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
             "headliner": "Tinie Tempah",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/w/o/m/edf690e6-6d48-453e-be35-78f2eaafa565.jpg",
+            "identity_aliases": [
+              "Tinie Tempah"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607151710040.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -74913,8 +76127,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/tinie-tempah-billet/idlist/6394/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/tinie-tempah-lo4626.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74974,7 +76188,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Rap / Hip hop",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-27",
@@ -74983,24 +76197,27 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Electronic, Pop",
+            "genre": "Rap / Hip hop",
             "genre_evidence": [
+              {
+                "raw": "Rap / Hip hop",
+                "source": "Alhambra"
+              },
               {
                 "raw": "Electronic, Pop",
                 "source": "Live Nation"
               }
             ],
-            "genre_method": "source_mapping",
-            "genre_public": "Electronic",
-            "genre_source": "Live Nation",
-            "genres_public": [
-              "Electronic",
-              "Pop"
-            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Alhambra",
+            "genres_public": null,
             "headliner": "MNEK",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/m/n/r/02794126-dbf4-4561-8f9f-b29e6b0eaaf0.jpg",
+            "identity_aliases": [
+              "MNEK"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607061103450.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -75012,8 +76229,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/mnek-billet/idmanif/666028/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/mnek-lo4618.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -80340,7 +81557,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Live Nation"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -84801,7 +86018,7 @@
           "state_identity": "8f5604aeb409a9add816a319fa6e0ee8926de8523238a3e5739845b904833f87"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -87659,7 +88876,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -88420,7 +89637,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Nouveau Casino"
     },
     "Petit Bain": {
@@ -90716,7 +91933,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -91762,7 +92979,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -93428,7 +94645,7 @@
           "state_identity": "d4c2db7324b7373b21de42fd42fe9a194ddd613170ab16aa92ceaced335de365"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -94264,7 +95481,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Folk",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-02-18",
@@ -94273,16 +95490,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Folk",
+            "genre_evidence": [
+              {
+                "raw": "Folk",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "Adam Green",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "Adam Green"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2609231113410.png",
             "openers": [
               "Turner Cody & The Soldiers of Love"
             ],
@@ -94296,8 +95520,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://radical-production.trium.fr/fr/t/-/event/70043",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/adam-green-lo4692.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-09-23T11:45:49Z",
@@ -94542,12 +95766,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -97960,7 +99184,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -98314,7 +99538,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -107407,7 +108631,7 @@
           "state_identity": "aabd4efab034afaa75a07a6ca06919cf6a426178eb4541c83c1b25bf44e6fb52"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -109829,7 +111053,7 @@
           "state_identity": "7d08800830f8e8ed12327f6a3b8f14c8d3d9600e7543832eca7386b3bb4a30bc"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Supersonic"
     },
     "Vedettes": {
@@ -111140,7 +112364,7 @@
           "state_identity": "475448b492c7886cf42661e1cfc473cbad981a23ac482992e59d7fbe9b2ed3ca"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -111481,7 +112705,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "POP ELECTRO",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-16",
@@ -111490,16 +112714,26 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Hip-hop / Rap",
-            "genre_source": "MusicBrainz artist tags via exact Wikidata identity",
-            "genres_public": null,
+            "genre": "POP ELECTRO",
+            "genre_evidence": [
+              {
+                "raw": "POP ELECTRO",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Electronic",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Electronic",
+              "Pop"
+            ],
             "headliner": "KÄÄRIJÄ",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "KÄÄRIJÄ"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2604301127340.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -111511,8 +112745,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "http://bit.ly/Kaarija_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/kaarija-lo4380.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -111811,7 +113045,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Pop Rock",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-10-27",
@@ -111820,16 +113054,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Chanson Française / Variétés",
-            "genre_source": "Apple Music and Deezer",
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "LENAÏG",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "LENAÏG"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605041156480.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -111841,8 +113082,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/Lenaïg_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/lenaig-lo4527.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -112138,7 +113379,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Folk",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-10",
@@ -112147,16 +113388,23 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre": "Folk",
+            "genre_evidence": [
+              {
+                "raw": "Folk",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
             "genre_public": "Folk / Country",
-            "genre_source": "Bandcamp",
+            "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "AMISTAT",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "AMISTAT"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2605071139070.png",
             "openers": [
               "Orange Oak"
             ],
@@ -112170,8 +113418,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/Amistat_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/amistat-lo4544.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -112449,7 +113697,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "Hard Rock / Metal / Punk",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-20",
@@ -112458,16 +113706,26 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Reviewed stable punk-rock classification, 2026-08-23",
-            "genres_public": null,
+            "genre": "Hard Rock / Metal / Punk",
+            "genre_evidence": [
+              {
+                "raw": "Hard Rock / Metal / Punk",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Alhambra",
+            "genres_public": [
+              "Metal / Hard Rock",
+              "Rock / Indie / Punk"
+            ],
             "headliner": "ZEBRAHEAD",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "ZEBRAHEAD"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607241723450.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -112479,8 +113737,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/Zebrahead_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/zebrahead-lo4633.html",
             "venue": "L'Alhambra"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -114735,7 +115993,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -115793,7 +117051,7 @@
           "state_identity": "85689543aa69f607e9483a984c1b185a99d029ada295d21542d3c77053952dfe"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -118859,10 +120117,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-09-27T01:20:20Z",
+      "last_successful_at": "2026-09-27T05:24:29Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-09-27T01:20:20Z",
+  "updated_at": "2026-09-27T05:24:29Z",
   "version": 1
 }
