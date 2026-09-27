@@ -387,7 +387,7 @@ def load_published_content_index(calendar_pointer: Path) -> dict:
         )
 
     data_match = re.search(
-        r"window\.ElectricEyeContentIndex\s*=\s*Object\.freeze\((\{.*\})\);\s*$",
+        r"window\.ElectricEyeContentIndex\s*=\s*Object\.freeze\((\{.*\})\);",
         body.decode("utf-8"),
         re.DOTALL,
     )
