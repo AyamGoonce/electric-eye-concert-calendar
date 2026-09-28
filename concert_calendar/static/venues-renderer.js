@@ -284,13 +284,24 @@
     if (!window.L || !controls.mapNode) return;
 
     map = L.map(controls.mapNode, {
-      scrollWheelZoom: false
+      scrollWheelZoom: false,
+      worldCopyJump: false,
+      maxBounds: [
+        [-85, -180],
+        [85, 180]
+      ],
+      maxBoundsViscosity: 1
     });
 
     L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         maxZoom: 19,
+        noWrap: true,
+        bounds: [
+          [-85.0511, -180],
+          [85.0511, 180]
+        ],
         attribution: "&copy; OpenStreetMap contributors"
       }
     ).addTo(map);
