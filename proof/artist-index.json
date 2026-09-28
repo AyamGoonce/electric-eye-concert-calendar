@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-09-27T21:28:58Z",
+  "generatedAt": "2026-09-28T05:34:38Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -645,13 +645,17 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
+      "articleCount": 2,
       "articleIds": [
+        "2574892090471103284",
         "6134462340113652757"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "2574892090471103284"
+      ],
       "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/afghan-whigs-trabendo-paris-september.html",
         "https://www.electriceyerock.com/2026/06/afghan-whigs-return-to-paris-with-ed.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -7838,6 +7842,40 @@
       "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/01/album-review-ebba-asman-when-you-know.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Ed Harcourt",
+      "slug": "ed-harcourt",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "articleIds": [
+        "6925567955227172518"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "6925567955227172518"
+      ],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/ed-harcourt-trabendo-paris-september.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -21387,7 +21425,9 @@
         "189464433969378974"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "6738311452493419943"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/05/ronnie-wood-at-olympia-with-imelda-may.html",
         "https://www.electriceyerock.com/2026/05/the-rolling-stones-officially-share-new.html",
@@ -26495,7 +26535,6 @@
         "461484123954871059",
         "5699155883436583836",
         "7600704829710541376",
-        "6738311452493419943",
         "189464433969378974"
       ],
       "articleUrls": [
