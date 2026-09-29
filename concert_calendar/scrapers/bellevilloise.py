@@ -46,6 +46,17 @@ def parse_events(soup, *, today=None):
         headliner = _clean(title_node.get_text(" ", strip=True))
         if not headliner:
             continue
+        raw_title = headliner
+        series_name = None
+        if "cafe-concert" in categories:
+            wrapper = re.fullmatch(
+                r"(?P<series>Caf[ée]\s*(?:[-–—]\s*)?Concert)\s*:\s*(?P<artist>.+)",
+                raw_title,
+                re.I,
+            )
+            if wrapper:
+                series_name = _clean(wrapper.group("series"))
+                headliner = _clean(wrapper.group("artist"))
         image_node = card.select_one(".c-tile_visual img")
         image = official_image_url(urljoin(PROGRAMME_URL, image_node.get("src", ""))) if image_node else None
         events.append(
@@ -56,6 +67,10 @@ def parse_events(soup, *, today=None):
                 city="Paris",
                 department="75",
                 ticket_url=detail_link["href"],
+                event_title=raw_title if series_name else None,
+                raw_title=raw_title if series_name else None,
+                series_name=series_name,
+                identity_aliases=[raw_title] if series_name else None,
                 image_url=image,
                 image_source=SOURCE_NAME if image else None,
             )

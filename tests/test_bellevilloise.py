@@ -13,7 +13,9 @@ FIXTURE = Path(__file__).parent / "fixtures" / "bellevilloise" / "programme.html
 class BellevilloiseTests(TestCase):
     def test_filters_mixed_programme_by_explicit_concert_categories(self):
         events = parse_events(BeautifulSoup(FIXTURE.read_text(), "html.parser"), today=date(2026, 9, 1))
-        self.assertEqual(["SIX60", "Café-Concert : Radio Cantina"], [event.headliner for event in events])
+        self.assertEqual(["SIX60", "Radio Cantina"], [event.headliner for event in events])
+        self.assertEqual("Café-Concert", events[1].series_name)
+        self.assertEqual("Café-Concert : Radio Cantina", events[1].raw_title)
         self.assertEqual(["2026-10-14", "2026-10-15"], [event.date for event in events])
 
     def test_rejects_clubbing_brunch_and_non_music(self):

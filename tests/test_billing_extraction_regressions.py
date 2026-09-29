@@ -184,6 +184,9 @@ class GarmonboziaStructuredBillingRegressions(unittest.TestCase):
             event.performers,
         )
         self.assertEqual(["STELLVRIS"], event.openers)
+        self.assertIsNone(event.raw_title)
+        self.assertIsNone(event.event_title)
+        self.assertIsNone(event.identity_aliases)
 
     def test_plus_title_without_structured_artist_evidence_stays_opaque(self):
         from bs4 import BeautifulSoup

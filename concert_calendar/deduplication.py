@@ -415,6 +415,50 @@ def _mark_reviewed_wrapper_semantics(
             event._reviewed_wrapper_semantics_locked = True
 
 
+
+def _source_resolved_presentation_identity(event: ConcertEvent) -> bool:
+    """
+    Return True when a source has already separated artist identity from its
+    presentation title.
+
+    This requires explicit source evidence: a distinct raw title that contains
+    both the canonical artist identity and the separately extracted event
+    title. It must not depend on aliases created later in deduplication and
+    must not infer performer structure from punctuation alone.
+    """
+    if not event.raw_title or not event.event_title:
+        return False
+
+    canonical = normalize_headliner(event.headliner)
+    raw = normalize_headliner(event.raw_title)
+    presentation = normalize_headliner(event.event_title)
+
+    if (
+        not canonical
+        or not raw
+        or not presentation
+        or canonical == raw
+    ):
+        return False
+
+    def phrase_form(value: str) -> str:
+        return " ".join(re.findall(r"\w+", value, flags=re.UNICODE))
+
+    canonical_phrase = phrase_form(canonical)
+    raw_phrase = phrase_form(raw)
+    presentation_phrase = phrase_form(presentation)
+
+    if not canonical_phrase or not raw_phrase or not presentation_phrase:
+        return False
+
+    padded_raw = f" {raw_phrase} "
+    return (
+        f" {canonical_phrase} " in padded_raw
+        and f" {presentation_phrase} " in padded_raw
+    )
+
+
+
 def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
     for event in events:
         event.headliner = unescape(event.headliner)
@@ -428,14 +472,30 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
             event.series_name = unescape(event.series_name)
         reviewed_title = _reviewed_event_title_for(event)
         if reviewed_title:
-            if normalize_headliner(event.headliner) != normalize_headliner(
-                reviewed_title
-            ):
+            reviewed_matches_raw = bool(
+                event.raw_title
+                and normalize_headliner(reviewed_title)
+                == normalize_headliner(event.raw_title)
+            )
+            preserve_resolved_identity = (
+                reviewed_matches_raw
+                and _source_resolved_presentation_identity(event)
+            )
+
+            if preserve_resolved_identity:
                 event.identity_aliases = _stable_unique([
                     *(event.identity_aliases or []),
-                    event.headliner,
+                    reviewed_title,
                 ])
-            event.headliner = reviewed_title
+            else:
+                if normalize_headliner(event.headliner) != normalize_headliner(
+                    reviewed_title
+                ):
+                    event.identity_aliases = _stable_unique([
+                        *(event.identity_aliases or []),
+                        event.headliner,
+                    ])
+                event.headliner = reviewed_title
 
         move_artist = normalize_artist_component(event.headliner)
         for date, artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
@@ -1072,13 +1132,32 @@ def _reconcile_cross_source_billing_variants(
                 right,
             )
 
-            preferred, incoming = sorted(
-                (left, right), key=_billing_richness, reverse=True
+            resolved_official = next(
+                (
+                    event
+                    for event in (left, right)
+                    if _has_official_venue_source(event)
+                    and _source_resolved_presentation_identity(event)
+                ),
+                None,
             )
-            canonical_display = _prefer_canonical_display_headliner(preferred, incoming)
+
+            if corroborated_extension and resolved_official is not None:
+                preferred = resolved_official
+                incoming = right if preferred is left else left
+                canonical_display = None
+            else:
+                preferred, incoming = sorted(
+                    (left, right), key=_billing_richness, reverse=True
+                )
+                canonical_display = _prefer_canonical_display_headliner(
+                    preferred,
+                    incoming,
+                )
+
             merge_events(preferred, incoming)
 
-            if corroborated_extension:
+            if corroborated_extension and resolved_official is None:
                 primary, additional = corroborated_extension
                 preferred.headliner = primary
                 preferred.co_headliners = _stable_unique([
@@ -1956,11 +2035,24 @@ def _reconcile_embedded_cross_source_titles(
             shorter_structured = bool(
                 shorter.openers or shorter.co_headliners or shorter.performers
             )
-            preferred, incoming = (
-                (shorter, richer)
-                if shorter_structured and not richer_structured
-                else (richer, shorter)
-            )
+
+            resolved_official = [
+                event
+                for event in (left, right)
+                if _has_official_venue_source(event)
+                and _source_resolved_presentation_identity(event)
+            ]
+
+            if len(resolved_official) == 1:
+                preferred = resolved_official[0]
+                incoming = right if preferred is left else left
+            else:
+                preferred, incoming = (
+                    (shorter, richer)
+                    if shorter_structured and not richer_structured
+                    else (richer, shorter)
+                )
+
             if preferred is shorter and not preferred.event_title:
                 preferred.event_title = richer.headliner
             merge_events(preferred, incoming)

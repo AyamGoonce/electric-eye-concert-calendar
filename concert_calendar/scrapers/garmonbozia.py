@@ -80,7 +80,25 @@ def parse_structured_billing(value, *, structured_artists=None, info_text=""):
     # Do not reinterpret the bill unless a billed artist has an explicit
     # current-event opening role in Garmonbozia's own description.
     if not openers:
-        return None
+        sillage = re.search(r"\bdans\s+(?:son|leur)\s+sillage\b", info, re.I)
+        current_headlining = bool(sillage) and (
+            bool(re.search(
+                re.escape(parts[0].casefold())
+                + r".{0,110}\bdans\s+(?:son|leur)\s+sillage\b",
+                info,
+                re.I,
+            ))
+            or bool(re.search(
+                r"\b(?:a|à)\s+la\s+t[eê]te\s+de\s+sa\s+propre\s+tourn[ée]e\b",
+                info[:sillage.start()],
+                re.I,
+            ))
+        )
+        if not current_headlining or not all(
+            part.casefold() in info[sillage.end():] for part in parts[1:]
+        ):
+            return None
+        return parts[0], parts[1:], [parts[0]]
 
     performers = [
         part
@@ -233,10 +251,15 @@ def parse_card(card):
     if not city:
         return None
 
+    newly_structured = headliner != title and len(performers or []) == 1
+
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
         performers=performers,
+        raw_title=title if newly_structured else None,
+        event_title=title if newly_structured else None,
+        identity_aliases=[title] if newly_structured else None,
         venue=venue,
         city=city,
         department="",

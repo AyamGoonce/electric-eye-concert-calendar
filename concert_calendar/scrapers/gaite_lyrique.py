@@ -19,7 +19,10 @@ from concert_calendar.models import ConcertEvent
 SOURCE_NAME = "La Gaîté Lyrique"
 AGENDA_URL = "https://www.gaite-lyrique.net/agenda/"
 REQUEST_TIMEOUT = 30
-MAX_PAGES = 7
+# Normal termination comes from the site's own pagination: a terminal 404
+# or a page with no event cards. This is only a guard against runaway
+# pagination if the upstream site changes unexpectedly.
+MAX_PAGE_SAFETY_LIMIT = 50
 
 HEADERS = {
     "User-Agent": (
@@ -292,7 +295,7 @@ def load_events():
     events = {}
     session = requests.Session()
 
-    for page in range(1, MAX_PAGES + 1):
+    for page in range(1, MAX_PAGE_SAFETY_LIMIT + 1):
         url = (
             AGENDA_URL
             if page == 1

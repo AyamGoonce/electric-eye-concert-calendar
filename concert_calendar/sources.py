@@ -15,6 +15,7 @@ from concert_calendar.genres import enrich_event_genres
 from concert_calendar.promoters import normalize_event_promoters
 from concert_calendar.scraper_loader import discover_scrapers_with_issues
 from concert_calendar.source_retention import SourceStateError, hydrate_failed_sources
+from concert_calendar.title_quality import is_placeholder_title
 from concert_calendar.venues import normalize_event_venue
 from concert_calendar.venues import normalize_venue_key
 
@@ -126,8 +127,8 @@ def normalize_text_for_matching(text):
 
 def is_non_supported_event(title):
     """
-    Return True for packages, club nights, parties, tribute events
-    and other listings outside the calendar's scope.
+    Return True for packages, club nights, parties and other listings
+    outside the calendar's scope. Tribute acts and productions are eligible.
     """
 
     normalized_title = normalize_text_for_matching(title)
@@ -153,9 +154,6 @@ def is_non_supported_event(title):
         r"\bdance floor\b",
         r"\bsoiree\b",
         r"\bdisco\b",
-
-        # Tribute events
-        r"\btribute\b",
 
         # Recurring or branded nightlife formats
         r"\bjeudi disco\b",
@@ -219,6 +217,8 @@ def classify_event_eligibility(event):
     This deliberately does not treat words such as DJ, party, vinyl, night,
     session, release, or festival as exclusions by themselves.
     """
+    if is_placeholder_title(event.headliner):
+        return False, "placeholder_title"
     values = [event.category, *(event.tags or [])]
     normalized = {normalize_text_for_matching(value) for value in values if value}
     for value in normalized:

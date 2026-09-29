@@ -119,6 +119,49 @@ def split_bill(value):
     return clean_text(value), None
 
 
+def evidenced_billing(title, *, team_love="", description=""):
+    """Interpret separators only when current-event prose establishes roles."""
+    raw = clean_text(title)
+    prose = clean_text(
+        BeautifulSoup(team_love or "", "html.parser").get_text(" ", strip=True)
+    )
+
+    def named_in(text, artist):
+        return bool(re.search(r"(?<![\w@])" + re.escape(artist) + r"(?!\w)", text, re.I))
+
+    plus_parts = [clean_text(part) for part in re.split(r"\s+\+\s+", raw)]
+    if len(plus_parts) >= 2:
+        role = re.search(
+            r"\b(?:en support|supported by|accompagn[ée] de|joined by)\b",
+            prose,
+            re.I,
+        )
+        if role and all(named_in(prose[role.end():], part) for part in plus_parts[1:]):
+            return plus_parts[0], plus_parts[1:], None
+
+    if re.search(r"\b(?:double|triple)\s+(?:affiche|bill)\b", prose, re.I):
+        description_soup = BeautifulSoup(description or "", "html.parser")
+        paragraphs = [node.get_text(" ", strip=True) for node in description_soup.select("p")]
+        billed = clean_text(
+            paragraphs[0] if paragraphs else description_soup.get_text(" ", strip=True)
+        )
+        full_parts = [clean_text(part) for part in re.split(r"\s+\+\s+", billed)]
+        title_parts = [
+            clean_text(part)
+            for part in re.split(r"\s+(?:\+|x|×)\s+", raw, flags=re.I)
+        ]
+        if (
+            len(full_parts) >= len(title_parts) >= 2
+            and [part.casefold() for part in full_parts[:len(title_parts)]]
+            == [part.casefold() for part in title_parts]
+            and all(named_in(prose, part) for part in full_parts)
+        ):
+            return full_parts[0], None, full_parts
+        if len(title_parts) >= 2 and all(named_in(prose, part) for part in title_parts):
+            return title_parts[0], None, title_parts
+    return raw, None, None
+
+
 def strapi_event_image(attributes):
     for field in ("imageList", "imageCover"):
         media = (((attributes.get(field) or {}).get("data") or {}).get("attributes") or {})
@@ -142,7 +185,12 @@ def parse_document(document):
     attributes = document.get("attributes") or {}
     event_date = clean_text(attributes.get("date"))[:10]
     status_uid = relation_uid(attributes.get("status")).casefold()
-    headliner, openers = split_bill(attributes.get("title"))
+    raw_title = clean_text(attributes.get("title"))
+    headliner, openers, performers = evidenced_billing(
+        raw_title,
+        team_love=attributes.get("teamLove") or "",
+        description=attributes.get("description") or "",
+    )
 
     if not is_concert(attributes):
         return None
@@ -173,6 +221,11 @@ def parse_document(document):
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
+        co_headliners=performers[1:] if performers else None,
+        performers=performers,
+        raw_title=raw_title if headliner != raw_title else None,
+        event_title=raw_title if headliner != raw_title else None,
+        identity_aliases=[raw_title] if headliner != raw_title else None,
         venue="Bataclan",
         city="Paris",
         department="75",

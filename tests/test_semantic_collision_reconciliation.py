@@ -6,6 +6,7 @@ from concert_calendar.automation import (
     validate_semantic_collisions,
 )
 from concert_calendar.deduplication import (
+    _source_resolved_presentation_identity,
     deduplicate_events,
     high_confidence_collision_pairs,
 )
@@ -161,6 +162,102 @@ class PhysicalEventTitleVariantTests(unittest.TestCase):
 
         self.assertEqual(rich_public_id, current[0]._public_id)
         self.assertEqual("2026-08-20T11:02:59Z", current[0].first_seen)
+
+
+    def test_official_venue_resolved_artist_merges_external_plus_bill_without_inventing_roles(self):
+        venue = event(
+            "2026-10-28",
+            "CRENOKA",
+            "La Boule Noire",
+            "La Boule Noire",
+            ticket_url="https://laboule-noire.fr/crenoka-release-party/",
+        )
+        venue.raw_title = "CRENOKA (RELEASE PARTY)"
+        venue.event_title = "Release Party"
+        external = event(
+            "2026-10-28",
+            "Crenoka + mita",
+            "La Boule Noire",
+            "Vedettes",
+            ticket_url="https://link.dice.fm/example",
+        )
+        external.promoters = ["Vedettes"]
+
+        result = deduplicate_events([venue, external])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("CRENOKA", result[0].headliner)
+        self.assertEqual("Release Party", result[0].event_title)
+        self.assertIsNone(result[0].co_headliners)
+        self.assertIsNone(result[0].openers)
+        self.assertIsNone(result[0].performers)
+        self.assertIn("Crenoka + mita", result[0].identity_aliases)
+        self.assertEqual(
+            {"La Boule Noire", "Vedettes"},
+            set(result[0].source_names),
+        )
+
+    def test_resolved_official_artist_nomenclature_survives_richer_third_source_title(self):
+        venue = event(
+            "2026-10-28",
+            "CRENOKA",
+            "La Boule Noire",
+            "La Boule Noire",
+            ticket_url="https://laboule-noire.fr/crenoka-release-party/",
+        )
+        venue.raw_title = "CRENOKA (RELEASE PARTY)"
+        venue.event_title = "Release Party"
+
+        promoter = event(
+            "2026-10-28",
+            "Crenoka + mita",
+            "La Boule Noire",
+            "Vedettes",
+            ticket_url="https://link.dice.fm/vedettes-example",
+        )
+        promoter.promoters = ["Vedettes"]
+
+        aggregator = event(
+            "2026-10-28",
+            "crenoka (release party) + mita",
+            "La Boule Noire",
+            "DICE",
+            start_time="20:00",
+            ticket_url="https://link.dice.fm/dice-example",
+        )
+        aggregator.raw_title = "crenoka (release party) + mita"
+
+        result = deduplicate_events([venue, promoter, aggregator])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("CRENOKA", result[0].headliner)
+        self.assertEqual("Release Party", result[0].event_title)
+        self.assertIsNone(result[0].co_headliners)
+        self.assertIsNone(result[0].openers)
+        self.assertIsNone(result[0].performers)
+        self.assertEqual(
+            {"DICE", "La Boule Noire", "Vedettes"},
+            set(result[0].source_names),
+        )
+        self.assertIn(
+            "crenoka (release party) + mita",
+            result[0].identity_aliases,
+        )
+
+    def test_unrelated_raw_presentation_is_not_source_resolved_identity(self):
+        venue = event(
+            "2027-01-01",
+            "Primary Artist",
+            "Example Hall",
+            "Example Hall",
+        )
+        venue.raw_title = "Completely Different Presentation"
+        venue.event_title = "Special Night"
+
+        self.assertFalse(
+            _source_resolved_presentation_identity(venue)
+        )
+
 
 
 class CollisionSafetyTests(unittest.TestCase):

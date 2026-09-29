@@ -43,7 +43,6 @@ def is_non_concert_event(title):
         r"\bsoiree\b",
         r"\bnuit\b",
         r"\bdisco\b",
-        r"\btribute\b",
         r"\bjeudi disco\b",
         r"\bdancing with myself\b",
         r"\bwhere is my mind\b",

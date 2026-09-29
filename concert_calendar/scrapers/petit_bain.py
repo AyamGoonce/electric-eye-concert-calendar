@@ -146,6 +146,17 @@ def parse_card(card, today=None):
         if artist
         and artist.casefold() not in GENERIC_SUPPORT_NAMES
     ]
+    if len(artists) > 1:
+        artists[1:] = [
+            clean_text(match.group(1)) if (
+                match := re.fullmatch(
+                    r"(?:premi[èe]re|1[èe]re)\s+partie\s*[-–—:]\s*(.+)",
+                    artist,
+                    re.I,
+                )
+            ) else artist
+            for artist in artists[1:]
+        ]
 
     if not artists:
         title_element = card.select_one("#nomsoiree")

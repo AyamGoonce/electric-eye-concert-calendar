@@ -28,22 +28,32 @@ def clean_text(value):
 
 
 def split_bill(value):
+    """A File7 display title alone does not prove '+' performer boundaries."""
+    return clean_text(value), None
+
+
+def title_semantics(value):
+    """Separate only File7's explicit recurring programme wrapper."""
+    raw = clean_text(value)
+    wrapper = re.fullmatch(
+        r"(?P<series>Soirées?\s+Fan[- ]Club|Café[- ]Concert)\s*:\s*(?P<artist>.+)",
+        raw,
+        re.I,
+    )
+    if not wrapper:
+        return raw, None
+    return clean_text(wrapper.group("artist")), clean_text(wrapper.group("series"))
+
+
+def legacy_primary_identity(value):
+    """Return the former parser's primary title for state migration only."""
     value = re.sub(
         r"^(?:Soirées Fan Club|Café-Concert)\s*:\s*",
         "",
         clean_text(value),
         flags=re.IGNORECASE,
     )
-    artists = [
-        clean_text(part)
-        for part in re.split(r"\s*\+\s*", value)
-    ]
-    artists = [artist for artist in artists if artist]
-
-    if not artists:
-        return "", None
-
-    return artists[0], artists[1:] or None
+    return clean_text(re.split(r"\s*\+\s*", value, maxsplit=1)[0])
 
 
 def parse_card(card):
@@ -58,9 +68,9 @@ def parse_card(card):
         r"/(\d{2})-(\d{2})-(\d{4})-\d{2}h\d{2}-",
         detail_url,
     )
-    headliner, openers = split_bill(
-        artist_element.get_text(" ", strip=True)
-    )
+    raw_title = clean_text(artist_element.get_text(" ", strip=True))
+    headliner, series_name = title_semantics(raw_title)
+    legacy_identity = legacy_primary_identity(raw_title)
 
     if not date_match or not headliner:
         return None
@@ -73,7 +83,14 @@ def parse_card(card):
         venue="File7",
         city="Magny-le-Hongre",
         department="77",
-        co_headliners=openers,
+        co_headliners=None,
+        event_title=raw_title if series_name else None,
+        raw_title=raw_title if series_name else None,
+        series_name=series_name,
+        # The old File7 parser treated the first '+' component as the primary
+        # identity. Keep that spelling only so event-state can retain the
+        # existing public ID/first_seen; it is not performer-role evidence.
+        identity_aliases=[legacy_identity] if legacy_identity != headliner else None,
         promoters=None,
         genre=None,
         facebook_event_url=None,

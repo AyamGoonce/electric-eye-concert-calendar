@@ -52,10 +52,37 @@ def split_bill(value):
     return clean_text(value), None
 
 
+def structured_bill(name, text_blocks):
+    """Require an independently emphasized section for every '+' bill part."""
+    title = clean_text(name)
+    parts = [clean_text(part) for part in re.split(r"\s+\+\s+", title)]
+    if len(parts) < 2:
+        return None
+    section_names = set()
+    for block in text_blocks or []:
+        if not isinstance(block, dict):
+            continue
+        value = clean_text(block.get("text"))
+        if not value or block.get("type") != "paragraph":
+            continue
+        if any(
+            span.get("type") == "strong"
+            and span.get("start") == 0
+            and span.get("end", 0) >= len(value)
+            for span in block.get("spans") or []
+        ):
+            section_names.add(value.casefold())
+    return parts if all(part.casefold() in section_names for part in parts) else None
+
+
 def parse_document(document):
     data = document.get("data") or {}
     event_date = clean_text(data.get("start_date"))
-    headliner, openers = split_bill(data.get("name"))
+    raw_title = clean_text(data.get("name"))
+    headliner, openers = split_bill(raw_title)
+    performers = structured_bill(raw_title, data.get("text"))
+    if performers:
+        headliner = performers[0]
     uid = clean_text(document.get("uid"))
     image_url = prismic_event_image(data.get("cover"))
 
@@ -71,6 +98,11 @@ def parse_document(document):
     return ConcertEvent(
         date=event_date,
         headliner=headliner,
+        co_headliners=performers[1:] if performers else None,
+        performers=performers,
+        raw_title=raw_title if performers else None,
+        event_title=raw_title if performers else None,
+        identity_aliases=[raw_title] if performers else None,
         venue="Point Éphémère",
         city="Paris",
         department="75",

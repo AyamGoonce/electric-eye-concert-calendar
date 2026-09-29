@@ -86,6 +86,15 @@ def _evidenced_headliner(event: ConcertEvent) -> str:
                 artist
                 and artist.casefold() in value.casefold()
             ):
+                # The referenced artist in a tribute production is context,
+                # not performer identity.  A title-level performer connector
+                # is required before description prose may name another act.
+                if re.search(r"\b(?:tribute|hommage)\b", value, re.I) and not re.search(
+                    r"\b(?:avec|with|feat\.?|ft\.?)\s+" + re.escape(artist) + r"(?=\W|$)",
+                    value,
+                    re.I,
+                ):
+                    return value
                 return artist
 
     return value
@@ -184,10 +193,31 @@ def normalize_event_semantics(event):
         )
         value = event.headliner
 
+    # A terminal release label explicitly assigns the release to the artist
+    # before it.  Keep bills with trailing '+ ARTIST' opaque: that would need
+    # independent role evidence from the source.
+    release_suffix = None if reviewed_wrapper_lock else re.fullmatch(
+        r"(?P<artist>.+?)\s+"
+        r"(?P<context>(?:(?:album\s+)?release|launch)\s+party"
+        r"(?:\s+(?:[IVX]+|\d+|[\"“«][^\"”»]+[\"”»]))?)\s*",
+        value,
+        re.IGNORECASE,
+    )
+    if release_suffix:
+        _retain_original(event, value)
+        event.headliner = release_suffix.group("artist").strip()
+        event.event_title = event.event_title or value
+        value = event.headliner
+
     # Source-marked release/country metadata: not a general punctuation split.
     # An explicitly labelled, delimited tour suffix is contextual wording,
     # not an artist. Arbitrary hyphenated subtitles remain untouched.
-    tour = re.fullmatch(r"(?P<artist>.+?)\s+[–—-]\s+(?P<context>.+\btour)\s*", value, re.I)
+    tour = re.fullmatch(
+        r"(?P<artist>.+?)(?:\s+[–—-]\s+|\s*:\s*)"
+        r"(?P<context>.+\btour)\s*",
+        value,
+        re.I,
+    )
     if tour:
         _retain_original(event, value)
         event.headliner = tour['artist'].strip()

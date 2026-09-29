@@ -112,6 +112,32 @@ def extract_explicit_support(description, headliner):
     return support or None
 
 
+def extract_tour_performer(item, translation):
+    """Use Accor's artist-linked Spotify cards for explicit tour titles."""
+    title = clean_text(translation.get("title"))
+    if (
+        not re.search(r"\btour\b", title, re.IGNORECASE)
+        or re.search(r"\b(?:tribute|hommage)\b", title, re.IGNORECASE)
+        or not clean_text(item.get("spotify"))
+    ):
+        return None
+
+    candidates = {
+        clean_text(card.get("year"))
+        for card in (translation.get("spotify_tiles") or [])
+        if clean_text(card.get("year"))
+        and not re.fullmatch(r"\d{4}", clean_text(card.get("year")))
+    }
+    if len(candidates) != 1:
+        return None
+
+    candidate = next(iter(candidates))
+    reference = clean_text(item.get("artist_reference"))
+    if candidate.casefold() not in f"{reference} {title}".casefold():
+        return None
+    return candidate
+
+
 
 def get_ticket_status(item):
     """Translate Accor Arena's explicit programme status code."""
@@ -133,6 +159,7 @@ def parse_item(item):
     ticket_url = clean_text(translation.get("url_event")) or None
     genre = clean_text(translation.get("sub_category")) or None
     openers = extract_explicit_support(translation.get("description"), headliner)
+    tour_performer = extract_tour_performer(item, translation)
     image = item.get("presentation_event") or item.get("list_image") or {}
     image_filename = clean_text(image.get("filename_disk"))
     image_url = (
@@ -161,6 +188,7 @@ def parse_item(item):
             city="Paris",
             department="75",
             openers=list(openers) if openers else None,
+            performers=[tour_performer] if tour_performer else None,
             promoters=None,
             genre=genre,
             facebook_event_url=None,

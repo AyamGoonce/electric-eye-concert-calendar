@@ -28,10 +28,10 @@ class GaiteLyriquePaginationTests(unittest.TestCase):
 
         self.assertEqual(1, session.get.call_count)
 
-    def test_terminal_page_seven_404_keeps_events_from_pages_one_through_six(self):
+    def test_loader_continues_beyond_old_page_limit_until_terminal_404(self):
         responses = []
 
-        for _ in range(6):
+        for _ in range(8):
             response = Mock()
             response.text = '<article class="event"></article>'
             response.status_code = 200
@@ -57,7 +57,7 @@ class GaiteLyriquePaginationTests(unittest.TestCase):
                 city="Paris",
                 department="75",
             )
-            for day in range(1, 7)
+            for day in range(1, 9)
         ]
 
         with (
@@ -72,12 +72,12 @@ class GaiteLyriquePaginationTests(unittest.TestCase):
         ):
             events = gaite_lyrique.load_events()
 
-        self.assertEqual(6, len(events))
+        self.assertEqual(8, len(events))
         self.assertEqual(
-            [f"Artist {day}" for day in range(1, 7)],
+            [f"Artist {day}" for day in range(1, 9)],
             [event.headliner for event in events],
         )
-        self.assertEqual(7, session.get.call_count)
+        self.assertEqual(9, session.get.call_count)
 
 
 if __name__ == "__main__":
