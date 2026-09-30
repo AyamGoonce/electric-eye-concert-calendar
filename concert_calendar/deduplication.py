@@ -28,11 +28,16 @@ TARGET_VENUE_IMAGE_SOURCES = {
     "Café de la Danse",
 }
 
+DISCOVERY_IMAGE_SOURCES = {
+    "Los Production",
+    "On the RoaD Again / ORDA",
+}
+
 
 def image_source_priority(source):
     """Keep this pass's venue-card artwork below existing official imagery."""
 
-    if not source or source == "DICE":
+    if not source or source == "DICE" or source in DISCOVERY_IMAGE_SOURCES:
         return 0
     return 1 if source in TARGET_VENUE_IMAGE_SOURCES else 2
 
@@ -160,6 +165,24 @@ REVIEWED_EVENT_TITLES = {
     (
         "2027-03-18", "l olympia bruno coquatrix", "chloe (live)",
     ): "CHLOÉ (Live)",
+    (
+        "2026-10-16", "la marbrerie", "qual and psyche",
+    ): "QUAL & PSYCHE",
+    (
+        "2026-10-16", "la marbrerie", "qual , psyche",
+    ): "QUAL & PSYCHE",
+    (
+        "2026-11-23", "le chinois", "litvrgy",
+    ): "Liturgy",
+    (
+        "2026-11-23", "le chinois", "liturgy",
+    ): "Liturgy",
+    (
+        "2027-02-20", "bal chavaux", "das ich + diary of dreams",
+    ): "Das Ich + Diary of Dreams",
+    (
+        "2027-02-20", "bal chavaux", "diary of dreams + das ich",
+    ): "Das Ich + Diary of Dreams",
     ("2026-09-05", "l olympia bruno coquatrix", "ronnie wood"): (
         "Ronnie Wood and His Band featuring Imelda May"
     ),
@@ -461,6 +484,8 @@ def _source_resolved_presentation_identity(event: ConcertEvent) -> bool:
 
 def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
     for event in events:
+        original_headliner = event.headliner
+        original_identity = normalize_artist_component(original_headliner)
         event.headliner = unescape(event.headliner)
         event.openers = [unescape(value) for value in (event.openers or [])] or None
         event.co_headliners = [
@@ -496,6 +521,12 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
                         event.headliner,
                     ])
                 event.headliner = reviewed_title
+                if (
+                    len(event.performers or []) == 1
+                    and normalize_artist_component(event.performers[0])
+                    == original_identity
+                ):
+                    event.performers = [reviewed_title]
 
         move_artist = normalize_artist_component(event.headliner)
         for date, artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
@@ -1103,6 +1134,57 @@ def _corroborated_single_plus_extension(
     return None
 
 
+def _los_classification_fuller_bill(
+    left: ConcertEvent,
+    right: ConcertEvent,
+) -> ConcertEvent | None:
+    """Return authoritative fuller billing beside a Los artist subject.
+
+    Los's canonical artist relationship establishes concert eligibility; it
+    does not outrank fuller performing identity supplied by another primary
+    source. The surrounding billing reconciler must already have established
+    that both records describe the same physical event.
+    """
+
+    for los, other in ((left, right), (right, left)):
+        if "Los Production" not in set(los.source_names or []):
+            continue
+        if not (set(other.source_names or []) - {"Los Production", "DICE"}):
+            continue
+        los_identity = _billing_evidence_key(los.headliner)
+        other_identity = _billing_evidence_key(other.headliner)
+        if (
+            los_identity
+            and other_identity != los_identity
+            and len(other_identity) > len(los_identity)
+            and _evidence_contains_artist(other_identity, los.headliner)
+        ):
+            return other
+    return None
+
+
+def _merge_los_classification_into_fuller_bill(
+    fuller: ConcertEvent,
+    los: ConcertEvent,
+) -> ConcertEvent:
+    retained_performers = {
+        normalize_artist_component(value)
+        for value in (fuller.performers or [])
+    }
+    classification_performers = {
+        normalize_artist_component(value)
+        for value in [los.headliner, *(los.performers or [])]
+    }
+    merge_events(fuller, los)
+    fuller.performers = [
+        value
+        for value in (fuller.performers or [])
+        if normalize_artist_component(value) not in classification_performers
+        or normalize_artist_component(value) in retained_performers
+    ] or None
+    return fuller
+
+
 def _reconcile_cross_source_billing_variants(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
@@ -1142,7 +1224,13 @@ def _reconcile_cross_source_billing_variants(
                 None,
             )
 
-            if corroborated_extension and resolved_official is not None:
+            los_fuller_bill = _los_classification_fuller_bill(left, right)
+
+            if los_fuller_bill is not None:
+                preferred = los_fuller_bill
+                incoming = right if preferred is left else left
+                canonical_display = None
+            elif corroborated_extension and resolved_official is not None:
                 preferred = resolved_official
                 incoming = right if preferred is left else left
                 canonical_display = None
@@ -1155,7 +1243,10 @@ def _reconcile_cross_source_billing_variants(
                     incoming,
                 )
 
-            merge_events(preferred, incoming)
+            if los_fuller_bill is not None:
+                _merge_los_classification_into_fuller_bill(preferred, incoming)
+            else:
+                merge_events(preferred, incoming)
 
             if corroborated_extension and resolved_official is None:
                 primary, additional = corroborated_extension
@@ -1348,6 +1439,32 @@ def _same_event_specific_ticket(
         ))
 
     return normalized(left.ticket_url) == normalized(right.ticket_url) is not None
+
+
+def _normalized_facebook_event_url(value: str | None) -> str | None:
+    """Return only an exact Facebook Event identifier, without tracking data."""
+
+    if not _valid_http_url(value):
+        return None
+    parsed = urlparse(value)
+    if parsed.netloc.casefold() not in {"facebook.com", "www.facebook.com"}:
+        return None
+    match = re.fullmatch(r"/events/([^/]+)/?", re.sub(r"/+", "/", parsed.path))
+    if not match:
+        return None
+    return match.group(1).casefold()
+
+
+def _shares_direct_event_identifier(
+    left: ConcertEvent,
+    right: ConcertEvent,
+) -> bool:
+    left_facebook = _normalized_facebook_event_url(left.facebook_event_url)
+    right_facebook = _normalized_facebook_event_url(right.facebook_event_url)
+    return bool(
+        (left_facebook and left_facebook == right_facebook)
+        or _same_event_specific_ticket(left, right)
+    )
 
 
 def _shared_promoter(left: ConcertEvent, right: ConcertEvent) -> bool:
@@ -1776,7 +1893,17 @@ def _has_official_venue_source(event: ConcertEvent) -> bool:
 
 def _has_explicit_performance_discriminator(event: ConcertEvent) -> bool:
     """Protect records explicitly identified as separate sets or performances."""
-    value = f"{event.headliner} {event.event_title or ''}"
+    value = " ".join(
+        item
+        for item in (
+            event.headliner,
+            event.event_title,
+            event.raw_title,
+            event.series_name,
+            event.performance_marker,
+        )
+        if item
+    )
 
     if SET_SUFFIX_RE.search(value) or PERFORMANCE_TIME_RE.search(value):
         return True
@@ -1787,6 +1914,214 @@ def _has_explicit_performance_discriminator(event: ConcertEvent) -> bool:
         r"matin[ée]e|evening|early show|late show)\b"
     )
     return bool(re.search(marker, value.casefold()))
+
+
+def _reconcile_transitive_time_bridges(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Merge one exact three-source bridge across conflicting source clocks.
+
+    This pass deliberately runs before exact deduplication so the untimed
+    bridge still retains both of its independent identifiers. It never treats
+    date/artist/venue similarity by itself as evidence that two times are one
+    performance.
+    """
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(
+            event.date,
+            normalize_artist_component(event.headliner),
+            normalize_venue_key(event.venue),
+        )].append(event)
+
+    removed = set()
+    merged_count = 0
+    for group in grouped.values():
+        proposals = {}
+        timed = [event for event in group if event.start_time]
+        for left, right in combinations(timed, 2):
+            if left.start_time == right.start_time:
+                continue
+            if (
+                _has_explicit_performance_discriminator(left)
+                or _has_explicit_performance_discriminator(right)
+            ):
+                continue
+
+            left_official = _has_official_venue_source(left)
+            right_official = _has_official_venue_source(right)
+            if left_official == right_official:
+                continue
+            official, external = (
+                (left, right) if left_official else (right, left)
+            )
+
+            bridges = [
+                bridge
+                for bridge in group
+                if bridge is not left
+                and bridge is not right
+                and set(bridge.source_names or []) - {"DICE"}
+                and not _has_explicit_performance_discriminator(bridge)
+                and _shares_direct_event_identifier(bridge, official)
+                and _shares_direct_event_identifier(bridge, external)
+            ]
+            if bridges:
+                proposals[(id(official), id(external))] = (
+                    official,
+                    external,
+                    bridges,
+                )
+
+        # More than one conflicting timed pair is not an unambiguous bridge.
+        if len(proposals) != 1:
+            continue
+        official, external, bridges = next(iter(proposals.values()))
+        for bridge in bridges:
+            merge_events(official, bridge)
+            removed.add(id(bridge))
+        merge_events(official, external)
+        removed.add(id(external))
+        merged_count += 1
+
+    if diagnostics is not None:
+        diagnostics["transitive_time_bridges_merged"] = merged_count
+    return [event for event in events if id(event) not in removed]
+
+
+def _time_minutes(value: str) -> int | None:
+    match = re.fullmatch(r"(\d{1,2}):(\d{2})", value or "")
+    if not match:
+        return None
+    hours, minutes = int(match.group(1)), int(match.group(2))
+    if hours > 23 or minutes > 59:
+        return None
+    return hours * 60 + minutes
+
+
+def _has_consensus_performance_discriminator(event: ConcertEvent) -> bool:
+    """Protect explicit room/session/stage identity in addition to show labels."""
+
+    if _has_explicit_performance_discriminator(event):
+        return True
+    if event.performance_marker:
+        return True
+    context = " ".join(
+        value
+        for value in (
+            event.event_title,
+            event.raw_title,
+            event.series_name,
+        )
+        if value
+    ).casefold()
+    return bool(re.search(
+        r"\b(?:session|s[ée]ance|stage|sc[èe]ne|room|salle)\s*(?:[:#-]?\s*)\w+",
+        context,
+    ))
+
+
+def _reconcile_authoritative_time_consensus(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Resolve a bounded doors/show-time disagreement by primary consensus.
+
+    This is intentionally weaker than the exact-identifier bridge only in its
+    identifier requirement. It compensates by requiring one unique official
+    venue listing, an additional independent non-DICE primary record, exactly
+    two nearby clock values, and no evidence of distinct performances.
+    """
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(
+            event.date,
+            normalize_artist_component(event.headliner),
+            normalize_venue_key(event.venue),
+        )].append(event)
+
+    removed = set()
+    merged_count = 0
+    for group in grouped.values():
+        official = [event for event in group if _has_official_venue_source(event)]
+        if len(official) != 1:
+            continue
+        official = official[0]
+        official_minutes = _time_minutes(official.start_time or "")
+        if official_minutes is None:
+            continue
+        if any(_has_consensus_performance_discriminator(event) for event in group):
+            continue
+
+        timed = [event for event in group if _time_minutes(event.start_time or "") is not None]
+        time_values = {
+            _time_minutes(event.start_time or "")
+            for event in timed
+        }
+        if len(time_values) != 2 or official_minutes not in time_values:
+            continue
+        alternate_minutes = next(
+            value for value in time_values if value != official_minutes
+        )
+        if abs(alternate_minutes - official_minutes) > 90:
+            continue
+
+        # Repeated listings from one source at different times are affirmative
+        # evidence of multiple performances, even if presentation labels are
+        # absent or incomplete.
+        by_source = defaultdict(list)
+        for event in group:
+            for source in event.source_names or []:
+                by_source[source].append(event)
+        if any(
+            len({
+                _time_minutes(event.start_time or "")
+                for event in source_events
+                if _time_minutes(event.start_time or "") is not None
+            }) > 1
+            for source_events in by_source.values()
+        ):
+            continue
+
+        official_sources = set(official.source_names or [])
+        external_timed = [
+            event
+            for event in timed
+            if event is not official
+            and _time_minutes(event.start_time or "") == alternate_minutes
+        ]
+        if not external_timed:
+            continue
+        external_sources = {
+            source
+            for event in external_timed
+            for source in (event.source_names or [])
+        }
+        primary_corroborators = [
+            event
+            for event in group
+            if event is not official
+            and event not in external_timed
+            and set(event.source_names or []) - (
+                official_sources | external_sources | {"DICE"}
+            )
+        ]
+        if not primary_corroborators:
+            continue
+
+        for event in group:
+            if event is official:
+                continue
+            merge_events(official, event)
+            removed.add(id(event))
+        merged_count += 1
+
+    if diagnostics is not None:
+        diagnostics["authoritative_time_consensus_merged"] = merged_count
+    return [event for event in events if id(event) not in removed]
 
 
 def _official_venue_time_disagreement(
@@ -2009,11 +2344,10 @@ def high_confidence_collision_pairs(
     return collisions
 
 
-def _reconcile_embedded_cross_source_titles(
+def _reconcile_exact_ticket_constituent_bills(
     events: list[ConcertEvent],
-    diagnostics: dict | None = None,
-) -> list[ConcertEvent]:
-    """Merge demonstrated title variants while retaining the richer row."""
+) -> tuple[list[ConcertEvent], int]:
+    """Collapse exact-ticket artist cards represented by one complete bill."""
 
     grouped = defaultdict(list)
     for event in events:
@@ -2022,6 +2356,84 @@ def _reconcile_embedded_cross_source_titles(
     removed = set()
     merged_count = 0
     for group in grouped.values():
+        # An agency roster may expose each performing act as its own card while
+        # another primary source exposes the complete bill. Collapse those
+        # constituent cards only when at least two distinct complete artist
+        # names occur in the richer title and every record shares the same
+        # event-specific ticket. This is comparison-only: the richer opaque
+        # bill is preserved and no support/co-headliner hierarchy is inferred.
+        for richer in group:
+            if id(richer) in removed:
+                continue
+            richer_sources = set(richer.source_names or [])
+            richer_evidence = max(
+                (
+                    _billing_evidence_key(value)
+                    for value in (
+                        richer.event_title,
+                        richer.raw_title,
+                        richer.headliner,
+                    )
+                    if value
+                ),
+                key=len,
+                default="",
+            )
+            richer_headliner = _billing_evidence_key(richer.headliner)
+            constituents = []
+            identities = set()
+            for candidate in group:
+                if candidate is richer or id(candidate) in removed:
+                    continue
+                candidate_sources = set(candidate.source_names or [])
+                identity = _billing_evidence_key(candidate.headliner)
+                if (
+                    not identity
+                    or identity == richer_headliner
+                    or not richer_sources - candidate_sources
+                    or _distinct_performance_evidence(richer, candidate)
+                    or not _same_event_specific_ticket(richer, candidate)
+                    or not re.search(
+                        rf"(?<![a-z0-9]){re.escape(identity)}(?![a-z0-9])",
+                        richer_evidence,
+                    )
+                ):
+                    continue
+                if identity and identity not in identities:
+                    constituents.append(candidate)
+                    identities.add(identity)
+
+            if len(constituents) < 2:
+                continue
+            retained_performers = deepcopy(richer.performers)
+            for constituent in constituents:
+                merge_events(richer, constituent)
+                removed.add(id(constituent))
+                merged_count += 1
+            richer.performers = retained_performers
+            _remove_billed_artists_from_support(richer)
+
+    return (
+        [event for event in events if id(event) not in removed],
+        merged_count,
+    )
+
+
+def _reconcile_embedded_cross_source_titles(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Merge demonstrated title variants while retaining the richer row."""
+
+    events, merged_count = _reconcile_exact_ticket_constituent_bills(events)
+
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    removed = set()
+    for group in grouped.values():
+
         for left, right in combinations(group, 2):
             if id(left) in removed or id(right) in removed:
                 continue
@@ -2043,7 +2455,12 @@ def _reconcile_embedded_cross_source_titles(
                 and _source_resolved_presentation_identity(event)
             ]
 
-            if len(resolved_official) == 1:
+            los_fuller_bill = _los_classification_fuller_bill(left, right)
+
+            if los_fuller_bill is not None:
+                preferred = los_fuller_bill
+                incoming = right if preferred is left else left
+            elif len(resolved_official) == 1:
                 preferred = resolved_official[0]
                 incoming = right if preferred is left else left
             else:
@@ -2055,7 +2472,10 @@ def _reconcile_embedded_cross_source_titles(
 
             if preferred is shorter and not preferred.event_title:
                 preferred.event_title = richer.headliner
-            merge_events(preferred, incoming)
+            if los_fuller_bill is not None:
+                _merge_los_classification_into_fuller_bill(preferred, incoming)
+            else:
+                merge_events(preferred, incoming)
             _remove_billed_artists_from_support(preferred)
             removed.add(id(incoming))
             merged_count += 1
@@ -2330,7 +2750,12 @@ def deduplicate_events(
     _apply_reviewed_event_rules(events)
     festival_represented_rows = _count_represented_festival_rows(events)
     display_candidates = _display_candidates(events)
-    reconciled = _deduplicate_exact(events)
+    reconciled = _reconcile_transitive_time_bridges(events, diagnostics)
+    reconciled = _reconcile_authoritative_time_consensus(
+        reconciled,
+        diagnostics,
+    )
+    reconciled = _deduplicate_exact(reconciled)
     reconciled = _reconcile_reviewed_event_bills(reconciled)
     _apply_verified_support_relationships(reconciled)
     reconciled = _reconcile_full_bills(reconciled)
@@ -2364,6 +2789,22 @@ def deduplicate_events(
     # stages have run. Collapse those residual duplicates before state IDs are
     # allocated, while preserving explicit performances/programmes.
     reconciled = _reconcile_final_identity_collisions(reconciled)
+
+    # The final identity merge can make an event-specific ticket and complete
+    # bill visible on the same retained record only after the earlier
+    # constituent pass. Re-run that exact conservative operation once; do not
+    # iterate the broader reconciliation pipeline or infer artists from a URL.
+    reconciled, late_constituents_merged = (
+        _reconcile_exact_ticket_constituent_bills(reconciled)
+    )
+    if diagnostics is not None:
+        diagnostics["late_ticket_constituents_merged"] = (
+            late_constituents_merged
+        )
+        diagnostics["physical_event_title_variants_merged"] = (
+            diagnostics.get("physical_event_title_variants_merged", 0)
+            + late_constituents_merged
+        )
 
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(

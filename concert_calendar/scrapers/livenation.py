@@ -25,6 +25,12 @@ HEADERS = {
     "X-Site": "3",
 }
 
+_DIAGNOSTICS = []
+
+
+def get_diagnostics():
+    return list(_DIAGNOSTICS)
+
 
 def get_primary_headliner(document):
     lineup = document.get("lineup") or []
@@ -181,7 +187,9 @@ def fetch_page(page_number):
     return response.json()
 
 
-def load_events():
+def fetch_inventory_snapshot():
+    """Fetch one complete page-number inventory from a single starting total."""
+
     first_page = fetch_page(1)
 
     total = first_page.get("total", 0)
@@ -193,6 +201,92 @@ def load_events():
         page_data = fetch_page(page_number)
         documents.extend(page_data.get("documents") or [])
 
+    return documents
+
+
+def _stable_document_id(document):
+    value = document.get("id")
+    if value is None or value == "":
+        return None
+    return str(value)
+
+
+def _coherent_snapshot(documents):
+    """Deduplicate one inventory by Live Nation's stable document identifier."""
+
+    documents_by_id = {}
+    unidentified = []
+    for document in documents:
+        document_id = _stable_document_id(document)
+        if document_id is None:
+            unidentified.append(document)
+            continue
+        documents_by_id.setdefault(document_id, document)
+
+    return {
+        "documents": [*documents_by_id.values(), *unidentified],
+        "ids": frozenset(documents_by_id),
+        "distinct_count": len(documents_by_id),
+        "unidentified_count": len(unidentified),
+    }
+
+
+def _select_inventory_snapshot(snapshots):
+    """Choose the fullest coherent snapshot, then consensus, then earliest."""
+
+    if len(snapshots) == 2 and snapshots[0]["ids"] == snapshots[1]["ids"]:
+        # The second matching snapshot is the freshest confirmation of the
+        # stable inventory without requiring a third network pass.
+        return 1
+
+    def selection_key(index):
+        snapshot = snapshots[index]
+        agreement = sum(
+            len(snapshot["ids"] & other["ids"])
+            for other_index, other in enumerate(snapshots)
+            if other_index != index
+        )
+        return snapshot["distinct_count"], agreement, -index
+
+    return max(range(len(snapshots)), key=selection_key)
+
+
+def load_events():
+    global _DIAGNOSTICS
+    _DIAGNOSTICS = []
+
+    snapshots = [
+        _coherent_snapshot(fetch_inventory_snapshot()),
+        _coherent_snapshot(fetch_inventory_snapshot()),
+    ]
+    disagreement = snapshots[0]["ids"] != snapshots[1]["ids"]
+    if disagreement:
+        snapshots.append(_coherent_snapshot(fetch_inventory_snapshot()))
+
+    selected_index = _select_inventory_snapshot(snapshots)
+    selected = snapshots[selected_index]
+    distinct_counts = [snapshot["distinct_count"] for snapshot in snapshots]
+    unidentified_counts = [
+        snapshot["unidentified_count"] for snapshot in snapshots
+    ]
+    _DIAGNOSTICS.append({
+        "kind": "inventory_stability",
+        "snapshot_disagreement": disagreement,
+        "snapshots_fetched": len(snapshots),
+        "snapshot_distinct_counts": distinct_counts,
+        "snapshot_unidentified_counts": unidentified_counts,
+        "selected_snapshot": selected_index + 1,
+        "selected_distinct_count": selected["distinct_count"],
+    })
+    print(
+        "Live Nation inventory stability | "
+        f"distinct_counts={distinct_counts} | "
+        f"disagreement={str(disagreement).lower()} | "
+        f"selected_snapshot={selected_index + 1}",
+        flush=True,
+    )
+
+    documents = selected["documents"]
     events = []
 
     for document in documents:

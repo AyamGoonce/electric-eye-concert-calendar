@@ -12,6 +12,7 @@ from concert_calendar.models import ConcertEvent
 SOURCE_NAME = "La Boule Noire"
 
 PROGRAMME_URL = "https://laboule-noire.fr/"
+IMPRESSION_URL = "https://laboule-noire.fr/impression/"
 REQUEST_TIMEOUT = 30
 MAX_PAGES = 12
 HEADERS = {
@@ -98,6 +99,99 @@ def event_key(event):
     return event.date, event.headliner.casefold(), event.venue.casefold()
 
 
+def parse_impression_card(card):
+    classes = {
+        clean_text(value).casefold()
+        for value in (card.get("class") or [])
+    }
+
+    if (
+        "category-annule" in classes
+        or "category-reporte" in classes
+        or "category-deplace" in classes
+    ):
+        return None
+
+    title_element = card.select_one(".elementor-post__title a[href]")
+    date_element = card.select_one(".elementor-post__excerpt")
+
+    headliner = (
+        clean_text(title_element.get_text(" ", strip=True))
+        if title_element
+        else ""
+    )
+    event_date = parse_event_date(
+        date_element.get_text(" ", strip=True)
+        if date_element
+        else ""
+    )
+
+    if not headliner or not event_date or event_date < date.today():
+        return None
+
+    return ConcertEvent(
+        date=event_date.isoformat(),
+        headliner=headliner,
+        venue="La Boule Noire",
+        city="Paris",
+        department="75",
+        openers=None,
+        promoters=None,
+        genre=None,
+        facebook_event_url=None,
+        ticket_url=clean_text(title_element.get("href")) or PROGRAMME_URL,
+        image_url=None,
+        image_source=None,
+    )
+
+
+def load_impression_events(session):
+    print("Downloading La Boule Noire impression index...")
+
+    response = session.get(
+        IMPRESSION_URL,
+        headers=HEADERS,
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+
+    soup = BeautifulSoup(response.text, "html.parser")
+    events = []
+    excluded_urls = set()
+
+    for card in soup.select(
+        "#programmation-impression article.elementor-post"
+    ):
+        classes = {
+            clean_text(value).casefold()
+            for value in (card.get("class") or [])
+        }
+        title_element = card.select_one(
+            ".elementor-post__title a[href]"
+        )
+        detail_url = (
+            clean_text(title_element.get("href"))
+            if title_element
+            else ""
+        )
+
+        if (
+            "category-annule" in classes
+            or "category-reporte" in classes
+            or "category-deplace" in classes
+        ):
+            if detail_url:
+                excluded_urls.add(detail_url)
+            continue
+
+        event = parse_impression_card(card)
+
+        if event is not None:
+            events.append(event)
+
+    return events, excluded_urls
+
+
 def load_events():
     session = requests.Session()
     events_by_key = {}
@@ -132,6 +226,33 @@ def load_events():
 
         page_url = next_page
 
+    primary_count = len(events_by_key)
+    impression_events, excluded_urls = load_impression_events(session)
+    suppressed_count = 0
+
+    for key, event in list(events_by_key.items()):
+        if event.ticket_url in excluded_urls:
+            del events_by_key[key]
+            suppressed_count += 1
+
+    recovered_count = 0
+
+    for event in impression_events:
+        key = event_key(event)
+
+        if key not in events_by_key:
+            events_by_key[key] = event
+            recovered_count += 1
+
     events = list(events_by_key.values())
+
+    print(
+        "La Boule Noire completeness | "
+        f"primary={primary_count} | "
+        f"impression={len(impression_events)} | "
+        f"recovered={recovered_count} | "
+        f"suppressed={suppressed_count}"
+    )
     print(f"Created {len(events)} La Boule Noire ConcertEvent records")
+
     return discard_repeated_generic_images(events)

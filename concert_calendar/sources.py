@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 
 from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.deduplication import normalize_headliner
+from concert_calendar.corroboration import corroborate_events
 from concert_calendar.geography import (
     is_ile_de_france_event,
     normalize_event_geography,
@@ -395,6 +396,11 @@ def load_events_with_report(
             source_counts.update(counts)
             source_failures.update(failures)
             source_diagnostics.extend(diagnostics)
+    for diagnostic in corroborate_events(raw_events):
+        source_diagnostics.append({
+            "source_name": diagnostic.pop("source", "corroboration"),
+            **diagnostic,
+        })
     print(
         f"PHASE COMPLETE | source_loading | elapsed={max(0.0, time.perf_counter() - source_phase_started):.2f}s",
         flush=True,

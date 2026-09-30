@@ -93,6 +93,8 @@ VENUE_ALIASES = {
     "pavillon baltard": "Pavillon Baltard",
     "point ephemere": "Point Éphémère",
     "le point ephemere": "Point Éphémère",
+    "gq oberkampf": "QG Oberkampf",
+    "qg oberkampf": "QG Oberkampf",
     "philarmonie de paris": "Philharmonie de Paris",
     "philharmonie": "Philharmonie de Paris",
     "philharmonie de paris": "Philharmonie de Paris",

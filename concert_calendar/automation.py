@@ -697,8 +697,16 @@ def validate_assets(output_dir: Path, result: dict) -> dict:
 
 def build(args) -> int:
     now = datetime.now(timezone.utc).replace(microsecond=0)
-    previous_source_state = read_published_source_state(
+    published_pointer = (
         Path(args.published_pointer) if args.published_pointer else None
+    )
+    published_events = (
+        read_published_calendar_events(published_pointer)
+        if published_pointer is not None and published_pointer.exists()
+        else None
+    )
+    previous_source_state = read_published_source_state(
+        published_pointer
     )
     print("PHASE START | source_and_pipeline_loading", flush=True)
     phase_started = time.perf_counter()
@@ -753,7 +761,12 @@ def build(args) -> int:
         previous_state = load_state(
             Path(args.published_state) if args.published_state else None
         )
-        candidate_state = reconcile_state(events, previous_state, now=now)
+        candidate_state = reconcile_state(
+            events,
+            previous_state,
+            now=now,
+            previous_public_events=published_events,
+        )
         validate_retained_identities(events, candidate_state, pipeline_report.retained_snapshots)
         change_report = build_change_report(events, previous_state, candidate_state, now=now)
         state_digest = write_state(output_dir / STATE_FILENAME, candidate_state)
@@ -826,10 +839,7 @@ def build(args) -> int:
         flush=True,
     )
 
-    if args.published_pointer and Path(args.published_pointer).exists():
-        published_events = read_published_calendar_events(
-            Path(args.published_pointer)
-        )
+    if published_events is not None:
         validate_venue_inventory_regression(
             events_data,
             published_events,

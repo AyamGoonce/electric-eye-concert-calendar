@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 from datetime import date, datetime, timedelta, timezone
+from difflib import SequenceMatcher
 import hashlib
 import json
 import re
+import unicodedata
 from collections import defaultdict
 from pathlib import Path
+from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 from concert_calendar.deduplication import (
     DESCRIPTIVE_ARTIST_ALIASES,
@@ -198,7 +201,234 @@ def _programme_discriminator(event: ConcertEvent) -> str:
     return "programme:" + normalized
 
 
-def assign_performance_identities(events, previous=None, *, preserve_public_ids=False):
+def _public_identity_phrase(value: str | None) -> str:
+    normalized = unicodedata.normalize("NFKD", value or "")
+    normalized = "".join(
+        character
+        for character in normalized
+        if not unicodedata.combining(character)
+    ).casefold()
+    return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9]+", " ", normalized)).strip()
+
+
+def _public_ticket_identity(value: str | None) -> str | None:
+    if not isinstance(value, str):
+        return None
+    parsed = urlparse(value)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return None
+    path = re.sub(r"/+", "/", parsed.path).rstrip("/")
+
+    if parsed.netloc.casefold() == "billetterie.sunset-sunside.com":
+        match = re.fullmatch(r"/event/(\d+)(?:-.+)?", path, re.IGNORECASE)
+        if match:
+            return f"https://billetterie.sunset-sunside.com/event/{match.group(1)}"
+
+    query = [
+        (key, item)
+        for key, item in parse_qsl(parsed.query, keep_blank_values=True)
+        if not key.casefold().startswith("utm_")
+        and key.casefold() not in {"lang", "language", "locale", "hl"}
+    ]
+    leaf = path.rsplit("/", 1)[-1].casefold() if path else ""
+    if leaf in {
+        "", "agenda", "events", "event", "billetterie", "tickets",
+        "ticketing", "programme", "programmation",
+    } and not query:
+        return None
+    return urlunparse((
+        parsed.scheme.casefold(),
+        parsed.netloc.casefold(),
+        path,
+        "",
+        urlencode(sorted(query)),
+        "",
+    ))
+
+
+def _public_venue_identity(value: str | None) -> str:
+    """Return the canonical known-venue identity used for route continuity."""
+
+    key = normalize_venue_key(value or "")
+    if not key:
+        return ""
+
+    # Local import avoids changing module dependency order.
+    from concert_calendar.venues import VENUE_ALIASES
+
+    canonical = VENUE_ALIASES.get(key)
+    return normalize_venue_key(canonical or value or "")
+
+
+def _public_bill_phrase(
+    headliner: str | None,
+    co_headliners: list[str] | None = None,
+) -> str:
+    """Compare an existing flat bill with equivalent structured billing."""
+
+    values = [
+        value
+        for value in [headliner, *(co_headliners or [])]
+        if value
+    ]
+    return _public_identity_phrase(" + ".join(values))
+
+
+def _normalized_public_time(value: str | None) -> str:
+    match = re.fullmatch(r"(\d{1,2})[:h](\d{2})(?::00)?", value or "")
+    return f"{int(match[1]):02d}:{match[2]}" if match else (value or "")
+
+
+def _published_continuity_score(event: ConcertEvent, published: dict) -> int | None:
+    if published.get("d", "")[:10] != event.date[:10]:
+        return None
+
+    old_time = _normalized_public_time(published.get("st"))
+    new_time = _normalized_public_time(event.start_time)
+    if old_time and new_time and old_time != new_time:
+        return None
+
+    old_ticket = _public_ticket_identity(published.get("t"))
+    new_ticket = _public_ticket_identity(event.ticket_url)
+    same_ticket = bool(old_ticket and old_ticket == new_ticket)
+
+    old_venue = _public_venue_identity(published.get("v", ""))
+    new_venue = _public_venue_identity(event.venue)
+    same_venue = bool(old_venue and old_venue == new_venue)
+
+    old_bill_phrase = _public_bill_phrase(
+        published.get("h", ""),
+        published.get("ch") or [],
+    )
+    new_bill_phrase = _public_bill_phrase(
+        event.headliner,
+        event.co_headliners or [],
+    )
+    exact_bill = bool(
+        old_bill_phrase
+        and new_bill_phrase
+        and old_bill_phrase == new_bill_phrase
+    )
+
+    old_artist = normalize_artist_component(published.get("h", ""))
+    new_artist = normalize_artist_component(event.headliner)
+    old_phrase = _public_identity_phrase(published.get("h", ""))
+    new_phrase = _public_identity_phrase(event.headliner)
+    exact_artist = bool(
+        old_artist
+        and (old_artist == new_artist or old_phrase == new_phrase)
+    )
+    richer_bill = bool(
+        old_phrase
+        and new_phrase != old_phrase
+        and re.search(
+            rf"(?<![a-z0-9]){re.escape(old_phrase)}(?![a-z0-9])",
+            new_phrase,
+        )
+        and re.search(r"\s(?:&|\+|/|,|–|—|-)\s", event.headliner)
+    )
+    spelling_variant = bool(
+        old_phrase
+        and new_phrase
+        and SequenceMatcher(None, old_phrase, new_phrase).ratio() >= 0.96
+    )
+    presentation_variant = bool(
+        old_phrase
+        and new_phrase
+        and (
+            re.fullmatch(
+                rf"{re.escape(new_phrase)} (?:live|tour|world tour|paris)",
+                old_phrase,
+            )
+            or re.fullmatch(
+                rf"{re.escape(old_phrase)} (?:live|tour|world tour|paris)",
+                new_phrase,
+            )
+        )
+    )
+
+    if not same_ticket and not (
+        same_venue
+        and (
+            exact_bill
+            or exact_artist
+            or richer_bill
+            or spelling_variant
+            or presentation_variant
+        )
+    ):
+        return None
+
+    score = 400 if same_ticket else (
+        340 if exact_bill else
+        320 if exact_artist else
+        300 if spelling_variant else
+        280
+    )
+    if same_venue:
+        score += 40
+    if exact_artist:
+        score += 20
+    if old_time and new_time and old_time == new_time:
+        score += 10
+    return score
+
+
+def _published_continuity_keys(
+    events: list[ConcertEvent],
+    previous: dict,
+    previous_public_events: list[dict] | None,
+) -> dict[int, str]:
+    if not previous_public_events:
+        return {}
+
+    state_key_by_public_id = {}
+    for key, record in sorted(
+        previous.items(),
+        key=lambda item: parse_timestamp(item[1]["last_seen"]),
+        reverse=True,
+    ):
+        state_key_by_public_id.setdefault(record.get("public_id", key[:16]), key)
+
+    edges = []
+    for event in events:
+        for published in previous_public_events:
+            public_id = published.get("i")
+            if (
+                not isinstance(public_id, str)
+                or not re.fullmatch(r"[0-9a-f]{16}", public_id)
+                or public_id not in state_key_by_public_id
+            ):
+                continue
+            score = _published_continuity_score(event, published)
+            if score is not None:
+                edges.append((
+                    -score,
+                    event.date,
+                    _public_identity_phrase(event.headliner),
+                    normalize_venue_key(event.venue),
+                    performance_discriminator(event),
+                    public_id,
+                    id(event),
+                ))
+
+    result = {}
+    used_public_ids = set()
+    for *_, public_id, event_id in sorted(edges):
+        if event_id in result or public_id in used_public_ids:
+            continue
+        result[event_id] = state_key_by_public_id[public_id]
+        used_public_ids.add(public_id)
+    return result
+
+
+def assign_performance_identities(
+    events,
+    previous=None,
+    *,
+    preserve_public_ids=False,
+    previous_public_events=None,
+):
     """Keep ordinary legacy keys; reserve one persisted key per performance.
 
     Only exact canonical/retained-alias identities qualify as predecessors.
@@ -206,6 +436,11 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
     route, and newly exposed sets inherit their age but not the same route.
     """
     previous = previous or {}
+    continuity_keys = _published_continuity_keys(
+        events,
+        previous,
+        previous_public_events,
+    )
     # Standalone exports may carry routes without a state document. Reserve
     # those routes before generating any IDs, including for later-sorted rows.
     supplied_ids = {
@@ -334,6 +569,9 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
         bases = list(dict.fromkeys([base, *_reviewed_predecessor_identities(event)]))
         candidates = {key: record for candidate in bases for key, record in by_base.get(candidate, [])
                       if not record.get('performance') or record['performance'] == discriminator}
+        continuity_key = continuity_keys.get(id(event))
+        if continuity_key in previous:
+            candidates.setdefault(continuity_key, previous[continuity_key])
 
         # A stable historical state key may itself become the canonical base
         # again after an intervening representation used another base_identity.
@@ -347,6 +585,8 @@ def assign_performance_identities(events, previous=None, *, preserve_public_ids=
                 candidates.setdefault(base, historical)
 
         ranked = sorted(candidates, key=lambda key: (
+            bool(continuity_key) and key != continuity_key,
+            -parse_timestamp(candidates[key]['last_seen']).timestamp(),
             candidates[key].get('performance') != discriminator,
             candidates[key].get('base_identity', key) != base,
             candidates[key]['first_seen'], key))
@@ -379,6 +619,7 @@ def reconcile_state(
     previous: dict | None,
     *,
     now: datetime,
+    previous_public_events: list[dict] | None = None,
 ) -> dict:
     """Attach first_seen and return a validated, bounded candidate state."""
 
@@ -396,7 +637,11 @@ def reconcile_state(
         for identity, record in previous_events.items()
     }
 
-    assign_performance_identities(events, previous_events)
+    assign_performance_identities(
+        events,
+        previous_events,
+        previous_public_events=previous_public_events,
+    )
     for event in events:
         identity = event._state_identity
         predecessors = event._previous_identities

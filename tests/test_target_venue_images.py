@@ -60,6 +60,46 @@ class TargetVenueImageTests(unittest.TestCase):
         self.assertEqual("https://promoter.example/show.jpg", merged.image_url)
         self.assertEqual("Live Nation", merged.image_source)
 
+    def test_discovery_images_do_not_displace_official_venue_image(self):
+        for discovery_source in ("Los Production", "On the RoaD Again / ORDA"):
+            with self.subTest(discovery_source=discovery_source):
+                official = ConcertEvent(
+                    date="2027-09-11", headliner="Artist",
+                    venue="Café de la Danse", city="Paris", department="75",
+                    image_url="https://venue.example/show.jpg",
+                    image_source="Café de la Danse",
+                    source_names=["Café de la Danse"],
+                )
+                discovery = ConcertEvent(
+                    date="2027-09-11", headliner="Artist",
+                    venue="Café de la Danse", city="Paris", department="75",
+                    image_url="https://discovery.example/show.jpg",
+                    image_source=discovery_source,
+                    source_names=[discovery_source],
+                )
+
+                merged = deduplicate_events([official, discovery])[0]
+
+                self.assertEqual("https://venue.example/show.jpg", merged.image_url)
+                self.assertEqual("Café de la Danse", merged.image_source)
+
+    def test_discovery_image_may_fill_a_blank(self):
+        existing = ConcertEvent(
+            date="2027-09-11", headliner="Artist",
+            venue="Café de la Danse", city="Paris", department="75",
+        )
+        discovery = ConcertEvent(
+            date="2027-09-11", headliner="Artist",
+            venue="Café de la Danse", city="Paris", department="75",
+            image_url="https://discovery.example/show.jpg",
+            image_source="Los Production",
+        )
+
+        merged = merge_events(existing, discovery)
+
+        self.assertEqual("https://discovery.example/show.jpg", merged.image_url)
+        self.assertEqual("Los Production", merged.image_source)
+
     def test_image_element_prefers_largest_safe_srcset_candidate(self):
         image = soup('<img src="/small.jpg" srcset="/small.jpg 300w, /large.jpg 900w" width="900" height="600">').img
         self.assertEqual(

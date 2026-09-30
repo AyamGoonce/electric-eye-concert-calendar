@@ -160,6 +160,16 @@ GitHub's **Actions** tab shows scheduled and manual runs and provides normal
 GitHub failure notifications according to the account's notification settings.
 No external monitoring credentials are required.
 
+Facebook Events and Bandsintown are corroboration-only inputs, never discovery
+sources. Direct Facebook Event URLs supplied by a primary source are preserved
+without any credential. Optional public-metadata fetching is disabled unless
+`FACEBOOK_EVENT_CORROBORATION=1`; login walls, blocking, and malformed public
+metadata are non-fatal. Bandsintown HTML is never scraped. Its optional API
+path is disabled unless an authorized `BANDSINTOWN_APP_ID` is present. Both
+paths have per-run request ceilings and may only fill a blank time or ticket
+URL after exact artist, date, venue, and city agreement; they never replace
+canonical primary-source identity or location evidence.
+
 For a failed run:
 
 1. Open the failed **Update Electric Eye Concert Calendar** run.
