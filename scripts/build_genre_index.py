@@ -18,7 +18,6 @@ from concert_calendar.genres import (
 )
 
 
-ROOT = Path(__file__).resolve().parents[1]
 MAPPINGS_PATH = ROOT / "concert_calendar" / "genre_mappings.json"
 OUTPUT_PATH = ROOT / "output" / "genre-index.json"
 
