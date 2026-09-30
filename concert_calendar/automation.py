@@ -102,6 +102,7 @@ DESCRIPTIVE_VENUE_RE = re.compile(
 PUBLIC_STABLE_ASSETS = (
     "calendar-renderer.js", "calendar.css",
     "venues-renderer.js", "venues.css", "venue-sidebar.js", "venue-sidebar.css", "venue-current.js",
+    "genres-renderer.js", "genres.css", "genre-current.js",
     "artist-page.js",
     "artist-page.css", "artist-autolinker.js", "artist.html",
     "coverage-page.js", "coverage.html",
@@ -822,7 +823,7 @@ def build(args) -> int:
     from concert_calendar.genre_export import write_genre_assets
     from concert_calendar.genre_index import build_genre_index
 
-    genre_index = build_genre_index()
+    genre_index = build_genre_index(content_index=content_index)
 
     genre_result = write_genre_assets(
         output_dir,
@@ -835,6 +836,18 @@ def build(args) -> int:
         f"elapsed={max(0.0, time.perf_counter() - genre_phase_started):.2f}s",
         flush=True,
     )
+
+    genre_static_dir = Path(__file__).with_name("static")
+    for genre_asset in (
+        "genres-renderer.js",
+        "genres.css",
+    ):
+        source = genre_static_dir / genre_asset
+        if not source.is_file():
+            raise ProductionValidationError(
+                f"Genre frontend asset is missing: {genre_asset}"
+            )
+        shutil.copyfile(source, output_dir / genre_asset)
 
     venue_static_dir = Path(__file__).with_name("static")
     for venue_asset in (
@@ -1026,6 +1039,28 @@ def validated_publication_files(source: Path) -> tuple[dict, list[Path]]:
 
     files.append(venue_data)
 
+    genre_pointer = source / "genre-current.js"
+    if not genre_pointer.is_file():
+        raise ProductionValidationError("Generated genre pointer is missing")
+
+    genre_match = POINTER_PATTERN.search(
+        genre_pointer.read_text(encoding="utf-8")
+    )
+    if not genre_match:
+        raise ProductionValidationError("Generated genre pointer is malformed")
+
+    genre_manifest = json.loads(genre_match.group(1))
+    genre_data = source / genre_manifest.get("data", "")
+
+    if (
+        not genre_data.is_file()
+        or hashlib.sha256(genre_data.read_bytes()).hexdigest()
+        != genre_manifest.get("sha256")
+    ):
+        raise ProductionValidationError("Generated genre data hash is invalid")
+
+    files.append(genre_data)
+
     for root_name in PUBLIC_ROOT_ASSETS:
         root_asset = source / root_name
         if not root_asset.is_file():
@@ -1094,7 +1129,11 @@ def publish(args) -> int:
         if not target.exists() or source.read_bytes() != target.read_bytes():
             shutil.copyfile(source, target)
     for source in publication_files:
-        if source.name.startswith(("electric-eye-content.", "venue-data.")):
+        if source.name.startswith((
+            "electric-eye-content.",
+            "venue-data.",
+            "genre-data.",
+        )):
             shutil.copyfile(source, proof / source.name)
     shutil.copyfile(generated / "calendar-current.js", proof / "calendar-current.js")
 
@@ -1135,6 +1174,14 @@ def publish(args) -> int:
         reverse=True,
     )
     for candidate in venue_candidates[3:]:
+        candidate.unlink()
+
+    genre_candidates = sorted(
+        proof.glob("genre-data.*.js"),
+        key=lambda path: path.stat().st_mtime,
+        reverse=True,
+    )
+    for candidate in genre_candidates[3:]:
         candidate.unlink()
 
     for stale_name in STALE_PUBLIC_TEST_ASSETS:
@@ -1212,6 +1259,8 @@ def verify_hosted(args) -> int:
                 "venues.css",
                 "venue-sidebar.js",
                 "venue-sidebar.css",
+                "genres-renderer.js",
+                "genres.css",
             ):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"
@@ -1231,6 +1280,47 @@ def verify_hosted(args) -> int:
                 expected_types = ("html",) if stable.endswith(".html") else ("javascript", "css")
                 if not body or not any(value in content_type for value in expected_types):
                     raise ProductionValidationError(f"Hosted {stable} is invalid")
+            genre_pointer_body, genre_pointer_type = fetch(
+                args.base_url.rstrip("/") + "/genre-current.js"
+                + f"?verify={args.sha256[:16]}"
+            )
+
+            if "javascript" not in genre_pointer_type:
+                raise ProductionValidationError(
+                    "Hosted genre pointer content type is invalid"
+                )
+
+            genre_match = POINTER_PATTERN.search(
+                genre_pointer_body.decode("utf-8")
+            )
+
+            if not genre_match:
+                raise ProductionValidationError(
+                    "Hosted genre pointer is malformed"
+                )
+
+            genre_manifest = json.loads(genre_match.group(1))
+            genre_data_name = genre_manifest.get("data")
+
+            if not genre_data_name:
+                raise ProductionValidationError(
+                    "Hosted genre pointer has no data asset"
+                )
+
+            genre_data_body, genre_data_type = fetch(
+                args.base_url.rstrip("/") + "/" + genre_data_name
+                + f"?verify={args.sha256[:16]}"
+            )
+
+            if (
+                hashlib.sha256(genre_data_body).hexdigest()
+                != genre_manifest.get("sha256")
+                or "javascript" not in genre_data_type
+            ):
+                raise ProductionValidationError(
+                    "Hosted genre data is invalid"
+                )
+
             content_pointer_body, _ = fetch(
                 args.base_url.rstrip("/") + "/electric-eye-content-current.js"
                 + f"?verify={args.sha256[:16]}"

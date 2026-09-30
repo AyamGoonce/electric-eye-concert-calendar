@@ -456,6 +456,9 @@ def _title_artist_candidate(title, article_type):
 def _artist_label_allowed(label, title, article_type=None):
     """Require independent title evidence before a structural label is an artist."""
 
+    if label.casefold() == "friday's playlist":
+        return False
+
     if label.casefold() not in GENERIC_LABELS:
         return True
     candidate = _title_artist_candidate(
@@ -702,6 +705,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "d": published,
             "y": article_type,
             "a": [],
+            "l": labels,
         }
         if post_id:
             article["pi"] = post_id

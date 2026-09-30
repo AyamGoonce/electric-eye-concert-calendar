@@ -28,6 +28,10 @@ from concert_calendar.automation import (
 )
 from concert_calendar.production_export import build_current_pointer, build_data_asset
 from concert_calendar.venue_export import build_venue_current_pointer
+from concert_calendar.genre_export import (
+    build_genre_current_pointer,
+    build_genre_data_asset,
+)
 from concert_calendar.source_retention import SOURCE_STATE_FILENAME, write_source_state
 from concert_calendar.event_state import (
     EventStateError,
@@ -67,6 +71,7 @@ def write_generated_publication(destination, marker="candidate"):
         if stable not in {
             "electric-eye-content-current.js",
             "venue-current.js",
+            "genre-current.js",
         }:
             (destination / stable).write_text(stable, encoding="utf-8")
     content_body = f"content-{marker}".encode()
@@ -92,6 +97,31 @@ def write_generated_publication(destination, marker="candidate"):
         build_venue_current_pointer(
             venue_name,
             venue_digest,
+            1,
+        ),
+        encoding="utf-8",
+    )
+
+    genre_name, genre_digest, genre_asset = build_genre_data_asset(
+        {
+            "genres": [
+                {
+                    "name": "Rock",
+                    "slug": "rock",
+                    "parent": None,
+                    "artists": [],
+                }
+            ]
+        }
+    )
+    (destination / genre_name).write_text(
+        genre_asset,
+        encoding="utf-8",
+    )
+    (destination / "genre-current.js").write_text(
+        build_genre_current_pointer(
+            genre_name,
+            genre_digest,
             1,
         ),
         encoding="utf-8",
