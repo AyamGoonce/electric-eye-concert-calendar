@@ -9,24 +9,25 @@ from concert_calendar.scrapers.supersonic import parse_event_row
 
 class BillingExtractionRegressionTests(unittest.TestCase):
 
-    def test_supersonic_bullet_bill_becomes_structured_performers(self):
+    def test_supersonic_plus_bill_becomes_structured_performers(self):
         soup = BeautifulSoup("""
-        <div class="tribe-events-calendar-list__event-row">
-          <a class="tribe-events-calendar-list__event-title-link"
-             href="/event/king-phantom/">
-            King Phantom • Les Caballeros • KIJE
+        <li class="agenda-item" data-venue="supersonic-2">
+          <a class="agenda-item-link"
+             href="/evenement/king-phantom/">
+            <div class="info-event-slider-agenda">
+              <div class="evenement-date">
+                <time datetime="2026-10-01"></time>
+                <span class="agenda-item-venue">Supersonic</span>
+              </div>
+              <h3>King Phantom + Les Caballeros + KIJE</h3>
+            </div>
           </a>
-          <time class="tribe-events-calendar-list__event-datetime"
-                datetime="2026-10-01"></time>
-          <span class="tribe-events-calendar-list__event-venue-title">
-            Supersonic
-          </span>
-        </div>
+        </li>
         """, "html.parser")
 
         event = parse_event_row(
-            soup.select_one(".tribe-events-calendar-list__event-row"),
-            "https://supersonic-club.fr/events/",
+            soup.select_one("li.agenda-item"),
+            "https://supersonic-club.fr/agenda/",
         )
 
         self.assertEqual(
@@ -68,22 +69,23 @@ class BillingExtractionSafetyTests(unittest.TestCase):
         title = "The Devil And The Almighty Blues"
 
         soup = BeautifulSoup(f"""
-        <div class="tribe-events-calendar-list__event-row">
-          <a class="tribe-events-calendar-list__event-title-link"
-             href="/event/devil/">
-            {title}
+        <li class="agenda-item" data-venue="supersonic-2">
+          <a class="agenda-item-link"
+             href="/evenement/devil/">
+            <div class="info-event-slider-agenda">
+              <div class="evenement-date">
+                <time datetime="2026-10-01"></time>
+                <span class="agenda-item-venue">Supersonic</span>
+              </div>
+              <h3>{title}</h3>
+            </div>
           </a>
-          <time class="tribe-events-calendar-list__event-datetime"
-                datetime="2026-10-01"></time>
-          <span class="tribe-events-calendar-list__event-venue-title">
-            Supersonic
-          </span>
-        </div>
+        </li>
         """, "html.parser")
 
         event = parse_event_row(
-            soup.select_one(".tribe-events-calendar-list__event-row"),
-            "https://supersonic-club.fr/events/",
+            soup.select_one("li.agenda-item"),
+            "https://supersonic-club.fr/agenda/",
         )
 
         self.assertEqual(title, event.headliner)

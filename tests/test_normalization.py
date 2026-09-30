@@ -1527,23 +1527,31 @@ class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
     def test_supersonic_row_keeps_direct_official_event_page(self):
         row = BeautifulSoup(
             """
-            <article class="tribe-events-calendar-list__event-row">
-              <a class="tribe-events-calendar-list__event-title-link"
-                 href="/event/example-band/">Example Band • Support</a>
-              <time class="tribe-events-calendar-list__event-datetime"
-                    datetime="2026-10-03"></time>
-              <span class="tribe-events-calendar-list__event-venue-title">Supersonic</span>
-            </article>
+            <li class="agenda-item" data-venue="supersonic-2">
+              <a class="agenda-item-link"
+                 href="/evenement/example-band/">
+                <div class="info-event-slider-agenda">
+                  <div class="evenement-date">
+                    <time datetime="2026-10-03"></time>
+                    <span class="agenda-item-venue">Supersonic</span>
+                  </div>
+                  <h3>Example Band + Support</h3>
+                </div>
+              </a>
+            </li>
             """,
             "html.parser",
-        ).article
+        ).li
 
         event = parse_supersonic_row(
-            row, "https://supersonic-club.fr/events/"
+            row, "https://supersonic-club.fr/agenda/"
         )
 
-        self.assertEqual("https://supersonic-club.fr/event/example-band/", event.ticket_url)
-        self.assertEqual("Example Band • Support", event.headliner)
+        self.assertEqual(
+            "https://supersonic-club.fr/evenement/example-band/",
+            event.ticket_url,
+        )
+        self.assertEqual("Example Band + Support", event.headliner)
         self.assertIsNone(event.openers)
 
     def test_radical_cancelled_event_has_status_without_fake_ticket(self):

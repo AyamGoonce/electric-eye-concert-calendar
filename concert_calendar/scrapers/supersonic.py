@@ -10,7 +10,7 @@ from concert_calendar.models import ConcertEvent
 
 SOURCE_NAME = "Supersonic"
 
-SUPERSONIC_EVENTS_URL = "https://supersonic-club.fr/events/"
+SUPERSONIC_EVENTS_URL = "https://supersonic-club.fr/agenda/"
 REQUEST_TIMEOUT = 30
 
 
@@ -62,30 +62,27 @@ def is_non_concert_event(title):
 
 
 def parse_event_row(row, page_url):
-    title_link = row.select_one(
-        ".tribe-events-calendar-list__event-title-link"
-    )
-    date_element = row.select_one(
-        ".tribe-events-calendar-list__event-datetime"
-    )
-    venue_element = row.select_one(
-        ".tribe-events-calendar-list__event-venue-title"
-    )
-
-    if not title_link:
+    if (row.get("data-venue") or "").strip() != "supersonic-2":
         return None
 
-    full_title = title_link.get_text(" ", strip=True)
+    title_element = row.select_one("h3")
+    title_link = row.select_one("a.agenda-item-link")
+    date_element = row.select_one("time[datetime]")
+    venue_element = row.select_one(".agenda-item-venue")
+
+    if not title_element or not title_link:
+        return None
+
+    full_title = title_element.get_text(" ", strip=True)
+
     if not full_title or is_non_concert_event(full_title):
         return None
 
     headliner = full_title
 
-    # Supersonic uses the bullet glyph as an explicit artist separator.
-    # Keep this source-specific: no other punctuation is interpreted here.
     performers = [
         part.strip()
-        for part in re.split(r"\s*•\s*", full_title)
+        for part in re.split(r"\s*\+\s*", full_title)
         if part.strip()
     ]
     if len(performers) < 2:
@@ -94,13 +91,18 @@ def parse_event_row(row, page_url):
     href = (title_link.get("href") or "").strip()
 
     return ConcertEvent(
-        date=(date_element.get("datetime", "").strip() if date_element else ""),
+        date=(
+            date_element.get("datetime", "").strip()
+            if date_element
+            else ""
+        ),
         headliner=headliner,
         raw_title=full_title,
         performers=performers,
         venue=(
             venue_element.get_text(" ", strip=True)
-            if venue_element else "Supersonic"
+            if venue_element
+            else "Supersonic"
         ),
         city="Paris",
         department="75",
@@ -156,7 +158,7 @@ def load_events():
 
         soup = BeautifulSoup(response.text, "html.parser")
         event_rows = soup.select(
-            ".tribe-events-calendar-list__event-row"
+            "li.agenda-item"
         )
 
         for row in event_rows:
@@ -164,20 +166,7 @@ def load_events():
             if event is not None:
                 events.append(event)
 
-        next_link = soup.select_one(
-            "a.tribe-events-c-nav__next"
-        )
-
-        if next_link:
-            next_href = next_link.get("href", "").strip()
-
-            page_url = (
-                urljoin(page_url, next_href)
-                if next_href
-                else None
-            )
-        else:
-            page_url = None
+        page_url = None
 
     print(f"Created {len(events)} Supersonic ConcertEvent records")
 
