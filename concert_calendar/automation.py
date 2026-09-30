@@ -816,6 +816,26 @@ def build(args) -> int:
 
     venue_result = write_venue_assets(output_dir, venue_index)
 
+    print("PHASE START | genre_index_export", flush=True)
+    genre_phase_started = time.perf_counter()
+
+    from concert_calendar.genre_export import write_genre_assets
+    from concert_calendar.genre_index import build_genre_index
+
+    genre_index = build_genre_index()
+
+    genre_result = write_genre_assets(
+        output_dir,
+        genre_index,
+    )
+
+    print(
+        "PHASE COMPLETE | genre_index_export | "
+        f"genres={genre_result['count']} | "
+        f"elapsed={max(0.0, time.perf_counter() - genre_phase_started):.2f}s",
+        flush=True,
+    )
+
     venue_static_dir = Path(__file__).with_name("static")
     for venue_asset in (
         "venues-renderer.js",
