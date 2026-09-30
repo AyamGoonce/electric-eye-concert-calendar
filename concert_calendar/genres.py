@@ -10,6 +10,105 @@ from concert_calendar.deduplication import normalize_artist_component
 from concert_calendar.models import ConcertEvent
 
 
+GENRE_TAXONOMY_PATH = Path(__file__).with_name("genre_taxonomy.json")
+
+
+def load_genre_taxonomy(path: Path | None = None) -> dict:
+    path = path or GENRE_TAXONOMY_PATH
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    if data.get("version") != 1:
+        raise ValueError("Unsupported genre taxonomy version")
+
+    genres = data.get("genres")
+    if not isinstance(genres, list):
+        raise ValueError("Genre taxonomy must contain a genres list")
+
+    return data
+
+
+def build_genre_taxonomy_lookup(taxonomy: dict | None = None) -> dict[str, str]:
+    taxonomy = taxonomy or load_genre_taxonomy()
+    lookup: dict[str, str] = {}
+
+    for record in taxonomy.get("genres", []):
+        name = record.get("name")
+        if not name:
+            continue
+
+        lookup[normalize_raw(name)] = name
+
+        for alias in record.get("aliases") or []:
+            lookup[normalize_raw(alias)] = name
+
+    return lookup
+
+
+def canonicalize_genre_term(
+    value: str | None,
+    taxonomy: dict | None = None,
+) -> str | None:
+    if not value:
+        return None
+
+    taxonomy = taxonomy or load_genre_taxonomy()
+    normalized = normalize_raw(value)
+
+    ignored = {
+        normalize_raw(term)
+        for term in taxonomy.get("ignored_terms", [])
+    }
+    if normalized in ignored:
+        return None
+
+    review = {
+        normalize_raw(term)
+        for term in taxonomy.get("review_terms", [])
+    }
+    if normalized in review:
+        return None
+
+    lookup = build_genre_taxonomy_lookup(taxonomy)
+    return lookup.get(normalized)
+
+
+def genre_parent_chain(
+    genre: str,
+    taxonomy: dict | None = None,
+) -> list[str]:
+    taxonomy = taxonomy or load_genre_taxonomy()
+
+    by_name = {
+        record["name"]: record
+        for record in taxonomy.get("genres", [])
+        if record.get("name")
+    }
+
+    if genre not in by_name:
+        return []
+
+    chain = [genre]
+    seen = {genre}
+    current = genre
+
+    while True:
+        parent = by_name[current].get("parent")
+        if not parent:
+            break
+        if parent in seen:
+            raise ValueError(f"Genre taxonomy cycle detected at {parent}")
+        if parent not in by_name:
+            raise ValueError(
+                f"Unknown parent genre {parent!r} for {current!r}"
+            )
+
+        chain.append(parent)
+        seen.add(parent)
+        current = parent
+
+    return chain
+
+
 PUBLIC_GENRES = (
     "Comedy / Spoken Word", "Electronic", "Folk / Country", "Chanson Française / Variétés",
     "Hip-hop / Rap", "Jazz / Blues", "Metal / Hard Rock", "Pop",
