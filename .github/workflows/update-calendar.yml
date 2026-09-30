@@ -163,7 +163,7 @@ jobs:
         id: publish
         working-directory: pages-write
         run: |
-          git add -A proof artist concert index.html
+          git add -A proof artist genre concert index.html
           git commit -m "Promote verified calendar (${{ steps.build.outputs.event_count }} events)"
           git push origin HEAD:gh-pages
           echo "changed=true" >> "$GITHUB_OUTPUT"
