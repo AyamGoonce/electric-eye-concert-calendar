@@ -12,6 +12,7 @@ import unicodedata
 from urllib.parse import urlparse
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.content_index import slugify
 from concert_calendar.event_images import repeated_generic_image_urls
 from concert_calendar.genres import PUBLIC_GENRES, map_raw_genre, map_raw_genres
 from concert_calendar.event_state import canonical_event_identity, assign_performance_identities
@@ -24,6 +25,7 @@ RENDERER_PATH = STATIC_DIR / "calendar-renderer.js"
 STYLES_PATH = STATIC_DIR / "calendar.css"
 SUPPORTING_STATIC_ASSETS = (
     "artist-page.js", "artist-page.css", "artist-autolinker.js", "artist.html",
+    "genre-page.js",
     "coverage-page.js", "coverage.html",
 )
 
@@ -449,9 +451,22 @@ def build_production_html(events: list[dict]) -> str:
 
 
 
-def _clean_route_page(*, title: str, canonical: str, mount_id: str, renderer: str) -> str:
+def _clean_route_page(
+    *,
+    title: str,
+    canonical: str,
+    mount_id: str,
+    renderer: str,
+    extra_scripts: tuple[str, ...] = (),
+) -> str:
     safe_title = html.escape(title)
     safe_canonical = html.escape(canonical, quote=True)
+
+    extra_script_html = "".join(
+        f'  <script src="/proof/{html.escape(script, quote=True)}"></script>\n'
+        for script in extra_scripts
+    )
+
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -465,7 +480,7 @@ def _clean_route_page(*, title: str, canonical: str, mount_id: str, renderer: st
   <main id="{mount_id}" class="ee-artist-results" aria-live="polite"></main>
   <script src="/proof/electric-eye-content-current.js"></script>
   <script src="/proof/calendar-current.js"></script>
-  <script src="/proof/{renderer}"></script>
+{extra_script_html}  <script src="/proof/{renderer}"></script>
 </body>
 </html>
 """
@@ -508,10 +523,11 @@ def write_clean_routes(
     output_dir: str | Path,
     content_index: dict,
     events: list[dict],
+    genre_index: dict | None = None,
 ) -> dict[str, int]:
     destination = Path(output_dir)
 
-    for directory_name in ("artist", "concert"):
+    for directory_name in ("artist", "genre", "concert"):
         directory = destination / directory_name
         if directory.exists():
             shutil.rmtree(directory)
@@ -533,6 +549,33 @@ def write_clean_routes(
             encoding="utf-8",
         )
         artist_count += 1
+
+
+    genre_count = 0
+    for genre in (genre_index or {}).get("genres", []):
+        name = (genre.get("name") or "").strip()
+        slug = slugify(name)
+
+        if not name or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
+            continue
+
+        route = destination / "genre" / slug
+        route.mkdir(parents=True, exist_ok=True)
+
+        canonical = f"https://archive.electriceyerock.com/genre/{slug}/"
+
+        (route / "index.html").write_text(
+            _clean_route_page(
+                title=f"{name} | Electric Eye",
+                canonical=canonical,
+                mount_id="ee-genre-results",
+                renderer="genre-page.js",
+                extra_scripts=("genre-current.js",),
+            ),
+            encoding="utf-8",
+        )
+
+        genre_count += 1
 
     concert_count = 0
     for event in events:
@@ -560,7 +603,11 @@ def write_clean_routes(
         encoding="utf-8",
     )
 
-    return {"artists": artist_count, "concerts": concert_count}
+    return {
+        "artists": artist_count,
+        "genres": genre_count,
+        "concerts": concert_count,
+    }
 
 
 def export_integration_prototype(

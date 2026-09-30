@@ -158,6 +158,13 @@ def write_generated_publication(destination, marker="candidate"):
         "<!doctype html><title>Test Artist</title>",
         encoding="utf-8",
     )
+    genre_route = destination / "genre" / "rock"
+    genre_route.mkdir(parents=True)
+    (genre_route / "index.html").write_text(
+        "<!doctype html><title>Rock</title>",
+        encoding="utf-8",
+    )
+
     concert_route = destination / "concert" / "0000000000000000"
     concert_route.mkdir(parents=True)
     (concert_route / "index.html").write_text(

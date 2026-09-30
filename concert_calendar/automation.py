@@ -103,6 +103,7 @@ PUBLIC_STABLE_ASSETS = (
     "calendar-renderer.js", "calendar.css",
     "venues-renderer.js", "venues.css", "venue-sidebar.js", "venue-sidebar.css", "venue-current.js",
     "genres-renderer.js", "genres.css", "genre-current.js",
+    "genre-page.js",
     "artist-page.js",
     "artist-page.css", "artist-autolinker.js", "artist.html",
     "coverage-page.js", "coverage.html",
@@ -111,7 +112,7 @@ PUBLIC_STABLE_ASSETS = (
 )
 
 PUBLIC_ROOT_ASSETS = ("index.html",)
-PUBLIC_ROUTE_DIRS = ("artist", "concert")
+PUBLIC_ROUTE_DIRS = ("artist", "genre", "concert")
 STALE_PUBLIC_TEST_ASSETS = (
     "calendar-current-missing.js", "calendar-malformed.js",
     "data-first.html", "diagnostic.html", "index.html", "malformed.html",
@@ -879,9 +880,15 @@ def build(args) -> int:
             allow_large_change=args.allow_large_count_change,
         )
 
-    route_result = write_clean_routes(output_dir, content_index, events_data)
+    route_result = write_clean_routes(
+        output_dir,
+        content_index,
+        events_data,
+        genre_index=genre_index,
+    )
     print(
-        f"Created {route_result['artists']} artist routes and "
+        f"Created {route_result['artists']} artist routes, "
+        f"{route_result['genres']} genre routes and "
         f"{route_result['concerts']} concert routes"
     )
     validate_genre_coverage(pipeline_report.genre_report)
