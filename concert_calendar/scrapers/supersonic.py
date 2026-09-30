@@ -62,7 +62,9 @@ def is_non_concert_event(title):
 
 
 def parse_event_row(row, page_url):
-    if (row.get("data-venue") or "").strip() != "supersonic-2":
+    venue_id = (row.get("data-venue") or "").strip()
+
+    if venue_id not in {"supersonic-2", "supersonic-records"}:
         return None
 
     title_element = row.select_one("h3")
@@ -102,7 +104,11 @@ def parse_event_row(row, page_url):
         venue=(
             venue_element.get_text(" ", strip=True)
             if venue_element
-            else "Supersonic"
+            else (
+                "Supersonic Records"
+                if venue_id == "supersonic-records"
+                else "Supersonic"
+            )
         ),
         city="Paris",
         department="75",

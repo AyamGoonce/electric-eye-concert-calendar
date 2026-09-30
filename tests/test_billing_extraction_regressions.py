@@ -9,6 +9,35 @@ from concert_calendar.scrapers.supersonic import parse_event_row
 
 class BillingExtractionRegressionTests(unittest.TestCase):
 
+    def test_supersonic_records_agenda_card_is_accepted(self):
+        soup = BeautifulSoup("""
+        <li class="agenda-item" data-venue="supersonic-records">
+          <a class="agenda-item-link"
+             href="/evenement/finojet-tom-river-9th-oct-supersonic-records-paris-tickets/">
+            <div class="info-event-slider-agenda">
+              <div class="evenement-date">
+                <time datetime="2026-10-09"></time>
+                <span class="agenda-item-venue">Supersonic Records</span>
+              </div>
+              <h3>Finojet + Tom River</h3>
+            </div>
+          </a>
+        </li>
+        """, "html.parser")
+
+        event = parse_event_row(
+            soup.select_one("li.agenda-item"),
+            "https://supersonic-club.fr/agenda/",
+        )
+
+        self.assertIsNotNone(event)
+        self.assertEqual("Supersonic Records", event.venue)
+        self.assertEqual("2026-10-09", event.date)
+        self.assertEqual(
+            ["Finojet", "Tom River"],
+            event.performers,
+        )
+
     def test_supersonic_plus_bill_becomes_structured_performers(self):
         soup = BeautifulSoup("""
         <li class="agenda-item" data-venue="supersonic-2">
