@@ -63,6 +63,20 @@ def extract_raw_genres(notes: str) -> list[str]:
     return values
 
 
+def normalized_phrase_in_text(phrase: str, text: str) -> bool:
+    """Match a normalized artist/genre phrase on complete token boundaries."""
+    normalized_phrase = normalize_artist(phrase)
+    normalized_text = normalize_artist(text)
+
+    if not normalized_phrase or not normalized_text:
+        return False
+
+    return re.search(
+        rf"(?:^| ){re.escape(normalized_phrase)}(?: |$)",
+        normalized_text,
+    ) is not None
+
+
 def build_genre_index(
     mappings_path: str | Path = MAPPINGS_PATH,
     content_index: dict | None = None,
@@ -153,10 +167,57 @@ def build_genre_index(
                     continue
 
                 article = articles[article_id]
+                title = (article.get("t") or "").strip()
+                article_artists = article.get("a") or []
+
+                # Article labels are safe artist-level genre evidence for
+                # this artist when the artist is explicitly associated with
+                # the article and the artist's name appears in the title.
+                artist_specific = (
+                    slug in article_artists
+                    and normalized_phrase_in_text(artist, title)
+                )
+
+                if artist_specific:
+                    for raw in article.get("l") or []:
+                        canonical = canonicalize_genre_term(raw, taxonomy)
+                        if canonical:
+                            direct_genres.add(canonical)
+                    continue
+
+                # Non-artist-specific article labels cannot be propagated
+                # wholesale to every associated artist. Playlists are the one
+                # narrow fallback: a genre may contribute only when it is
+                # independently supported by both the playlist title and a
+                # recognized genre label on that same article.
+                if article.get("y") != "playlist":
+                    continue
+
+                label_genres = set()
                 for raw in article.get("l") or []:
                     canonical = canonicalize_genre_term(raw, taxonomy)
                     if canonical:
-                        direct_genres.add(canonical)
+                        label_genres.add(canonical)
+
+                for genre_record in taxonomy.get("genres", []):
+                    candidates = [
+                        genre_record.get("name"),
+                        *(genre_record.get("aliases") or []),
+                    ]
+
+                    for candidate in candidates:
+                        candidate = (candidate or "").strip()
+                        if not candidate:
+                            continue
+
+                        if normalized_phrase_in_text(candidate, title):
+                            canonical = canonicalize_genre_term(
+                                candidate,
+                                taxonomy,
+                            )
+                            if canonical and canonical in label_genres:
+                                direct_genres.add(canonical)
+                            break
 
             if not direct_genres:
                 continue

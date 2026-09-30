@@ -532,19 +532,45 @@ def write_clean_routes(
         if directory.exists():
             shutil.rmtree(directory)
 
-    artist_count = 0
+    artist_routes: dict[str, str] = {}
+
+    # Electric Eye content artists remain authoritative for existing slugs
+    # and display names.
     for slug, artist in content_index["artists"].items():
-        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
-            continue
+        name = (artist.get("n") or "").strip()
+
+        if (
+            name
+            and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug)
+        ):
+            artist_routes[slug] = name
+
+    # Add every artist retained by the persistent genre catalogue.
+    for genre in (genre_index or {}).get("genres", []):
+        for name in genre.get("artists", []):
+            name = (name or "").strip()
+            slug = slugify(name)
+
+            if (
+                name
+                and re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug)
+            ):
+                artist_routes.setdefault(slug, name)
+
+    artist_count = 0
+
+    for slug, name in sorted(artist_routes.items()):
         route = destination / "artist" / slug
         route.mkdir(parents=True, exist_ok=True)
         canonical = f"https://archive.electriceyerock.com/artist/{slug}/"
+
         (route / "index.html").write_text(
             _clean_route_page(
-                title=f"{artist['n']} | Electric Eye",
+                title=f"{name} | Electric Eye",
                 canonical=canonical,
                 mount_id="ee-artist-results",
                 renderer="artist-page.js",
+                extra_scripts=("genre-current.js",),
             ),
             encoding="utf-8",
         )
