@@ -267,7 +267,7 @@ class GenreIndexEvidenceTests(unittest.TestCase):
         index = self.build(artists, articles)
         genres = self.genres_for(index, "Public Enemy")
 
-        self.assertIn("Hip-Hop", genres)
+        self.assertNotIn("Hip-Hop", genres)
 
     def test_non_playlist_title_genre_does_not_apply_to_unnamed_artist(self):
         articles = [

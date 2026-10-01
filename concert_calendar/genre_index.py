@@ -185,39 +185,12 @@ def build_genre_index(
                             direct_genres.add(canonical)
                     continue
 
-                # Non-artist-specific article labels cannot be propagated
-                # wholesale to every associated artist. Playlists are the one
-                # narrow fallback: a genre may contribute only when it is
-                # independently supported by both the playlist title and a
-                # recognized genre label on that same article.
-                if article.get("y") != "playlist":
-                    continue
-
-                label_genres = set()
-                for raw in article.get("l") or []:
-                    canonical = canonicalize_genre_term(raw, taxonomy)
-                    if canonical:
-                        label_genres.add(canonical)
-
-                for genre_record in taxonomy.get("genres", []):
-                    candidates = [
-                        genre_record.get("name"),
-                        *(genre_record.get("aliases") or []),
-                    ]
-
-                    for candidate in candidates:
-                        candidate = (candidate or "").strip()
-                        if not candidate:
-                            continue
-
-                        if normalized_phrase_in_text(candidate, title):
-                            canonical = canonicalize_genre_term(
-                                candidate,
-                                taxonomy,
-                            )
-                            if canonical and canonical in label_genres:
-                                direct_genres.add(canonical)
-                            break
+                # Non-artist-specific articles cannot establish an
+                # artist-level genre identity. This includes playlists:
+                # a multi-genre article may associate many artists with many
+                # genres without identifying which genre belongs to which
+                # artist.
+                continue
 
             if not direct_genres:
                 continue
