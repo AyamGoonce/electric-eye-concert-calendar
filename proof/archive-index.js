@@ -69,19 +69,89 @@
 
     if (!lookup || !content || !content.artists) return null;
 
+    var relationshipFields = [
+      "members",
+      "formerMembers",
+      "associatedActs",
+      "sideProjects",
+      "collaborators"
+    ];
+    var searchTermsBySlug = Object.create(null);
+
+    function addSearchTerm(slug, value) {
+      if (!slug || !value) return;
+
+      if (!searchTermsBySlug[slug]) {
+        searchTermsBySlug[slug] = [];
+      }
+
+      if (searchTermsBySlug[slug].indexOf(value) === -1) {
+        searchTermsBySlug[slug].push(value);
+      }
+    }
+
+    Object.keys(content.artists).forEach(function (slug) {
+      var artist = content.artists[slug] || {};
+      var identity = artist.identity || {};
+      var artistName = artist.n || identity.canonicalName || slug;
+
+      (artist.al || []).forEach(function (alias) {
+        addSearchTerm(slug, alias);
+      });
+
+      relationshipFields.forEach(function (field) {
+        (identity[field] || []).forEach(function (relatedName) {
+          addSearchTerm(slug, relatedName);
+
+          var relatedSlug = lookup[relatedName];
+
+          if (relatedSlug) {
+            addSearchTerm(relatedSlug, artistName);
+          }
+        });
+      });
+    });
+
     return sortItems(
       Object.keys(lookup)
         .filter(function (name) {
           return hasEditorialCoverage(content, lookup[name]);
         })
         .map(function (name) {
+          var slug = lookup[name];
+          var artist = content.artists[slug] || {};
+          var exactTerms = [name]
+            .concat(artist.al || [])
+            .concat(artist.n || []);
+
+          var articleItems = (artist.ar || []).map(
+            function (articleIndex) {
+              var article =
+                content.articles &&
+                content.articles[articleIndex];
+
+              if (!article || !article.t || !article.u) {
+                return null;
+              }
+
+              return {
+                name: article.t,
+                href: article.u,
+                meta: article.d || ""
+              };
+            }
+          ).filter(Boolean);
+
           return {
             name: name,
             href:
               "https://archive.electriceyerock.com/artist/" +
-              lookup[name] +
+              slug +
               "/",
-            meta: ""
+            meta: "",
+            searchTerms: searchTermsBySlug[slug] || [],
+            exactTerms: exactTerms,
+            articleItems: articleItems
           };
         })
     );
@@ -289,12 +359,16 @@
     results.innerHTML = "";
 
     var filtered = items.filter(function (item) {
-      if (
-        normalizedQuery &&
-        normalize(item.name).indexOf(normalizedQuery) === -1 &&
-        normalize(item.meta).indexOf(normalizedQuery) === -1
-      ) {
-        return false;
+      if (normalizedQuery) {
+        var searchable = [item.name, item.meta]
+          .concat(item.searchTerms || [])
+          .map(normalize);
+
+        if (!searchable.some(function (value) {
+          return value.indexOf(normalizedQuery) !== -1;
+        })) {
+          return false;
+        }
       }
 
       if (
@@ -348,6 +422,53 @@
         results.appendChild(group);
       }
     );
+
+    if (
+      section.id === "ee-index-artists" &&
+      normalizedQuery
+    ) {
+      var matchedArticles = [];
+      var seenArticleUrls = Object.create(null);
+
+      items.forEach(function (item) {
+        var exactMatch = (item.exactTerms || []).some(
+          function (term) {
+            return normalize(term) === normalizedQuery;
+          }
+        );
+
+        if (!exactMatch) return;
+
+        (item.articleItems || []).forEach(function (article) {
+          if (seenArticleUrls[article.href]) return;
+
+          seenArticleUrls[article.href] = true;
+          matchedArticles.push(article);
+        });
+      });
+
+      if (matchedArticles.length) {
+        var articleGroup = document.createElement("section");
+        var articleHeading = document.createElement("h3");
+        var articleGrid = document.createElement("div");
+
+        articleGroup.className =
+          "ee-index-group ee-index-article-results";
+
+        articleHeading.className = "ee-index-group-letter";
+        articleHeading.textContent = "Articles";
+
+        articleGrid.className = "ee-index-items";
+
+        matchedArticles.forEach(function (article) {
+          articleGrid.appendChild(createItem(article));
+        });
+
+        articleGroup.appendChild(articleHeading);
+        articleGroup.appendChild(articleGrid);
+        results.appendChild(articleGroup);
+      }
+    }
   }
 
   function setupSection(id, items) {
