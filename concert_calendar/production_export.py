@@ -596,7 +596,10 @@ def write_clean_routes(
                 canonical=canonical,
                 mount_id="ee-genre-results",
                 renderer="genre-page.js",
-                extra_scripts=("genre-current.js",),
+                extra_scripts=(
+                    "genre-current.js",
+                    "electric-eye-artist-lookup.js",
+                ),
             ),
             encoding="utf-8",
         )
