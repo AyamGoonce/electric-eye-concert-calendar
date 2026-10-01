@@ -291,6 +291,29 @@ class GenreIndexEvidenceTests(unittest.TestCase):
 
         self.assertNotIn("Rock", genres)
 
+    def test_historical_article_without_reverse_artist_association_can_use_labels(self):
+        articles = [
+            article(
+                "Stanley Clarke @ l'Auditorium de la Seine Musicale",
+                ["Jazz", "Jazz Fusion"],
+                [],
+                "concert_review",
+            )
+        ]
+        artists = {
+            "stanley-clarke": {
+                "n": "Stanley Clarke",
+                "ar": [0],
+                "identity": {"genres": []},
+            }
+        }
+
+        index = self.build(artists, articles)
+        genres = self.genres_for(index, "Stanley Clarke")
+
+        self.assertIn("Jazz Fusion", genres)
+        self.assertIn("Jazz", genres)
+
     def test_phrase_matching_uses_token_boundaries(self):
         self.assertTrue(
             normalized_phrase_in_text(

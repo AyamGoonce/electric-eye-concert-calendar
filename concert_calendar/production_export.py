@@ -510,56 +510,85 @@ def _archive_landing_page() -> str:
 
     <div class="ee-archive-sections">
       <section class="ee-index-section" id="ee-index-artists">
-        <div class="ee-index-heading">
-          <h2>Artists</h2>
-          <span class="ee-index-count">Loading…</span>
-        </div>
-        <input
-          class="ee-index-search"
-          type="search"
-          placeholder="Search artists…"
-          aria-label="Search artists"
-          autocomplete="off"
+        <button
+          class="ee-index-heading"
+          type="button"
+          aria-expanded="false"
+          aria-controls="ee-index-artists-body"
         >
-        <nav class="ee-index-alphabet" aria-label="Artist alphabet"></nav>
-        <div class="ee-index-results">
-          <p class="ee-index-loading">Loading artists…</p>
+          <span class="ee-index-heading-title">
+            <span class="ee-index-chevron" aria-hidden="true">›</span>
+            <span>Artists</span>
+          </span>
+          <span class="ee-index-count">Loading…</span>
+        </button>
+        <div class="ee-index-body" id="ee-index-artists-body" hidden>
+          <input
+            class="ee-index-search"
+            type="search"
+            placeholder="Search artists…"
+            aria-label="Search artists"
+            autocomplete="off"
+          >
+          <nav class="ee-index-alphabet" aria-label="Artist alphabet"></nav>
+          <div class="ee-index-results">
+            <p class="ee-index-loading">Loading artists…</p>
+          </div>
         </div>
       </section>
 
       <section class="ee-index-section" id="ee-index-venues">
-        <div class="ee-index-heading">
-          <h2>Venues</h2>
-          <span class="ee-index-count">Loading…</span>
-        </div>
-        <input
-          class="ee-index-search"
-          type="search"
-          placeholder="Search venues…"
-          aria-label="Search venues"
-          autocomplete="off"
+        <button
+          class="ee-index-heading"
+          type="button"
+          aria-expanded="false"
+          aria-controls="ee-index-venues-body"
         >
-        <nav class="ee-index-alphabet" aria-label="Venue alphabet"></nav>
-        <div class="ee-index-results">
-          <p class="ee-index-loading">Loading venues…</p>
+          <span class="ee-index-heading-title">
+            <span class="ee-index-chevron" aria-hidden="true">›</span>
+            <span>Venues</span>
+          </span>
+          <span class="ee-index-count">Loading…</span>
+        </button>
+        <div class="ee-index-body" id="ee-index-venues-body" hidden>
+          <input
+            class="ee-index-search"
+            type="search"
+            placeholder="Search venues…"
+            aria-label="Search venues"
+            autocomplete="off"
+          >
+          <nav class="ee-index-alphabet" aria-label="Venue alphabet"></nav>
+          <div class="ee-index-results">
+            <p class="ee-index-loading">Loading venues…</p>
+          </div>
         </div>
       </section>
 
       <section class="ee-index-section" id="ee-index-genres">
-        <div class="ee-index-heading">
-          <h2>Genres</h2>
-          <span class="ee-index-count">Loading…</span>
-        </div>
-        <input
-          class="ee-index-search"
-          type="search"
-          placeholder="Search genres…"
-          aria-label="Search genres"
-          autocomplete="off"
+        <button
+          class="ee-index-heading"
+          type="button"
+          aria-expanded="false"
+          aria-controls="ee-index-genres-body"
         >
-        <nav class="ee-index-alphabet" aria-label="Genre alphabet"></nav>
-        <div class="ee-index-results">
-          <p class="ee-index-loading">Loading genres…</p>
+          <span class="ee-index-heading-title">
+            <span class="ee-index-chevron" aria-hidden="true">›</span>
+            <span>Genres</span>
+          </span>
+          <span class="ee-index-count">Loading…</span>
+        </button>
+        <div class="ee-index-body" id="ee-index-genres-body" hidden>
+          <input
+            class="ee-index-search"
+            type="search"
+            placeholder="Search genres…"
+            aria-label="Search genres"
+            autocomplete="off"
+          >
+          <div class="ee-index-results ee-genre-tree">
+            <p class="ee-index-loading">Loading genres…</p>
+          </div>
         </div>
       </section>
     </div>
@@ -571,6 +600,8 @@ def _archive_landing_page() -> str:
   </main>
 
   <script src="/proof/electric-eye-artist-lookup.js"></script>
+  <script src="/proof/electric-eye-content-current.js"></script>
+  <script src="/proof/calendar-current.js"></script>
   <script src="/proof/venue-current.js"></script>
   <script src="/proof/genre-current.js"></script>
   <script src="/proof/archive-index.js"></script>

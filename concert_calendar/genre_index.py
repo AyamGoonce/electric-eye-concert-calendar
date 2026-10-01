@@ -168,15 +168,12 @@ def build_genre_index(
 
                 article = articles[article_id]
                 title = (article.get("t") or "").strip()
-                article_artists = article.get("a") or []
-
-                # Article labels are safe artist-level genre evidence for
-                # this artist when the artist is explicitly associated with
-                # the article and the artist's name appears in the title.
-                artist_specific = (
-                    slug in article_artists
-                    and normalized_phrase_in_text(artist, title)
-                )
+                # We are already iterating articles explicitly associated
+                # with this artist through artist_record["ar"]. Historical
+                # articles may not carry the reverse article["a"] association,
+                # so require the artist name in the title as the additional
+                # safeguard before accepting article genre labels.
+                artist_specific = normalized_phrase_in_text(artist, title)
 
                 if artist_specific:
                     for raw in article.get("l") or []:
