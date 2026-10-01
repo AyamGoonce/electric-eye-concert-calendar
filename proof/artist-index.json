@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-10-01T00:42:52Z",
+  "generatedAt": "2026-10-01T05:55:22Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -8760,6 +8760,50 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Exhibit",
+      "slug": "exhibit",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 7,
+      "articleIds": [
+        "1487827650377782818",
+        "37726129496199704",
+        "9218351681080916069",
+        "5956057993592769065",
+        "8936115794068836505",
+        "7829326842414138496",
+        "6738311452493419943"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2024/07/metal-diabolus-in-musica.html",
+        "https://www.electriceyerock.com/2024/05/roger-dean-artwork-of-yes-salle-pleyel.html",
+        "https://www.electriceyerock.com/2022/10/black-indians-of-new-orlean-musee-quai.html",
+        "https://www.electriceyerock.com/2020/10/musee-de-la-musique-paris.html",
+        "https://www.electriceyerock.com/2020/10/renaud-putain-dexpo-la-cite-de-la.html",
+        "https://www.electriceyerock.com/2019/08/play-it-loud-metropolitan-museum-of-art.html",
+        "https://www.electriceyerock.com/2016/12/rolling-stones-exhibitionism-industrie.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Exhorder",
       "slug": "exhorder",
       "aliases": [],
@@ -9773,7 +9817,9 @@
         "4332823696767421207"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "5234475963389878611"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html",
         "https://www.electriceyerock.com/2026/03/a-conversation-with-fred-wesley-video.html",
@@ -10238,9 +10284,7 @@
         "5234475963389878611"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "5234475963389878611"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html"
       ],
@@ -21463,7 +21507,9 @@
         "189464433969378974"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "6738311452493419943"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/05/ronnie-wood-at-olympia-with-imelda-may.html",
         "https://www.electriceyerock.com/2026/05/the-rolling-stones-officially-share-new.html",
@@ -26574,7 +26620,6 @@
         "461484123954871059",
         "5699155883436583836",
         "7600704829710541376",
-        "6738311452493419943",
         "189464433969378974"
       ],
       "articleUrls": [

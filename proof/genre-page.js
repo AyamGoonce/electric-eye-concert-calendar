@@ -131,25 +131,26 @@
 
     var matchedArtists = [];
     var articleIds = [];
+    var routeLookup =
+      (window.ElectricEyeArtistLookup &&
+        window.ElectricEyeArtistLookup.terms) ||
+      {};
 
     (genre.artists || []).forEach(function (name) {
       var match = artistLookup[normalize(name)];
+      var routeSlug = routeLookup[name];
+
+      if (!routeSlug) return;
+
+      matchedArtists.push({
+        name: name,
+        slug: routeSlug,
+        artist: match ? match.artist : null
+      });
 
       if (match) {
-        matchedArtists.push({
-          name: name,
-          slug: match.slug,
-          artist: match.artist
-        });
-
         (match.artist.ar || []).forEach(function (id) {
           articleIds.push(id);
-        });
-      } else {
-        matchedArtists.push({
-          name: name,
-          slug: "",
-          artist: null
         });
       }
     });
