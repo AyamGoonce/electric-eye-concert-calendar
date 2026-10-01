@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-10-01T05:55:22Z",
+  "generatedAt": "2026-10-01T06:39:03Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -9817,9 +9817,7 @@
         "4332823696767421207"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "5234475963389878611"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html",
         "https://www.electriceyerock.com/2026/03/a-conversation-with-fred-wesley-video.html",
@@ -10284,7 +10282,9 @@
         "5234475963389878611"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "5234475963389878611"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html"
       ],
@@ -16985,14 +16985,13 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 6,
+      "articleCount": 5,
       "articleIds": [
         "7564009698465708036",
         "1251632869922327269",
         "1192519423230597107",
         "1129037568768135500",
-        "4899891289179715882",
-        "7080401538161250535"
+        "4899891289179715882"
       ],
       "reviewedArticleIds": [],
       "concertReviewArchiveArticleIds": [
@@ -17004,8 +17003,7 @@
         "https://www.electriceyerock.com/2026/06/megadeth-hellfest-clisson-june-20th-2026.html",
         "https://www.electriceyerock.com/2026/01/album-review-megadeth-megadeth.html",
         "https://www.electriceyerock.com/2025/10/the-new-megadeth-video-is-here.html",
-        "https://www.electriceyerock.com/2024/06/megadeth-le-zenith-paris-june-19th-2024.html",
-        "https://www.electriceyerock.com/2020/08/fridays-playlist-thrash-death-and-black.html"
+        "https://www.electriceyerock.com/2024/06/megadeth-le-zenith-paris-june-19th-2024.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -17198,13 +17196,12 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 6,
+      "articleCount": 5,
       "articleIds": [
         "5630650432348165215",
         "5345421111066808879",
         "8057084301440051790",
         "6235124858684994271",
-        "7080401538161250535",
         "6253673180231839360"
       ],
       "reviewedArticleIds": [],
@@ -17218,7 +17215,6 @@
         "https://www.electriceyerock.com/2025/02/black-sabbath-reunites-again.html",
         "https://www.electriceyerock.com/2023/05/metallica-stade-de-france-saint-denis.html",
         "https://www.electriceyerock.com/2023/05/metallica-stade-de-france-paris-may.html",
-        "https://www.electriceyerock.com/2020/08/fridays-playlist-thrash-death-and-black.html",
         "https://www.electriceyerock.com/2017/09/metallica-accorhotels-arena-paris.html"
       ],
       "lastIdentityUpdatedAt": null,
@@ -21507,9 +21503,7 @@
         "189464433969378974"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "6738311452493419943"
-      ],
+      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/05/ronnie-wood-at-olympia-with-imelda-may.html",
         "https://www.electriceyerock.com/2026/05/the-rolling-stones-officially-share-new.html",
@@ -26620,6 +26614,7 @@
         "461484123954871059",
         "5699155883436583836",
         "7600704829710541376",
+        "6738311452493419943",
         "189464433969378974"
       ],
       "articleUrls": [
