@@ -610,6 +610,14 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         identity = normalize_artist(label)
         canonical_by_identity.setdefault(identity, label)
 
+    # Every manually reviewed artist is an authoritative canonical identity.
+    # It must be available for article resolution even when automatic Blogger
+    # label/title seeding failed to discover it.
+    for canonical in reviewed_artists:
+        identity = normalize_artist(canonical)
+        if identity:
+            canonical_by_identity[identity] = canonical
+
     # Reviewed manual artists remain valid canonical identities even when
     # automatic Blogger label/title detection misses them.
     for canonical in MANUAL_ARTIST_ARTICLES:

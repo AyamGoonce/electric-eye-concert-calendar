@@ -5,27 +5,20 @@
     "Altons": "The Altons",
     "QOTSA": "Queens of the Stone Age",
     "Sheepdogs": "The Sheepdogs",
-    "Seasick Sick": "Seasick Steve"
+    "Seasick Sick": "Seasick Steve",
+    "Ron Wood": "Ronnie Wood",
+    "Saucerful of Secrets": "Nick Mason's Saucerful of Secrets",
+    "Nick Mason’s Saucerful of Secrets": "Nick Mason's Saucerful of Secrets",
+    "400 Unit": "Jason Isbell and the 400 Unit",
+    "The 400 Unit": "Jason Isbell and the 400 Unit",
+    "Jason Isbell & the 400 Unit": "Jason Isbell and the 400 Unit",
+    "Steven Van Zandt": "Little Steven",
+    "E Street Band": "The E Street Band",
+    "E-Street Band": "The E Street Band",
+    "The E-Street Band": "The E Street Band",
+    "Frankie & The Witch Fingers": "Frankie and the Witch Fingers"
   },
   "artists": {
-    "BEAT": {
-      "ambiguityClass": "common_word",
-      "members": [
-        "Adrian Belew",
-        "Tony Levin",
-        "Steve Vai",
-        "Danny Carey"
-      ],
-      "associatedActs": [
-        "King Crimson"
-      ],
-      "keywords": [
-        "THRAK"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye musical-project identity"
-      ]
-    },
     "Down": {
       "ambiguityClass": "common_word",
       "identityEvidence": [
@@ -37,7 +30,8 @@
         "ZZ Top"
       ],
       "identityEvidence": [
-        "Reviewed member relationship"
+        "Reviewed member relationship",
+        "Reviewed Electric Eye artist relationship"
       ]
     },
     "Ghost": {
@@ -59,11 +53,583 @@
         "Russell Mael"
       ],
       "identityEvidence": [
-        "Reviewed Electric Eye band identity"
+        "Reviewed Electric Eye band identity",
+        "Reviewed Electric Eye artist relationship"
       ]
     },
     "Tool": {
       "ambiguityClass": "common_word"
+    },
+    "Ronnie Wood": {
+      "associatedActs": [
+        "The Rolling Stones",
+        "Faces",
+        "The Jeff Beck Group"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Rolling Stones": {
+      "members": [
+        "Ronnie Wood"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "David Vincent": {
+      "associatedActs": [
+        "Morbid Angel",
+        "I Am Morbid",
+        "Terrorizer",
+        "Vltimas"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Morbid Angel": {
+      "associatedActs": [
+        "David Vincent"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "I Am Morbid": {
+      "associatedActs": [
+        "David Vincent"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Terrorizer": {
+      "associatedActs": [
+        "David Vincent"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "David Vincent"
+      ]
+    },
+    "Vltimas": {
+      "associatedActs": [
+        "David Vincent"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Hollywood Vampires": {
+      "members": [
+        "Alice Cooper",
+        "Joe Perry",
+        "Johnny Depp",
+        "Tommy Henriksen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Alice Cooper": {
+      "associatedActs": [
+        "Hollywood Vampires"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Joe Perry": {
+      "associatedActs": [
+        "Hollywood Vampires"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Johnny Depp": {
+      "associatedActs": [
+        "Hollywood Vampires"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Tommy Henriksen": {
+      "associatedActs": [
+        "Hollywood Vampires",
+        "Alice Cooper",
+        "Alice Cooper Band"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Rhiannon Giddens": {
+      "associatedActs": [
+        "Our Native Daughters",
+        "Carolina Chocolate Drops"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Our Native Daughters": {
+      "associatedActs": [
+        "Rhiannon Giddens"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Carolina Chocolate Drops": {
+      "associatedActs": [
+        "Rhiannon Giddens"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Nick Mason's Saucerful of Secrets": {
+      "members": [
+        "Nick Mason"
+      ],
+      "associatedActs": [
+        "Pink Floyd"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Nick Mason": {
+      "associatedActs": [
+        "Nick Mason's Saucerful of Secrets",
+        "Pink Floyd"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "David Gilmour": {
+      "associatedActs": [
+        "Pink Floyd"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Roger Waters": {
+      "associatedActs": [
+        "Pink Floyd"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Pink Floyd": {
+      "members": [
+        "Nick Mason",
+        "David Gilmour",
+        "Roger Waters"
+      ],
+      "associatedActs": [
+        "Nick Mason's Saucerful of Secrets"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Jason Isbell and the 400 Unit": {
+      "associatedActs": [
+        "Jason Isbell"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Jason Isbell": {
+      "associatedActs": [
+        "Jason Isbell and the 400 Unit"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Genesis Revisited": {
+      "associatedActs": [
+        "Steve Hackett",
+        "Genesis"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Steve Hackett": {
+      "associatedActs": [
+        "Genesis Revisited",
+        "Genesis",
+        "The Musical Box"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Little Steven": {
+      "associatedActs": [
+        "Disciples of Soul"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Disciples of Soul": {
+      "associatedActs": [
+        "Little Steven"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Guantanamo School of Medicine": {
+      "associatedActs": [
+        "Jello Biafra"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Jello Biafra": {
+      "associatedActs": [
+        "Guantanamo School of Medicine"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Pink Monkey Birds": {
+      "associatedActs": [
+        "Kid Congo Powers"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Kid Congo Powers": {
+      "associatedActs": [
+        "Pink Monkey Birds"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Bruce Springsteen": {
+      "associatedActs": [
+        "The E Street Band"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship",
+        "Reviewed Electric Eye artist identity/genre"
+      ]
+    },
+    "The E Street Band": {
+      "associatedActs": [
+        "Bruce Springsteen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship",
+        "Reviewed Electric Eye artist identity/genre"
+      ],
+      "genres": [
+        "Heartland Rock",
+        "Rock"
+      ]
+    },
+    "Sheila E.": {
+      "genres": [
+        "Funk",
+        "R&B",
+        "Pop"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist identity/genre"
+      ]
+    },
+    "Southside Johnny": {
+      "genres": [
+        "Rock",
+        "Blues Rock",
+        "Soul"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist identity/genre"
+      ]
+    },
+    "Attila Csihar": {
+      "associatedActs": [
+        "Mayhem"
+      ],
+      "genres": [
+        "Black Metal",
+        "Metal"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist identity/genre",
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Iggor Cavalera": {
+      "associatedActs": [
+        "Sepultura"
+      ],
+      "genres": [
+        "Thrash Metal",
+        "Heavy Metal",
+        "Metal"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist identity/genre",
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Gov't Mule": {
+      "members": [
+        "Warren Haynes"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The National": {
+      "members": [
+        "Matt Berninger"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Guns N' Roses": {
+      "members": [
+        "Axl Rose",
+        "Slash",
+        "Duff McKagan"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Spiritual Beggars": {
+      "members": [
+        "Michael Amott"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Arch Enemy": {
+      "members": [
+        "Michael Amott"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Obsessed": {
+      "members": [
+        "Scott \"Wino\" Weinrich"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Iron Maiden": {
+      "members": [
+        "Adrian Smith"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Mayhem": {
+      "members": [
+        "Attila Csihar"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Deep Purple": {
+      "members": [
+        "Simon McBride"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Smith/Kotzen": {
+      "members": [
+        "Adrian Smith",
+        "Richie Kotzen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Slash feat. Myles Kennedy & The Conspirators": {
+      "members": [
+        "Slash",
+        "Myles Kennedy"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Tremonti": {
+      "members": [
+        "Mark Tremonti"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Alter Bridge": {
+      "members": [
+        "Mark Tremonti",
+        "Myles Kennedy"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Mastodon": {
+      "formerMembers": [
+        "Brent Hinds"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Saint Vitus": {
+      "formerMembers": [
+        "Scott \"Wino\" Weinrich"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Axl Rose": {
+      "associatedActs": [
+        "AC/DC"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Durand Jones & the Indications": {
+      "members": [
+        "Durand Jones"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Satchvai Band": {
+      "members": [
+        "Joe Satriani",
+        "Steve Vai"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Winery Dogs": {
+      "members": [
+        "Richie Kotzen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Crimson ProjeKct": {
+      "members": [
+        "Adrian Belew",
+        "Pat Mastelotto"
+      ],
+      "associatedActs": [
+        "King Crimson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "King Crimson": {
+      "members": [
+        "Robert Fripp",
+        "Pat Mastelotto",
+        "Gavin Harrison"
+      ],
+      "formerMembers": [
+        "Adrian Belew"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "O.R.K.": {
+      "members": [
+        "Pat Mastelotto"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Pineapple Thief": {
+      "members": [
+        "Gavin Harrison"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Genesis": {
+      "associatedActs": [
+        "Steve Hackett",
+        "The Musical Box"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Musical Box": {
+      "associatedActs": [
+        "Genesis",
+        "Steve Hackett"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "BEAT": {
+      "ambiguityClass": "common_word",
+      "members": [
+        "Adrian Belew",
+        "Tony Levin",
+        "Steve Vai",
+        "Danny Carey"
+      ],
+      "associatedActs": [
+        "King Crimson"
+      ],
+      "keywords": [
+        "THRAK"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye musical-project identity",
+        "Reviewed Electric Eye artist relationship"
+      ]
     }
   },
   "articleOverrides": {
@@ -81,6 +647,15 @@
       ],
       "identityEvidence": [
         "Reviewed editorial-subject identity"
+      ]
+    },
+    "8744441217617196842": {
+      "primaryArtists": [
+        "Bruce Springsteen",
+        "The E Street Band"
+      ],
+      "identityEvidence": [
+        "Reviewed combined-billing article identity"
       ]
     }
   },

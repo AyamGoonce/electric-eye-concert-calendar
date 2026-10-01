@@ -4,7 +4,10 @@ import json
 import re
 from pathlib import Path
 
-from concert_calendar.content_index import normalize_artist
+from concert_calendar.content_index import (
+    load_artist_identity_overrides,
+    normalize_artist,
+)
 from concert_calendar.genre_external import (
     apple_detailed_lookup,
     musicbrainz_relationship_genres,
@@ -101,6 +104,44 @@ def build_genre_index(
     resolved_artists = 0
     artist_genres: dict[str, set[str]] = {}
     artist_names_by_identity: dict[str, str] = {}
+
+    # Highest-priority genre evidence: manually reviewed Electric Eye
+    # artist identity overrides. These are explicit editorial assertions,
+    # so they must take precedence over inferred/article/external genres.
+    identity_overrides = load_artist_identity_overrides()
+
+    for artist, override in (identity_overrides.get("artists") or {}).items():
+        direct_genres = set()
+
+        for raw in override.get("genres") or []:
+            canonical = canonicalize_genre_term(raw, taxonomy)
+            if canonical:
+                direct_genres.add(canonical)
+
+        if not direct_genres:
+            continue
+
+        identity_key = normalize_artist(artist)
+        artist_names_by_identity.setdefault(identity_key, artist)
+
+        if identity_key not in artist_genres:
+            resolved_artists += 1
+            artist_genres[identity_key] = set()
+
+        artist_genres[identity_key].update(direct_genres)
+
+        for direct in direct_genres:
+            if direct not in genres:
+                continue
+
+            genres[direct]["directArtists"].add(artist)
+
+            for inherited in genre_parent_chain(
+                direct,
+                taxonomy,
+            ):
+                if inherited in genres:
+                    genres[inherited]["artists"].add(artist)
 
     for record in mappings.get("artists", []):
         artist = (record.get("artist") or "").strip()
