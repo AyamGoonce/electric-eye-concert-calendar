@@ -16,9 +16,18 @@
     "Reggae / Dub / Ska",
     "World",
     "Chanson Française",
-    "Comedy / Spoken Word"
+    "Comedy / Spoken Word",
+    "Avant-Garde",
+    "Experimental",
+    "Lo-Fi",
+    "New Age"
   ],
   "genres": [
+    {
+      "name": "Acid Jazz",
+      "parent": "Jazz",
+      "aliases": []
+    },
     {
       "name": "African Soul",
       "parent": "Soul",
@@ -28,6 +37,18 @@
       "name": "Afro Trap",
       "parent": "Hip-Hop",
       "aliases": []
+    },
+    {
+      "name": "Afrobeat",
+      "parent": "World",
+      "aliases": []
+    },
+    {
+      "name": "Afropop",
+      "parent": "World",
+      "aliases": [
+        "afro pop"
+      ]
     },
     {
       "name": "Alt-Country",
@@ -75,6 +96,11 @@
       ]
     },
     {
+      "name": "Amapiano",
+      "parent": "World",
+      "aliases": []
+    },
+    {
       "name": "Ambient",
       "parent": "Electronic",
       "aliases": [
@@ -86,6 +112,13 @@
       "name": "Americana",
       "parent": "Country",
       "aliases": []
+    },
+    {
+      "name": "Anarcho-Punk",
+      "parent": "Punk",
+      "aliases": [
+        "anarcho punk"
+      ]
     },
     {
       "name": "Art Pop",
@@ -118,13 +151,37 @@
       ]
     },
     {
+      "name": "Avant-Garde",
+      "parent": null,
+      "aliases": [
+        "avant garde"
+      ]
+    },
+    {
+      "name": "Avant-Garde Jazz",
+      "parent": "Jazz",
+      "aliases": [
+        "avant garde jazz"
+      ]
+    },
+    {
       "name": "Balearic",
       "parent": "Electronic",
       "aliases": []
     },
     {
+      "name": "Baroque Pop",
+      "parent": "Pop",
+      "aliases": []
+    },
+    {
       "name": "Bass Music",
       "parent": "Electronic",
+      "aliases": []
+    },
+    {
+      "name": "Bebop",
+      "parent": "Jazz",
       "aliases": []
     },
     {
@@ -143,8 +200,25 @@
       "aliases": []
     },
     {
+      "name": "Blackened Death Metal",
+      "parent": "Death Metal",
+      "aliases": []
+    },
+    {
       "name": "Blackgaze",
       "parent": "Black Metal",
+      "aliases": []
+    },
+    {
+      "name": "Blue-Eyed Soul",
+      "parent": "Soul",
+      "aliases": [
+        "blue eyed soul"
+      ]
+    },
+    {
+      "name": "Bluegrass",
+      "parent": "Country",
       "aliases": []
     },
     {
@@ -160,8 +234,20 @@
       ]
     },
     {
+      "name": "Boom Bap",
+      "parent": "Hip-Hop",
+      "aliases": [
+        "boom-bap"
+      ]
+    },
+    {
       "name": "Bossa Nova",
       "parent": "World",
+      "aliases": []
+    },
+    {
+      "name": "Breakbeat",
+      "parent": "Electronic",
       "aliases": []
     },
     {
@@ -182,6 +268,16 @@
       "aliases": []
     },
     {
+      "name": "Celtic Folk",
+      "parent": "Folk",
+      "aliases": []
+    },
+    {
+      "name": "Chamber Pop",
+      "parent": "Pop",
+      "aliases": []
+    },
+    {
       "name": "Chanson Alternative",
       "parent": "Chanson Française",
       "aliases": []
@@ -198,6 +294,11 @@
         "Variété française",
         "Variétés françaises"
       ]
+    },
+    {
+      "name": "Chicago Blues",
+      "parent": "Blues",
+      "aliases": []
     },
     {
       "name": "Chillwave",
@@ -245,6 +346,14 @@
       "aliases": []
     },
     {
+      "name": "Contemporary Folk",
+      "parent": "Folk",
+      "aliases": [
+        "contemporary folk music",
+        "Folk contemporain"
+      ]
+    },
+    {
       "name": "Contemporary Jazz",
       "parent": "Jazz",
       "aliases": [
@@ -259,10 +368,29 @@
       ]
     },
     {
+      "name": "Cool Jazz",
+      "parent": "Jazz",
+      "aliases": []
+    },
+    {
       "name": "Country",
       "parent": null,
       "aliases": [
         "country music"
+      ]
+    },
+    {
+      "name": "Country Rock",
+      "parent": "Country",
+      "aliases": [
+        "country-rock"
+      ]
+    },
+    {
+      "name": "Crust Punk",
+      "parent": "Punk",
+      "aliases": [
+        "crust"
       ]
     },
     {
@@ -336,9 +464,31 @@
       "aliases": []
     },
     {
+      "name": "Delta Blues",
+      "parent": "Blues",
+      "aliases": []
+    },
+    {
       "name": "Desert Blues",
       "parent": "Blues",
       "aliases": []
+    },
+    {
+      "name": "Desert Rock",
+      "parent": "Rock",
+      "aliases": []
+    },
+    {
+      "name": "Disco",
+      "parent": "R&B / Soul / Funk",
+      "aliases": []
+    },
+    {
+      "name": "Disco-Funk",
+      "parent": "Funk",
+      "aliases": [
+        "disco funk"
+      ]
     },
     {
       "name": "Djent",
@@ -365,9 +515,24 @@
       ]
     },
     {
+      "name": "Drill",
+      "parent": "Hip-Hop",
+      "aliases": []
+    },
+    {
       "name": "Drone Metal",
       "parent": "Metal",
       "aliases": []
+    },
+    {
+      "name": "Drum and Bass",
+      "parent": "Electronic",
+      "aliases": [
+        "drum & bass",
+        "drum n bass",
+        "dnb",
+        "d&b"
+      ]
     },
     {
       "name": "Dub",
@@ -396,6 +561,11 @@
     {
       "name": "Egg Punk",
       "parent": "Punk",
+      "aliases": []
+    },
+    {
+      "name": "Electric Blues",
+      "parent": "Blues",
       "aliases": []
     },
     {
@@ -432,6 +602,11 @@
       ]
     },
     {
+      "name": "Emo",
+      "parent": "Punk",
+      "aliases": []
+    },
+    {
       "name": "Emo Pop",
       "parent": "Pop",
       "aliases": []
@@ -447,6 +622,11 @@
       "aliases": []
     },
     {
+      "name": "Experimental",
+      "parent": null,
+      "aliases": []
+    },
+    {
       "name": "Experimental Hip-Hop",
       "parent": "Hip-Hop",
       "aliases": []
@@ -457,17 +637,21 @@
       "aliases": []
     },
     {
+      "name": "Fado",
+      "parent": "World",
+      "aliases": []
+    },
+    {
+      "name": "Flamenco",
+      "parent": "World",
+      "aliases": []
+    },
+    {
       "name": "Folk",
       "parent": null,
       "aliases": [
         "folk music",
-        "traditional folk music",
-        "contemporary folk music",
-        "american folk",
-        "Folk traditionnel",
-        "Traditional Folk",
-        "Folk contemporain",
-        "Contemporary Folk"
+        "american folk"
       ]
     },
     {
@@ -479,6 +663,13 @@
       "name": "Folk Pop",
       "parent": "Pop",
       "aliases": []
+    },
+    {
+      "name": "Folk Punk",
+      "parent": "Punk",
+      "aliases": [
+        "folk-punk"
+      ]
     },
     {
       "name": "Folk Rock",
@@ -503,14 +694,33 @@
       "aliases": []
     },
     {
+      "name": "French House",
+      "parent": "House",
+      "aliases": []
+    },
+    {
       "name": "Funk",
       "parent": "R&B / Soul / Funk",
       "aliases": []
     },
     {
+      "name": "Funk Rock",
+      "parent": "Rock",
+      "aliases": [
+        "funk-rock"
+      ]
+    },
+    {
       "name": "Funktronica",
       "parent": "Funk",
       "aliases": []
+    },
+    {
+      "name": "G-Funk",
+      "parent": "Hip-Hop",
+      "aliases": [
+        "g funk"
+      ]
     },
     {
       "name": "Gangsta Rap",
@@ -557,6 +767,25 @@
       "aliases": []
     },
     {
+      "name": "Gothic Metal",
+      "parent": "Metal",
+      "aliases": []
+    },
+    {
+      "name": "Gothic Rock",
+      "parent": "Rock",
+      "aliases": [
+        "goth",
+        "gothic",
+        "goth rock"
+      ]
+    },
+    {
+      "name": "Grime",
+      "parent": "Hip-Hop",
+      "aliases": []
+    },
+    {
       "name": "Grindcore",
       "parent": "Metal",
       "aliases": []
@@ -584,6 +813,13 @@
       ]
     },
     {
+      "name": "Hard Bop",
+      "parent": "Jazz",
+      "aliases": [
+        "hard-bop"
+      ]
+    },
+    {
       "name": "Hard Rock",
       "parent": "Rock",
       "aliases": []
@@ -607,6 +843,11 @@
       "aliases": []
     },
     {
+      "name": "Heartland Rock",
+      "parent": "Rock",
+      "aliases": []
+    },
+    {
       "name": "Heavy Metal",
       "parent": "Metal",
       "aliases": [
@@ -614,6 +855,11 @@
         "melodic heavy metal",
         "melodic metal"
       ]
+    },
+    {
+      "name": "Highlife",
+      "parent": "World",
+      "aliases": []
     },
     {
       "name": "Hip-Hop",
@@ -664,6 +910,20 @@
         "rock and indie",
         "rock français",
         "rock francophone"
+      ]
+    },
+    {
+      "name": "Indietronica",
+      "parent": "Electronic",
+      "aliases": [
+        "indie electronic"
+      ]
+    },
+    {
+      "name": "Industrial",
+      "parent": "Electronic",
+      "aliases": [
+        "industrial music"
       ]
     },
     {
@@ -722,6 +982,27 @@
       "aliases": []
     },
     {
+      "name": "Jazz Rap",
+      "parent": "Hip-Hop",
+      "aliases": [
+        "jazz-rap"
+      ]
+    },
+    {
+      "name": "Jazz-Funk",
+      "parent": "Jazz",
+      "aliases": [
+        "jazz funk"
+      ]
+    },
+    {
+      "name": "Jungle",
+      "parent": "Electronic",
+      "aliases": [
+        "jungle music"
+      ]
+    },
+    {
       "name": "K-Pop",
       "parent": "Pop",
       "aliases": [
@@ -752,6 +1033,16 @@
       "aliases": []
     },
     {
+      "name": "Lo-Fi",
+      "parent": null,
+      "aliases": [
+        "lo fi",
+        "lofi",
+        "lo-fi music",
+        "lo fi music"
+      ]
+    },
+    {
       "name": "Lo-Fi Folk",
       "parent": "Folk",
       "aliases": []
@@ -764,6 +1055,11 @@
     {
       "name": "Math Rock",
       "parent": "Rock",
+      "aliases": []
+    },
+    {
+      "name": "Melodic Black Metal",
+      "parent": "Black Metal",
       "aliases": []
     },
     {
@@ -795,6 +1091,11 @@
       ]
     },
     {
+      "name": "Modal Jazz",
+      "parent": "Jazz",
+      "aliases": []
+    },
+    {
       "name": "Música Popular Brasileira",
       "parent": "World",
       "aliases": []
@@ -818,6 +1119,13 @@
       "name": "Neofolk",
       "parent": "Folk",
       "aliases": []
+    },
+    {
+      "name": "New Age",
+      "parent": null,
+      "aliases": [
+        "new-age"
+      ]
     },
     {
       "name": "New Wave",
@@ -853,9 +1161,29 @@
       ]
     },
     {
+      "name": "Oi!",
+      "parent": "Punk",
+      "aliases": [
+        "oi"
+      ]
+    },
+    {
       "name": "Old-Time Music",
       "parent": "Folk",
       "aliases": []
+    },
+    {
+      "name": "Outlaw Country",
+      "parent": "Country",
+      "aliases": []
+    },
+    {
+      "name": "P-Funk",
+      "parent": "Funk",
+      "aliases": [
+        "p funk",
+        "parliament-funkadelic"
+      ]
     },
     {
       "name": "Pagan Folk",
@@ -895,6 +1223,13 @@
       ]
     },
     {
+      "name": "Post-Hardcore",
+      "parent": "Punk",
+      "aliases": [
+        "post hardcore"
+      ]
+    },
+    {
       "name": "Post-Metal",
       "parent": "Metal",
       "aliases": []
@@ -922,6 +1257,11 @@
       ]
     },
     {
+      "name": "Power Metal",
+      "parent": "Metal",
+      "aliases": []
+    },
+    {
       "name": "Power Pop",
       "parent": "Pop",
       "aliases": []
@@ -932,6 +1272,11 @@
       "aliases": [
         "powerviolence"
       ]
+    },
+    {
+      "name": "Progressive Death Metal",
+      "parent": "Death Metal",
+      "aliases": []
     },
     {
       "name": "Progressive House",
@@ -976,6 +1321,20 @@
       "aliases": []
     },
     {
+      "name": "Psychedelic Soul",
+      "parent": "Soul",
+      "aliases": []
+    },
+    {
+      "name": "Psytrance",
+      "parent": "Electronic",
+      "aliases": [
+        "psy trance",
+        "psychedelic trance",
+        "forest darkpsy"
+      ]
+    },
+    {
       "name": "Puirt à Beul",
       "parent": "World",
       "aliases": []
@@ -995,6 +1354,11 @@
       ]
     },
     {
+      "name": "Punkabilly",
+      "parent": "Punk",
+      "aliases": []
+    },
+    {
       "name": "R&B",
       "parent": "R&B / Soul / Funk",
       "aliases": [
@@ -1010,9 +1374,21 @@
       ]
     },
     {
+      "name": "Rap",
+      "parent": "Hip-Hop",
+      "aliases": []
+    },
+    {
       "name": "Rap Metal",
       "parent": "Metal",
       "aliases": []
+    },
+    {
+      "name": "Rap Rock",
+      "parent": "Rock",
+      "aliases": [
+        "rap-rock"
+      ]
     },
     {
       "name": "Reggae",
@@ -1065,6 +1441,18 @@
       "aliases": []
     },
     {
+      "name": "Roots Rock",
+      "parent": "Rock",
+      "aliases": [
+        "roots"
+      ]
+    },
+    {
+      "name": "Salsa",
+      "parent": "World",
+      "aliases": []
+    },
+    {
       "name": "Shoegaze",
       "parent": "Rock",
       "aliases": [
@@ -1087,6 +1475,13 @@
       "aliases": []
     },
     {
+      "name": "Ska Punk",
+      "parent": "Punk",
+      "aliases": [
+        "ska-punk"
+      ]
+    },
+    {
       "name": "Skate Punk",
       "parent": "Punk",
       "aliases": []
@@ -1103,6 +1498,11 @@
         "sludge",
         "atmospheric sludge metal"
       ]
+    },
+    {
+      "name": "Smooth Jazz",
+      "parent": "Jazz",
+      "aliases": []
     },
     {
       "name": "Soft Rock",
@@ -1132,8 +1532,18 @@
       "aliases": []
     },
     {
+      "name": "Southern Soul",
+      "parent": "Soul",
+      "aliases": []
+    },
+    {
       "name": "Space Rock",
       "parent": "Rock",
+      "aliases": []
+    },
+    {
+      "name": "Speed Metal",
+      "parent": "Metal",
       "aliases": []
     },
     {
@@ -1192,6 +1602,25 @@
       ]
     },
     {
+      "name": "Synthwave",
+      "parent": "Electronic",
+      "aliases": [
+        "synth wave"
+      ]
+    },
+    {
+      "name": "Tango",
+      "parent": "World",
+      "aliases": []
+    },
+    {
+      "name": "Technical Death Metal",
+      "parent": "Death Metal",
+      "aliases": [
+        "tech death"
+      ]
+    },
+    {
       "name": "Techno",
       "parent": "Electronic",
       "aliases": [
@@ -1203,6 +1632,14 @@
       "parent": "Metal",
       "aliases": [
         "thrash"
+      ]
+    },
+    {
+      "name": "Traditional Folk",
+      "parent": "Folk",
+      "aliases": [
+        "traditional folk music",
+        "Folk traditionnel"
       ]
     },
     {
@@ -1229,6 +1666,13 @@
       ]
     },
     {
+      "name": "UK Garage",
+      "parent": "Electronic",
+      "aliases": [
+        "ukg"
+      ]
+    },
+    {
       "name": "UK Rap",
       "parent": "Hip-Hop",
       "aliases": []
@@ -1248,6 +1692,11 @@
     {
       "name": "Vaporwave",
       "parent": "Electronic",
+      "aliases": []
+    },
+    {
+      "name": "Viking Metal",
+      "parent": "Metal",
       "aliases": []
     },
     {
@@ -1308,22 +1757,12 @@
   ],
   "review_terms": [
     "anime song",
-    "avant-garde",
     "bearpop",
     "blufunk and soul",
-    "experimental",
     "fusion",
-    "goth",
-    "gothic",
     "indie",
-    "industrial",
-    "lo-fi",
-    "lo-fi music",
-    "lofi",
     "melodic",
-    "new age",
     "psychedelic",
-    "roots",
     "slam rock",
     "wave"
   ]
