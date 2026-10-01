@@ -26,7 +26,7 @@
     var normalized = normalize(value);
 
     return normalized.replace(
-      /^(?:(?:the|a|an|le|la|les)\s+|l\s+)/,
+      /^(?:the|a|an|le|la|les)\s+/,
       ""
     );
   }
