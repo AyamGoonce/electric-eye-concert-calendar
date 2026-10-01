@@ -107,14 +107,11 @@
         .map(function (key) {
           var venue = data[key] || {};
           var name = venue.name || key;
-          var meta = venue.city || "";
+          var city = venue.city || "";
+          var events = venue.events || [];
 
-          if (
-            venue.department &&
-            venue.department !== "75" &&
-            meta
-          ) {
-            meta += " · " + venue.department;
+          if (!city && events.length) {
+            city = events[0].city || "";
           }
 
           return {
@@ -122,7 +119,9 @@
             href:
               "https://www.electriceyerock.com/p/venues.html#venue-" +
               slugify(name),
-            meta: meta
+            meta: city,
+            address: venue.address || "",
+            website: venue.website || ""
           };
         })
     );
