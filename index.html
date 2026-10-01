@@ -3,86 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Electric Eye Archive | Artists, Venues & Genres</title>
-  <meta name="description" content="Browse the Electric Eye archive by artist, venue or genre.">
-  <link rel="canonical" href="https://archive.electriceyerock.com/">
-  <link rel="stylesheet" href="/proof/archive-index.css">
+  <title>Electric Eye Archive</title>
+  <style>
+    body{margin:0;background:#fff;color:#15171a;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    main{max-width:760px;margin:0 auto;padding:72px 24px}
+    p:first-child{color:#c62828;font-size:.78rem;font-weight:850;letter-spacing:.15em;text-transform:uppercase}
+    h1{font-size:clamp(2.5rem,7vw,5rem);letter-spacing:-.045em;line-height:1;margin:.2em 0}
+    p{line-height:1.6}
+    nav{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+    a{padding:11px 15px;background:#15171a;color:#fff;text-decoration:none}
+    a+a{background:#c62828}
+  </style>
 </head>
 <body>
-  <main class="ee-archive">
-    <header class="ee-archive-hero">
-      <p class="ee-archive-kicker">Electric Eye</p>
-      <h1>Archive</h1>
-      <p class="ee-archive-intro">
-        Explore Electric Eye coverage by artist, venue or genre.
-      </p>
-    </header>
-
-    <div class="ee-archive-sections">
-      <section class="ee-index-section" id="ee-index-artists">
-        <div class="ee-index-heading">
-          <h2>Artists</h2>
-          <span class="ee-index-count">Loading…</span>
-        </div>
-        <input
-          class="ee-index-search"
-          type="search"
-          placeholder="Search artists…"
-          aria-label="Search artists"
-          autocomplete="off"
-        >
-        <nav class="ee-index-alphabet" aria-label="Artist alphabet"></nav>
-        <div class="ee-index-results">
-          <p class="ee-index-loading">Loading artists…</p>
-        </div>
-      </section>
-
-      <section class="ee-index-section" id="ee-index-venues">
-        <div class="ee-index-heading">
-          <h2>Venues</h2>
-          <span class="ee-index-count">Loading…</span>
-        </div>
-        <input
-          class="ee-index-search"
-          type="search"
-          placeholder="Search venues…"
-          aria-label="Search venues"
-          autocomplete="off"
-        >
-        <nav class="ee-index-alphabet" aria-label="Venue alphabet"></nav>
-        <div class="ee-index-results">
-          <p class="ee-index-loading">Loading venues…</p>
-        </div>
-      </section>
-
-      <section class="ee-index-section" id="ee-index-genres">
-        <div class="ee-index-heading">
-          <h2>Genres</h2>
-          <span class="ee-index-count">Loading…</span>
-        </div>
-        <input
-          class="ee-index-search"
-          type="search"
-          placeholder="Search genres…"
-          aria-label="Search genres"
-          autocomplete="off"
-        >
-        <nav class="ee-index-alphabet" aria-label="Genre alphabet"></nav>
-        <div class="ee-index-results">
-          <p class="ee-index-loading">Loading genres…</p>
-        </div>
-      </section>
-    </div>
-
-    <nav class="ee-archive-links" aria-label="Electric Eye">
+  <main>
+    <p>Electric Eye</p>
+    <h1>Archive</h1>
+    <p>Artist coverage and concert connections from Electric Eye.</p>
+    <nav>
       <a href="https://www.electriceyerock.com/">Electric Eye</a>
       <a href="https://www.electriceyerock.com/p/paris-area-concert-calendar.html">Concert Calendar</a>
     </nav>
   </main>
-
-  <script src="/proof/electric-eye-artist-lookup.js"></script>
-  <script src="/proof/venue-current.js"></script>
-  <script src="/proof/genre-current.js"></script>
-  <script src="/proof/archive-index.js"></script>
 </body>
 </html>
