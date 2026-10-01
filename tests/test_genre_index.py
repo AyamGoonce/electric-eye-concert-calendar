@@ -105,11 +105,16 @@ class GenreIndexEvidenceTests(unittest.TestCase):
         index = self.build(artists, articles)
         genres = self.genres_for(index, "Jason Isbell")
 
-        self.assertIn("Alt-Country", genres)
+        # Single-artist article evidence is retained.
         self.assertIn("Americana", genres)
         self.assertIn("Country", genres)
         self.assertIn("Folk", genres)
-        self.assertIn("Rock", genres)
+
+        # The Jason Isbell & the 400 Unit article is multi-artist.
+        # Its flat Blogger genre labels cannot establish which genre
+        # belongs to which artist.
+        self.assertNotIn("Alt-Country", genres)
+        self.assertNotIn("Rock", genres)
 
     def test_generic_roundup_does_not_leak_genres_to_artist(self):
         articles = [
@@ -224,28 +229,29 @@ class GenreIndexEvidenceTests(unittest.TestCase):
         self.assertNotIn("Heavy Metal", genres)
         self.assertNotIn("Metal", genres)
 
-    def test_artist_named_in_multi_artist_title_can_use_labels(self):
+    def test_artist_named_in_multi_artist_title_does_not_inherit_flat_genres(self):
         articles = [
             article(
-                "Dimmu Borgir, Behemoth and Dark Funeral To Perform Black Metal Ritual",
-                ["Black Metal", "Metal"],
-                ["behemoth", "dark-funeral", "dimmu-borgir"],
+                "Artist Alpha, Artist Beta and Artist Gamma announce joint tour",
+                ["Jazz", "Death Metal", "Electronic"],
+                ["artist-alpha", "artist-beta", "artist-gamma"],
                 "news",
             )
         ]
         artists = {
-            "behemoth": {
-                "n": "Behemoth",
+            "artist-beta": {
+                "n": "Artist Beta",
                 "ar": [0],
                 "identity": {"genres": []},
             }
         }
 
         index = self.build(artists, articles)
-        genres = self.genres_for(index, "Behemoth")
+        genres = self.genres_for(index, "Artist Beta")
 
-        self.assertIn("Black Metal", genres)
-        self.assertIn("Metal", genres)
+        self.assertNotIn("Jazz", genres)
+        self.assertNotIn("Death Metal", genres)
+        self.assertNotIn("Electronic", genres)
 
     def test_playlist_title_genre_requires_matching_genre_label(self):
         articles = [
@@ -313,6 +319,49 @@ class GenreIndexEvidenceTests(unittest.TestCase):
 
         self.assertIn("Jazz Fusion", genres)
         self.assertIn("Jazz", genres)
+
+    def test_new_canonical_genres_exist_and_inherit_correctly(self):
+        from concert_calendar.genres import (
+            canonicalize_genre_term,
+            genre_parent_chain,
+            load_genre_taxonomy,
+        )
+
+        taxonomy = load_genre_taxonomy()
+
+        self.assertEqual(
+            "Gypsy Jazz",
+            canonicalize_genre_term("Gypsy Jazz", taxonomy),
+        )
+        self.assertEqual(
+            "Gypsy Jazz",
+            canonicalize_genre_term("Jazz Manouche", taxonomy),
+        )
+        self.assertEqual(
+            "Gypsy Jazz",
+            canonicalize_genre_term("Manouche Jazz", taxonomy),
+        )
+        self.assertIn(
+            "Jazz",
+            genre_parent_chain("Gypsy Jazz", taxonomy),
+        )
+
+        self.assertEqual(
+            "New York Hardcore",
+            canonicalize_genre_term("New York Hardcore", taxonomy),
+        )
+        self.assertEqual(
+            "New York Hardcore",
+            canonicalize_genre_term("NYHC", taxonomy),
+        )
+
+        nyhc_parents = genre_parent_chain(
+            "New York Hardcore",
+            taxonomy,
+        )
+        self.assertIn("Hardcore Punk", nyhc_parents)
+        self.assertIn("Punk", nyhc_parents)
+
 
     def test_phrase_matching_uses_token_boundaries(self):
         self.assertTrue(

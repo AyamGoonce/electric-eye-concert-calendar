@@ -147,6 +147,30 @@ def build_genre_index(
         content_artists = content_index.get("artists") or {}
         articles = content_index.get("articles") or []
 
+        # Blogger labels are flat article metadata. A multi-artist article
+        # cannot establish which genre belongs to which artist, even when all
+        # artist names appear in the title. Count artist-to-article
+        # associations from the authoritative artist records rather than
+        # relying on article["a"], because historical articles may not carry
+        # the reverse association.
+        article_artist_counts: dict[int, int] = {}
+
+        for associated_artist in content_artists.values():
+            seen_article_ids = set()
+
+            for article_id in associated_artist.get("ar") or []:
+                if not isinstance(article_id, int):
+                    continue
+                if article_id < 0 or article_id >= len(articles):
+                    continue
+                if article_id in seen_article_ids:
+                    continue
+
+                seen_article_ids.add(article_id)
+                article_artist_counts[article_id] = (
+                    article_artist_counts.get(article_id, 0) + 1
+                )
+
         for slug, artist_record in content_artists.items():
             artist = (artist_record.get("n") or "").strip()
             if not artist:
@@ -173,7 +197,26 @@ def build_genre_index(
                 # articles may not carry the reverse article["a"] association,
                 # so require the artist name in the title as the additional
                 # safeguard before accepting article genre labels.
-                artist_specific = normalized_phrase_in_text(artist, title)
+                reverse_artist_count = article_artist_counts.get(
+                    article_id,
+                    0,
+                )
+                article_artist_count = len(
+                    {
+                        slug
+                        for slug in (article.get("a") or [])
+                        if slug
+                    }
+                )
+                associated_artist_count = max(
+                    reverse_artist_count,
+                    article_artist_count,
+                )
+
+                artist_specific = (
+                    associated_artist_count == 1
+                    and normalized_phrase_in_text(artist, title)
+                )
 
                 if artist_specific:
                     for raw in article.get("l") or []:
