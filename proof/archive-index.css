@@ -68,16 +68,58 @@ body {
 
 .ee-index-heading {
   display: flex;
-  align-items: baseline;
+  width: 100%;
+  align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 22px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ee-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
-.ee-index-heading h2 {
-  margin: 0;
+.ee-index-heading-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   font-size: clamp(1.9rem, 4vw, 3rem);
+  font-weight: 750;
   letter-spacing: -0.035em;
+}
+
+.ee-index-chevron {
+  display: inline-block;
+  font-size: 0.8em;
+  line-height: 1;
+  transform: rotate(0deg);
+  transition: transform 160ms ease;
+}
+
+.ee-index-section.is-open .ee-index-chevron {
+  transform: rotate(90deg);
+}
+
+.ee-index-heading:hover .ee-index-heading-title,
+.ee-index-heading:focus-visible .ee-index-heading-title {
+  color: var(--ee-accent);
+}
+
+.ee-index-heading:focus-visible {
+  outline: 2px solid var(--ee-dark);
+  outline-offset: 6px;
+  border-radius: 3px;
+}
+
+.ee-index-body {
+  margin-top: 24px;
+}
+
+.ee-index-body[hidden] {
+  display: none;
 }
 
 .ee-index-count {
@@ -297,5 +339,124 @@ body {
     min-width: 31px;
     height: 31px;
     padding: 0 6px;
+  }
+}
+
+
+/* Hierarchical genre index */
+
+.ee-genre-tree {
+  min-height: 0;
+}
+
+.ee-genre-node {
+  min-width: 0;
+}
+
+.ee-genre-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 38px;
+  border-top: 1px solid var(--ee-border);
+}
+
+.ee-genre-tree > .ee-genre-node:first-child > .ee-genre-row {
+  border-top: 0;
+}
+
+.ee-genre-toggle,
+.ee-genre-toggle-spacer {
+  width: 24px;
+  height: 24px;
+}
+
+.ee-genre-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ee-muted);
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 140ms ease, color 140ms ease;
+}
+
+.ee-genre-toggle[aria-expanded="true"] {
+  transform: rotate(90deg);
+}
+
+.ee-genre-toggle:hover,
+.ee-genre-toggle:focus-visible {
+  color: var(--ee-accent);
+}
+
+.ee-genre-link {
+  min-width: 0;
+  color: var(--ee-text);
+  font-size: 0.96rem;
+  font-weight: 680;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.ee-genre-link:hover,
+.ee-genre-link:focus-visible {
+  color: var(--ee-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.ee-genre-count {
+  color: var(--ee-muted);
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.ee-genre-children {
+  margin-left: 12px;
+  padding-left: 20px;
+  border-left: 1px solid var(--ee-border);
+}
+
+.ee-genre-children[hidden] {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .ee-index-heading {
+    display: flex;
+  }
+
+  .ee-index-count {
+    display: inline;
+    margin-top: 0;
+  }
+
+  .ee-index-heading-title {
+    font-size: 1.8rem;
+  }
+
+  .ee-genre-row {
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 7px;
+    padding: 3px 0;
+  }
+
+  .ee-genre-count {
+    grid-column: 2;
+    margin-top: -6px;
+    padding-bottom: 5px;
+  }
+
+  .ee-genre-children {
+    margin-left: 9px;
+    padding-left: 13px;
   }
 }

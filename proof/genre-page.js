@@ -105,20 +105,6 @@
     text(mount, "p", "Electric Eye", "ee-page-kicker");
     text(mount, "h1", genre.name, "ee-artist-title");
 
-    var context = genre.artistCount + " artist";
-    if (genre.artistCount !== 1) context += "s";
-
-    if (genre.parent) {
-      context += " · Part of " + genre.parent;
-    }
-
-    text(
-      mount,
-      "p",
-      context,
-      "ee-page-context"
-    );
-
     var artistLookup = Object.create(null);
 
     Object.keys(contentIndex.artists || {}).forEach(function (slug) {
@@ -154,6 +140,21 @@
         });
       }
     });
+
+    var visibleArtistCount = matchedArtists.length;
+    var context = visibleArtistCount + " artist";
+    if (visibleArtistCount !== 1) context += "s";
+
+    if (genre.parent) {
+      context += " · " + genre.parent + " subgenre";
+    }
+
+    text(
+      mount,
+      "p",
+      context,
+      "ee-page-context"
+    );
 
     if (matchedArtists.length) {
       var artistsSection = document.createElement("section");
