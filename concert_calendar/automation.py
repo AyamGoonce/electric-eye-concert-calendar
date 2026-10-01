@@ -107,6 +107,7 @@ PUBLIC_STABLE_ASSETS = (
     "artist-page.js",
     "artist-page.css", "artist-autolinker.js", "artist.html",
     "coverage-page.js", "coverage.html",
+    "archive-index.js", "archive-index.css",
     "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
     "artist-index.json", "artist-index.csv", "artist-article-associations.csv",
 )
@@ -1280,6 +1281,7 @@ def verify_hosted(args) -> int:
                 "electric-eye-artist-lookup.js", "electric-eye-content-current.js",
                 "artist-page.js", "artist-page.css", "artist-autolinker.js", "artist.html",
                 "coverage-page.js", "coverage.html",
+                "archive-index.js", "archive-index.css",
             ):
                 body, content_type = fetch(
                     args.base_url.rstrip("/") + "/" + stable + f"?verify={args.sha256[:16]}"
