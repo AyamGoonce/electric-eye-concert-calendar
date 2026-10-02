@@ -127,6 +127,62 @@
           }
         });
       });
+
+      (identity.searchLinks || []).forEach(function (relatedName) {
+        addSearchTerm(slug, relatedName);
+      });
+
+      (identity.searchAssociations || []).forEach(function (relatedName) {
+        addSearchTerm(slug, relatedName);
+
+        var relatedSlug = lookup[relatedName];
+
+        if (relatedSlug) {
+          addSearchTerm(relatedSlug, artistName);
+        }
+      });
+    });
+
+    Object.keys(content.relationshipNodes || {}).forEach(function (slug) {
+      var node = content.relationshipNodes[slug] || {};
+      var identity = node.identity || {};
+      var nodeName = node.n || slug;
+
+      (node.al || []).forEach(function (alias) {
+        addSearchTerm(slug, alias);
+      });
+
+      relationshipFields.forEach(function (field) {
+        (identity[field] || []).forEach(function (relatedName) {
+          var relatedSlug = lookup[relatedName];
+
+          if (relatedSlug && content.artists[relatedSlug]) {
+            addSearchTerm(relatedSlug, nodeName);
+            (node.al || []).forEach(function (alias) {
+              addSearchTerm(relatedSlug, alias);
+            });
+          }
+        });
+      });
+
+      (identity.searchLinks || []).forEach(function (relatedName) {
+        var relatedSlug = lookup[relatedName];
+
+        if (relatedSlug && content.artists[relatedSlug]) {
+          addSearchTerm(slug, relatedName);
+        }
+      });
+
+      (identity.searchAssociations || []).forEach(function (relatedName) {
+        var relatedSlug = lookup[relatedName];
+
+        if (relatedSlug && content.artists[relatedSlug]) {
+          addSearchTerm(relatedSlug, nodeName);
+          (node.al || []).forEach(function (alias) {
+            addSearchTerm(relatedSlug, alias);
+          });
+        }
+      });
     });
 
     return sortItems(
