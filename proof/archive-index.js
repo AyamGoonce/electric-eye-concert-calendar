@@ -80,6 +80,7 @@
     ];
     var searchTermsBySlug = Object.create(null);
     var relatedSlugsBySlug = Object.create(null);
+    var scopedArticlesBySlug = Object.create(null);
     var entitiesBySlug = Object.create(null);
     var relationshipLookup = Object.create(null);
     var searchEdges = Object.create(null);
@@ -105,6 +106,32 @@
 
       if (relatedSlugsBySlug[slug].indexOf(relatedSlug) === -1) {
         relatedSlugsBySlug[slug].push(relatedSlug);
+      }
+    }
+
+    function addScopedArticle(slug, term, article) {
+      var key = normalize(term);
+
+      if (!slug || !key || !article || !article.u || !article.t) return;
+
+      if (!scopedArticlesBySlug[slug]) {
+        scopedArticlesBySlug[slug] = Object.create(null);
+      }
+
+      if (!scopedArticlesBySlug[slug][key]) {
+        scopedArticlesBySlug[slug][key] = [];
+      }
+
+      if (
+        !scopedArticlesBySlug[slug][key].some(function (item) {
+          return item.href === article.u;
+        })
+      ) {
+        scopedArticlesBySlug[slug][key].push({
+          name: article.t,
+          href: article.u,
+          meta: article.d || ""
+        });
       }
     }
 
@@ -251,6 +278,18 @@
             sourceTerms.forEach(function (term) {
               addSearchTerm(targetSlug, term);
             });
+
+            (source.identity.searchArticleIds || []).forEach(
+              function (postId) {
+                (content.articles || []).forEach(function (article) {
+                  if (String(article.pi || "") !== String(postId)) return;
+
+                  sourceTerms.forEach(function (term) {
+                    addScopedArticle(targetSlug, term, article);
+                  });
+                });
+              }
+            );
           } else {
             queue.push(targetSlug);
           }
@@ -321,7 +360,8 @@
             meta: "",
             searchTerms: searchTermsBySlug[slug] || [],
             exactTerms: exactTerms,
-            articleItems: articleItems
+            articleItems: articleItems,
+            scopedArticleItems: scopedArticlesBySlug[slug] || {}
           };
         })
     );
@@ -607,9 +647,18 @@
           }
         );
 
-        if (!exactMatch) return;
+        if (exactMatch) {
+          (item.articleItems || []).forEach(function (article) {
+            if (seenArticleUrls[article.href]) return;
 
-        (item.articleItems || []).forEach(function (article) {
+            seenArticleUrls[article.href] = true;
+            matchedArticles.push(article);
+          });
+        }
+
+        (
+          (item.scopedArticleItems || {})[normalizedQuery] || []
+        ).forEach(function (article) {
           if (seenArticleUrls[article.href]) return;
 
           seenArticleUrls[article.href] = true;
