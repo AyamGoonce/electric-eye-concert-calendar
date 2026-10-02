@@ -109,6 +109,25 @@ def normalize_artist(value):
     return re.sub(r"[^a-z0-9]+", " ", value).strip()
 
 
+def _non_artist_identities(overrides):
+    """Return exact reviewed pseudo-identities, normalized for comparison."""
+    return {
+        normalize_artist(name)
+        for name in overrides.get("nonArtistIdentities", [])
+        if normalize_artist(name)
+    }
+
+
+def _is_suspicious_billing_identity(name):
+    """Flag, but never automatically collapse, new billing-like identities."""
+    return bool(re.search(
+        r"(?:\bfeat(?:uring)?\.?\b|\bwith\b|\b(?:and|&)\s+friends\b|"
+        r"\bfrom\s+.+|\bplays?\s+.+)",
+        str(name or ""),
+        flags=re.IGNORECASE,
+    ))
+
+
 def normalize_content_identity(value):
     """Exact Unicode spelling for article association; never fold accents."""
     value = unicodedata.normalize("NFC", value or "").casefold().replace("’", "'")
@@ -637,11 +656,14 @@ def _concert_review_artist_can_seed(value):
 def build_index(entries, *, generated_at=None, concert_review_associations=None):
     overrides = load_artist_identity_overrides()
     reviewed_artists = overrides.get("artists") or {}
+    non_artist_identities = _non_artist_identities(overrides)
     concert_review_associations = concert_review_associations or {}
     seeds = seed_artist_labels(entries)
     canonical_by_identity = {}
     for label, _count in seeds.most_common():
         identity = normalize_artist(label)
+        if identity in non_artist_identities:
+            continue
         canonical_by_identity.setdefault(identity, label)
 
     # Every manually reviewed artist is an authoritative canonical identity.
@@ -649,14 +671,14 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
     # label/title seeding failed to discover it.
     for canonical in reviewed_artists:
         identity = normalize_artist(canonical)
-        if identity:
+        if identity and identity not in non_artist_identities:
             canonical_by_identity[identity] = canonical
 
     # Reviewed manual artists remain valid canonical identities even when
     # automatic Blogger label/title detection misses them.
     for canonical in MANUAL_ARTIST_ARTICLES:
         identity = normalize_artist(canonical)
-        if identity:
+        if identity and identity not in non_artist_identities:
             canonical_by_identity.setdefault(identity, canonical)
     # The Concert Reviews page is a structured editorial source. Its
     # explicit artist field may seed a simple canonical identity when Blogger
@@ -671,13 +693,17 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
                 continue
 
             identity = normalize_artist(canonical)
-            if identity and _concert_review_artist_can_seed(canonical):
+            if (
+                identity
+                and identity not in non_artist_identities
+                and _concert_review_artist_can_seed(canonical)
+            ):
                 canonical_by_identity.setdefault(identity, canonical)
 
     for override in (overrides.get("articleOverrides") or {}).values():
         for canonical in override.get("primaryArtists", []):
             identity = normalize_artist(canonical)
-            if identity:
+            if identity and identity not in non_artist_identities:
                 canonical_by_identity.setdefault(identity, canonical)
 
     for alias, canonical in EXPLICIT_ALIASES.items():
@@ -852,6 +878,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "searchLinks": reviewed.get("searchLinks", []),
             "searchAssociations": reviewed.get("searchAssociations", []),
             "searchArticleIds": reviewed.get("searchArticleIds", []),
+            "articleSearchTerms": reviewed.get("articleSearchTerms", []),
             "producers": reviewed.get("producers", []),
             "songwriters": reviewed.get("songwriters", []),
             "genres": reviewed.get("genres", []),
@@ -912,6 +939,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         "searchLinks",
         "searchAssociations",
         "searchArticleIds",
+        "articleSearchTerms",
     )
     artist_names = {
         normalize_artist(item["n"])
@@ -943,6 +971,23 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         }
 
     counts = Counter(article["y"] for article in articles)
+    relationship_names_by_artist = {
+        canonical: {
+            normalize_artist(name)
+            for field in relationship_fields
+            if field != "articleSearchTerms"
+            for name in reviewed.get(field, [])
+        }
+        for canonical, reviewed in reviewed_artists.items()
+    }
+    alias_relationship_conflicts = []
+    for alias, canonical in EXPLICIT_ALIASES.items():
+        if normalize_artist(alias) in relationship_names_by_artist.get(canonical, set()):
+            alias_relationship_conflicts.append({
+                "canonical": canonical,
+                "alias": alias,
+            })
+
     return {
         "schema": 2,
         "generatedAt": generated_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -954,6 +999,22 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "aliases": sum(len(item["al"]) for item in artists.values()),
             "proseAutolinkExclusions": sorted(PROSE_AUTOLINK_EXCLUSIONS),
             "slugCollisions": collisions,
+            "aliasRelationshipConflicts": sorted(
+                alias_relationship_conflicts,
+                key=lambda item: (
+                    normalize_artist(item["canonical"]),
+                    normalize_artist(item["alias"]),
+                ),
+            ),
+            "suspiciousBillingIdentities": sorted(
+                [
+                    artist["n"]
+                    for artist in artists.values()
+                    if len(artist["ar"]) == 1
+                    and _is_suspicious_billing_identity(artist["n"])
+                ],
+                key=normalize_artist,
+            ),
             "unresolvedArticles": sum(not article["a"] for article in articles),
         },
         "lookup": lookup,
@@ -1035,6 +1096,7 @@ def write_artist_exports(output_dir, index):
     columns = [
         "canonicalName", "slug", "aliases", "alternateSpellings", "members",
         "formerMembers", "associatedActs", "sideProjects", "collaborators",
+        "articleSearchTerms",
         "producers", "songwriters", "genres", "keywords", "musicBrainzId",
         "appleArtistId", "appleIdentityConfidence", "ambiguityClass",
         "identityEvidence", "articleCount", "lastIdentityUpdatedAt",

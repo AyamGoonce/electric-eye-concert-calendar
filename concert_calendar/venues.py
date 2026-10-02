@@ -3,6 +3,7 @@ import unicodedata
 from html import unescape
 
 from concert_calendar.models import ConcertEvent
+from concert_calendar.venue_metadata import VENUE_METADATA
 
 
 VENUE_ALIASES = {
@@ -207,6 +208,9 @@ VENUE_GEOGRAPHY = {
     "L’Accord Parfait": ("Paris", "75"),
     "Plénitude Arena": ("Nanterre", "92"),
     "Théâtre Claude Debussy": ("Maisons-Alfort", "94"),
+    # Verified by the first-party venue scrapers' structured event records.
+    "Supersonic": ("Paris", "75"),
+    "Le Zénith Paris – La Villette": ("Paris", "75"),
 
     "Le Forum": ("Vauréal", "95"),
     "Maison des Arts de Créteil": ("Créteil", "94"),
@@ -327,6 +331,23 @@ def normalize_venue_key(value: str) -> str:
     normalized = re.sub(r"\s+", " ", normalized)
 
     return normalized.strip()
+
+
+# Renames are authoritative metadata, not fuzzy name similarity. Register both
+# the former and current names against the current physical venue identity.
+for _former_name, _metadata in VENUE_METADATA.items():
+    _current_name = (_metadata.get("current_name") or "").strip()
+    if _metadata.get("status") == "renamed" and _current_name:
+        for _alias_key, _alias_target in list(VENUE_ALIASES.items()):
+            if _alias_target == _former_name:
+                VENUE_ALIASES[_alias_key] = _current_name
+        VENUE_ALIASES[normalize_venue_key(_former_name)] = _current_name
+        VENUE_ALIASES[normalize_venue_key(_current_name)] = _current_name
+        if _former_name in VENUE_GEOGRAPHY:
+            VENUE_GEOGRAPHY.setdefault(
+                _current_name,
+                VENUE_GEOGRAPHY[_former_name],
+            )
 
 
 def _wrapped_known_venue(value: str) -> str | None:

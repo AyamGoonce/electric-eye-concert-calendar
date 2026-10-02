@@ -62,6 +62,22 @@ class VenueArticleAssociationTests(unittest.TestCase):
             1,
         )
 
+    def test_former_venue_name_resolves_to_current_physical_identity(self):
+        entries = [
+            entry(
+                "Artist @ Batofar, Paris - November 28th, 2014",
+                "https://www.electriceyerock.com/2014/11/batofar.html",
+            )
+        ]
+
+        result = build_venue_article_associations(
+            entries,
+            known_venues={"Le Bateau Phare"},
+        )
+
+        self.assertEqual(1, len(result["Le Bateau Phare"]))
+        self.assertIn("@ Batofar", result["Le Bateau Phare"][0]["title"])
+
     def test_non_review_is_ignored(self):
         entries = [
             entry(

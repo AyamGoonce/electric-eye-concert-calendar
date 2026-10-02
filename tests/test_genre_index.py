@@ -7,6 +7,7 @@ from unittest.mock import patch
 from concert_calendar.genre_index import (
     build_genre_index,
     normalized_phrase_in_text,
+    public_genre_names,
 )
 
 
@@ -376,6 +377,90 @@ class GenreIndexEvidenceTests(unittest.TestCase):
                 "Nashville Rock Night",
             )
         )
+
+    def test_public_genre_visibility_threshold_and_required_ancestors(self):
+        records = [
+            {"name": "Rock", "parent": None, "artists": ["Covered"]},
+            {"name": "Niche", "parent": "Rock", "artists": ["Covered"]},
+            {"name": "Two Artist Genre", "parent": None, "artists": ["A", "B"]},
+            {"name": "Calendar Singleton", "parent": None, "artists": ["Solo"]},
+        ]
+
+        visible = public_genre_names(
+            records,
+            visible_artists={"Covered", "A", "B", "Solo"},
+            article_backed_artists={"Covered"},
+        )
+
+        self.assertIn("Niche", visible)
+        self.assertIn("Rock", visible)
+        self.assertIn("Two Artist Genre", visible)
+        self.assertNotIn("Calendar Singleton", visible)
+
+    def test_reviewed_exclusions_and_musicbrainz_low_score_filter(self):
+        articles = [
+            article("Prince announces a show", [], ["prince"], "news"),
+            article("Elton John announces a show", [], ["elton-john"], "news"),
+            article("Keefus Ciancia announces a show", [], ["keefus-ciancia"], "news"),
+        ]
+        artists = {
+            "prince": {"n": "Prince", "ar": [0], "identity": {"genres": []}},
+            "elton-john": {"n": "Elton John", "ar": [1], "identity": {"genres": []}},
+            "keefus-ciancia": {"n": "Keefus Ciancia", "ar": [2], "identity": {"genres": []}},
+        }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            mappings = Path(tmp) / "genre_mappings.json"
+            mappings.write_text(json.dumps({"artists": []}), encoding="utf-8")
+            musicbrainz = {
+                "prince": {
+                    "genres": ["Funk", "Deep House", "House", "Trap"],
+                    "scores": {"Funk": 22, "Deep House": 1, "House": 1, "Trap": 1},
+                },
+                "elton john": {
+                    "genres": ["Pop", "House"],
+                    "scores": {"Pop": 19, "House": 1},
+                },
+                "keefus ciancia": {"genres": [], "scores": {}, "musicbrainz_id": "keefus"},
+            }
+            with (
+                patch("concert_calendar.genre_index.resolve_musicbrainz_genres", return_value=musicbrainz),
+                patch("concert_calendar.genre_index.musicbrainz_relationship_genres", return_value={"genres": ["P-Funk"]}),
+                patch("concert_calendar.genre_index.wikidata_detailed_lookup", return_value={}),
+                patch("concert_calendar.genre_index.apple_detailed_lookup", return_value={}),
+            ):
+                index = build_genre_index(
+                    mappings_path=mappings,
+                    content_index=make_content_index(artists, articles),
+                )
+
+        self.assertEqual({"Funk"}, self.genres_for(index, "Prince"))
+        self.assertEqual({"Pop"}, self.genres_for(index, "Elton John"))
+        self.assertNotIn("P-Funk", self.genres_for(index, "Keefus Ciancia"))
+
+    def test_genre_outlier_audit_flags_without_deleting(self):
+        artist = "Wide Spectrum"
+        direct = [
+            "Rock", "Pop", "Jazz", "Electronic", "Country",
+            "Punk", "Funk", "Metal",
+        ]
+        artists = {
+            "wide-spectrum": {
+                "n": artist,
+                "ar": [],
+                "identity": {"genres": direct},
+            }
+        }
+
+        index = self.build(artists, [])
+        reasons = {
+            row["reason"]
+            for row in index["diagnostics"]["genreOutliers"]
+            if row["artist"] == artist
+        }
+
+        self.assertIn("high_direct_genre_count", reasons)
+        self.assertTrue(self.genres_for(index, artist))
 
 
 if __name__ == "__main__":

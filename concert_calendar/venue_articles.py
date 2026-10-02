@@ -10,6 +10,7 @@ from concert_calendar.content_index import (
     resized_blogger_image,
 )
 from concert_calendar.venue_metadata import VENUE_METADATA
+from concert_calendar.venue_index import canonicalize_venue_metadata
 from concert_calendar.venues import resolve_venue_name
 
 
@@ -97,7 +98,7 @@ def build_venue_article_associations(
     """
 
     known = (
-        set(VENUE_METADATA)
+        set(canonicalize_venue_metadata(VENUE_METADATA))
         if known_venues is None
         else set(known_venues)
     )

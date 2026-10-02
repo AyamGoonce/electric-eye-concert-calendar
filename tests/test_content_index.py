@@ -25,6 +25,13 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    @staticmethod
+    def reviewed_entry(title, labels, url, post_id, date="2026-01-01"):
+        item = entry(title, labels, date)
+        item["id"]["$t"] = f"tag:blogger.com,1999:blog-1.post-{post_id}"
+        item["link"][0]["href"] = url
+        return item
+
     def test_geographic_label_is_structural_without_hiding_real_artists(self):
         index = build_index([
             entry(
@@ -607,6 +614,242 @@ var EE_ARCHIVE_REVIEWS=[];
         self.assertIn("live", index["artists"])
         self.assertEqual("live", index["lookup"]["live"])
         self.assertIn("Live", index["diagnostics"]["proseAutolinkExclusions"])
+
+    def test_reviewed_common_word_live_false_positives_do_not_create_artist(self):
+        items = [
+            self.reviewed_entry(
+                "Exhibit: Play It Loud @ Metropolitan Museum of Art",
+                ["Play It Loud", "Exhibit"],
+                "https://www.electriceyerock.com/play-it-loud.html",
+                "6997",
+            ),
+            self.reviewed_entry(
+                "Convention: Mondial du Tatouage @ Grande Halle de la Villette",
+                ["Mondial du Tatouage", "Tatouage", "Convention"],
+                "https://www.electriceyerock.com/mondial-du-tatouage.html",
+                "6998",
+            ),
+            self.reviewed_entry(
+                "The first live album by Sparks is here!",
+                ["News", "Live", "Sparks"],
+                "https://www.electriceyerock.com/2026/08/the-first-live-album-by-sparks-is-here.html",
+                "1990071812697989870",
+            ),
+            self.reviewed_entry(
+                "Friday's Playlist: Great Live Performances (part one)",
+                ["Friday's Playlist", "Live"],
+                "https://www.electriceyerock.com/2020/01/fridays-playlist-great-live.html",
+                "1158533944436168877",
+            ),
+        ]
+
+        index = build_index(items, generated_at="2026-01-01T00:00:00Z")
+
+        self.assertNotIn("live", index["artists"])
+
+    def test_reviewed_identity_visibility_relationships_and_billings(self):
+        items = [
+            self.reviewed_entry(
+                "Scary Goldings feat. John Scofield, MonoNeon & Louis Cole @ Jazz à la Villette, Paris - September 4th, 2022",
+                [
+                    "Concert Review", "Scary Goldings",
+                    "Scary Goldings feat. John Scofield", "John Scofield",
+                    "MonoNeon", "MonoNeon & Louis Cole", "Scary Pockets",
+                ],
+                "https://www.electriceyerock.com/2022/09/scary-goldings-feat-john-scofield.html",
+                "4253062553459285019",
+                "2022-09-04",
+            ),
+            self.reviewed_entry(
+                "Scary Pockets @ Élysée-Montmartre, Paris",
+                ["Concert Review", "Scary Pockets"],
+                "https://www.electriceyerock.com/scary-pockets.html",
+                "7001",
+            ),
+            self.reviewed_entry(
+                "MonoNeon @ Alhambra, Paris",
+                ["Concert Review", "MonoNeon"],
+                "https://www.electriceyerock.com/mononeon.html",
+                "7002",
+            ),
+            self.reviewed_entry(
+                "R.I.P. Frank Beard, drummer of ZZ Top",
+                ["News", "Obituary", "Frank Beard", "ZZ Top"],
+                "https://www.electriceyerock.com/2026/08/rip-frank-beard.html",
+                "6325116386435382454",
+            ),
+            self.reviewed_entry(
+                "Renaud et ses invités",
+                ["News", "Renaud"],
+                "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+                "7003",
+            ),
+        ]
+        playlist_cases = {
+            "Eddie Van Halen": "https://www.electriceyerock.com/2020/10/eddie-van-halen-1955-2020.html",
+            "George Harrison": "https://www.electriceyerock.com/2021/11/fridays-mondays-playlist-george.html",
+            "Elliot Easton": "https://www.electriceyerock.com/2022/06/fridays-playlist-elliot-easton-sessions.html",
+            "John McGeoch": "https://www.electriceyerock.com/2022/04/fridays-playlist-john-mcgeoch-sessions.html",
+            "Ginger Baker": "https://www.electriceyerock.com/2019/10/fridays-playlist-rip-ginger-baker.html",
+            "Jesse “Ed” Davis": "https://www.electriceyerock.com/2025/06/fridays-playlist-jess-ed-davis-sessions.html",
+            "Robert Quine": "https://www.electriceyerock.com/2021/12/fridays-playlist-robert-quine-sessions.html",
+            "Ollie Halsall": "https://www.electriceyerock.com/2022/04/fridays-playlist-ollie-halsall-sessions.html",
+            "Ronnie James Dio": "https://www.electriceyerock.com/2020/05/fridays-saturdays-playlist-ronnie-james.html",
+        }
+        for offset, (artist, url) in enumerate(playlist_cases.items(), 7100):
+            items.append(self.reviewed_entry(
+                f"Friday's Playlist: {artist}",
+                ["Friday's Playlist", artist],
+                url,
+                str(offset),
+            ))
+
+        index = build_index(items, generated_at="2026-01-01T00:00:00Z")
+
+        for pseudo in (
+            "Play It Loud", "Tatouage", "Mondial du Tatouage",
+            "Scary Goldings feat. John Scofield", "MonoNeon & Louis Cole",
+            "Mikkey Dee & Friends play Motörhead",
+        ):
+            self.assertNotIn(content_index.slugify(pseudo), index["artists"])
+
+        for artist in (
+            "Scary Pockets", "Scary Goldings", "MonoNeon", "Louis Cole",
+            "John Scofield", *playlist_cases,
+        ):
+            slug = content_index.slugify(artist)
+            self.assertIn(slug, index["artists"], artist)
+            self.assertTrue(index["artists"][slug]["da"], artist)
+            self.assertFalse(
+                index["artists"][slug]["identity"]["hideFromArtistIndex"],
+                artist,
+            )
+
+        self.assertEqual("eddie-van-halen", index["lookup"]["ed van halen"])
+        self.assertEqual("eddie-van-halen", index["lookup"]["edward van halen"])
+        self.assertEqual("jesse-ed-davis", index["lookup"]["jesse ed davis"])
+        self.assertEqual("ronnie-james-dio", index["lookup"]["rj dio"])
+        self.assertNotIn("dio", index["lookup"])
+
+        scary_goldings = index["artists"]["scary-goldings"]
+        scary_pockets = index["artists"]["scary-pockets"]
+        self.assertIn(
+            "Scary Pockets",
+            scary_goldings["identity"]["associatedActs"],
+        )
+        self.assertIn(
+            "Scary Goldings",
+            scary_pockets["identity"]["associatedActs"],
+        )
+        self.assertNotEqual(scary_goldings["n"], scary_pockets["n"])
+        jazz_article = next(
+            article
+            for article in index["articles"]
+            if article["pi"] == "4253062553459285019"
+        )
+        for artist in (
+            "scary-goldings", "john-scofield", "mononeon", "louis-cole",
+        ):
+            self.assertIn(artist, jazz_article["a"])
+
+        frank = index["artists"]["frank-beard"]
+        self.assertTrue(frank["identity"]["hideFromArtistIndex"])
+        self.assertTrue(frank["ar"])
+        self.assertEqual(["ZZ Top"], frank["identity"]["searchLinks"])
+
+        for person, band in (
+            ("David Coverdale", "Whitesnake"),
+            ("Robert Jon Burrison", "Robert Jon & The Wreck"),
+            ("Ewan Currie", "The Sheepdogs"),
+        ):
+            node = index["relationshipNodes"][content_index.slugify(person)]
+            self.assertEqual([band], node["identity"]["searchLinks"])
+
+        self.assertIn("van-halen", index["relationshipNodes"])
+        self.assertIn("the-cars", index["relationshipNodes"])
+        self.assertIn("the-beatles", index["relationshipNodes"])
+        self.assertIn("cream", index["relationshipNodes"])
+        reviewed_relationships = (
+            ("eddie-van-halen", "Van Halen", "van-halen", "Eddie Van Halen"),
+            ("george-harrison", "The Beatles", "the-beatles", "George Harrison"),
+            ("elliot-easton", "The Cars", "the-cars", "Elliot Easton"),
+            ("ginger-baker", "Cream", "cream", "Ginger Baker"),
+        )
+        for artist_slug, band, band_slug, artist in reviewed_relationships:
+            self.assertIn(
+                band,
+                index["artists"][artist_slug]["identity"]["associatedActs"],
+            )
+            self.assertIn(
+                artist,
+                index["relationshipNodes"][band_slug]["identity"]["members"],
+            )
+
+        self.assertEqual(
+            {
+                "Public Image Ltd.", "Magazine", "Visage",
+                "Siouxsie and the Banshees",
+            },
+            set(index["artists"]["john-mcgeoch"]["identity"]["associatedActs"]),
+        )
+        self.assertEqual(
+            ["Lloyd Cole"],
+            index["artists"]["robert-quine"]["identity"]["collaborators"],
+        )
+        self.assertNotIn("lloyd-coles-band", index["relationshipNodes"])
+        dio_node = index["relationshipNodes"]["dio"]
+        self.assertEqual("Dio", dio_node["n"])
+        self.assertEqual(["Ronnie James Dio"], dio_node["identity"]["searchLinks"])
+        self.assertIn(
+            "Dio",
+            index["artists"]["ronnie-james-dio"]["identity"]["associatedActs"],
+        )
+
+        agnostic_front_entity = (
+            index["artists"].get("agnostic-front")
+            or index["relationshipNodes"]["agnostic-front"]
+        )
+        agnostic_front = agnostic_front_entity["identity"]
+        self.assertEqual(
+            {"Roger Miret", "Vinnie Stigma"},
+            set(agnostic_front["members"]),
+        )
+        self.assertNotIn("Roger Miret", agnostic_front_entity["al"])
+        self.assertNotIn("Vinnie Stigma", agnostic_front_entity["al"])
+        conflicts = {
+            (row["canonical"], row["alias"])
+            for row in index["diagnostics"]["aliasRelationshipConflicts"]
+        }
+        for corrected in (
+            ("Agnostic Front", "Roger Miret"),
+            ("Agnostic Front", "Vinnie Stigma"),
+            ("Whitesnake", "David Coverdale"),
+            ("The Sheepdogs", "Ewan Currie"),
+            ("Robert Jon & The Wreck", "Robert Jon Burrison"),
+        ):
+            self.assertNotIn(corrected, conflicts)
+        self.assertIn(
+            ("Jello Biafra", "Guantanamo School of Medicine"),
+            conflicts,
+        )
+
+        for guest in ("Francis Cabrel", "Hugues Aufray", "Pascal Obispo"):
+            guest_record = index["artists"][content_index.slugify(guest)]
+            self.assertTrue(guest_record["da"])
+
+    def test_new_suspicious_single_article_billing_is_flagged_not_collapsed(self):
+        index = build_index([
+            entry(
+                "Example Singer with Friends @ Club, Paris - January 1st, 2026",
+                ["Concert Review", "Example Singer with Friends"],
+            )
+        ], generated_at="2026-01-01T00:00:00Z")
+
+        self.assertIn("example-singer-with-friends", index["artists"])
+        self.assertEqual(
+            ["Example Singer with Friends"],
+            index["diagnostics"]["suspiciousBillingIdentities"],
+        )
 
     def test_down_stays_indexed_and_compact_but_is_excluded_from_free_prose(self):
         index = build_index([

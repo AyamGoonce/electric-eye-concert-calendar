@@ -849,7 +849,8 @@ def build(args) -> int:
 
     print(
         "PHASE COMPLETE | venue_index_export | "
-        f"venues={venue_diagnostics['canonicalVenueCount']} | "
+        f"venues={venue_diagnostics['venueCount']} | "
+        f"provisional={venue_diagnostics['provisionalVenueCount']} | "
         f"mapped={venue_diagnostics['mapReadyVenueCount']} | "
         f"articles={venue_diagnostics['articleAssociations']} | "
         f"elapsed={max(0.0, time.perf_counter() - venue_phase_started):.2f}s",
@@ -911,12 +912,25 @@ def build(args) -> int:
             "full_bytes": (output_dir / content_result["filename"]).stat().st_size,
         },
         "venues": {
+            "count": venue_diagnostics["venueCount"],
             "canonical_count": venue_diagnostics["canonicalVenueCount"],
             "map_ready_count": venue_diagnostics["mapReadyVenueCount"],
             "with_upcoming_events": venue_diagnostics["venuesWithUpcomingEvents"],
             "with_articles": venue_diagnostics["venuesWithArticles"],
             "article_associations": venue_diagnostics["articleAssociations"],
             "unknown_event_venues": venue_diagnostics["unknownEventVenues"],
+            "provisional_event_venues": venue_diagnostics[
+                "provisionalEventVenues"
+            ],
+            "provisional_count": venue_diagnostics[
+                "provisionalVenueCount"
+            ],
+            "excluded_invalid_event_venues": venue_diagnostics[
+                "excludedInvalidEventVenues"
+            ],
+            "provisional_city_conflicts": venue_diagnostics[
+                "provisionalVenueCityConflicts"
+            ],
             "unresolved_reviews": venue_article_diagnostics["unresolvedReviews"],
             "data_filename": venue_result["filename"],
             "sha256": venue_result["sha256"],

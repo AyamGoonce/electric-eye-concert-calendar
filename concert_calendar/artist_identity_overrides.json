@@ -43,8 +43,8 @@
     "Axl": "Axl Rose",
     "Duff": "Duff McKagan",
     "Viv Campbell": "Vivian Campbell",
-    "Dio": "Ronnie James Dio",
     "Ronnie Dio": "Ronnie James Dio",
+    "RJ Dio": "Ronnie James Dio",
     "Zakk Starkey": "Zak Starkey",
     "Anthony Banks": "Tony Banks",
     "Billy F. Gibbons": "Billy Gibbons",
@@ -53,12 +53,8 @@
     "Steve Hogerth": "Steve Hogarth",
     "Neal Morse Band": "Neal Morse",
     "Neal Morse and The Resonance": "Neal Morse",
-    "Robert Jon Burrison": "Robert Jon and The Wreck",
-    "Robert Jon & the Wreck": "Robert Jon and The Wreck",
-    "Robert Jon & The Wreck": "Robert Jon and The Wreck",
-    "Ewan Currie": "The Sheepdogs",
-    "Roger Miret": "Agnostic Front",
-    "Vinnie Stigma": "Agnostic Front",
+    "Robert Jon and The Wreck": "Robert Jon & The Wreck",
+    "Robert Jon & the Wreck": "Robert Jon & The Wreck",
     "Little Steven": "\"Little\" Steven Van Zandt",
     "Disciples of Soul": "\"Little\" Steven Van Zandt",
     "Little Steven & The Disciples of Soul": "\"Little\" Steven Van Zandt",
@@ -67,7 +63,6 @@
     "Ross": "Morcheeba",
     "Skye & Ross": "Morcheeba",
     "Neil Hannon": "The Divine Comedy",
-    "David Coverdale": "Whitesnake",
     "Neal Morse & The Resonance": "Neal Morse",
     "The Cockroaches": "The Rolling Stones",
     "Bruce Springsteen and The E Street Band": "Bruce Springsteen",
@@ -123,6 +118,10 @@
     "Charles Burchill": "Charlie Burchill",
     "Charly Burchill": "Charlie Burchill",
     "Wolfie Van Halen": "Wolfgang Van Halen",
+    "Ed Van Halen": "Eddie Van Halen",
+    "Edward Van Halen": "Eddie Van Halen",
+    "Jesse ‘Ed’ Davis": "Jesse “Ed” Davis",
+    "Jesse Ed Davis": "Jesse “Ed” Davis",
     "Bobby Ellsworth": "Bobby “Blitz” Ellsworth",
     "Robert Ellsworth": "Bobby “Blitz” Ellsworth",
     "Bernie": "Bernie Bonvoisin",
@@ -154,6 +153,14 @@
     "Mikkey Dee and Friends play Motörhead": "Mikkey Dee",
     "Mikkey Dee and Friends Play Motörhead": "Mikkey Dee"
   },
+  "nonArtistIdentities": [
+    "Play It Loud",
+    "Tatouage",
+    "Mondial du Tatouage",
+    "Scary Goldings feat. John Scofield",
+    "MonoNeon & Louis Cole",
+    "Mikkey Dee & Friends play Motörhead"
+  ],
   "artists": {
     "Down": {
       "ambiguityClass": "common_word",
@@ -165,15 +172,16 @@
       "associatedActs": [
         "ZZ Top"
       ],
+      "searchLinks": [
+        "ZZ Top"
+      ],
+      "hideFromArtistIndex": true,
       "identityEvidence": [
         "Reviewed member relationship",
         "Reviewed Electric Eye artist relationship"
       ]
     },
     "Ghost": {
-      "ambiguityClass": "common_word"
-    },
-    "Live": {
       "ambiguityClass": "common_word"
     },
     "Possessed": {
@@ -782,7 +790,7 @@
         "Reviewed Electric Eye artist relationship"
       ]
     },
-    "Robert Jon & the Wreck": {
+    "Robert Jon & The Wreck": {
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ],
@@ -795,8 +803,12 @@
         "Reviewed Electric Eye artist relationship"
       ],
       "associatedActs": [
-        "Robert Jon & the Wreck"
-      ]
+        "Robert Jon & The Wreck"
+      ],
+      "searchLinks": [
+        "Robert Jon & The Wreck"
+      ],
+      "hideFromArtistIndex": true
     },
     "Agnostic Front": {
       "identityEvidence": [
@@ -837,7 +849,11 @@
       ],
       "associatedActs": [
         "The Sheepdogs"
-      ]
+      ],
+      "searchLinks": [
+        "The Sheepdogs"
+      ],
+      "hideFromArtistIndex": true
     },
     "Beastö Blancö": {
       "identityEvidence": [
@@ -1118,6 +1134,9 @@
       ],
       "associatedActs": [
         "Scary Pockets"
+      ],
+      "articleSearchTerms": [
+        "Scary Goldings feat. John Scofield"
       ]
     },
     "Ryan Lerman": {
@@ -1143,7 +1162,22 @@
         "Reviewed Electric Eye artist relationship"
       ],
       "collaborators": [
-        "Scary Goldings"
+        "Scary Goldings",
+        "Louis Cole"
+      ],
+      "articleSearchTerms": [
+        "MonoNeon & Louis Cole"
+      ]
+    },
+    "Louis Cole": {
+      "identityEvidence": [
+        "Reviewed combined-billing article subject"
+      ],
+      "collaborators": [
+        "MonoNeon"
+      ],
+      "articleSearchTerms": [
+        "MonoNeon & Louis Cole"
       ]
     },
     "John Scofield": {
@@ -1152,6 +1186,9 @@
       ],
       "collaborators": [
         "Scary Goldings"
+      ],
+      "articleSearchTerms": [
+        "Scary Goldings feat. John Scofield"
       ]
     },
     "Marillion": {
@@ -1236,13 +1273,17 @@
         "David Coverdale"
       ]
     },
-    "Robert Jon and The Wreck": {
+    "David Coverdale": {
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ],
-      "members": [
-        "Robert Jon Burrison"
-      ]
+      "associatedActs": [
+        "Whitesnake"
+      ],
+      "searchLinks": [
+        "Whitesnake"
+      ],
+      "hideFromArtistIndex": true
     },
     "Method of Defiance": {
       "identityEvidence": [
@@ -1447,7 +1488,8 @@
     },
     "Cream": {
       "members": [
-        "Eric Clapton"
+        "Eric Clapton",
+        "Ginger Baker"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -2176,6 +2218,9 @@
       "members": [
         "John Lydon"
       ],
+      "formerMembers": [
+        "John McGeoch"
+      ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
@@ -2186,6 +2231,189 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Eddie Van Halen": {
+      "associatedActs": [
+        "Van Halen"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed member relationship"
+      ]
+    },
+    "Van Halen": {
+      "members": [
+        "Eddie Van Halen"
+      ],
+      "searchLinks": [
+        "Eddie Van Halen"
+      ],
+      "hideFromArtistIndex": true,
+      "identityEvidence": [
+        "Reviewed historical band relationship"
+      ]
+    },
+    "George Harrison": {
+      "associatedActs": [
+        "The Beatles"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed member relationship"
+      ]
+    },
+    "Elliot Easton": {
+      "associatedActs": [
+        "The Cars"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed member relationship"
+      ]
+    },
+    "The Cars": {
+      "members": [
+        "Elliot Easton"
+      ],
+      "searchLinks": [
+        "Elliot Easton"
+      ],
+      "hideFromArtistIndex": true,
+      "identityEvidence": [
+        "Reviewed historical band relationship"
+      ]
+    },
+    "John McGeoch": {
+      "associatedActs": [
+        "Public Image Ltd.",
+        "Magazine",
+        "Visage",
+        "Siouxsie and the Banshees"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed former-member relationships"
+      ]
+    },
+    "Magazine": {
+      "formerMembers": [
+        "John McGeoch"
+      ],
+      "searchLinks": [
+        "John McGeoch"
+      ],
+      "hideFromArtistIndex": true,
+      "identityEvidence": [
+        "Reviewed historical band relationship"
+      ]
+    },
+    "Visage": {
+      "formerMembers": [
+        "John McGeoch"
+      ],
+      "searchLinks": [
+        "John McGeoch"
+      ],
+      "hideFromArtistIndex": true,
+      "identityEvidence": [
+        "Reviewed historical band relationship"
+      ]
+    },
+    "Siouxsie and the Banshees": {
+      "formerMembers": [
+        "John McGeoch"
+      ],
+      "searchLinks": [
+        "John McGeoch"
+      ],
+      "hideFromArtistIndex": true,
+      "identityEvidence": [
+        "Reviewed historical band relationship"
+      ]
+    },
+    "Ginger Baker": {
+      "associatedActs": [
+        "Cream"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed member relationship"
+      ]
+    },
+    "Jesse “Ed” Davis": {
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage"
+      ]
+    },
+    "Robert Quine": {
+      "collaborators": [
+        "Lloyd Cole"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed artist relationship"
+      ]
+    },
+    "Lloyd Cole": {
+      "collaborators": [
+        "Robert Quine"
+      ],
+      "identityEvidence": [
+        "Reviewed artist relationship"
+      ]
+    },
+    "Ollie Halsall": {
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage"
+      ]
+    },
+    "Ronnie James Dio": {
+      "associatedActs": [
+        "Dio",
+        "Black Sabbath"
+      ],
+      "identityEvidence": [
+        "Reviewed artist-centric editorial coverage",
+        "Reviewed artist relationship"
+      ]
+    },
+    "Dio": {
+      "members": [
+        "Ronnie James Dio"
+      ],
+      "searchLinks": [
+        "Ronnie James Dio"
+      ],
+      "hideFromArtistIndex": true,
+      "identityEvidence": [
+        "Reviewed distinct band identity"
+      ]
+    },
+    "Prince": {
+      "excludedGenres": [
+        "Deep House",
+        "House",
+        "Trap"
+      ],
+      "identityEvidence": [
+        "Reviewed exclusion of low-support external genre tags"
+      ]
+    },
+    "Elton John": {
+      "excludedGenres": [
+        "House"
+      ],
+      "identityEvidence": [
+        "Reviewed exclusion of low-support external genre tags"
+      ]
+    },
+    "Keefus Ciancia": {
+      "excludedGenres": [
+        "P-Funk"
+      ],
+      "identityEvidence": [
+        "Reviewed exclusion of unsupported relationship genre"
       ]
     },
     "P-Funk": {
@@ -2216,6 +2444,37 @@
     }
   },
   "articleOverrides": {
+    "1990071812697989870": {
+      "excludedArtists": [
+        "Live"
+      ],
+      "identityEvidence": [
+        "Reviewed ordinary-word false positive"
+      ]
+    },
+    "1158533944436168877": {
+      "excludedArtists": [
+        "Live"
+      ],
+      "identityEvidence": [
+        "Reviewed ordinary-word false positive"
+      ]
+    },
+    "4253062553459285019": {
+      "primaryArtists": [
+        "Scary Goldings",
+        "John Scofield",
+        "MonoNeon",
+        "Louis Cole"
+      ],
+      "excludedArtists": [
+        "Scary Goldings feat. John Scofield",
+        "MonoNeon & Louis Cole"
+      ],
+      "identityEvidence": [
+        "Reviewed combined-billing article identity"
+      ]
+    },
     "3124541008960499514": {
       "primaryArtists": [
         "Floor Jansen"
@@ -2382,6 +2641,33 @@
       "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
       "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
       "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Eddie Van Halen": [
+      "https://www.electriceyerock.com/2020/10/eddie-van-halen-1955-2020.html"
+    ],
+    "George Harrison": [
+      "https://www.electriceyerock.com/2021/11/fridays-mondays-playlist-george.html"
+    ],
+    "Elliot Easton": [
+      "https://www.electriceyerock.com/2022/06/fridays-playlist-elliot-easton-sessions.html"
+    ],
+    "John McGeoch": [
+      "https://www.electriceyerock.com/2022/04/fridays-playlist-john-mcgeoch-sessions.html"
+    ],
+    "Ginger Baker": [
+      "https://www.electriceyerock.com/2019/10/fridays-playlist-rip-ginger-baker.html"
+    ],
+    "Jesse “Ed” Davis": [
+      "https://www.electriceyerock.com/2025/06/fridays-playlist-jess-ed-davis-sessions.html"
+    ],
+    "Robert Quine": [
+      "https://www.electriceyerock.com/2021/12/fridays-playlist-robert-quine-sessions.html"
+    ],
+    "Ollie Halsall": [
+      "https://www.electriceyerock.com/2022/04/fridays-playlist-ollie-halsall-sessions.html"
+    ],
+    "Ronnie James Dio": [
+      "https://www.electriceyerock.com/2020/05/fridays-saturdays-playlist-ronnie-james.html"
     ]
   },
   "officialSites": {}

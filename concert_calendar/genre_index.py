@@ -80,6 +80,38 @@ def normalized_phrase_in_text(phrase: str, text: str) -> bool:
     ) is not None
 
 
+def public_genre_names(
+    genre_records: list[dict],
+    visible_artists: set[str],
+    article_backed_artists: set[str],
+) -> set[str]:
+    """Apply the public index threshold without deleting taxonomy records."""
+    by_name = {record["name"]: record for record in genre_records}
+    children = {name: [] for name in by_name}
+
+    for record in genre_records:
+        parent = record.get("parent")
+        if parent in children:
+            children[parent].append(record["name"])
+
+    memo = {}
+
+    def should_keep(name: str) -> bool:
+        if name in memo:
+            return memo[name]
+
+        artists = set(by_name[name].get("artists") or [])
+        keep = (
+            len(artists & visible_artists) >= 2
+            or bool(artists & article_backed_artists)
+            or any(should_keep(child) for child in children[name])
+        )
+        memo[name] = keep
+        return keep
+
+    return {name for name in by_name if should_keep(name)}
+
+
 def build_genre_index(
     mappings_path: str | Path = MAPPINGS_PATH,
     content_index: dict | None = None,
@@ -104,11 +136,41 @@ def build_genre_index(
     resolved_artists = 0
     artist_genres: dict[str, set[str]] = {}
     artist_names_by_identity: dict[str, str] = {}
+    artist_genre_sources: dict[str, dict[str, set[str]]] = {}
 
     # Highest-priority genre evidence: manually reviewed Electric Eye
     # artist identity overrides. These are explicit editorial assertions,
     # so they must take precedence over inferred/article/external genres.
     identity_overrides = load_artist_identity_overrides()
+    excluded_genres_by_identity = {}
+
+    for artist, override in (identity_overrides.get("artists") or {}).items():
+        excluded = {
+            canonical
+            for raw in override.get("excludedGenres") or []
+            if (canonical := canonicalize_genre_term(raw, taxonomy))
+        }
+        if excluded:
+            excluded_genres_by_identity[normalize_artist(artist)] = excluded
+
+    def filter_reviewed_exclusions(
+        artist: str,
+        direct_genres: set[str],
+    ) -> set[str]:
+        return direct_genres - excluded_genres_by_identity.get(
+            normalize_artist(artist),
+            set(),
+        )
+
+    def record_sources(
+        artist: str,
+        direct_genres: set[str],
+        source: str,
+    ) -> None:
+        identity_key = normalize_artist(artist)
+        by_genre = artist_genre_sources.setdefault(identity_key, {})
+        for genre in direct_genres:
+            by_genre.setdefault(genre, set()).add(source)
 
     for artist, override in (identity_overrides.get("artists") or {}).items():
         direct_genres = set()
@@ -117,6 +179,8 @@ def build_genre_index(
             canonical = canonicalize_genre_term(raw, taxonomy)
             if canonical:
                 direct_genres.add(canonical)
+
+        direct_genres = filter_reviewed_exclusions(artist, direct_genres)
 
         if not direct_genres:
             continue
@@ -129,6 +193,7 @@ def build_genre_index(
             artist_genres[identity_key] = set()
 
         artist_genres[identity_key].update(direct_genres)
+        record_sources(artist, direct_genres, "reviewed_identity")
 
         for direct in direct_genres:
             if direct not in genres:
@@ -166,10 +231,16 @@ def build_genre_index(
                 unresolved_artists.append(artist)
                 continue
 
+        direct_genres = filter_reviewed_exclusions(artist, direct_genres)
+        if not direct_genres:
+            unresolved_artists.append(artist)
+            continue
+
         resolved_artists += 1
         identity_key = normalize_artist(artist)
         artist_names_by_identity.setdefault(identity_key, artist)
         artist_genres.setdefault(identity_key, set()).update(direct_genres)
+        record_sources(artist, direct_genres, "reviewed_mapping")
 
         for direct in direct_genres:
             if direct not in genres:
@@ -276,6 +347,10 @@ def build_genre_index(
             if not direct_genres:
                 continue
 
+            direct_genres = filter_reviewed_exclusions(artist, direct_genres)
+            if not direct_genres:
+                continue
+
             identity_key = normalize_artist(artist)
             already_known = artist_genres.get(identity_key, set())
             new_genres = direct_genres - already_known
@@ -288,6 +363,7 @@ def build_genre_index(
                 artist_names_by_identity.setdefault(identity_key, artist)
 
             artist_genres[identity_key].update(direct_genres)
+            record_sources(artist, direct_genres, "electric_eye_article")
 
             for direct in new_genres:
                 if direct not in genres:
@@ -341,6 +417,7 @@ def build_genre_index(
         def apply_external_genres(
             artist: str,
             direct_genres: set[str],
+            source: str,
         ) -> bool:
             nonlocal resolved_artists
 
@@ -349,6 +426,10 @@ def build_genre_index(
                 for genre in direct_genres
                 if genre in genres
             }
+            direct_genres = filter_reviewed_exclusions(
+                artist,
+                direct_genres,
+            )
 
             if not direct_genres:
                 return False
@@ -363,6 +444,7 @@ def build_genre_index(
             already_known = artist_genres[identity_key]
             new_genres = direct_genres - already_known
             already_known.update(direct_genres)
+            record_sources(artist, direct_genres, source)
 
             for direct in new_genres:
                 genres[direct]["directArtists"].add(artist)
@@ -389,7 +471,12 @@ def build_genre_index(
 
             if apply_external_genres(
                 artist,
-                set(result.get("genres") or []),
+                {
+                    genre
+                    for genre in result.get("genres") or []
+                    if (result.get("scores") or {}).get(genre, 2) >= 2
+                },
+                "musicbrainz",
             ):
                 continue
 
@@ -412,6 +499,7 @@ def build_genre_index(
             if apply_external_genres(
                 artist,
                 set(relationship_result.get("genres") or []),
+                "musicbrainz_relationship",
             ):
                 continue
 
@@ -428,6 +516,7 @@ def build_genre_index(
             if apply_external_genres(
                 artist,
                 set(result.get("genres") or []),
+                "wikidata",
             ):
                 continue
 
@@ -442,6 +531,7 @@ def build_genre_index(
             apply_external_genres(
                 artist,
                 set(result.get("genres") or []),
+                "apple",
             )
 
     output_genres = []
@@ -502,6 +592,54 @@ def build_genre_index(
         key=str.casefold,
     )
 
+    direct_artist_counts = {
+        name: len(record["directArtists"])
+        for name, record in genres.items()
+    }
+    genre_outliers = []
+
+    for identity_key, direct_genres in sorted(artist_genres.items()):
+        artist = artist_names_by_identity.get(identity_key, identity_key)
+        roots = {
+            genre_parent_chain(genre, taxonomy)[-1]
+            for genre in direct_genres
+            if genre_parent_chain(genre, taxonomy)
+        }
+
+        if len(direct_genres) >= 8:
+            genre_outliers.append({
+                "artist": artist,
+                "reason": "high_direct_genre_count",
+                "genres": sorted(direct_genres, key=str.casefold),
+            })
+
+        if len(roots) >= 4:
+            genre_outliers.append({
+                "artist": artist,
+                "reason": "unrelated_top_level_families",
+                "genres": sorted(direct_genres, key=str.casefold),
+                "families": sorted(roots, key=str.casefold),
+            })
+
+        for genre in sorted(direct_genres, key=str.casefold):
+            sources = artist_genre_sources.get(identity_key, {}).get(genre, set())
+            if (
+                direct_artist_counts.get(genre) == 1
+                and len(sources) == 1
+                and next(iter(sources), "") in {
+                    "musicbrainz",
+                    "musicbrainz_relationship",
+                    "wikidata",
+                    "apple",
+                }
+            ):
+                genre_outliers.append({
+                    "artist": artist,
+                    "reason": "singleton_external_genre",
+                    "genre": genre,
+                    "sources": sorted(sources),
+                })
+
     return {
         "version": 1,
         "source": "concert_calendar/genre_mappings.json",
@@ -510,4 +648,7 @@ def build_genre_index(
         "unresolvedArtistCount": len(final_unresolved_artists),
         "genres": output_genres,
         "unresolvedArtists": final_unresolved_artists,
+        "diagnostics": {
+            "genreOutliers": genre_outliers,
+        },
     }

@@ -39,7 +39,7 @@ class VenueLocationResolutionTests(unittest.TestCase):
             ("Le Klub", "Paris"),
             ("La Bellevilloise", "Paris"),
             ("Badaboum", "Paris"),
-            ("Batofar", "Paris"),
+            ("Le Bateau Phare", "Paris"),
             ("Grande Halle de la Villette", "Paris"),
             ("Glazart", "Paris"),
             ("La Dame de Canton", "Paris"),
@@ -97,12 +97,16 @@ class VenueLocationResolutionTests(unittest.TestCase):
             resolve_venue_name("Le Dôme de Paris", "Paris"),
         )
         self.assertEqual(
-            "Batofar",
+            "Le Bateau Phare",
             resolve_venue_name("Bateau Phare", "Paris"),
         )
         self.assertEqual(
-            "Batofar",
+            "Le Bateau Phare",
             resolve_venue_name("Le Bateau Phare", "Paris"),
+        )
+        self.assertEqual(
+            "Le Bateau Phare",
+            resolve_venue_name("Batofar", "Paris"),
         )
 
     def test_event_normalization_can_use_city_context(self):

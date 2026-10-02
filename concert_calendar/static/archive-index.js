@@ -247,6 +247,12 @@
           addSearchEdge(slug, relatedSlug);
         }
       });
+
+      if (entity.isArtist) {
+        (identity.articleSearchTerms || []).forEach(function (term) {
+          addSearchTerm(slug, term);
+        });
+      }
     });
 
     Object.keys(entitiesBySlug).forEach(function (sourceSlug) {
@@ -401,7 +407,11 @@
               slugify(name),
             meta: city,
             address: venue.address || "",
-            website: venue.website || ""
+            website: venue.website || "",
+            searchTerms: []
+              .concat(venue.aliases || [])
+              .concat(venue.formerNames || [])
+              .concat(venue.currentName || [])
           };
         })
     );
@@ -457,7 +467,11 @@
           "https://archive.electriceyerock.com/genre/" +
           slugify(genre.name) +
           "/",
-        artistCount: visibleArtists.length
+        artistCount: visibleArtists.length,
+        articleBackedArtistCount: visibleArtists.filter(function (name) {
+          var slug = lookup[name];
+          return slug && hasEditorialCoverage(content, slug);
+        }).length
       };
     });
 
@@ -483,7 +497,8 @@
       }
 
       var keep =
-        item.artistCount > 0 ||
+        item.artistCount >= 2 ||
+        item.articleBackedArtistCount >= 1 ||
         children[item.name].some(shouldKeep);
 
       keepMemo[item.name] = keep;
