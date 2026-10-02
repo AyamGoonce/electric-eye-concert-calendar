@@ -33,6 +33,7 @@ from concert_calendar.content_index import (
     build_index,
     enrich_events,
     fetch_entries,
+    load_concert_review_associations,
     normalize_artist,
     write_assets,
 )
@@ -727,31 +728,12 @@ def build(args) -> int:
     print("Building Electric Eye editorial content index...")
     print("PHASE START | blogger_content_retrieval_indexing", flush=True)
     phase_started = time.perf_counter()
-    from concert_calendar.content_index import fetch_concert_review_associations
-
-    blogger_entries = None
-
-    try:
-        concert_review_associations = fetch_concert_review_associations()
-    except Exception as error:
-        print(
-            "Concert Reviews identity evidence unavailable; "
-            f"reusing published content index: {error}"
-        )
-        if not args.published_pointer:
-            raise ProductionValidationError(
-                "Concert Reviews identity evidence unavailable and no "
-                "published content fallback exists"
-            ) from error
-        content_index = load_published_content_index(
-            Path(args.published_pointer)
-        )
-    else:
-        blogger_entries = fetch_entries()
-        content_index = build_index(
-            blogger_entries,
-            concert_review_associations=concert_review_associations,
-        )
+    concert_review_associations = load_concert_review_associations()
+    blogger_entries = fetch_entries()
+    content_index = build_index(
+        blogger_entries,
+        concert_review_associations=concert_review_associations,
+    )
     print(f"PHASE COMPLETE | blogger_content_retrieval_indexing | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     print("PHASE START | content_index_enrichment", flush=True)
     phase_started = time.perf_counter()

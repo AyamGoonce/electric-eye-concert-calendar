@@ -176,6 +176,46 @@ class ContentIndexTests(unittest.TestCase):
         self.assertIn('"the-smiths"', asset)
         self.assertIn('"Morrissey"', asset)
 
+    def test_cached_concert_review_associations_loader(self):
+        payload = {
+            "schemaVersion": 1,
+            "source": "https://www.electriceyerock.com/p/concert-photos-reviews.html",
+            "associations": {
+                "https://www.electriceyerock.com/2026/01/example.html": [
+                    "Example Artist"
+                ]
+            },
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory, "concert_review_associations.json")
+            path.write_text(
+                json.dumps(payload),
+                encoding="utf-8",
+            )
+
+            associations = (
+                content_index.load_concert_review_associations(path)
+            )
+
+        self.assertEqual(
+            {
+                "https://www.electriceyerock.com/2026/01/example.html": [
+                    "Example Artist"
+                ]
+            },
+            associations,
+        )
+
+    def test_missing_cached_concert_review_associations_returns_empty(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory, "missing.json")
+
+            self.assertEqual(
+                {},
+                content_index.load_concert_review_associations(path),
+            )
+
     def test_article_url_rejects_unsafe_scheme(self):
         unsafe = entry("Unsafe article", ["News"])
         unsafe["link"][0]["href"] = "javascript:alert(1)"

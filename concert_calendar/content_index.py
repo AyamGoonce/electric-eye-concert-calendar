@@ -29,6 +29,9 @@ HEADERS = {
 ARTIST_PAGE_URL = "https://archive.electriceyerock.com/artist/"
 COVERAGE_PAGE_URL = "https://archive.electriceyerock.com/concert/"
 IDENTITY_OVERRIDES_PATH = Path(__file__).with_name("artist_identity_overrides.json")
+CONCERT_REVIEW_ASSOCIATIONS_PATH = Path(__file__).with_name(
+    "concert_review_associations.json"
+)
 
 
 def load_artist_identity_overrides(path=IDENTITY_OVERRIDES_PATH):
@@ -36,6 +39,24 @@ def load_artist_identity_overrides(path=IDENTITY_OVERRIDES_PATH):
     if payload.get("schemaVersion") != 1:
         raise ValueError("Unsupported artist identity override schema")
     return payload
+
+
+def load_concert_review_associations(
+    path=CONCERT_REVIEW_ASSOCIATIONS_PATH,
+):
+    path = Path(path)
+    if not path.exists():
+        return {}
+
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if payload.get("schemaVersion") != 1:
+        raise ValueError("Unsupported Concert Review association schema")
+
+    associations = payload.get("associations") or {}
+    if not isinstance(associations, dict):
+        raise ValueError("Concert Review associations must be an object")
+
+    return associations
 
 
 _IDENTITY_OVERRIDES = load_artist_identity_overrides()
