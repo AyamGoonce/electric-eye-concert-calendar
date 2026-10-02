@@ -371,12 +371,25 @@ def parse_concert_review_associations(source):
 
 def fetch_concert_review_associations(session=None):
     session = session or requests.Session()
-    response = session.get(
-        CONCERT_REVIEWS_URL,
-        headers=HEADERS,
-        timeout=REQUEST_TIMEOUT,
-    )
-    response.raise_for_status()
+
+    for attempt in range(3):
+        response = session.get(
+            CONCERT_REVIEWS_URL,
+            headers=HEADERS,
+            timeout=REQUEST_TIMEOUT,
+        )
+
+        if response.status_code == 429 and attempt < 2:
+            retry_after = response.headers.get("Retry-After")
+            try:
+                delay = int(retry_after)
+            except (TypeError, ValueError):
+                delay = (5, 15)[attempt]
+            time.sleep(max(1, delay))
+            continue
+
+        response.raise_for_status()
+        break
 
     associations = parse_concert_review_associations(response.text)
     if not associations:

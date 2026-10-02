@@ -60,3 +60,59 @@ class ContentFeedRetryTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "Incomplete Electric Eye feed"):
             fetch_entries(session)
         sleep.assert_not_called()
+
+class ConcertReviewRetryTests(unittest.TestCase):
+    @patch("concert_calendar.content_index.time.sleep")
+    def test_retries_429_then_succeeds(self, sleep):
+        from concert_calendar.content_index import fetch_concert_review_associations
+
+        rate_limited = Mock()
+        rate_limited.status_code = 429
+        rate_limited.headers = {"Retry-After": "5"}
+        rate_limited.raise_for_status.side_effect = requests.HTTPError(
+            "429 Too Many Requests", response=rate_limited
+        )
+
+        success = Mock()
+        success.status_code = 200
+        success.headers = {}
+        success.text = '''
+        <script>
+        var EE_NEW_REVIEWS = [
+          {artist:"Test Artist",url:"https://www.electriceyerock.com/2026/01/test.html"}
+        ];
+        </script>
+        '''
+
+        session = Mock()
+        session.get.side_effect = [rate_limited, success]
+
+        associations = fetch_concert_review_associations(session)
+
+        self.assertEqual(
+            ["Test Artist"],
+            associations["https://www.electriceyerock.com/2026/01/test.html"],
+        )
+        self.assertEqual(2, session.get.call_count)
+        sleep.assert_called_once_with(5)
+
+class ConcertReviewRetryExhaustionTests(unittest.TestCase):
+    @patch("concert_calendar.content_index.time.sleep")
+    def test_exhausted_429_raises_after_three_attempts(self, sleep):
+        from concert_calendar.content_index import fetch_concert_review_associations
+
+        rate_limited = Mock()
+        rate_limited.status_code = 429
+        rate_limited.headers = {}
+        error = requests.HTTPError("429 Too Many Requests", response=rate_limited)
+        rate_limited.raise_for_status.side_effect = error
+
+        session = Mock()
+        session.get.return_value = rate_limited
+
+        with self.assertRaises(requests.HTTPError) as caught:
+            fetch_concert_review_associations(session)
+
+        self.assertIs(error, caught.exception)
+        self.assertEqual(3, session.get.call_count)
+        self.assertEqual([((5,), {}), ((15,), {})], sleep.call_args_list)
