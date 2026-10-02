@@ -97,8 +97,40 @@
     "Rick Medlocke": "Rickey Medlocke",
     "Ricky Medlocke": "Rickey Medlocke",
     "Johnny Van Zandt": "Johnny Van Zant",
-    "Telephone": "Téléphone",
-    "Dresden Dolls": "The Dresden Dolls"
+    "Telephone": "Les Insus?",
+    "Dresden Dolls": "The Dresden Dolls",
+    "Téléphone": "Les Insus?",
+    "Les Insus? (Téléphone)": "Les Insus?",
+    "Kiss": "KISS",
+    "Guantanamo School of Medicine": "Jello Biafra",
+    "Steve Hackett & Genesis Revisited": "Steve Hackett",
+    "Steve Hackett and Genesis Revisited": "Steve Hackett",
+    "Elton John & Brandi Carlile": "Brandi Carlile",
+    "Elton John and Brandi Carlile": "Brandi Carlile",
+    "Meghan Parnell & Dave Barnes from Bywater Call": "Bywater Call",
+    "Meghan Parnell and Dave Barnes from Bywater Call": "Bywater Call",
+    "Brant Bjork": "Brant Bjork Trio",
+    "Joshua Homme": "Josh Homme",
+    "Lauryn Hill": "Ms. Lauryn Hill",
+    "Wyclef": "Wyclef Jean",
+    "Pal Waaktaar": "Paul Waaktaar-Savoy",
+    "Paul Waaktaar": "Paul Waaktaar-Savoy",
+    "Pal Waaktaar-Savoy": "Paul Waaktaar-Savoy",
+    "Pål Waaktaar-Savoy": "Paul Waaktaar-Savoy",
+    "Mags Furuholmen": "Magne Furuholmen",
+    "Lemmy": "Lemmy Kilmister",
+    "Lemmy Kilminster": "Lemmy Kilmister",
+    "Charles Burchill": "Charlie Burchill",
+    "Charly Burchill": "Charlie Burchill",
+    "Wolfie Van Halen": "Wolfgang Van Halen",
+    "Bobby Ellsworth": "Bobby “Blitz” Ellsworth",
+    "Robert Ellsworth": "Bobby “Blitz” Ellsworth",
+    "Bernie": "Bernie Bonvoisin",
+    "Bernard Bonvoisin": "Bernie Bonvoisin",
+    "Bernard “Bernie” Bonvoisin": "Bernie Bonvoisin",
+    "Nono": "Norbert Krief",
+    "Nono Krief": "Norbert Krief",
+    "Norbert “Nono” Krief": "Norbert Krief"
   },
   "artists": {
     "Down": {
@@ -119,14 +151,17 @@
     "Ghost": {
       "ambiguityClass": "common_word"
     },
-    "Kiss": {
-      "ambiguityClass": "common_word"
-    },
     "Live": {
       "ambiguityClass": "common_word"
     },
     "Possessed": {
-      "ambiguityClass": "common_word"
+      "ambiguityClass": "common_word",
+      "members": [
+        "Jeff Becerra"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
     },
     "Sparks": {
       "ambiguityClass": "common_word",
@@ -334,14 +369,6 @@
       "associatedActs": [
         "Genesis",
         "The Musical Box"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
-    "Guantanamo School of Medicine": {
-      "associatedActs": [
-        "Jello Biafra"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -1892,14 +1919,6 @@
         "Reviewed Electric Eye artist relationship"
       ]
     },
-    "Téléphone": {
-      "searchAssociations": [
-        "Les Insus?"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
     "New Order": {
       "searchAssociations": [
         "Peter Hook & The Light"
@@ -1915,7 +1934,273 @@
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
-    }
+    },
+    "Metal - Diabolus In Musica": {
+      "hideFromArtistIndex": true
+    },
+    "Oasis": {
+      "members": [
+        "Noel Gallagher",
+        "Liam Gallagher"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Primal Scream": {
+      "members": [
+        "Bobby Gillespie"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Halestorm": {
+      "members": [
+        "Lzzy Hale",
+        "Joe Hottinger"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Stooges": {
+      "members": [
+        "Iggy Pop"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Kyuss": {
+      "members": [
+        "Brant Bjork Trio",
+        "John Garcia",
+        "Josh Homme"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Queens of the Stone Age": {
+      "members": [
+        "Josh Homme"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Hermano": {
+      "members": [
+        "John Garcia"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Mahavishnu Orchestra": {
+      "members": [
+        "John McLaughlin",
+        "Billy Cobham"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Return to Forever": {
+      "members": [
+        "Stanley Clarke",
+        "Lenny White",
+        "Al Di Meola",
+        "Chick Corea"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "A-Ha": {
+      "members": [
+        "Morten Harket",
+        "Paul Waaktaar-Savoy",
+        "Magne Furuholmen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Generation Sex": {
+      "members": [
+        "Billy Idol",
+        "Steve Jones"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Fugees": {
+      "members": [
+        "Ms. Lauryn Hill",
+        "Wyclef Jean"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Toto": {
+      "members": [
+        "Steve Lukather"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Trust": {
+      "members": [
+        "Bernie Bonvoisin",
+        "Norbert Krief"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Mammoth": {
+      "members": [
+        "Wolfgang Van Halen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Bywater Call": {
+      "members": [
+        "Meghan Parnell",
+        "Dave Barnes"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "White Lion": {
+      "members": [
+        "Mike Tramp"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Overkill": {
+      "members": [
+        "Bobby “Blitz” Ellsworth"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Motörhead": {
+      "members": [
+        "Lemmy Kilmister",
+        "Mikkey Dee"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Pretenders": {
+      "members": [
+        "Chrissie Hynde"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Massive Wagons": {
+      "members": [
+        "Barry Mills"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Suede": {
+      "members": [
+        "Brett Anderson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Sylvaine": {
+      "members": [
+        "Kathrine Shepard"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Social Distortion": {
+      "members": [
+        "Mike Ness"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Simple Minds": {
+      "members": [
+        "Jim Kerr",
+        "Charlie Burchill"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Josh Homme": {
+      "searchLinks": [
+        "Iggy Pop"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Noel Gallagher": {},
+    "Liam Gallagher": {},
+    "Bobby Gillespie": {},
+    "Jeff Becerra": {},
+    "Lzzy Hale": {},
+    "Joe Hottinger": {},
+    "Iggy Pop": {},
+    "John Garcia": {},
+    "Brant Bjork Trio": {},
+    "John McLaughlin": {},
+    "Billy Cobham": {},
+    "Stanley Clarke": {},
+    "Lenny White": {},
+    "Al Di Meola": {},
+    "Chick Corea": {},
+    "Morten Harket": {},
+    "Paul Waaktaar-Savoy": {},
+    "Magne Furuholmen": {},
+    "Billy Idol": {},
+    "Steve Jones": {},
+    "Ms. Lauryn Hill": {},
+    "Wyclef Jean": {},
+    "Steve Lukather": {},
+    "Bernie Bonvoisin": {},
+    "Norbert Krief": {},
+    "Wolfgang Van Halen": {},
+    "Meghan Parnell": {},
+    "Dave Barnes": {},
+    "Mike Tramp": {},
+    "Bobby “Blitz” Ellsworth": {},
+    "Lemmy Kilmister": {},
+    "Mikkey Dee": {},
+    "Chrissie Hynde": {},
+    "Barry Mills": {},
+    "Brett Anderson": {},
+    "Kathrine Shepard": {},
+    "Mike Ness": {},
+    "Jim Kerr": {},
+    "Charlie Burchill": {}
   },
   "articleOverrides": {
     "3124541008960499514": {
@@ -2004,6 +2289,12 @@
       "primaryArtists": [
         "Brandi Carlile",
         "Elton John"
+      ],
+      "excludedArtists": [
+        "Brandi Carlile & Elton John",
+        "Elton John & Brandi Carlile",
+        "Brandi Carlile and Elton John",
+        "Elton John and Brandi Carlile"
       ]
     },
     "7694146401260249927": {
