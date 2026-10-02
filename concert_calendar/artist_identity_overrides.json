@@ -130,7 +130,25 @@
     "Bernard “Bernie” Bonvoisin": "Bernie Bonvoisin",
     "Nono": "Norbert Krief",
     "Nono Krief": "Norbert Krief",
-    "Norbert “Nono” Krief": "Norbert Krief"
+    "Norbert “Nono” Krief": "Norbert Krief",
+    "Russ Mael": "Russell Mael",
+    "Mael Brothers": "Sparks",
+    "Mael Bros.": "Sparks",
+    "Johnny Rotten": "John Lydon",
+    "Russel Mael": "Russell Mael",
+    "Parliament": "George Clinton",
+    "Funkadelic": "George Clinton",
+    "George Clinton & Parliament/Funkadelic": "George Clinton",
+    "George Clinton and Parliament/Funkadelic": "George Clinton",
+    "George Clinton & The P-Funk All Stars": "George Clinton",
+    "George Clinton & The P-Funk AllStars": "George Clinton",
+    "George Clinton and The P-Funk AllStars": "George Clinton",
+    "George Clinton and The P-Funk All Stars": "George Clinton",
+    "George Clinton and The P-Funk All-Stars": "George Clinton",
+    "PFunk": "P-Funk",
+    "Parliament Funkadelic": "P-Funk",
+    "P-Funk All Stars": "P-Funk",
+    "P-Funk Allstars": "P-Funk"
   },
   "artists": {
     "Down": {
@@ -180,8 +198,7 @@
     "Ronnie Wood": {
       "associatedActs": [
         "The Rolling Stones",
-        "Faces",
-        "The Jeff Beck Group"
+        "Faces"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -913,50 +930,9 @@
         "The Rolling Stones"
       ]
     },
-    "Parliament": {
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ],
-      "members": [
-        "George Clinton",
-        "Bootsy Collins"
-      ],
-      "associatedActs": [
-        "P-Funk",
-        "PFunk",
-        "Parliament Funkadelic",
-        "P-Funk All Stars",
-        "P-Funk Allstars"
-      ]
-    },
-    "Funkadelic": {
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ],
-      "members": [
-        "George Clinton",
-        "Bootsy Collins"
-      ],
-      "associatedActs": [
-        "P-Funk",
-        "PFunk",
-        "Parliament Funkadelic",
-        "P-Funk All Stars",
-        "P-Funk Allstars"
-      ]
-    },
     "George Clinton": {
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
-      ],
-      "associatedActs": [
-        "Parliament",
-        "Funkadelic",
-        "P-Funk",
-        "PFunk",
-        "Parliament Funkadelic",
-        "P-Funk All Stars",
-        "P-Funk Allstars"
       ]
     },
     "Imelda May": {
@@ -992,15 +968,6 @@
     "Bootsy Collins": {
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
-      ],
-      "associatedActs": [
-        "Parliament",
-        "Funkadelic",
-        "P-Funk",
-        "PFunk",
-        "Parliament Funkadelic",
-        "P-Funk All Stars",
-        "P-Funk Allstars"
       ]
     },
     "Warren Haynes": {
@@ -2155,11 +2122,11 @@
       ]
     },
     "Josh Homme": {
-      "searchLinks": [
-        "Iggy Pop"
-      ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "searchArticleIds": [
+        "5079821736142979867"
       ]
     },
     "Noel Gallagher": {},
@@ -2200,7 +2167,49 @@
     "Kathrine Shepard": {},
     "Mike Ness": {},
     "Jim Kerr": {},
-    "Charlie Burchill": {}
+    "Charlie Burchill": {},
+    "Public Image Ltd.": {
+      "members": [
+        "John Lydon"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "John Lydon": {
+      "searchAssociations": [
+        "Public Image Ltd."
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "P-Funk": {
+      "searchLinks": [
+        "George Clinton",
+        "Bootsy Collins",
+        "Maceo Parker"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Russell Mael": {
+      "searchLinks": [
+        "Sparks"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Ron Mael": {
+      "searchLinks": [
+        "Sparks"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    }
   },
   "articleOverrides": {
     "3124541008960499514": {
@@ -2306,6 +2315,18 @@
         "Taj Mahal / Keb' Mo'",
         "Taj Mahal/Keb' Mo'",
         "Taj Mahal/Keb’ Mo’"
+      ]
+    },
+    "258061909540315964": {
+      "primaryArtists": [
+        "Jeff Beck",
+        "Johnny Depp"
+      ],
+      "excludedArtists": [
+        "Jeff Beck feat. Johnny Depp",
+        "Jeff Beck featuring Johnny Depp",
+        "Jeff Beck & Johnny Depp",
+        "Jeff Beck and Johnny Depp"
       ]
     }
   },

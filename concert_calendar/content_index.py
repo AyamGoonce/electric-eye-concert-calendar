@@ -851,6 +851,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "collaborators": reviewed.get("collaborators", []),
             "searchLinks": reviewed.get("searchLinks", []),
             "searchAssociations": reviewed.get("searchAssociations", []),
+            "searchArticleIds": reviewed.get("searchArticleIds", []),
             "producers": reviewed.get("producers", []),
             "songwriters": reviewed.get("songwriters", []),
             "genres": reviewed.get("genres", []),
@@ -910,6 +911,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         "collaborators",
         "searchLinks",
         "searchAssociations",
+        "searchArticleIds",
     )
     artist_names = {
         normalize_artist(item["n"])
