@@ -1045,15 +1045,12 @@ def write_assets(output_dir, index):
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
     full_payload = {
-        key: index[key]
-        for key in (
-            "schema",
-            "generatedAt",
-            "artists",
-            "relationshipNodes",
-            "articles",
-            "diagnostics",
-        )
+        "schema": index["schema"],
+        "generatedAt": index["generatedAt"],
+        "artists": index["artists"],
+        "relationshipNodes": index.get("relationshipNodes", {}),
+        "articles": index["articles"],
+        "diagnostics": index["diagnostics"],
     }
     full_asset = (
         _javascript_assignment("ElectricEyeContentIndex", full_payload)
