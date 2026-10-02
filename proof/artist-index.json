@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-10-02T17:58:00Z",
+  "generatedAt": "2026-10-02T18:04:23Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -169,7 +169,11 @@
       "slug": "a-ha",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Morten Harket",
+        "Paul Waaktaar-Savoy",
+        "Magne Furuholmen"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -184,7 +188,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -2455,6 +2461,42 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Barry Mills",
+      "slug": "barry-mills",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "4805287868420286253"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/massive-wagons-conversation-with-barry.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Bea and her Business",
       "slug": "bea-and-her-business",
       "aliases": [],
@@ -4213,7 +4255,10 @@
       "schemaVersion": 1,
       "canonicalName": "Brandi Carlile",
       "slug": "brandi-carlile",
-      "aliases": [],
+      "aliases": [
+        "Elton John and Brandi Carlile",
+        "Elton John & Brandi Carlile"
+      ],
       "alternateSpellings": [],
       "members": [],
       "formerMembers": [],
@@ -4259,7 +4304,9 @@
       "schemaVersion": 1,
       "canonicalName": "Brant Bjork Trio",
       "slug": "brant-bjork-trio",
-      "aliases": [],
+      "aliases": [
+        "Brant Bjork"
+      ],
       "alternateSpellings": [],
       "members": [],
       "formerMembers": [],
@@ -4277,18 +4324,20 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
+      "articleCount": 2,
+      "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
       "articleIds": [
-        "1620274366805823043"
+        "1620274366805823043",
+        "1696969193316074803"
       ],
       "reviewedArticleIds": [],
       "concertReviewArchiveArticleIds": [
         "1620274366805823043"
       ],
       "articleUrls": [
-        "https://www.electriceyerock.com/2025/10/brant-bjork-trio-cafe-de-la-danse-paris.html"
+        "https://www.electriceyerock.com/2025/10/brant-bjork-trio-cafe-de-la-danse-paris.html",
+        "https://www.electriceyerock.com/2025/10/the-brant-bjork-trio-to-bring-desert-to.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -4655,6 +4704,50 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/01/bury-tomorrow-le-zenith-paris-january.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Bywater Call",
+      "slug": "bywater-call",
+      "aliases": [
+        "Meghan Parnell and Dave Barnes from Bywater Call",
+        "Meghan Parnell & Dave Barnes from Bywater Call"
+      ],
+      "alternateSpellings": [],
+      "members": [
+        "Meghan Parnell",
+        "Dave Barnes"
+      ],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "3707567466304177860"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2023/02/meghan-parnell-dave-barnes-from-bywater.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -5225,6 +5318,42 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2021/12/chloe-foy-olympia-paris-december-8th.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Chrissie Hynde",
+      "slug": "chrissie-hynde",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "7530079054562238761"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/09/the-pretenders-story-comes-to-screen-in.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -6453,6 +6582,42 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/11/datcha-mandala-backstage-by-mill-paris.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Dave Barnes",
+      "slug": "dave-barnes",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "3707567466304177860"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2023/02/meghan-parnell-dave-barnes-from-bywater.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -8775,42 +8940,6 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Elton John & Brandi Carlile",
-      "slug": "elton-john-brandi-carlile",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "3087016823383713061"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2025/04/album-review-elton-john-brandi-carlile.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
       "canonicalName": "Eluveitie",
       "slug": "eluveitie",
       "aliases": [],
@@ -11059,7 +11188,10 @@
       "slug": "generation-sex",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Billy Idol",
+        "Steve Jones"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -11074,7 +11206,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -11719,46 +11853,6 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Guantanamo School of Medicine",
-      "slug": "guantanamo-school-of-medicine",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [
-        "Jello Biafra"
-      ],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "610591521759724819"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2014/04/jello-biafra-guantanamo-school-of.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
       "canonicalName": "Guns N' Roses",
       "slug": "guns-n-roses",
       "aliases": [
@@ -12028,7 +12122,10 @@
       "slug": "halestorm",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Lzzy Hale",
+        "Joe Hottinger"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -12043,7 +12140,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 5,
       "directSubjectArticleCount": 3,
       "hideFromArtistIndex": false,
@@ -12391,7 +12490,9 @@
       "slug": "hermano",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "John Garcia"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -12406,7 +12507,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -13866,6 +13969,7 @@
       "canonicalName": "Jello Biafra",
       "slug": "jello-biafra",
       "aliases": [
+        "Guantanamo School of Medicine",
         "Jello Biafra & the Guantanamo School of Medicine"
       ],
       "alternateSpellings": [],
@@ -14858,6 +14962,48 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Josh Homme",
+      "slug": "josh-homme",
+      "aliases": [
+        "Joshua Homme"
+      ],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [
+        "Iggy Pop"
+      ],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "3119127713851500652"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/08/queens-of-stone-age-reveal-new-album-in.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Josie",
       "slug": "josie",
       "aliases": [],
@@ -15202,6 +15348,42 @@
       "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/09/katatonia-returns-to-paris-in-december.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Kathrine Shepard",
+      "slug": "kathrine-shepard",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "6215417841055031184"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/10/sylvaine-conversation-with-kathrine.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -15773,7 +15955,9 @@
       "schemaVersion": 1,
       "canonicalName": "KISS",
       "slug": "kiss",
-      "aliases": [],
+      "aliases": [
+        "Kiss"
+      ],
       "alternateSpellings": [],
       "members": [
         "Ace Frehley",
@@ -16104,6 +16288,48 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2017/09/kvelartak-accorhotels-arena-paris.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Kyuss",
+      "slug": "kyuss",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [
+        "Brant Bjork Trio",
+        "John Garcia",
+        "Josh Homme"
+      ],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "7213580509485151050"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/05/hermano-la-maroquinerie-paris-may-7th.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -16503,7 +16729,11 @@
       "schemaVersion": 1,
       "canonicalName": "Les Insus?",
       "slug": "les-insus",
-      "aliases": [],
+      "aliases": [
+        "Les Insus? (Téléphone)",
+        "Telephone",
+        "Téléphone"
+      ],
       "alternateSpellings": [],
       "members": [
         "Jean-Louis Aubert",
@@ -16537,42 +16767,6 @@
       "concertReviewArchiveArticleIds": [
         "5932667059502062101"
       ],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2016/11/les-insus-telephone-le-zenith-paris.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Les Insus? (Téléphone)",
-      "slug": "les-insus-telephone",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "5932667059502062101"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
       "articleUrls": [
         "https://www.electriceyerock.com/2016/11/les-insus-telephone-le-zenith-paris.html"
       ],
@@ -17561,6 +17755,44 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Magne Furuholmen",
+      "slug": "magne-furuholmen",
+      "aliases": [
+        "Mags Furuholmen"
+      ],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "1380211764682900128"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/06/a-ha-frontman-morten-harket-reveals.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Mai Mai Mai",
       "slug": "mai-mai-mai",
       "aliases": [],
@@ -17679,7 +17911,9 @@
       "slug": "mammoth",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Wolfgang Van Halen"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -17694,7 +17928,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 5,
       "directSubjectArticleCount": 5,
       "hideFromArtistIndex": false,
@@ -18179,7 +18415,9 @@
       "slug": "massive-wagons",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Barry Mills"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -18194,7 +18432,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 3,
       "hideFromArtistIndex": false,
@@ -18631,8 +18871,8 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Meghan Parnell & Dave Barnes from Bywater Call",
-      "slug": "meghan-parnell-dave-barnes-from-bywater-call",
+      "canonicalName": "Meghan Parnell",
+      "slug": "meghan-parnell",
       "aliases": [],
       "alternateSpellings": [],
       "members": [],
@@ -18765,7 +19005,7 @@
       "identityEvidence": [],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
+      "hideFromArtistIndex": true,
       "articleIds": [
         "1487827650377782818"
       ],
@@ -19645,6 +19885,42 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Morten Harket",
+      "slug": "morten-harket",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "1380211764682900128"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/06/a-ha-frontman-morten-harket-reveals.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Mothica",
       "slug": "mothica",
       "aliases": [],
@@ -19715,6 +19991,47 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2023/06/motionless-in-white-accor-arena-pairs.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Motörhead",
+      "slug": "motorhead",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [
+        "Lemmy Kilmister",
+        "Mikkey Dee"
+      ],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "2016262289640600608"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/06/mikkey-dee-friends-play-motorhead.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -19844,7 +20161,9 @@
       "schemaVersion": 1,
       "canonicalName": "Ms. Lauryn Hill",
       "slug": "ms-lauryn-hill",
-      "aliases": [],
+      "aliases": [
+        "Lauryn Hill"
+      ],
       "alternateSpellings": [],
       "members": [],
       "formerMembers": [],
@@ -20647,7 +20966,10 @@
       "slug": "oasis",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Noel Gallagher",
+        "Liam Gallagher"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -20662,7 +20984,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -21081,7 +21405,9 @@
       "slug": "overkill",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Bobby “Blitz” Ellsworth"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -21096,7 +21422,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -22130,7 +22458,9 @@
       "slug": "possessed",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Jeff Becerra"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -22145,7 +22475,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "common_word",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -22209,7 +22541,9 @@
       "slug": "primal-scream",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Bobby Gillespie"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -22224,7 +22558,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -22698,6 +23034,48 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/07/queen-bee-bataclan-paris-july-26th-2026.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Queens of the Stone Age",
+      "slug": "queens-of-the-stone-age",
+      "aliases": [
+        "QOTSA"
+      ],
+      "alternateSpellings": [],
+      "members": [
+        "Josh Homme"
+      ],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "3119127713851500652"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/08/queens-of-stone-age-reveal-new-album-in.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -25010,7 +25388,10 @@
       "slug": "simple-minds",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Jim Kerr",
+        "Charlie Burchill"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -25025,7 +25406,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 3,
       "hideFromArtistIndex": false,
@@ -25260,8 +25643,8 @@
       "canonicalName": "Slash",
       "slug": "slash",
       "aliases": [
-        "Slash feat. Myles Kennedy & The Conspirators",
-        "Slash feat. Myles Kennedy & the Conspirators"
+        "Slash feat. Myles Kennedy & the Conspirators",
+        "Slash feat. Myles Kennedy & The Conspirators"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -25429,7 +25812,9 @@
       "slug": "social-distortion",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Mike Ness"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -25444,7 +25829,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -26334,7 +26721,9 @@
       "canonicalName": "Steve Hackett",
       "slug": "steve-hackett",
       "aliases": [
-        "Genesis Revisited"
+        "Genesis Revisited",
+        "Steve Hackett and Genesis Revisited",
+        "Steve Hackett & Genesis Revisited"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -26378,44 +26767,6 @@
         "https://www.electriceyerock.com/2026/08/watch-hackett-rotherys-red-dragon-and.html",
         "https://www.electriceyerock.com/2026/05/steve-hackett-salle-pleyel-paris-may.html",
         "https://www.electriceyerock.com/2025/09/steve-hackett-returns-to-paris-with.html",
-        "https://www.electriceyerock.com/2023/04/steve-hackett-genesis-revisited-la.html",
-        "https://www.electriceyerock.com/2021/11/steve-hackett-genesis-revisited-salle.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Steve Hackett & Genesis Revisited",
-      "slug": "steve-hackett-genesis-revisited",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 2,
-      "directSubjectArticleCount": 2,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "2986559290279888674",
-        "7833926848915439862"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
         "https://www.electriceyerock.com/2023/04/steve-hackett-genesis-revisited-la.html",
         "https://www.electriceyerock.com/2021/11/steve-hackett-genesis-revisited-salle.html"
       ],
@@ -26662,7 +27013,9 @@
       "slug": "suede",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Brett Anderson"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -26677,7 +27030,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -27077,7 +27432,9 @@
       "slug": "sylvaine",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Kathrine Shepard"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -27092,7 +27449,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 6,
       "directSubjectArticleCount": 6,
       "hideFromArtistIndex": false,
@@ -27395,48 +27754,6 @@
         "https://www.electriceyerock.com/2025/01/album-review-teddy-swims-ive-tried.html",
         "https://www.electriceyerock.com/2025/01/teddy-swims-to-release-ive-tried.html",
         "https://www.electriceyerock.com/2024/11/teddy-swims-salle-pleyel-paris-november.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Téléphone",
-      "slug": "telephone",
-      "aliases": [
-        "Telephone"
-      ],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [
-        "Les Insus?"
-      ],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "5932667059502062101"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2016/11/les-insus-telephone-le-zenith-paris.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -28575,8 +28892,8 @@
       "canonicalName": "The E Street Band",
       "slug": "the-e-street-band",
       "aliases": [
-        "E-Street Band",
         "E Street Band",
+        "E-Street Band",
         "The E-Street Band"
       ],
       "alternateSpellings": [],
@@ -29786,7 +30103,9 @@
       "slug": "the-pretenders",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Chrissie Hynde"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -29801,7 +30120,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -31588,7 +31909,9 @@
       "slug": "toto",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Steve Lukather"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -31603,7 +31926,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 3,
       "hideFromArtistIndex": false,
@@ -31875,7 +32200,10 @@
       "slug": "trust",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Bernie Bonvoisin",
+        "Norbert Krief"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -31890,7 +32218,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -33253,6 +33583,44 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Wolfgang Van Halen",
+      "slug": "wolfgang-van-halen",
+      "aliases": [
+        "Wolfie Van Halen"
+      ],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "5116080140774464053"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2023/03/listen-to-mammoth-wvhs-new-song-here.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Written By Wolves",
       "slug": "written-by-wolves",
       "aliases": [],
@@ -33769,6 +34137,12 @@
       "primaryArtists": [
         "Brandi Carlile",
         "Elton John"
+      ],
+      "excludedArtists": [
+        "Brandi Carlile & Elton John",
+        "Elton John & Brandi Carlile",
+        "Brandi Carlile and Elton John",
+        "Elton John and Brandi Carlile"
       ]
     },
     "7694146401260249927": {

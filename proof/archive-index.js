@@ -80,6 +80,9 @@
     ];
     var searchTermsBySlug = Object.create(null);
     var relatedSlugsBySlug = Object.create(null);
+    var entitiesBySlug = Object.create(null);
+    var relationshipLookup = Object.create(null);
+    var searchEdges = Object.create(null);
 
     function addSearchTerm(slug, value) {
       if (!slug || !value) return;
@@ -105,83 +108,161 @@
       }
     }
 
-    Object.keys(content.artists).forEach(function (slug) {
-      var artist = content.artists[slug] || {};
-      var identity = artist.identity || {};
-      var artistName = artist.n || identity.canonicalName || slug;
+    function addSearchEdge(fromSlug, toSlug) {
+      if (!fromSlug || !toSlug || fromSlug === toSlug) return;
 
-      (artist.al || []).forEach(function (alias) {
-        addSearchTerm(slug, alias);
+      if (!searchEdges[fromSlug]) {
+        searchEdges[fromSlug] = [];
+      }
+
+      if (searchEdges[fromSlug].indexOf(toSlug) === -1) {
+        searchEdges[fromSlug].push(toSlug);
+      }
+    }
+
+    function registerEntity(slug, entity, isArtist) {
+      var identity = entity.identity || {};
+      var name = entity.n || identity.canonicalName || slug;
+      var aliases = entity.al || [];
+
+      entitiesBySlug[slug] = {
+        name: name,
+        aliases: aliases,
+        identity: identity,
+        isArtist: !!isArtist
+      };
+
+      [name].concat(aliases).forEach(function (value) {
+        if (!value) return;
+        relationshipLookup[value] = slug;
+        relationshipLookup[normalize(value)] = slug;
       });
+    }
+
+    function resolveRelationshipSlug(name) {
+      if (!name) return null;
+
+      return (
+        relationshipLookup[name] ||
+        relationshipLookup[normalize(name)] ||
+        lookup[name] ||
+        lookup[normalize(name)] ||
+        null
+      );
+    }
+
+    Object.keys(content.artists).forEach(function (slug) {
+      registerEntity(slug, content.artists[slug] || {}, true);
+    });
+
+    Object.keys(content.relationshipNodes || {}).forEach(function (slug) {
+      registerEntity(
+        slug,
+        content.relationshipNodes[slug] || {},
+        false
+      );
+    });
+
+    Object.keys(entitiesBySlug).forEach(function (slug) {
+      var entity = entitiesBySlug[slug];
+      var identity = entity.identity || {};
 
       relationshipFields.forEach(function (field) {
         (identity[field] || []).forEach(function (relatedName) {
-          addSearchTerm(slug, relatedName);
+          if (entity.isArtist) {
+            addSearchTerm(slug, relatedName);
+          }
 
-          var relatedSlug = lookup[relatedName];
+          var relatedSlug = resolveRelationshipSlug(relatedName);
 
-          if (relatedSlug) {
-            addSearchTerm(relatedSlug, artistName);
+          if (!relatedSlug) return;
+
+          addSearchEdge(slug, relatedSlug);
+
+          if (hasEditorialCoverage(content, slug)) {
+            addSearchEdge(relatedSlug, slug);
+          }
+
+          if (
+            entity.isArtist &&
+            content.artists[relatedSlug]
+          ) {
             addRelatedSlug(slug, relatedSlug);
             addRelatedSlug(relatedSlug, slug);
           }
         });
       });
 
-      (identity.searchLinks || []).forEach(function (relatedName) {
-        addSearchTerm(slug, relatedName);
+      (identity.searchAssociations || []).forEach(function (relatedName) {
+        if (entity.isArtist) {
+          addSearchTerm(slug, relatedName);
+        }
+
+        var relatedSlug = resolveRelationshipSlug(relatedName);
+
+        if (!relatedSlug) return;
+
+        addSearchEdge(slug, relatedSlug);
+        addSearchEdge(relatedSlug, slug);
       });
 
-      (identity.searchAssociations || []).forEach(function (relatedName) {
-        addSearchTerm(slug, relatedName);
+      (identity.searchLinks || []).forEach(function (relatedName) {
+        if (entity.isArtist) {
+          addSearchTerm(slug, relatedName);
+        }
 
-        var relatedSlug = lookup[relatedName];
+        var relatedSlug = resolveRelationshipSlug(relatedName);
 
-        if (relatedSlug) {
-          addSearchTerm(relatedSlug, artistName);
+        if (
+          relatedSlug &&
+          !hasEditorialCoverage(content, slug)
+        ) {
+          addSearchEdge(slug, relatedSlug);
         }
       });
     });
 
-    Object.keys(content.relationshipNodes || {}).forEach(function (slug) {
-      var node = content.relationshipNodes[slug] || {};
-      var identity = node.identity || {};
-      var nodeName = node.n || slug;
+    Object.keys(entitiesBySlug).forEach(function (sourceSlug) {
+      if (hasEditorialCoverage(content, sourceSlug)) {
+        return;
+      }
 
-      (node.al || []).forEach(function (alias) {
-        addSearchTerm(slug, alias);
-      });
+      var source = entitiesBySlug[sourceSlug];
+      var sourceTerms = [source.name].concat(source.aliases || []);
+      var queue = [sourceSlug];
+      var visited = Object.create(null);
 
-      relationshipFields.forEach(function (field) {
-        (identity[field] || []).forEach(function (relatedName) {
-          var relatedSlug = lookup[relatedName];
+      visited[sourceSlug] = true;
 
-          if (relatedSlug && content.artists[relatedSlug]) {
-            addSearchTerm(relatedSlug, nodeName);
-            (node.al || []).forEach(function (alias) {
-              addSearchTerm(relatedSlug, alias);
+      while (queue.length) {
+        var currentSlug = queue.shift();
+
+        (searchEdges[currentSlug] || []).forEach(function (targetSlug) {
+          if (visited[targetSlug]) return;
+
+          visited[targetSlug] = true;
+
+          var targetIsVisible = hasEditorialCoverage(
+            content,
+            targetSlug
+          );
+
+          if (targetIsVisible) {
+            sourceTerms.forEach(function (term) {
+              addSearchTerm(targetSlug, term);
             });
+          } else {
+            queue.push(targetSlug);
           }
         });
-      });
+      }
+    });
 
-      (identity.searchLinks || []).forEach(function (relatedName) {
-        var relatedSlug = lookup[relatedName];
+    Object.keys(content.artists).forEach(function (slug) {
+      var artist = content.artists[slug] || {};
 
-        if (relatedSlug && content.artists[relatedSlug]) {
-          addSearchTerm(slug, relatedName);
-        }
-      });
-
-      (identity.searchAssociations || []).forEach(function (relatedName) {
-        var relatedSlug = lookup[relatedName];
-
-        if (relatedSlug && content.artists[relatedSlug]) {
-          addSearchTerm(relatedSlug, nodeName);
-          (node.al || []).forEach(function (alias) {
-            addSearchTerm(relatedSlug, alias);
-          });
-        }
+      (artist.al || []).forEach(function (alias) {
+        addSearchTerm(slug, alias);
       });
     });
 
