@@ -16,7 +16,26 @@
     "E Street Band": "The E Street Band",
     "E-Street Band": "The E Street Band",
     "The E-Street Band": "The E Street Band",
-    "Frankie & The Witch Fingers": "Frankie and the Witch Fingers"
+    "Frankie & The Witch Fingers": "Frankie and the Witch Fingers",
+    "Crimson ProjeKct": "The Crimson ProjeKct",
+    "Divine Comedy": "The Divine Comedy",
+    "Hollywood Vampires": "The Hollywood Vampires",
+    "Last In Line": "The Last In Line",
+    "Lemonheads": "The Lemonheads",
+    "Pixies": "The Pixies",
+    "Rolling Stones": "The Rolling Stones",
+    "Satchvai Band": "The SatchVai Band",
+    "Soledad Brothers": "The Soledad Brothers",
+    "Tedeschi Trucks Band": "The Tedeschi Trucks Band",
+    "Winery Dogs": "The Winery Dogs",
+    "P.I.L.": "Public Image Ltd.",
+    "P.I.L": "Public Image Ltd.",
+    "PIL": "Public Image Ltd.",
+    "PiL": "Public Image Ltd.",
+    "Public Image Limited": "Public Image Ltd.",
+    "Public Image, Ltd.": "Public Image Ltd.",
+    "Slash feat. Myles Kennedy & The Conspirators": "Slash",
+    "Slash feat. Myles Kennedy & the Conspirators": "Slash"
   },
   "artists": {
     "Down": {
@@ -124,20 +143,9 @@
         "Reviewed Electric Eye artist relationship"
       ]
     },
-    "Hollywood Vampires": {
-      "members": [
-        "Alice Cooper",
-        "Joe Perry",
-        "Johnny Depp",
-        "Tommy Henriksen"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
     "Alice Cooper": {
       "associatedActs": [
-        "Hollywood Vampires"
+        "The Hollywood Vampires"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -145,7 +153,7 @@
     },
     "Joe Perry": {
       "associatedActs": [
-        "Hollywood Vampires"
+        "The Hollywood Vampires"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -153,7 +161,7 @@
     },
     "Johnny Depp": {
       "associatedActs": [
-        "Hollywood Vampires"
+        "The Hollywood Vampires"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -161,7 +169,7 @@
     },
     "Tommy Henriksen": {
       "associatedActs": [
-        "Hollywood Vampires",
+        "The Hollywood Vampires",
         "Alice Cooper",
         "Alice Cooper Band"
       ],
@@ -478,15 +486,6 @@
         "Reviewed Electric Eye artist relationship"
       ]
     },
-    "Slash feat. Myles Kennedy & The Conspirators": {
-      "members": [
-        "Slash",
-        "Myles Kennedy"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
     "Tremonti": {
       "members": [
         "Mark Tremonti"
@@ -531,35 +530,6 @@
     "Durand Jones & the Indications": {
       "members": [
         "Durand Jones"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
-    "Satchvai Band": {
-      "members": [
-        "Joe Satriani",
-        "Steve Vai"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
-    "Winery Dogs": {
-      "members": [
-        "Richie Kotzen"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
-    "Crimson ProjeKct": {
-      "members": [
-        "Adrian Belew",
-        "Pat Mastelotto"
-      ],
-      "associatedActs": [
-        "King Crimson"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -628,6 +598,174 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye musical-project identity",
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Crimson ProjeKct": {
+      "members": [
+        "Adrian Belew",
+        "Pat Mastelotto"
+      ],
+      "associatedActs": [
+        "King Crimson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Hollywood Vampires": {
+      "members": [
+        "Alice Cooper",
+        "Joe Perry",
+        "Johnny Depp",
+        "Tommy Henriksen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The SatchVai Band": {
+      "members": [
+        "Joe Satriani",
+        "Steve Vai"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Winery Dogs": {
+      "members": [
+        "Richie Kotzen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Smashing Pumpkins": {
+      "members": [
+        "Billy Corgan"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Billy Corgan": {
+      "associatedActs": [
+        "The Smashing Pumpkins"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "M-Pire of Evil": {
+      "associatedActs": [
+        "Venom"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Venom": {
+      "associatedActs": [
+        "M-Pire of Evil"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Robert Jon & the Wreck": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Robert Jon Burrison"
+      ]
+    },
+    "Robert Jon Burrison": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Robert Jon & the Wreck"
+      ]
+    },
+    "Agnostic Front": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Roger Miret",
+        "Vinnie Stigma"
+      ]
+    },
+    "Roger Miret": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Agnostic Front"
+      ]
+    },
+    "Vinnie Stigma": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Agnostic Front"
+      ]
+    },
+    "The Sheepdogs": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Ewan Currie"
+      ]
+    },
+    "Ewan Currie": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "The Sheepdogs"
+      ]
+    },
+    "Beastö Blancö": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Chuck Garric",
+        "Jan LeGrow"
+      ]
+    },
+    "Chuck Garric": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Beastö Blancö",
+        "The Alice Cooper Band"
+      ]
+    },
+    "Jan LeGrow": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Beastö Blancö"
+      ]
+    },
+    "The Alice Cooper Band": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Chuck Garric"
+      ]
+    },
+    "Slash": {
+      "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
     }

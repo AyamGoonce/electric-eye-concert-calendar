@@ -123,7 +123,7 @@ class ContentIndexTests(unittest.TestCase):
         self.assertEqual({"garbage", "skunk-anansie"}, set(index["articles"][2]["a"]))
         self.assertEqual(["drink-the-sea"], index["articles"][3]["a"])
         self.assertEqual(["loading-data"], index["articles"][4]["a"])
-        self.assertEqual(["hollywood-vampires"], index["articles"][5]["a"])
+        self.assertEqual(["the-hollywood-vampires"], index["articles"][5]["a"])
 
     def test_schema_two_identity_record_and_human_exports(self):
         index = build_index([
