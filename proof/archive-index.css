@@ -460,3 +460,16 @@ body {
     padding-left: 13px;
   }
 }
+
+/* Exact artist-search article results */
+.ee-index-article-results {
+  display: block;
+}
+
+.ee-index-article-results .ee-index-group-letter {
+  margin-bottom: 16px;
+}
+
+.ee-index-article-results .ee-index-items {
+  width: 100%;
+}

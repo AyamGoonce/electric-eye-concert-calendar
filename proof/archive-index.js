@@ -77,6 +77,7 @@
       "collaborators"
     ];
     var searchTermsBySlug = Object.create(null);
+    var relatedSlugsBySlug = Object.create(null);
 
     function addSearchTerm(slug, value) {
       if (!slug || !value) return;
@@ -87,6 +88,18 @@
 
       if (searchTermsBySlug[slug].indexOf(value) === -1) {
         searchTermsBySlug[slug].push(value);
+      }
+    }
+
+    function addRelatedSlug(slug, relatedSlug) {
+      if (!slug || !relatedSlug || slug === relatedSlug) return;
+
+      if (!relatedSlugsBySlug[slug]) {
+        relatedSlugsBySlug[slug] = [];
+      }
+
+      if (relatedSlugsBySlug[slug].indexOf(relatedSlug) === -1) {
+        relatedSlugsBySlug[slug].push(relatedSlug);
       }
     }
 
@@ -107,6 +120,8 @@
 
           if (relatedSlug) {
             addSearchTerm(relatedSlug, artistName);
+            addRelatedSlug(slug, relatedSlug);
+            addRelatedSlug(relatedSlug, slug);
           }
         });
       });
@@ -124,23 +139,40 @@
             .concat(artist.al || [])
             .concat(artist.n || []);
 
-          var articleItems = (artist.ar || []).map(
-            function (articleIndex) {
-              var article =
-                content.articles &&
-                content.articles[articleIndex];
+          var articleItems = [];
+          var seenArticleUrls = Object.create(null);
+          var articleSlugs = [slug].concat(
+            relatedSlugsBySlug[slug] || []
+          );
 
-              if (!article || !article.t || !article.u) {
-                return null;
+          articleSlugs.forEach(function (articleSlug) {
+            var relatedArtist = content.artists[articleSlug] || {};
+
+            (relatedArtist.ar || []).forEach(
+              function (articleIndex) {
+                var article =
+                  content.articles &&
+                  content.articles[articleIndex];
+
+                if (
+                  !article ||
+                  !article.t ||
+                  !article.u ||
+                  seenArticleUrls[article.u]
+                ) {
+                  return;
+                }
+
+                seenArticleUrls[article.u] = true;
+
+                articleItems.push({
+                  name: article.t,
+                  href: article.u,
+                  meta: article.d || ""
+                });
               }
-
-              return {
-                name: article.t,
-                href: article.u,
-                meta: article.d || ""
-              };
-            }
-          ).filter(Boolean);
+            );
+          });
 
           return {
             name: name,
