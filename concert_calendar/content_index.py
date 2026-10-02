@@ -672,6 +672,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
 
     articles = []
     artist_article_ids = defaultdict(list)
+    artist_direct_article_ids = defaultdict(list)
     aliases_by_canonical = defaultdict(set)
     for entry in entries:
         title = (entry.get("title") or {}).get("$t", "").strip()
@@ -681,6 +682,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         if not title or not url or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", published):
             continue
         matched_names = []
+        direct_names = []
         post_id = blogger_post_id(entry)
         article_type = classify_article(title, labels)
         for label in labels:
@@ -689,23 +691,41 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             canonical = canonical_by_identity.get(normalize_artist(label))
             if canonical and canonical not in matched_names:
                 matched_names.append(canonical)
-                if label != canonical:
-                    aliases_by_canonical[canonical].add(label)
+
+            candidate = _title_artist_candidate(title, article_type)
+            direct_match = (
+                _label_in_text(label, candidate)
+                if candidate
+                else _label_in_text(label, title)
+            )
+
+            if canonical and direct_match and canonical not in direct_names:
+                direct_names.append(canonical)
+
+            if canonical and label != canonical:
+                aliases_by_canonical[canonical].add(label)
 
         # Exact reviewed article associations override missed automatic
         # artist detection without creating identities from calendar data.
         for canonical, manual_urls in MANUAL_ARTIST_ARTICLES.items():
-            if url in manual_urls and canonical not in matched_names:
-                matched_names.append(canonical)
+            if url in manual_urls:
+                if canonical not in matched_names:
+                    matched_names.append(canonical)
+                if canonical not in direct_names:
+                    direct_names.append(canonical)
         canonical_article_url = _canonical_electric_eye_article_url(url)
         for canonical in concert_review_canonicals.get(canonical_article_url, []):
             if canonical not in matched_names:
                 matched_names.append(canonical)
+            if canonical not in direct_names:
+                direct_names.append(canonical)
 
         reviewed_article = (overrides.get("articleOverrides") or {}).get(post_id or "") or {}
         for canonical in reviewed_article.get("primaryArtists", []):
             if canonical not in matched_names:
                 matched_names.append(canonical)
+            if canonical not in direct_names:
+                direct_names.append(canonical)
 
         article = {
             "u": url,
@@ -725,6 +745,10 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             slug = slugify(canonical)
             article["a"].append(slug)
             artist_article_ids[canonical].append(article_id)
+
+        for canonical in direct_names:
+            artist_direct_article_ids[canonical].append(article_id)
+
         articles.append(article)
 
     artists = {}
@@ -743,7 +767,12 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         for alias, target in EXPLICIT_ALIASES.items():
             if normalize_artist(target) == normalize_artist(canonical):
                 aliases.append(alias)
-        item = {"n": canonical, "al": sorted(set(aliases), key=normalize_artist), "ar": article_ids}
+        item = {
+            "n": canonical,
+            "al": sorted(set(aliases), key=normalize_artist),
+            "ar": article_ids,
+            "da": artist_direct_article_ids.get(canonical, []),
+        }
         reviewed = reviewed_artists.get(canonical) or {}
         official_site = OFFICIAL_ARTIST_SITES.get(canonical)
         if official_site:
@@ -778,6 +807,12 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "ambiguityClass": reviewed.get("ambiguityClass", "distinctive"),
             "identityEvidence": reviewed.get("identityEvidence", []),
             "articleCount": len(article_ids),
+            "directSubjectArticleCount": len(
+                artist_direct_article_ids.get(canonical, [])
+            ),
+            "hideFromArtistIndex": bool(
+                reviewed.get("hideFromArtistIndex", False)
+            ),
             "articleIds": [articles[index].get("pi") for index in article_ids if articles[index].get("pi")],
             "reviewedArticleIds": [
                 articles[index].get("pi")

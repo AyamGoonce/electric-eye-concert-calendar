@@ -56,8 +56,10 @@
 
     return !!(
       artist &&
-      Array.isArray(artist.ar) &&
-      artist.ar.length
+      artist.identity &&
+      !artist.identity.hideFromArtistIndex &&
+      Array.isArray(artist.da) &&
+      artist.da.length
     );
   }
 

@@ -37,7 +37,28 @@
     "Slash feat. Myles Kennedy & The Conspirators": "Slash",
     "Slash feat. Myles Kennedy & the Conspirators": "Slash",
     "the Waterboys": "The Waterboys",
-    "Ronnie Wood and his Band featuring Imelda May": "Ronnie Wood"
+    "Ronnie Wood and his Band featuring Imelda May": "Ronnie Wood",
+    "AC/DC feat. Axl Rose": "AC/DC",
+    "W. Axl Rose": "Axl Rose",
+    "Axl": "Axl Rose",
+    "Duff": "Duff McKagan",
+    "Viv Campbell": "Vivian Campbell",
+    "Dio": "Ronnie James Dio",
+    "Ronnie Dio": "Ronnie James Dio",
+    "Zakk Starkey": "Zak Starkey",
+    "Anthony Banks": "Tony Banks",
+    "Billy F. Gibbons": "Billy Gibbons",
+    "The Reverend Billy Gibbons": "Billy Gibbons",
+    "Stevie Van Zandt": "Little Steven",
+    "Steve Hogerth": "Steve Hogarth",
+    "Neal Morse Band": "Neal Morse",
+    "Neal Morse and The Resonance": "Neal Morse",
+    "Robert Jon Burrison": "Robert Jon and The Wreck",
+    "Robert Jon & the Wreck": "Robert Jon and The Wreck",
+    "Robert Jon & The Wreck": "Robert Jon and The Wreck",
+    "Ewan Currie": "The Sheepdogs",
+    "Roger Miret": "Agnostic Front",
+    "Vinnie Stigma": "Agnostic Front"
   },
   "artists": {
     "Down": {
@@ -293,7 +314,9 @@
     },
     "Little Steven": {
       "associatedActs": [
-        "Disciples of Soul"
+        "Disciples of Soul",
+        "The E Street Band",
+        "Little Steven & The Disciples of Soul"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -359,7 +382,8 @@
       "genres": [
         "Heartland Rock",
         "Rock"
-      ]
+      ],
+      "hideFromArtistIndex": true
     },
     "Sheila E.": {
       "genres": [
@@ -460,7 +484,10 @@
     },
     "Iron Maiden": {
       "members": [
-        "Adrian Smith"
+        "Adrian Smith",
+        "Bruce Dickinson",
+        "Steve Harris",
+        "Nicko McBrain"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -544,7 +571,8 @@
       "members": [
         "Robert Fripp",
         "Pat Mastelotto",
-        "Gavin Harrison"
+        "Gavin Harrison",
+        "Tony Levin"
       ],
       "formerMembers": [
         "Adrian Belew"
@@ -576,6 +604,11 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Phil Collins",
+        "Mike Rutherford",
+        "Tony Banks"
       ]
     },
     "The Musical Box": {
@@ -785,7 +818,8 @@
       ],
       "members": [
         "Ozzy Osbourne",
-        "Tony Iommi"
+        "Tony Iommi",
+        "Geezer Butler"
       ]
     },
     "Ozzy Osbourne": {
@@ -793,7 +827,8 @@
         "Reviewed Electric Eye artist relationship"
       ],
       "associatedActs": [
-        "Black Sabbath"
+        "Black Sabbath",
+        "Zakk Wylde"
       ]
     },
     "Tony Iommi": {
@@ -833,7 +868,15 @@
         "Reviewed Electric Eye artist relationship"
       ],
       "members": [
-        "George Clinton"
+        "George Clinton",
+        "Bootsy Collins"
+      ],
+      "associatedActs": [
+        "P-Funk",
+        "PFunk",
+        "Parliament Funkadelic",
+        "P-Funk All Stars",
+        "P-Funk Allstars"
       ]
     },
     "Funkadelic": {
@@ -841,7 +884,15 @@
         "Reviewed Electric Eye artist relationship"
       ],
       "members": [
-        "George Clinton"
+        "George Clinton",
+        "Bootsy Collins"
+      ],
+      "associatedActs": [
+        "P-Funk",
+        "PFunk",
+        "Parliament Funkadelic",
+        "P-Funk All Stars",
+        "P-Funk Allstars"
       ]
     },
     "George Clinton": {
@@ -850,12 +901,405 @@
       ],
       "associatedActs": [
         "Parliament",
-        "Funkadelic"
+        "Funkadelic",
+        "P-Funk",
+        "PFunk",
+        "Parliament Funkadelic",
+        "P-Funk All Stars",
+        "P-Funk Allstars"
       ]
     },
     "Imelda May": {
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Nightwish": {
+      "members": [
+        "Floor Jansen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Floor Jansen": {
+      "associatedActs": [
+        "Nightwish"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "AC/DC": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Angus Young",
+        "Malcolm Young",
+        "Brian Johnson",
+        "Chris Slade",
+        "Cliff Williams"
+      ]
+    },
+    "Bootsy Collins": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Parliament",
+        "Funkadelic",
+        "P-Funk",
+        "PFunk",
+        "Parliament Funkadelic",
+        "P-Funk All Stars",
+        "P-Funk Allstars"
+      ]
+    },
+    "Warren Haynes": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Gov't Mule"
+      ]
+    },
+    "The Last In Line": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Vivian Campbell"
+      ],
+      "associatedActs": [
+        "Ronnie James Dio"
+      ]
+    },
+    "Tony Levin": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "King Crimson"
+      ]
+    },
+    "Adrian Belew": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "King Crimson",
+        "Celebrating David Bowie"
+      ]
+    },
+    "Robert Fripp": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "King Crimson"
+      ]
+    },
+    "The Beatles": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Paul McCartney",
+        "Ringo Starr"
+      ]
+    },
+    "The Who": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Pete Townshend",
+        "Roger Daltrey",
+        "Zak Starkey"
+      ]
+    },
+    "ZZ Top": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Frank Beard",
+        "Dusty Hill",
+        "Billy Gibbons"
+      ]
+    },
+    "KISS": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Ace Frehley",
+        "Gene Simmons",
+        "Paul Stanley"
+      ]
+    },
+    "Black Label Society": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Zakk Wylde"
+      ]
+    },
+    "Zakk Wylde": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Black Label Society",
+        "Ozzy Osbourne"
+      ]
+    },
+    "Sugar": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Bob Mould"
+      ]
+    },
+    "Bob Mould": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Sugar"
+      ]
+    },
+    "Scary Pockets": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Ryan Lerman",
+        "Jack Conte"
+      ],
+      "associatedActs": [
+        "Scary Goldings"
+      ]
+    },
+    "Scary Goldings": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Ryan Lerman",
+        "Jack Conte"
+      ],
+      "collaborators": [
+        "MonoNeon",
+        "John Scofield"
+      ],
+      "associatedActs": [
+        "Scary Pockets"
+      ]
+    },
+    "Ryan Lerman": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Scary Pockets",
+        "Scary Goldings"
+      ]
+    },
+    "Jack Conte": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Scary Pockets",
+        "Scary Goldings"
+      ]
+    },
+    "MonoNeon": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "collaborators": [
+        "Scary Goldings"
+      ]
+    },
+    "John Scofield": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "collaborators": [
+        "Scary Goldings"
+      ]
+    },
+    "Marillion": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Steve Hogarth",
+        "Steve Rothery"
+      ]
+    },
+    "Neal Morse": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Neal Morse Band",
+        "Neal Morse and The Resonance",
+        "Transatlantic"
+      ]
+    },
+    "Transatlantic": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Neal Morse",
+        "Mike Portnoy"
+      ]
+    },
+    "Mike Portnoy": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Transatlantic",
+        "Neal Morse Band"
+      ]
+    },
+    "Anneke Van Giersbergen": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "The Gathering",
+        "Sirens",
+        "The Gentle Storm"
+      ]
+    },
+    "Tenacious D": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Jack Black",
+        "Kyle Gass"
+      ]
+    },
+    "W.A.F.P.": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "W.A.S.P."
+      ]
+    },
+    "W.A.S.P.": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "W.A.F.P."
+      ]
+    },
+    "Whitesnake": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "David Coverdale"
+      ]
+    },
+    "David Coverdale": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Whitesnake"
+      ]
+    },
+    "Robert Jon and The Wreck": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Robert Jon Burrison"
+      ]
+    },
+    "Method of Defiance": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Bill Laswell"
+      ]
+    },
+    "Massacre": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Bill Laswell"
+      ]
+    },
+    "Bill Laswell": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Method of Defiance",
+        "Massacre"
+      ]
+    },
+    "West Side Story": {
+      "hideFromArtistIndex": true
+    },
+    "Parchment Prison Prayer": {
+      "hideFromArtistIndex": true
+    },
+    "Comic-Con": {
+      "hideFromArtistIndex": true
+    },
+    "Convention": {
+      "hideFromArtistIndex": true
+    },
+    "Exhibit": {
+      "hideFromArtistIndex": true
+    },
+    "Exhibition": {
+      "hideFromArtistIndex": true
+    },
+    "Tattoo Convention": {
+      "hideFromArtistIndex": true
+    },
+    "Fishbone": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Angelo Moore"
+      ]
+    },
+    "Angelo Moore": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Fishbone",
+        "Celebrating David Bowie"
+      ]
+    },
+    "Celebrating David Bowie": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Angelo Moore",
+        "Adrian Belew"
       ]
     }
   },
@@ -895,6 +1339,51 @@
   "manualArticleAssociations": {
     "Billy Corgan": [
       "https://www.electriceyerock.com/2024/06/the-smashing-pumpkins-accor-arena-paris.html"
+    ],
+    "Francis Cabrel": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Hugues Aufray": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Pascal Obispo": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Bénabar": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Axelle Red": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Élodie Frégé": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Anne Sila": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Alain Souchon": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
+    ],
+    "Gauvain Sers": [
+      "https://www.electriceyerock.com/2025/11/renaud-annonce-trois-concerts-paris.html",
+      "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
+      "https://www.electriceyerock.com/2026/09/renaud-son-concert-anniversaire-bientot.html"
     ]
   },
   "officialSites": {}
