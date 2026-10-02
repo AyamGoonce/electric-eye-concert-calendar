@@ -147,6 +147,35 @@ class ContentIndexTests(unittest.TestCase):
         self.assertIn("canonicalName,slug,aliases", csv_export)
         self.assertIn("beat,BEAT,123456", associations)
 
+    def test_write_assets_includes_relationship_nodes_in_full_payload(self):
+        original = content_index.load_artist_identity_overrides
+        content_index.load_artist_identity_overrides = lambda: {
+            "aliases": {},
+            "artists": {
+                "The Smiths": {
+                    "members": ["Morrissey"],
+                },
+            },
+            "articleOverrides": {},
+        }
+        try:
+            index = build_index(
+                [],
+                generated_at="2026-01-01T00:00:00Z",
+            )
+        finally:
+            content_index.load_artist_identity_overrides = original
+
+        with tempfile.TemporaryDirectory() as directory:
+            result = write_assets(directory, index)
+            asset = Path(directory, result["filename"]).read_text(
+                encoding="utf-8"
+            )
+
+        self.assertIn('"relationshipNodes"', asset)
+        self.assertIn('"the-smiths"', asset)
+        self.assertIn('"Morrissey"', asset)
+
     def test_article_url_rejects_unsafe_scheme(self):
         unsafe = entry("Unsafe article", ["News"])
         unsafe["link"][0]["href"] = "javascript:alert(1)"
@@ -160,6 +189,111 @@ class ContentIndexTests(unittest.TestCase):
             entry("Some general news", ["News", "Calendar Only Band"]),
         ], generated_at="2026-01-01T00:00:00Z")
         self.assertEqual(index["artists"], {})
+
+    def test_article_override_can_exclude_combined_credit(self):
+        article = entry(
+            "Album Review: Rhiannon Giddens & Justin Robinson - Example",
+            ["Album Review", "Rhiannon Giddens & Justin Robinson"],
+            "2026-01-01",
+        )
+
+        original = content_index.load_artist_identity_overrides
+        content_index.load_artist_identity_overrides = lambda: {
+            "aliases": {},
+            "artists": {},
+            "articleOverrides": {
+                "123456": {
+                    "excludedArtists": [
+                        "Rhiannon Giddens & Justin Robinson",
+                    ],
+                    "primaryArtists": [
+                        "Rhiannon Giddens",
+                        "Justin Robinson",
+                    ],
+                }
+            },
+        }
+        try:
+            index = build_index(
+                [article],
+                generated_at="2026-01-02T00:00:00Z",
+            )
+        finally:
+            content_index.load_artist_identity_overrides = original
+
+        self.assertNotIn(
+            "rhiannon-giddens-justin-robinson",
+            index["artists"],
+        )
+        self.assertIn("rhiannon-giddens", index["artists"])
+        self.assertIn("justin-robinson", index["artists"])
+
+    def test_zero_article_relationship_identity_exports_as_node_only(self):
+        original = content_index.load_artist_identity_overrides
+        content_index.load_artist_identity_overrides = lambda: {
+            "aliases": {},
+            "artists": {
+                "The Smiths": {
+                    "members": ["Morrissey"],
+                },
+            },
+            "articleOverrides": {},
+        }
+        try:
+            index = build_index(
+                [],
+                generated_at="2026-01-01T00:00:00Z",
+            )
+        finally:
+            content_index.load_artist_identity_overrides = original
+
+        self.assertEqual(index["artists"], {})
+        self.assertIn("the-smiths", index["relationshipNodes"])
+        self.assertEqual(
+            ["Morrissey"],
+            index["relationshipNodes"]["the-smiths"]["identity"]["members"],
+        )
+
+    def test_search_link_and_search_association_are_exported(self):
+        article = entry(
+            "Floor Jansen announces new show",
+            ["News", "Floor Jansen"],
+            "2026-01-01",
+        )
+
+        original = content_index.load_artist_identity_overrides
+        content_index.load_artist_identity_overrides = lambda: {
+            "aliases": {},
+            "artists": {
+                "Floor Jansen": {
+                    "searchLinks": ["Nightwish"],
+                },
+                "Peter Hook & The Light": {
+                    "searchAssociations": ["New Order", "Joy Division"],
+                },
+            },
+            "articleOverrides": {},
+        }
+        try:
+            index = build_index(
+                [article],
+                generated_at="2026-01-02T00:00:00Z",
+            )
+        finally:
+            content_index.load_artist_identity_overrides = original
+
+        self.assertEqual(
+            ["Nightwish"],
+            index["artists"]["floor-jansen"]["identity"]["searchLinks"],
+        )
+        self.assertIn(
+            "peter-hook-the-light",
+            index["relationshipNodes"],
+        )
+        self.assertEqual(
+            ["New Order", "Joy Division"],
+            index["relationshipNodes"]["peter-hook-the-light"]["identity"]["searchAssociations"],
+        )
 
     def test_article_types_associations_and_concert_hero_rules(self):
         image = "https://blogger.googleusercontent.com/example/s72-c/photo.jpg"
@@ -292,8 +426,8 @@ var EE_ARCHIVE_REVIEWS=[
             },
         )
 
-        self.assertIn("dresden-dolls", index["artists"])
-        self.assertNotIn("the-dresden-dolls", index["artists"])
+        self.assertIn("the-dresden-dolls", index["artists"])
+        self.assertNotIn("dresden-dolls", index["artists"])
         self.assertIn("surf-gang", index["artists"])
         self.assertNotIn("surf-gang-dj-set", index["artists"])
 

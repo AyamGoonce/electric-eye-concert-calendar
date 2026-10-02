@@ -7,12 +7,12 @@
     "Sheepdogs": "The Sheepdogs",
     "Seasick Sick": "Seasick Steve",
     "Ron Wood": "Ronnie Wood",
-    "Saucerful of Secrets": "Nick Mason's Saucerful of Secrets",
-    "Nick Mason’s Saucerful of Secrets": "Nick Mason's Saucerful of Secrets",
+    "Saucerful of Secrets": "Nick Mason",
+    "Nick Mason’s Saucerful of Secrets": "Nick Mason",
     "400 Unit": "Jason Isbell and the 400 Unit",
     "The 400 Unit": "Jason Isbell and the 400 Unit",
     "Jason Isbell & the 400 Unit": "Jason Isbell and the 400 Unit",
-    "Steven Van Zandt": "Little Steven",
+    "Steven Van Zandt": "\"Little\" Steven Van Zandt",
     "E Street Band": "The E Street Band",
     "E-Street Band": "The E Street Band",
     "The E-Street Band": "The E Street Band",
@@ -49,7 +49,7 @@
     "Anthony Banks": "Tony Banks",
     "Billy F. Gibbons": "Billy Gibbons",
     "The Reverend Billy Gibbons": "Billy Gibbons",
-    "Stevie Van Zandt": "Little Steven",
+    "Stevie Van Zandt": "\"Little\" Steven Van Zandt",
     "Steve Hogerth": "Steve Hogarth",
     "Neal Morse Band": "Neal Morse",
     "Neal Morse and The Resonance": "Neal Morse",
@@ -58,7 +58,47 @@
     "Robert Jon & The Wreck": "Robert Jon and The Wreck",
     "Ewan Currie": "The Sheepdogs",
     "Roger Miret": "Agnostic Front",
-    "Vinnie Stigma": "Agnostic Front"
+    "Vinnie Stigma": "Agnostic Front",
+    "Little Steven": "\"Little\" Steven Van Zandt",
+    "Disciples of Soul": "\"Little\" Steven Van Zandt",
+    "Little Steven & The Disciples of Soul": "\"Little\" Steven Van Zandt",
+    "Little Steven and the Disciples of Soul": "\"Little\" Steven Van Zandt",
+    "Skye": "Morcheeba",
+    "Ross": "Morcheeba",
+    "Skye & Ross": "Morcheeba",
+    "Neil Hannon": "The Divine Comedy",
+    "David Coverdale": "Whitesnake",
+    "Neal Morse & The Resonance": "Neal Morse",
+    "The Cockroaches": "The Rolling Stones",
+    "Bruce Springsteen and The E Street Band": "Bruce Springsteen",
+    "Genesis Revisited": "Steve Hackett",
+    "Jello Biafra & the Guantanamo School of Medicine": "Jello Biafra",
+    "Robert Plant & the Sensational Space Shifters": "Robert Plant",
+    "Nick Mason's Saucerful of Secrets": "Nick Mason",
+    "Matt Schultz": "Matt Shultz",
+    "Brad Schultz": "Brad Shultz",
+    "Richie Blackmore": "Ritchie Blackmore",
+    "Tom Huntin": "Tom Hunting",
+    "Wolf Hoffman": "Wolf Hoffmann",
+    "Carl Bârat": "Carl Barât",
+    "Spritualized": "Spiritualized",
+    "The the": "The The",
+    "Derek & the Dominos": "Derek and the Dominos",
+    "Steve Queralt": "Steven Queralt",
+    "Mike Cooley": "Michael Cooley",
+    "Tod LaTorre": "Todd La Torre",
+    "Wattie": "Walter Buchan",
+    "Wattie Buchan": "Walter Buchan",
+    "Peter Doherty": "Pete Doherty",
+    "Larry Mullen": "Larry Mullen Jr.",
+    "Larry Mullen, Jr.": "Larry Mullen Jr.",
+    "Larry Mullen Jr": "Larry Mullen Jr.",
+    "Frank Black": "Black Francis",
+    "Rick Medlocke": "Rickey Medlocke",
+    "Ricky Medlocke": "Rickey Medlocke",
+    "Johnny Van Zandt": "Johnny Van Zant",
+    "Telephone": "Téléphone",
+    "Dresden Dolls": "The Dresden Dolls"
   },
   "artists": {
     "Down": {
@@ -148,6 +188,9 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "David Vincent"
       ]
     },
     "Terrorizer": {
@@ -158,7 +201,8 @@
         "Reviewed Electric Eye artist relationship"
       ],
       "members": [
-        "David Vincent"
+        "David Vincent",
+        "Pete Sandoval"
       ]
     },
     "Vltimas": {
@@ -218,6 +262,11 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Leyla McCalla",
+        "Rhiannon Giddens",
+        "Amythyst Kiah"
       ]
     },
     "Carolina Chocolate Drops": {
@@ -228,20 +277,8 @@
         "Reviewed Electric Eye artist relationship"
       ]
     },
-    "Nick Mason's Saucerful of Secrets": {
-      "members": [
-        "Nick Mason"
-      ],
-      "associatedActs": [
-        "Pink Floyd"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
     "Nick Mason": {
       "associatedActs": [
-        "Nick Mason's Saucerful of Secrets",
         "Pink Floyd"
       ],
       "identityEvidence": [
@@ -293,38 +330,10 @@
         "Reviewed Electric Eye artist relationship"
       ]
     },
-    "Genesis Revisited": {
-      "associatedActs": [
-        "Steve Hackett",
-        "Genesis"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
     "Steve Hackett": {
       "associatedActs": [
-        "Genesis Revisited",
         "Genesis",
         "The Musical Box"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
-    "Little Steven": {
-      "associatedActs": [
-        "Disciples of Soul",
-        "The E Street Band",
-        "Little Steven & The Disciples of Soul"
-      ],
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ]
-    },
-    "Disciples of Soul": {
-      "associatedActs": [
-        "Little Steven"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -383,7 +392,10 @@
         "Heartland Rock",
         "Rock"
       ],
-      "hideFromArtistIndex": true
+      "hideFromArtistIndex": true,
+      "members": [
+        "\"Little\" Steven Van Zandt"
+      ]
     },
     "Sheila E.": {
       "genres": [
@@ -507,6 +519,15 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "searchAssociations": [
+        "Ritchie Blackmore",
+        "Steve Morse",
+        "Simon McBride",
+        "Glenn Hughes",
+        "Roger Glover",
+        "Ian Paice",
+        "Ian Gillan"
       ]
     },
     "Smith/Kotzen": {
@@ -552,12 +573,10 @@
       ]
     },
     "Axl Rose": {
-      "associatedActs": [
-        "AC/DC"
-      ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
-      ]
+      ],
+      "hideFromArtistIndex": true
     },
     "Durand Jones & the Indications": {
       "members": [
@@ -591,7 +610,8 @@
     },
     "The Pineapple Thief": {
       "members": [
-        "Gavin Harrison"
+        "Gavin Harrison",
+        "Bruce Soord"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -642,7 +662,8 @@
     "The Crimson ProjeKct": {
       "members": [
         "Adrian Belew",
-        "Pat Mastelotto"
+        "Pat Mastelotto",
+        "Tony Levin"
       ],
       "associatedActs": [
         "King Crimson"
@@ -673,7 +694,9 @@
     },
     "The Winery Dogs": {
       "members": [
-        "Richie Kotzen"
+        "Richie Kotzen",
+        "Billy Sheehan",
+        "Mike Portnoy"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -915,19 +938,16 @@
       ]
     },
     "Nightwish": {
-      "members": [
-        "Floor Jansen"
-      ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
     },
     "Floor Jansen": {
-      "associatedActs": [
-        "Nightwish"
-      ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "searchLinks": [
+        "Nightwish"
       ]
     },
     "AC/DC": {
@@ -1006,7 +1026,9 @@
       ],
       "members": [
         "Paul McCartney",
-        "Ringo Starr"
+        "Ringo Starr",
+        "George Harrison",
+        "John Lennon"
       ]
     },
     "The Who": {
@@ -1140,7 +1162,8 @@
       ],
       "members": [
         "Steve Hogarth",
-        "Steve Rothery"
+        "Steve Rothery",
+        "Pete Trewavas"
       ]
     },
     "Neal Morse": {
@@ -1149,7 +1172,6 @@
       ],
       "associatedActs": [
         "Neal Morse Band",
-        "Neal Morse and The Resonance",
         "Transatlantic"
       ]
     },
@@ -1159,7 +1181,9 @@
       ],
       "members": [
         "Neal Morse",
-        "Mike Portnoy"
+        "Mike Portnoy",
+        "Roine Stolt",
+        "Pete Trewavas"
       ]
     },
     "Mike Portnoy": {
@@ -1212,14 +1236,6 @@
       ],
       "members": [
         "David Coverdale"
-      ]
-    },
-    "David Coverdale": {
-      "identityEvidence": [
-        "Reviewed Electric Eye artist relationship"
-      ],
-      "associatedActs": [
-        "Whitesnake"
       ]
     },
     "Robert Jon and The Wreck": {
@@ -1301,6 +1317,604 @@
         "Angelo Moore",
         "Adrian Belew"
       ]
+    },
+    "\"Little\" Steven Van Zandt": {
+      "associatedActs": [
+        "The E Street Band"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Black Indians of New Orleans": {
+      "hideFromArtistIndex": true
+    },
+    "Metal - Diabolus in Music": {
+      "hideFromArtistIndex": true
+    },
+    "Musée de la Musique": {
+      "hideFromArtistIndex": true
+    },
+    "The Aristocrats": {
+      "members": [
+        "Guthrie Govan"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Anthrax": {
+      "members": [
+        "Joey Belladonna",
+        "Scott Ian",
+        "Charlie Benante",
+        "Frank Bello"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Black Crowes": {
+      "members": [
+        "Chris Robinson",
+        "Rich Robinson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Black Flag": {
+      "members": [
+        "Greg Ginn"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Blackberry Smoke": {
+      "members": [
+        "Charlie Starr",
+        "Brandon Still",
+        "Richard Turner",
+        "Paul Jackson",
+        "Benji Shanks"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Blue Öyster Cult": {
+      "members": [
+        "Buck Dharma",
+        "Eric Bloom"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Cage The Elephant": {
+      "members": [
+        "Matt Shultz",
+        "Brad Shultz"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Mr. Big": {
+      "members": [
+        "Billy Sheehan",
+        "Paul Gilbert"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Corrosion of Conformity": {
+      "members": [
+        "Pepper Keenan",
+        "Woody Weatherman"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Crowbar": {
+      "members": [
+        "Kirk Windstein"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Dream Theater": {
+      "members": [
+        "Mike Portnoy",
+        "James LaBrie",
+        "John Petrucci",
+        "Jordan Rudess",
+        "John Myung"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Derek and the Dominos": {
+      "members": [
+        "Eric Clapton"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Cream": {
+      "members": [
+        "Eric Clapton"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Yardbirds": {
+      "members": [
+        "Eric Clapton",
+        "Jeff Beck"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Ride": {
+      "members": [
+        "Andy Bell",
+        "Mark Gardener",
+        "Tom Leigh",
+        "Steven Queralt"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Burning Rain": {
+      "members": [
+        "Doug Aldrich"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Children of Bodom": {
+      "members": [
+        "Alexei Laiho"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Cult": {
+      "members": [
+        "Ian Astbury",
+        "Billy Duffy"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Smiths": {
+      "members": [
+        "Morrissey"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Led Zeppelin": {
+      "members": [
+        "Robert Plant",
+        "Jimmy Page",
+        "John Paul Jones",
+        "John Bonham"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Cure": {
+      "members": [
+        "Robert Smith",
+        "Simon Gallup"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Damned": {
+      "members": [
+        "Captain Sensible",
+        "Dave Vanian",
+        "Rat Scabies"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Drive-By Truckers": {
+      "members": [
+        "Patterson Hood",
+        "Michael Cooley"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Darkness": {
+      "members": [
+        "Justin Hawkins"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Dresden Dolls": {
+      "members": [
+        "Brian Viglione",
+        "Amanda Palmer"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Accept": {
+      "members": [
+        "Christopher Williams",
+        "Mark Tornillo",
+        "Wolf Hoffmann"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Queensrÿche": {
+      "members": [
+        "Todd La Torre",
+        "Michael Wilton"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Elegant Weapons": {
+      "members": [
+        "Richie Faulkner",
+        "Ronnie Romero",
+        "Dave Rimmer",
+        "Christopher Williams"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Uriah Heep": {
+      "members": [
+        "Dave Rimmer",
+        "Mick Box"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Judas Priest": {
+      "members": [
+        "Richie Faulkner",
+        "Rob Halford",
+        "Ian Hill",
+        "Glenn Tipton",
+        "Scott Travis"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Epica": {
+      "members": [
+        "Simone Simons"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Exhorder": {
+      "members": [
+        "Kyle Thomas"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Europe": {
+      "members": [
+        "Joey Tempest",
+        "John Norum",
+        "Mic Michaeli",
+        "John Levén",
+        "Ian Haugland"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Exodus": {
+      "members": [
+        "Tom Hunting",
+        "Rob Dukes",
+        "Gary Holt"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Exploited": {
+      "members": [
+        "Walter Buchan"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Flamin’ Groovies": {
+      "members": [
+        "Cyril Jordan",
+        "Chris Wilson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Foo Fighters": {
+      "members": [
+        "Dave Grohl",
+        "Taylor Hawkins",
+        "Pat Smear"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Flower Kings": {
+      "members": [
+        "Roine Stolt"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Gogol Bordello": {
+      "members": [
+        "Eugene Hütz"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Les Insus?": {
+      "members": [
+        "Jean-Louis Aubert",
+        "Richard Kolinka",
+        "Louis Bertignac"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Jethro Tull": {
+      "members": [
+        "Ian Anderson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Creedence Clearwater Revival": {
+      "members": [
+        "John Fogerty"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Kula Shaker": {
+      "members": [
+        "Crispin Mills"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Kreator": {
+      "members": [
+        "Mille Petrozza"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "King’s X": {
+      "members": [
+        "Ty Tabor",
+        "Doug Pinnick",
+        "Jerry Gaskill"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "L.A. Guns": {
+      "members": [
+        "Tracii Guns"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Libertines": {
+      "members": [
+        "Pete Doherty",
+        "Carl Barât"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Limp Bizkit": {
+      "members": [
+        "Fred Durst",
+        "Wes Borland"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Lemonheads": {
+      "members": [
+        "Evan Dando"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Wilco": {
+      "members": [
+        "Jeff Tweedy",
+        "Nels Cline"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "U2": {
+      "members": [
+        "Bono",
+        "The Edge",
+        "Larry Mullen Jr.",
+        "Adam Clayton"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The The": {
+      "members": [
+        "Matt Johnson"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Tedeschi Trucks Band": {
+      "members": [
+        "Susan Tedeschi",
+        "Derek Trucks"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Sunflower Bean": {
+      "members": [
+        "Julia Cumming"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Six Feet Under": {
+      "members": [
+        "Chris Barnes",
+        "Jack Owen"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Spiritualized": {
+      "members": [
+        "Jason Pierce"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Pixies": {
+      "members": [
+        "Black Francis",
+        "Joey Santiago",
+        "David Lovering"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "The Dead Daisies": {
+      "searchAssociations": [
+        "John Corabi",
+        "Doug Aldrich",
+        "David Lowy",
+        "Reb Beach"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Lynyrd Skynyrd": {
+      "searchAssociations": [
+        "Gary Rossington",
+        "Rickey Medlocke",
+        "Johnny Van Zant"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Brian Viglione": {
+      "searchAssociations": [
+        "Veronica Swift"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Peter Hook & The Light": {
+      "searchAssociations": [
+        "New Order",
+        "Joy Division"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Téléphone": {
+      "searchAssociations": [
+        "Les Insus?"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "New Order": {
+      "searchAssociations": [
+        "Peter Hook & The Light"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Joy Division": {
+      "searchAssociations": [
+        "Peter Hook & The Light"
+      ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
     }
   },
   "articleOverrides": {
@@ -1333,6 +1947,74 @@
       "primaryArtists": [
         "Ronnie Wood",
         "Imelda May"
+      ]
+    },
+    "7246169822937525098": {
+      "primaryArtists": [
+        "AC/DC",
+        "Axl Rose"
+      ]
+    },
+    "4488577314972148020": {
+      "primaryArtists": [
+        "John Hiatt",
+        "Sonny Landreth"
+      ],
+      "excludedArtists": [
+        "John Hiatt & the Goners feat. Sonny Landreth"
+      ]
+    },
+    "8250808478680218130": {
+      "primaryArtists": [
+        "Richard Bona",
+        "Alfredo Rodriguez"
+      ],
+      "excludedArtists": [
+        "Richard Bona/Alfredo Rodriguez Trio"
+      ]
+    },
+    "5849253261480266950": {
+      "primaryArtists": [
+        "Rhiannon Giddens",
+        "Francesco Turrisi"
+      ],
+      "excludedArtists": [
+        "Rhiannon Giddens & Francesco Turrisi"
+      ]
+    },
+    "1619567883905031094": {
+      "primaryArtists": [
+        "Rhiannon Giddens",
+        "Justin Robinson"
+      ],
+      "excludedArtists": [
+        "Rhiannon Giddens & Justin Robinson"
+      ]
+    },
+    "8896466334025707654": {
+      "primaryArtists": [
+        "Ry Cooder",
+        "The Hamiltones"
+      ],
+      "excludedArtists": [
+        "Ry Cooder (feat. the Hamiltones)"
+      ]
+    },
+    "3087016823383713061": {
+      "primaryArtists": [
+        "Brandi Carlile",
+        "Elton John"
+      ]
+    },
+    "7694146401260249927": {
+      "primaryArtists": [
+        "Taj Mahal",
+        "Keb' Mo'"
+      ],
+      "excludedArtists": [
+        "Taj Mahal / Keb' Mo'",
+        "Taj Mahal/Keb' Mo'",
+        "Taj Mahal/Keb’ Mo’"
       ]
     }
   },

@@ -734,6 +734,21 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
                 direct_names.append(canonical)
 
         reviewed_article = (overrides.get("articleOverrides") or {}).get(post_id or "") or {}
+
+        excluded_artists = {
+            normalize_artist(name)
+            for name in reviewed_article.get("excludedArtists", [])
+        }
+        if excluded_artists:
+            matched_names = [
+                name for name in matched_names
+                if normalize_artist(name) not in excluded_artists
+            ]
+            direct_names = [
+                name for name in direct_names
+                if normalize_artist(name) not in excluded_artists
+            ]
+
         for canonical in reviewed_article.get("primaryArtists", []):
             if canonical not in matched_names:
                 matched_names.append(canonical)
@@ -767,7 +782,10 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
     artists = {}
     slug_owners = {}
     collisions = []
-    for canonical, article_ids in sorted(artist_article_ids.items(), key=lambda item: normalize_artist(item[0])):
+    for canonical, article_ids in sorted(
+        artist_article_ids.items(),
+        key=lambda item: normalize_artist(item[0]),
+    ):
         slug = slugify(canonical)
         if not slug:
             continue
@@ -810,6 +828,8 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "associatedActs": reviewed.get("associatedActs", []),
             "sideProjects": reviewed.get("sideProjects", []),
             "collaborators": reviewed.get("collaborators", []),
+            "searchLinks": reviewed.get("searchLinks", []),
+            "searchAssociations": reviewed.get("searchAssociations", []),
             "producers": reviewed.get("producers", []),
             "songwriters": reviewed.get("songwriters", []),
             "genres": reviewed.get("genres", []),
@@ -859,11 +879,52 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
         for name in [artist["n"], *artist["al"]]:
             lookup[normalize_artist(name)] = slug
 
+    # Keep reviewed zero-article identities out of the Artist registry, while
+    # still exporting relationship-bearing identities for search expansion.
+    relationship_fields = (
+        "members",
+        "formerMembers",
+        "associatedActs",
+        "sideProjects",
+        "collaborators",
+        "searchLinks",
+        "searchAssociations",
+    )
+    artist_names = {
+        normalize_artist(item["n"])
+        for item in artists.values()
+    }
+    relationship_nodes = {}
+
+    for canonical, reviewed in reviewed_artists.items():
+        if normalize_artist(canonical) in artist_names:
+            continue
+
+        if not any(reviewed.get(field) for field in relationship_fields):
+            continue
+
+        relationship_nodes[slugify(canonical)] = {
+            "n": canonical,
+            "al": sorted(
+                {
+                    alias
+                    for alias, target in EXPLICIT_ALIASES.items()
+                    if normalize_artist(target) == normalize_artist(canonical)
+                },
+                key=normalize_artist,
+            ),
+            "identity": {
+                field: reviewed.get(field, [])
+                for field in relationship_fields
+            },
+        }
+
     counts = Counter(article["y"] for article in articles)
     return {
         "schema": 2,
         "generatedAt": generated_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
         "artists": artists,
+        "relationshipNodes": relationship_nodes,
         "articles": articles,
         "diagnostics": {
             "articleCounts": dict(sorted(counts.items())),
@@ -983,7 +1044,17 @@ def write_artist_exports(output_dir, index):
 def write_assets(output_dir, index):
     destination = Path(output_dir)
     destination.mkdir(parents=True, exist_ok=True)
-    full_payload = {key: index[key] for key in ("schema", "generatedAt", "artists", "articles", "diagnostics")}
+    full_payload = {
+        key: index[key]
+        for key in (
+            "schema",
+            "generatedAt",
+            "artists",
+            "relationshipNodes",
+            "articles",
+            "diagnostics",
+        )
+    }
     full_asset = (
         _javascript_assignment("ElectricEyeContentIndex", full_payload)
         + "document.dispatchEvent(new CustomEvent('ee:content-index-ready'));\n"
