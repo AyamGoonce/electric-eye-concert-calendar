@@ -128,16 +128,15 @@
     });
 
     return sortItems(
-      Object.keys(lookup)
-        .filter(function (name) {
-          return hasEditorialCoverage(content, lookup[name]);
+      Object.keys(content.artists)
+        .filter(function (slug) {
+          return hasEditorialCoverage(content, slug);
         })
-        .map(function (name) {
-          var slug = lookup[name];
+        .map(function (slug) {
           var artist = content.artists[slug] || {};
+          var name = artist.n || slug;
           var exactTerms = [name]
-            .concat(artist.al || [])
-            .concat(artist.n || []);
+            .concat(artist.al || []);
 
           var articleItems = [];
           var seenArticleUrls = Object.create(null);

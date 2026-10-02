@@ -35,7 +35,9 @@
     "Public Image Limited": "Public Image Ltd.",
     "Public Image, Ltd.": "Public Image Ltd.",
     "Slash feat. Myles Kennedy & The Conspirators": "Slash",
-    "Slash feat. Myles Kennedy & the Conspirators": "Slash"
+    "Slash feat. Myles Kennedy & the Conspirators": "Slash",
+    "the Waterboys": "The Waterboys",
+    "Ronnie Wood and his Band featuring Imelda May": "Ronnie Wood"
   },
   "artists": {
     "Down": {
@@ -91,7 +93,10 @@
     },
     "The Rolling Stones": {
       "members": [
-        "Ronnie Wood"
+        "Ronnie Wood",
+        "Keith Richards",
+        "Mick Jagger",
+        "Charlie Watts"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -768,6 +773,90 @@
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
+    },
+    "The Waterboys": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Black Sabbath": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Ozzy Osbourne",
+        "Tony Iommi"
+      ]
+    },
+    "Ozzy Osbourne": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Black Sabbath"
+      ]
+    },
+    "Tony Iommi": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Black Sabbath"
+      ]
+    },
+    "Keith Richards": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "The Rolling Stones"
+      ]
+    },
+    "Mick Jagger": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "The Rolling Stones"
+      ]
+    },
+    "Charlie Watts": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "The Rolling Stones"
+      ]
+    },
+    "Parliament": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "George Clinton"
+      ]
+    },
+    "Funkadelic": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "George Clinton"
+      ]
+    },
+    "George Clinton": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Parliament",
+        "Funkadelic"
+      ]
+    },
+    "Imelda May": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
     }
   },
   "articleOverrides": {
@@ -794,6 +883,12 @@
       ],
       "identityEvidence": [
         "Reviewed combined-billing article identity"
+      ]
+    },
+    "4580191959139692605": {
+      "primaryArtists": [
+        "Ronnie Wood",
+        "Imelda May"
       ]
     }
   },
