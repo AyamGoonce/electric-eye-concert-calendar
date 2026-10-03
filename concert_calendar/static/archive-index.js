@@ -231,12 +231,27 @@
           relatedSlug = resolveRelationshipSlug(relatedName);
           if (!relatedSlug) return;
 
+          relatedEntity = entitiesBySlug[relatedSlug];
+
+          if (
+            relatedEntity &&
+            (
+              entity.isArtist ||
+              identity.searchResultVisible
+            )
+          ) {
+            [relatedEntity.name]
+              .concat(relatedEntity.aliases || [])
+              .forEach(function (term) {
+                addSearchTerm(slug, term);
+              });
+          }
+
           addSearchEdge(slug, relatedSlug);
 
           if (!hasEditorialCoverage(content, slug)) return;
 
           addSearchEdge(relatedSlug, slug);
-          relatedEntity = entitiesBySlug[relatedSlug];
 
           if (
             relatedEntity &&
