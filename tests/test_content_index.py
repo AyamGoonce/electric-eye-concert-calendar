@@ -573,6 +573,114 @@ var EE_ARCHIVE_REVIEWS=[
                 ],
             )
 
+
+    def test_reviewed_manual_relationship_batch(self):
+        overrides = content_index.load_artist_identity_overrides()
+        artists = overrides["artists"]
+        aliases = overrides["aliases"]
+        article_overrides = overrides["articleOverrides"]
+
+        # Faces is a hidden relationship node; The Faces is only an alias.
+        self.assertFalse(
+            artists["Faces"].get("searchResultVisible", False)
+        )
+        self.assertEqual("Faces", aliases["The Faces"])
+        self.assertIn("Ronnie Wood", artists["Faces"]["members"])
+
+        # Tribute relationships.
+        self.assertIn(
+            "Rock N' Roll Doctors",
+            artists["Black Sabbath"]["associatedActs"],
+        )
+        self.assertIn(
+            "Black Sabbath",
+            artists["Rock N' Roll Doctors"]["associatedActs"],
+        )
+        self.assertTrue(artists["Grateful Dead"]["hideFromArtistIndex"])
+        self.assertIn(
+            "Dark Star Orchestra",
+            artists["Grateful Dead"]["associatedActs"],
+        )
+
+        expected_members = {
+            "Scary Goldings": {"Larry Goldings"},
+            "Megadeth": {"Dave Mustaine"},
+            "Metallica": {
+                "James Hetfield",
+                "Kirk Hammett",
+                "Lars Ulrich",
+                "Robert Trujillo",
+            },
+            "Carcass": {"Bill Steer", "Jeff Walker"},
+            "Arch Enemy": {"Alissa White-Gluz"},
+            "Depeche Mode": {"Dave Gahan", "Martin Gore"},
+            "The Waterboys": {"Mike Scott"},
+            "Flea & the Honora Band": {"Flea"},
+            "Garbage": {"Shirley Manson"},
+            "Slipknot": {"Jim Root", "Corey Taylor"},
+            "Afghan Whigs": {"Greg Dulli"},
+            "Skunk Anansie": {"Skin"},
+            "Clutch": {
+                "Neil Fallon",
+                "Tim Sult",
+                "Jan-Paul Gaster",
+                "Dan Maines",
+            },
+            "Stereophonics": {"Kelly Jones"},
+            "Rage Against the Machine": {"Tom Morello"},
+            "Red Hot Chili Peppers": {"Flea"},
+            "Therapy?": {"Andy Cairns"},
+        }
+
+        for band, members in expected_members.items():
+            self.assertTrue(
+                members.issubset(set(artists[band].get("members", []))),
+                band,
+            )
+
+        self.assertEqual("Robert Trujillo", aliases["Rob Trujillo"])
+
+        # Reviewed invisible-band cases.
+        self.assertTrue(
+            artists["Rage Against the Machine"]["hideFromArtistIndex"]
+        )
+        self.assertTrue(
+            artists["Red Hot Chili Peppers"]["hideFromArtistIndex"]
+        )
+
+        # QOTSA is absent from the unfiltered index but can appear on explicit search.
+        self.assertTrue(
+            artists["Queens of the Stone Age"]["hideFromArtistIndex"]
+        )
+        self.assertTrue(
+            artists["Queens of the Stone Age"]["searchResultVisible"]
+        )
+        self.assertEqual(
+            "Queens of the Stone Age",
+            aliases["QOTSA"],
+        )
+        self.assertEqual("Josh Homme", aliases["Joshua Homme"])
+        self.assertEqual(
+            ["5079821736142979867"],
+            artists["Josh Homme"]["searchArticleIds"],
+        )
+
+        # Patterson Hood is a reviewed primary subject of his solo article.
+        self.assertEqual(
+            ["Patterson Hood"],
+            article_overrides["769330683119258944"]["primaryArtists"],
+        )
+
+        # Thom Yorke is a show-specific subject, not a permanent band member.
+        self.assertEqual(
+            ["Flea & the Honora Band", "Thom Yorke"],
+            article_overrides["2464282514414023979"]["primaryArtists"],
+        )
+        self.assertNotIn(
+            "Thom Yorke",
+            artists["Flea & the Honora Band"]["members"],
+        )
+
     def test_concert_review_archive_rejects_missing_artist_and_external_url(self):
         source = """
 var EE_NEW_REVIEWS=[
@@ -921,7 +1029,7 @@ var EE_ARCHIVE_REVIEWS=[];
         relationship_index = build_index(
             [], generated_at="2026-01-01T00:00:00Z"
         )
-        self.assertTrue(
+        self.assertFalse(
             relationship_index["relationshipNodes"]["faces"]["identity"][
                 "searchResultVisible"
             ]

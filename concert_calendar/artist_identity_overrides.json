@@ -155,7 +155,8 @@
     "Mikkey Dee & Friends play Motörhead": "Mikkey Dee",
     "Mikkey Dee & Friends Play Motörhead": "Mikkey Dee",
     "Mikkey Dee and Friends play Motörhead": "Mikkey Dee",
-    "Mikkey Dee and Friends Play Motörhead": "Mikkey Dee"
+    "Mikkey Dee and Friends Play Motörhead": "Mikkey Dee",
+    "Rob Trujillo": "Robert Trujillo"
   },
   "nonArtistIdentities": [
     "Play It Loud",
@@ -223,7 +224,6 @@
       "members": [
         "Ronnie Wood"
       ],
-      "searchResultVisible": true,
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
@@ -548,7 +548,8 @@
     },
     "Arch Enemy": {
       "members": [
-        "Michael Amott"
+        "Michael Amott",
+        "Alissa White-Gluz"
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
@@ -907,6 +908,9 @@
     "The Waterboys": {
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Mike Scott"
       ]
     },
     "Black Sabbath": {
@@ -917,6 +921,9 @@
         "Ozzy Osbourne",
         "Tony Iommi",
         "Geezer Butler"
+      ],
+      "associatedActs": [
+        "Rock N' Roll Doctors"
       ]
     },
     "Ozzy Osbourne": {
@@ -1136,7 +1143,8 @@
       ],
       "members": [
         "Ryan Lerman",
-        "Jack Conte"
+        "Jack Conte",
+        "Larry Goldings"
       ],
       "collaborators": [
         "MonoNeon",
@@ -2010,7 +2018,9 @@
       ],
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
-      ]
+      ],
+      "hideFromArtistIndex": true,
+      "searchResultVisible": true
     },
     "Hermano": {
       "members": [
@@ -2464,6 +2474,154 @@
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
+    },
+    "Rock N' Roll Doctors": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Black Sabbath"
+      ]
+    },
+    "Grateful Dead": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Dark Star Orchestra"
+      ],
+      "hideFromArtistIndex": true
+    },
+    "Dark Star Orchestra": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "associatedActs": [
+        "Grateful Dead"
+      ]
+    },
+    "Megadeth": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Dave Mustaine"
+      ]
+    },
+    "Metallica": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "James Hetfield",
+        "Kirk Hammett",
+        "Lars Ulrich",
+        "Robert Trujillo"
+      ]
+    },
+    "Carcass": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Bill Steer",
+        "Jeff Walker"
+      ]
+    },
+    "Depeche Mode": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Dave Gahan",
+        "Martin Gore"
+      ]
+    },
+    "Flea & the Honora Band": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Flea"
+      ]
+    },
+    "Garbage": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Shirley Manson"
+      ]
+    },
+    "Slipknot": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Jim Root",
+        "Corey Taylor"
+      ]
+    },
+    "Afghan Whigs": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Greg Dulli"
+      ]
+    },
+    "Skunk Anansie": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Skin"
+      ]
+    },
+    "Clutch": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Neil Fallon",
+        "Tim Sult",
+        "Jan-Paul Gaster",
+        "Dan Maines"
+      ]
+    },
+    "Stereophonics": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Kelly Jones"
+      ]
+    },
+    "Rage Against the Machine": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Tom Morello"
+      ],
+      "hideFromArtistIndex": true
+    },
+    "Red Hot Chili Peppers": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Flea"
+      ],
+      "hideFromArtistIndex": true
+    },
+    "Therapy?": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "members": [
+        "Andy Cairns"
+      ]
     }
   },
   "articleOverrides": {
@@ -2613,6 +2771,23 @@
         "Jeff Beck featuring Johnny Depp",
         "Jeff Beck & Johnny Depp",
         "Jeff Beck and Johnny Depp"
+      ]
+    },
+    "769330683119258944": {
+      "primaryArtists": [
+        "Patterson Hood"
+      ],
+      "identityEvidence": [
+        "Reviewed editorial-subject identity"
+      ]
+    },
+    "2464282514414023979": {
+      "primaryArtists": [
+        "Flea & the Honora Band",
+        "Thom Yorke"
+      ],
+      "identityEvidence": [
+        "Reviewed show-specific guest association"
       ]
     }
   },

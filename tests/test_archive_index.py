@@ -78,13 +78,13 @@ const artists = {
   "maceo-parker":artist("Maceo Parker",26,{}),
   "fred-wesley":artist("Fred Wesley",27,{},true,["Fred Wesley Generations Trio","Generations Trio","Generations"]),
   "iggy-pop":artist("Iggy Pop",28,{}),
-  "queens-of-the-stone-age":artist("Queens of the Stone Age",29,{members:["Josh Homme"]}),
+  "queens-of-the-stone-age":artist("Queens of the Stone Age",29,{members:["Josh Homme"],searchResultVisible:true},false,["QOTSA"]),
   "kyuss":artist("Kyuss",30,{members:["Josh Homme"]},false),
   "josh-homme":artist("Josh Homme",31,{searchArticleIds:["iggy-post"]},false),
   "p-funk":artist("P-Funk",32,{searchLinks:["George Clinton","Bootsy Collins","Maceo Parker","Fred Wesley"],searchAliasLinks:{"P-Funk All-Stars":["George Clinton"],"P-Funk Allstars":["George Clinton"]}},false,["P-Funk All-Stars","P-Funk Allstars"])
 };
 const relationshipNodes = {
-  "faces":{n:"Faces",al:["The Faces"],identity:{members:["Ronnie Wood"],searchResultVisible:true}},
+  "faces":{n:"Faces",al:["The Faces"],identity:{members:["Ronnie Wood"],searchResultVisible:false}},
   "ron-mael":{n:"Ron Mael",al:[],identity:{searchLinks:["Sparks"]}},
   "russell-mael":{n:"Russell Mael",al:[],identity:{searchLinks:["Sparks"]}},
   "john-lydon":{n:"John Lydon",al:["Johnny Rotten"],identity:{searchAssociations:["Public Image Ltd."]}},
@@ -109,7 +109,7 @@ function scoped(name,term) {
   const item=items.find((candidate)=>candidate.name===name);
   return item ? ((item.scopedArticleItems||{})[normalize(term)]||[]).map((article)=>article.name) : [];
 }
-const queries=["Mick Jagger","Geezer Butler","Angus Young","Slash","Duff McKagan","Guns N' Roses","Ronnie Wood","Faces","The Faces","Frank Beard","David Coverdale","Vinnie Stigma","Roger Miret","Agnostic Front","John McGeoch","Public Image Ltd.","The Sheepdogs","Ewan Currie","Robert Jon & The Wreck","Robert Jon Burrison","Louis Cole","Scary Goldings","Parliament","Funkadelic","P-Funk All-Stars","P-Funk","Fred Wesley","Fred Wesley Generations Trio","Generations Trio","Generations","Ron Mael","Russell Mael","Johnny Rotten","Josh Homme","Kyuss"];
+const queries=["Mick Jagger","Geezer Butler","Angus Young","Slash","Duff McKagan","Guns N' Roses","Ronnie Wood","Faces","The Faces","Frank Beard","David Coverdale","Vinnie Stigma","Roger Miret","Agnostic Front","John McGeoch","Public Image Ltd.","The Sheepdogs","Ewan Currie","Robert Jon & The Wreck","Robert Jon Burrison","Louis Cole","Scary Goldings","Parliament","Funkadelic","P-Funk All-Stars","P-Funk","Fred Wesley","Fred Wesley Generations Trio","Generations Trio","Generations","Ron Mael","Russell Mael","Johnny Rotten","QOTSA","Queens of the Stone Age","Josh Homme","Joshua Homme","Kyuss"];
 const result={}; queries.forEach((query)=>{result[query]=matches(query);});
 result.joshScoped=scoped("Queens of the Stone Age","Josh Homme");
 result.kyussScoped=scoped("Kyuss","Josh Homme");
@@ -131,8 +131,8 @@ process.stdout.write(JSON.stringify(result));
             "Duff McKagan": {"Duff McKagan", "Guns N' Roses"},
             "Guns N' Roses": {"Guns N' Roses", "Slash", "Duff McKagan"},
             "Ronnie Wood": {"Ronnie Wood", "The Rolling Stones", "Faces"},
-            "Faces": {"Faces", "Ronnie Wood"},
-            "The Faces": {"Faces", "Ronnie Wood"},
+            "Faces": {"Ronnie Wood"},
+            "The Faces": {"Ronnie Wood"},
             "Frank Beard": {"Frank Beard", "ZZ Top"},
             "David Coverdale": {"David Coverdale", "Whitesnake"},
             "Vinnie Stigma": {"Vinnie Stigma", "Agnostic Front"},
@@ -157,7 +157,10 @@ process.stdout.write(JSON.stringify(result));
             "Ron Mael": {"Sparks"},
             "Russell Mael": {"Sparks"},
             "Johnny Rotten": {"Public Image Ltd."},
+            "QOTSA": {"Queens of the Stone Age"},
+            "Queens of the Stone Age": {"Queens of the Stone Age"},
             "Josh Homme": {"Queens of the Stone Age"},
+            "Joshua Homme": {"Queens of the Stone Age"},
             "Kyuss": {"Queens of the Stone Age"},
         }
         for query, expected_names in expected.items():
