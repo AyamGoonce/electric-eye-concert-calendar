@@ -68,6 +68,42 @@ class GenreIndexEvidenceTests(unittest.TestCase):
             if artist in genre.get("directArtists", [])
         }
 
+    def test_hidden_artist_identities_do_not_appear_in_public_genre_memberships(self):
+        articles = [
+            article(
+                "Axl Rose announces a show",
+                ["Hard Rock"],
+                ["axl-rose"],
+                "news",
+            ),
+            article(
+                "Convention coverage",
+                ["Death Metal"],
+                ["convention"],
+                "other",
+            ),
+        ]
+        artists = {
+            "axl-rose": {
+                "n": "Axl Rose",
+                "ar": [0],
+                "identity": {"genres": []},
+            },
+            "convention": {
+                "n": "Convention",
+                "ar": [1],
+                "identity": {"genres": []},
+            },
+        }
+
+        index = self.build(artists, articles)
+
+        for genre in index["genres"]:
+            self.assertNotIn("Axl Rose", genre.get("artists", []))
+            self.assertNotIn("Axl Rose", genre.get("directArtists", []))
+            self.assertNotIn("Convention", genre.get("artists", []))
+            self.assertNotIn("Convention", genre.get("directArtists", []))
+
     def test_artist_named_in_title_accepts_article_genre_labels(self):
         articles = [
             article(

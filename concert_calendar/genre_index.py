@@ -540,25 +540,42 @@ def build_genre_index(
                 "apple",
             )
 
+    hidden_artist_keys = {
+        normalize_artist(artist)
+        for artist, override in (identity_overrides.get("artists") or {}).items()
+        if override.get("hideFromArtistIndex") is True
+    }
+
     output_genres = []
 
     for name in sorted(genres, key=str.casefold):
         record = genres[name]
 
-        if not record["artists"] and not record["directArtists"]:
+        public_artists = {
+            artist
+            for artist in record["artists"]
+            if normalize_artist(artist) not in hidden_artist_keys
+        }
+        public_direct_artists = {
+            artist
+            for artist in record["directArtists"]
+            if normalize_artist(artist) not in hidden_artist_keys
+        }
+
+        if not public_artists and not public_direct_artists:
             continue
 
         output_genres.append({
             "name": name,
             "parent": record["parent"],
-            "artistCount": len(record["artists"]),
-            "directArtistCount": len(record["directArtists"]),
+            "artistCount": len(public_artists),
+            "directArtistCount": len(public_direct_artists),
             "artists": sorted(
-                record["artists"],
+                public_artists,
                 key=str.casefold,
             ),
             "directArtists": sorted(
-                record["directArtists"],
+                public_direct_artists,
                 key=str.casefold,
             ),
         })

@@ -130,7 +130,7 @@ process.stdout.write(JSON.stringify(result));
             "Slash": {"Slash", "Guns N' Roses"},
             "Duff McKagan": {"Duff McKagan", "Guns N' Roses"},
             "Guns N' Roses": {"Guns N' Roses", "Slash", "Duff McKagan"},
-            "Ronnie Wood": {"Ronnie Wood", "The Rolling Stones", "Faces"},
+            "Ronnie Wood": {"Ronnie Wood", "The Rolling Stones"},
             "Faces": {"Ronnie Wood"},
             "The Faces": {"Ronnie Wood"},
             "Frank Beard": {"Frank Beard", "ZZ Top"},
