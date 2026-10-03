@@ -9,7 +9,7 @@
     if(!mount||!index||!data||mount.dataset.ready)return;
     var id=new URLSearchParams(location.search).get("event")||location.pathname.match(/\/concert\/([^/]+)\/?$/)?.[1]||"",event=data.find(function(item){return item.i===decodeURIComponent(id);});
     if(!event){text(mount,"p","No matching concert coverage was found.","ee-artist-empty");return;}
-    mount.dataset.ready="1";text(mount,"p","Electric Eye","ee-page-kicker");text(mount,"h1",event.h,"ee-artist-title");
+    mount.dataset.ready="1";var home=document.createElement("a");home.href="https://www.electriceyerock.com/p/welcome-to-electric-eye.html";home.textContent="Electric Eye";home.className="ee-page-kicker ee-home-link";mount.append(home);text(mount,"h1",event.h,"ee-artist-title");
     text(mount,"p",humanDate(event.d)+" · "+event.v+(event.c.toLowerCase()==="paris"?"":" · "+event.c),"ee-page-context");
     var actions=document.createElement("div");actions.className="ee-page-actions";
     var back=document.createElement("a");back.href=calendarUrl+"#event-"+event.i;back.textContent="View in Concert Calendar";actions.append(back);

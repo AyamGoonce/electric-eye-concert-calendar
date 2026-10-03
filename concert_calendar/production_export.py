@@ -478,6 +478,11 @@ def _clean_route_page(
   <link rel="stylesheet" href="/proof/artist-page.css">
 </head>
 <body>
+  <nav class="ee-archive-nav" aria-label="Archive navigation">
+    <button class="ee-back-link" type="button" onclick="if (history.length > 1) {{ history.back(); }} else {{ location.href='https://www.electriceyerock.com/p/welcome-to-electric-eye.html'; }}">
+      ← Back
+    </button>
+  </nav>
   <main id="{mount_id}" class="ee-artist-results" aria-live="polite"></main>
   <script src="/proof/electric-eye-content-current.js"></script>
   <script src="/proof/calendar-current.js"></script>
@@ -500,8 +505,13 @@ def _archive_landing_page() -> str:
 </head>
 <body>
   <main class="ee-archive">
+    <nav class="ee-archive-nav" aria-label="Archive navigation">
+      <button class="ee-back-link" type="button" onclick="if (history.length > 1) { history.back(); } else { location.href='https://www.electriceyerock.com/p/welcome-to-electric-eye.html'; }">
+        ← Back
+      </button>
+    </nav>
     <header class="ee-archive-hero">
-      <p class="ee-archive-kicker">Electric Eye</p>
+      <a class="ee-archive-kicker ee-home-link" href="https://www.electriceyerock.com/p/welcome-to-electric-eye.html">Electric Eye</a>
       <h1>Index</h1>
       <p class="ee-archive-intro">
         Explore Electric Eye coverage by artist, venue or genre.
