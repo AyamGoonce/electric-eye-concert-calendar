@@ -80,7 +80,7 @@ const artists = {
   "iggy-pop":artist("Iggy Pop",28,{}),
   "queens-of-the-stone-age":artist("Queens of the Stone Age",29,{members:["Josh Homme"],searchResultVisible:true},false,["QOTSA"]),
   "kyuss":artist("Kyuss",30,{members:["Josh Homme"]},false),
-  "josh-homme":artist("Josh Homme",31,{searchArticleIds:["iggy-post"]},false),
+  "josh-homme":artist("Josh Homme",31,{searchArticleIds:["iggy-post"]},false,["Joshua Homme"]),
   "p-funk":artist("P-Funk",32,{searchLinks:["George Clinton","Bootsy Collins","Maceo Parker","Fred Wesley"],searchAliasLinks:{"P-Funk All-Stars":["George Clinton"],"P-Funk Allstars":["George Clinton"]}},false,["P-Funk All-Stars","P-Funk Allstars"])
 };
 const relationshipNodes = {
