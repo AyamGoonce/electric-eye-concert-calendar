@@ -48,6 +48,38 @@
     });
   }
 
+  function filterItemsForQuery(items, query, artistSection) {
+    var normalizedQuery = normalize(query);
+    var exactArtistQuery = false;
+
+    if (!normalizedQuery) {
+      return items.filter(function (item) {
+        return !item.searchOnly;
+      });
+    }
+
+    if (artistSection) {
+      exactArtistQuery = items.some(function (item) {
+        return (item.exactTerms || []).some(function (term) {
+          return normalize(term) === normalizedQuery;
+        });
+      });
+    }
+
+    return items.filter(function (item) {
+      var searchable = [item.name, item.meta]
+        .concat(item.searchTerms || [])
+        .concat(item.exactTerms || [])
+        .map(normalize);
+
+      return searchable.some(function (value) {
+        return exactArtistQuery
+          ? value === normalizedQuery
+          : value.indexOf(normalizedQuery) !== -1;
+      });
+    });
+  }
+
   function hasEditorialCoverage(content, slug) {
     var artist =
       content &&
@@ -71,6 +103,12 @@
 
     if (!lookup || !content || !content.artists) return null;
 
+    var structuralRelationshipFields = [
+      "members",
+      "formerMembers",
+      "associatedActs",
+      "sideProjects"
+    ];
     var searchTermsBySlug = Object.create(null);
     var scopedArticlesBySlug = Object.create(null);
     var entitiesBySlug = Object.create(null);
@@ -175,7 +213,50 @@
       var identity = entity.identity || {};
 
       // Relationship metadata describes identity; only reviewed search fields
-      // are allowed to expand global search routing.
+      // and reviewed structural fields may expand global search routing.
+      // Collaborators are deliberately excluded: article co-subjects and
+      // one-off billmates must not become global search equivalents.
+      structuralRelationshipFields.forEach(function (field) {
+        (identity[field] || []).forEach(function (relatedName) {
+          var relatedSlug;
+          var relatedEntity;
+
+          if (
+            entity.isArtist ||
+            identity.searchResultVisible
+          ) {
+            addSearchTerm(slug, relatedName);
+          }
+
+          relatedSlug = resolveRelationshipSlug(relatedName);
+          if (!relatedSlug) return;
+
+          addSearchEdge(slug, relatedSlug);
+
+          if (!hasEditorialCoverage(content, slug)) return;
+
+          addSearchEdge(relatedSlug, slug);
+          relatedEntity = entitiesBySlug[relatedSlug];
+
+          if (
+            relatedEntity &&
+            (
+              (
+                relatedEntity.isArtist &&
+                hasEditorialCoverage(content, relatedSlug)
+              ) ||
+              relatedEntity.identity.searchResultVisible
+            )
+          ) {
+            [entity.name].concat(entity.aliases || []).forEach(
+              function (term) {
+                addSearchTerm(relatedSlug, term);
+              }
+            );
+          }
+        });
+      });
+
       (identity.searchAssociations || []).forEach(function (relatedName) {
         if (entity.isArtist) {
           addSearchTerm(slug, relatedName);
@@ -204,11 +285,6 @@
         }
       });
 
-      if (entity.isArtist) {
-        (identity.articleSearchTerms || []).forEach(function (term) {
-          addSearchTerm(slug, term);
-        });
-      }
     });
 
     Object.keys(entitiesBySlug).forEach(function (sourceSlug) {
@@ -237,7 +313,22 @@
           );
 
           if (targetIsVisible) {
-            sourceTerms.forEach(function (term) {
+            sourceTerms.filter(function (term) {
+              var aliasLinks = source.identity.searchAliasLinks || {};
+              var reviewedTargets = null;
+
+              Object.keys(aliasLinks).some(function (alias) {
+                if (normalize(alias) !== normalize(term)) return false;
+                reviewedTargets = aliasLinks[alias] || [];
+                return true;
+              });
+
+              if (!reviewedTargets) return true;
+
+              return reviewedTargets.some(function (targetName) {
+                return resolveRelationshipSlug(targetName) === targetSlug;
+              });
+            }).forEach(function (term) {
               addSearchTerm(targetSlug, term);
             });
 
@@ -318,6 +409,31 @@
             scopedArticleItems: scopedArticlesBySlug[slug] || {}
           };
         })
+        .concat(
+          Object.keys(content.relationshipNodes || {})
+            .filter(function (slug) {
+              var node = content.relationshipNodes[slug] || {};
+              return !!(
+                node.identity &&
+                node.identity.searchResultVisible
+              );
+            })
+            .map(function (slug) {
+              var node = content.relationshipNodes[slug] || {};
+              var name = node.n || slug;
+
+              return {
+                name: name,
+                href: "",
+                meta: "",
+                searchOnly: true,
+                searchTerms: searchTermsBySlug[slug] || [],
+                exactTerms: [name].concat(node.al || []),
+                articleItems: [],
+                scopedArticleItems: {}
+              };
+            })
+        )
     );
   }
 
@@ -481,6 +597,7 @@
     if (!alphabet) return;
 
     items.forEach(function (item) {
+      if (item.searchOnly) return;
       available[firstLetter(item.name)] = true;
     });
 
@@ -504,13 +621,13 @@
 
   function createItem(item) {
     var wrapper = document.createElement("div");
-    var link = document.createElement("a");
+    var label = document.createElement(item.href ? "a" : "span");
 
     wrapper.className = "ee-index-item";
 
-    link.href = item.href;
-    link.textContent = item.name;
-    wrapper.appendChild(link);
+    if (item.href) label.href = item.href;
+    label.textContent = item.name;
+    wrapper.appendChild(label);
 
     if (item.meta) {
       var meta = document.createElement("span");
@@ -530,19 +647,11 @@
 
     results.innerHTML = "";
 
-    var filtered = items.filter(function (item) {
-      if (normalizedQuery) {
-        var searchable = [item.name, item.meta]
-          .concat(item.searchTerms || [])
-          .map(normalize);
-
-        if (!searchable.some(function (value) {
-          return value.indexOf(normalizedQuery) !== -1;
-        })) {
-          return false;
-        }
-      }
-
+    var filtered = filterItemsForQuery(
+      items,
+      query,
+      section.id === "ee-index-artists"
+    ).filter(function (item) {
       if (
         activeLetter &&
         firstLetter(item.name) !== activeLetter
@@ -660,10 +769,13 @@
     var input = section.querySelector(".ee-index-search");
     var count = section.querySelector(".ee-index-count");
     var activeLetter = "";
+    var visibleItemCount = items.filter(function (item) {
+      return !item.searchOnly;
+    }).length;
 
     count.textContent =
-      items.length.toLocaleString("en") +
-      (items.length === 1 ? " entry" : " entries");
+      visibleItemCount.toLocaleString("en") +
+      (visibleItemCount === 1 ? " entry" : " entries");
 
     createAlphabet(items, section);
     renderItems(section, items, "", "");
