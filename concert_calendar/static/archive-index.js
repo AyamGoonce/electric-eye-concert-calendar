@@ -71,15 +71,7 @@
 
     if (!lookup || !content || !content.artists) return null;
 
-    var relationshipFields = [
-      "members",
-      "formerMembers",
-      "associatedActs",
-      "sideProjects",
-      "collaborators"
-    ];
     var searchTermsBySlug = Object.create(null);
-    var relatedSlugsBySlug = Object.create(null);
     var scopedArticlesBySlug = Object.create(null);
     var entitiesBySlug = Object.create(null);
     var relationshipLookup = Object.create(null);
@@ -94,18 +86,6 @@
 
       if (searchTermsBySlug[slug].indexOf(value) === -1) {
         searchTermsBySlug[slug].push(value);
-      }
-    }
-
-    function addRelatedSlug(slug, relatedSlug) {
-      if (!slug || !relatedSlug || slug === relatedSlug) return;
-
-      if (!relatedSlugsBySlug[slug]) {
-        relatedSlugsBySlug[slug] = [];
-      }
-
-      if (relatedSlugsBySlug[slug].indexOf(relatedSlug) === -1) {
-        relatedSlugsBySlug[slug].push(relatedSlug);
       }
     }
 
@@ -194,32 +174,8 @@
       var entity = entitiesBySlug[slug];
       var identity = entity.identity || {};
 
-      relationshipFields.forEach(function (field) {
-        (identity[field] || []).forEach(function (relatedName) {
-          if (entity.isArtist) {
-            addSearchTerm(slug, relatedName);
-          }
-
-          var relatedSlug = resolveRelationshipSlug(relatedName);
-
-          if (!relatedSlug) return;
-
-          addSearchEdge(slug, relatedSlug);
-
-          if (hasEditorialCoverage(content, slug)) {
-            addSearchEdge(relatedSlug, slug);
-          }
-
-          if (
-            entity.isArtist &&
-            content.artists[relatedSlug]
-          ) {
-            addRelatedSlug(slug, relatedSlug);
-            addRelatedSlug(relatedSlug, slug);
-          }
-        });
-      });
-
+      // Relationship metadata describes identity; only reviewed search fields
+      // are allowed to expand global search routing.
       (identity.searchAssociations || []).forEach(function (relatedName) {
         if (entity.isArtist) {
           addSearchTerm(slug, relatedName);
@@ -324,14 +280,7 @@
 
           var articleItems = [];
           var seenArticleUrls = Object.create(null);
-          var articleSlugs = [slug].concat(
-            relatedSlugsBySlug[slug] || []
-          );
-
-          articleSlugs.forEach(function (articleSlug) {
-            var relatedArtist = content.artists[articleSlug] || {};
-
-            (relatedArtist.ar || []).forEach(
+          (artist.ar || []).forEach(
               function (articleIndex) {
                 var article =
                   content.articles &&
@@ -355,7 +304,6 @@
                 });
               }
             );
-          });
 
           return {
             name: name,
@@ -497,8 +445,7 @@
       }
 
       var keep =
-        item.artistCount >= 2 ||
-        item.articleBackedArtistCount >= 1 ||
+        item.artistCount >= 1 ||
         children[item.name].some(shouldKeep);
 
       keepMemo[item.name] = keep;

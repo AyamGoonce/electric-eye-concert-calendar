@@ -679,6 +679,18 @@ var EE_ARCHIVE_REVIEWS=[];
                 "6325116386435382454",
             ),
             self.reviewed_entry(
+                "David Coverdale announces retirement from touring",
+                ["News", "David Coverdale", "Whitesnake"],
+                "https://www.electriceyerock.com/david-coverdale-retires.html",
+                "7004",
+            ),
+            self.reviewed_entry(
+                "Interview with Roger Miret and Vinnie Stigma",
+                ["Interview", "Roger Miret", "Vinnie Stigma", "Agnostic Front"],
+                "https://www.electriceyerock.com/roger-miret-vinnie-stigma.html",
+                "7005",
+            ),
+            self.reviewed_entry(
                 "Renaud et ses invités",
                 ["News", "Renaud"],
                 "https://www.electriceyerock.com/2026/05/renaud-et-ses-invites-le-zenith-paris.html",
@@ -752,13 +764,32 @@ var EE_ARCHIVE_REVIEWS=[];
         ):
             self.assertIn(artist, jazz_article["a"])
 
-        frank = index["artists"]["frank-beard"]
-        self.assertTrue(frank["identity"]["hideFromArtistIndex"])
-        self.assertTrue(frank["ar"])
-        self.assertEqual(["ZZ Top"], frank["identity"]["searchLinks"])
+        for person, band in (
+            ("Frank Beard", "ZZ Top"),
+            ("David Coverdale", "Whitesnake"),
+            ("Vinnie Stigma", "Agnostic Front"),
+            ("Roger Miret", "Agnostic Front"),
+        ):
+            record = index["artists"][content_index.slugify(person)]
+            self.assertTrue(record["da"], person)
+            self.assertFalse(
+                record["identity"]["hideFromArtistIndex"],
+                person,
+            )
+            self.assertIn(band, record["identity"]["associatedActs"])
+            band_entity = (
+                index["artists"].get(content_index.slugify(band))
+                or index["relationshipNodes"][content_index.slugify(band)]
+            )
+            self.assertIn(person, band_entity["identity"]["members"])
+            self.assertNotIn(person, band_entity["al"])
+
+        self.assertEqual(
+            ["ZZ Top"],
+            index["artists"]["frank-beard"]["identity"]["searchLinks"],
+        )
 
         for person, band in (
-            ("David Coverdale", "Whitesnake"),
             ("Robert Jon Burrison", "Robert Jon & The Wreck"),
             ("Ewan Currie", "The Sheepdogs"),
         ):

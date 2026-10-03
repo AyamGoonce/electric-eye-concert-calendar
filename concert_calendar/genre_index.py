@@ -80,6 +80,11 @@ def normalized_phrase_in_text(phrase: str, text: str) -> bool:
     ) is not None
 
 
+def genre_term_is_artist_name_fragment(term: str, artist: str) -> bool:
+    """Reject ambiguous article labels that are merely part of the artist name."""
+    return normalized_phrase_in_text(term, artist)
+
+
 def public_genre_names(
     genre_records: list[dict],
     visible_artists: set[str],
@@ -95,16 +100,15 @@ def public_genre_names(
             children[parent].append(record["name"])
 
     memo = {}
+    qualifying_artists = visible_artists | article_backed_artists
 
     def should_keep(name: str) -> bool:
         if name in memo:
             return memo[name]
 
         artists = set(by_name[name].get("artists") or [])
-        keep = (
-            len(artists & visible_artists) >= 2
-            or bool(artists & article_backed_artists)
-            or any(should_keep(child) for child in children[name])
+        keep = bool(artists & qualifying_artists) or any(
+            should_keep(child) for child in children[name]
         )
         memo[name] = keep
         return keep
@@ -332,6 +336,8 @@ def build_genre_index(
 
                 if artist_specific:
                     for raw in article.get("l") or []:
+                        if genre_term_is_artist_name_fragment(raw, artist):
+                            continue
                         canonical = canonicalize_genre_term(raw, taxonomy)
                         if canonical:
                             direct_genres.add(canonical)

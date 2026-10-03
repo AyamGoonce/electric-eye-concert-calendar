@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 from concert_calendar.genre_index import (
     build_genre_index,
+    genre_term_is_artist_name_fragment,
     normalized_phrase_in_text,
     public_genre_names,
 )
@@ -378,24 +379,58 @@ class GenreIndexEvidenceTests(unittest.TestCase):
             )
         )
 
-    def test_public_genre_visibility_threshold_and_required_ancestors(self):
+    def test_artist_name_token_does_not_create_genre_assignment(self):
+        articles = [
+            article(
+                "Spite House @ La Maroquinerie, Paris",
+                ["Concert Review", "House", "Spite House"],
+                ["spite-house"],
+                "concert_review",
+            )
+        ]
+        artists = {
+            "spite-house": {
+                "n": "Spite House",
+                "ar": [0],
+                "identity": {"genres": []},
+            }
+        }
+
+        index = self.build(artists, articles)
+
+        self.assertTrue(
+            genre_term_is_artist_name_fragment("House", "Spite House")
+        )
+        self.assertNotIn("House", self.genres_for(index, "Spite House"))
+
+    def test_public_genre_visibility_uses_one_qualifying_artist_and_ancestors(self):
         records = [
-            {"name": "Rock", "parent": None, "artists": ["Covered"]},
-            {"name": "Niche", "parent": "Rock", "artists": ["Covered"]},
-            {"name": "Two Artist Genre", "parent": None, "artists": ["A", "B"]},
-            {"name": "Calendar Singleton", "parent": None, "artists": ["Solo"]},
+            {"name": "Rock", "parent": None, "artists": []},
+            {"name": "Niche", "parent": "Rock", "artists": ["Article Solo"]},
+            {"name": "Calendar Singleton", "parent": None, "artists": ["Calendar Solo"]},
+            {"name": "Empty", "parent": None, "artists": []},
         ]
 
         visible = public_genre_names(
             records,
-            visible_artists={"Covered", "A", "B", "Solo"},
-            article_backed_artists={"Covered"},
+            visible_artists={"Calendar Solo"},
+            article_backed_artists={"Article Solo"},
         )
 
         self.assertIn("Niche", visible)
         self.assertIn("Rock", visible)
-        self.assertIn("Two Artist Genre", visible)
-        self.assertNotIn("Calendar Singleton", visible)
+        self.assertIn("Calendar Singleton", visible)
+        self.assertNotIn("Empty", visible)
+
+        reappeared = public_genre_names(
+            [
+                *records[:3],
+                {"name": "Empty", "parent": None, "artists": ["Future Artist"]},
+            ],
+            visible_artists={"Calendar Solo", "Future Artist"},
+            article_backed_artists={"Article Solo"},
+        )
+        self.assertIn("Empty", reappeared)
 
     def test_reviewed_exclusions_and_musicbrainz_low_score_filter(self):
         articles = [
