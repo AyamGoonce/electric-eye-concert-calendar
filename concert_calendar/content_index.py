@@ -877,6 +877,7 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "collaborators": reviewed.get("collaborators", []),
             "searchLinks": reviewed.get("searchLinks", []),
             "searchAssociations": reviewed.get("searchAssociations", []),
+            "searchAliasLinks": reviewed.get("searchAliasLinks", {}),
             "searchArticleIds": reviewed.get("searchArticleIds", []),
             "articleSearchTerms": reviewed.get("articleSearchTerms", []),
             "producers": reviewed.get("producers", []),
@@ -967,6 +968,11 @@ def build_index(entries, *, generated_at=None, concert_review_associations=None)
             "identity": {
                 field: reviewed.get(field, [])
                 for field in relationship_fields
+            } | {
+                "searchAliasLinks": reviewed.get("searchAliasLinks", {}),
+                "searchResultVisible": bool(
+                    reviewed.get("searchResultVisible", False)
+                ),
             },
         }
 

@@ -868,6 +868,89 @@ var EE_ARCHIVE_REVIEWS=[];
             guest_record = index["artists"][content_index.slugify(guest)]
             self.assertTrue(guest_record["da"])
 
+    def test_reviewed_person_interviews_are_visible_without_becoming_band_aliases(self):
+        index = build_index([
+            self.reviewed_entry(
+                "A conversation with Ewan Currie of The Sheepdogs (video)",
+                ["Interview", "Ewan Currie", "The Sheepdogs"],
+                "https://www.electriceyerock.com/ewan-currie.html",
+                "1741500482528981785",
+            ),
+            self.reviewed_entry(
+                "A conversation with Robert Jon Burrison from Robert Jon & the Wreck (video)",
+                ["Interview", "Robert Jon Burrison", "Robert Jon & The Wreck"],
+                "https://www.electriceyerock.com/robert-jon-burrison.html",
+                "1621359244804023360",
+            ),
+        ], generated_at="2026-01-01T00:00:00Z")
+
+        for person, band in (
+            ("Ewan Currie", "The Sheepdogs"),
+            ("Robert Jon Burrison", "Robert Jon & The Wreck"),
+        ):
+            person_record = index["artists"][content_index.slugify(person)]
+            band_record = index["artists"][content_index.slugify(band)]
+
+            self.assertTrue(person_record["da"])
+            self.assertFalse(person_record["identity"]["hideFromArtistIndex"])
+            self.assertIn(band, person_record["identity"]["associatedActs"])
+            self.assertIn(person, band_record["identity"]["members"])
+            self.assertNotIn(person, band_record["al"])
+
+    def test_faces_and_fred_wesley_use_reviewed_canonical_identities(self):
+        index = build_index([
+            self.reviewed_entry(
+                "The Faces announce a reunion",
+                ["News", "The Faces", "Ronnie Wood"],
+                "https://www.electriceyerock.com/the-faces-reunion.html",
+                "8001",
+            ),
+            self.reviewed_entry(
+                "Fred Wesley Generations Trio @ New Morning, Paris - March 12th, 2026",
+                ["Concert Review", "Fred Wesley Generations Trio"],
+                "https://www.electriceyerock.com/2026/03/fred-wesley-generations-trio-new.html",
+                "5234475963389878611",
+            ),
+        ], generated_at="2026-01-01T00:00:00Z")
+
+        self.assertIn("faces", index["artists"])
+        self.assertNotIn("the-faces", index["artists"])
+        self.assertEqual("faces", index["lookup"]["the faces"])
+        self.assertIn("Ronnie Wood", index["artists"]["faces"]["identity"]["members"])
+
+        relationship_index = build_index(
+            [], generated_at="2026-01-01T00:00:00Z"
+        )
+        self.assertTrue(
+            relationship_index["relationshipNodes"]["faces"]["identity"][
+                "searchResultVisible"
+            ]
+        )
+
+        self.assertIn("fred-wesley", index["artists"])
+        self.assertNotIn("fred-wesley-generations-trio", index["artists"])
+        for variant in (
+            "fred wesley generations trio",
+            "generations trio",
+            "generations",
+        ):
+            self.assertEqual("fred-wesley", index["lookup"][variant])
+        self.assertEqual(["fred-wesley"], index["articles"][1]["a"])
+
+        overrides = content_index.load_artist_identity_overrides()
+        self.assertEqual(
+            ["George Clinton", "Bootsy Collins", "Maceo Parker", "Fred Wesley"],
+            overrides["artists"]["P-Funk"]["searchLinks"],
+        )
+        self.assertEqual(
+            {"P-Funk All Stars": ["George Clinton"], "P-Funk Allstars": ["George Clinton"]},
+            overrides["artists"]["P-Funk"]["searchAliasLinks"],
+        )
+        self.assertNotIn(
+            "The Jeff Beck Group",
+            overrides["artists"]["Ronnie Wood"]["associatedActs"],
+        )
+
     def test_new_suspicious_single_article_billing_is_flagged_not_collapsed(self):
         index = build_index([
             entry(

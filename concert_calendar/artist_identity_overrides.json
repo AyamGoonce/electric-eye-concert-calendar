@@ -148,6 +148,10 @@
     "Parliament Funkadelic": "P-Funk",
     "P-Funk All Stars": "P-Funk",
     "P-Funk Allstars": "P-Funk",
+    "The Faces": "Faces",
+    "Fred Wesley Generations Trio": "Fred Wesley",
+    "Generations Trio": "Fred Wesley",
+    "Generations": "Fred Wesley",
     "Mikkey Dee & Friends play Motörhead": "Mikkey Dee",
     "Mikkey Dee & Friends Play Motörhead": "Mikkey Dee",
     "Mikkey Dee and Friends play Motörhead": "Mikkey Dee",
@@ -211,6 +215,15 @@
         "The Rolling Stones",
         "Faces"
       ],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Faces": {
+      "members": [
+        "Ronnie Wood"
+      ],
+      "searchResultVisible": true,
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ]
@@ -806,8 +819,7 @@
       ],
       "searchLinks": [
         "Robert Jon & The Wreck"
-      ],
-      "hideFromArtistIndex": true
+      ]
     },
     "Agnostic Front": {
       "identityEvidence": [
@@ -851,8 +863,7 @@
       ],
       "searchLinks": [
         "The Sheepdogs"
-      ],
-      "hideFromArtistIndex": true
+      ]
     },
     "Beastö Blancö": {
       "identityEvidence": [
@@ -2418,10 +2429,24 @@
       "searchLinks": [
         "George Clinton",
         "Bootsy Collins",
-        "Maceo Parker"
+        "Maceo Parker",
+        "Fred Wesley"
       ],
+      "searchAliasLinks": {
+        "P-Funk All Stars": [
+          "George Clinton"
+        ],
+        "P-Funk Allstars": [
+          "George Clinton"
+        ]
+      },
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
+      ]
+    },
+    "Fred Wesley": {
+      "identityEvidence": [
+        "Reviewed Electric Eye artist identity"
       ]
     },
     "Russell Mael": {
