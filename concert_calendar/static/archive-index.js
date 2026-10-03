@@ -361,10 +361,17 @@
     return sortItems(
       Object.keys(content.artists)
         .filter(function (slug) {
-          return hasEditorialCoverage(content, slug);
+          var artist = content.artists[slug] || {};
+          var identity = artist.identity || {};
+
+          return (
+            hasEditorialCoverage(content, slug) ||
+            identity.searchResultVisible === true
+          );
         })
         .map(function (slug) {
           var artist = content.artists[slug] || {};
+          var identity = artist.identity || {};
           var name = artist.n || slug;
           var exactTerms = [name]
             .concat(artist.al || []);
