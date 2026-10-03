@@ -422,12 +422,23 @@ class NewPrimarySourceTests(TestCase):
                     date=event_date, headliner=dice_title, venue=venue,
                     city="Paris", department="75", start_time="19:00",
                     ticket_url=ticket, source_names=["DICE"],
+                    performers=(
+                        ["Das Ich", "Diary of Dreams"]
+                        if persona_title == "Das Ich + Diary of Dreams"
+                        else None
+                    ),
                 )
 
                 result = deduplicate_events([persona, dice])
 
                 self.assertEqual(1, len(result))
-                self.assertEqual(expected, result[0].headliner)
+                expected_headliner = (
+                    "Das Ich" if persona_title == "Das Ich + Diary of Dreams"
+                    else expected
+                )
+                self.assertEqual(expected_headliner, result[0].headliner)
+                if persona_title == "Das Ich + Diary of Dreams":
+                    self.assertEqual(["Diary of Dreams"], result[0].co_headliners)
                 self.assertEqual("19:00", result[0].start_time)
 
     def test_persona_constituent_cards_collapse_into_exact_ticket_bill(self):

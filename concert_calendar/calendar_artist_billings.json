@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "canonicalIdentities": {
+    "Jon Anderson and The Band Geeks": {
+      "aliases": [
+        "Jon Anderson And The Band Geeks"
+      ],
+      "evidence": "Reviewed established performing/project identity",
+      "reviewDate": "2026-10-03"
+    },
+    "Mike + The Mechanics": {
+      "aliases": [],
+      "evidence": "Reviewed established project identity containing a plus sign",
+      "reviewDate": "2026-10-03"
+    },
+    "Earth, Wind & Fire": {
+      "aliases": [],
+      "evidence": "Reviewed established project identity containing an ampersand",
+      "reviewDate": "2026-10-03"
+    },
+    "Of Monsters and Men": {
+      "aliases": [],
+      "evidence": "Reviewed established project identity containing a conjunction",
+      "reviewDate": "2026-10-03"
+    },
+    "(Hed) P.E.": {
+      "aliases": [],
+      "evidence": "Reviewed established project identity containing parentheses",
+      "reviewDate": "2026-10-03"
+    }
+  },
+  "reviewedBillings": {
+    "Songhoy Blues + Julien Ledru": {
+      "artists": [
+        "Songhoy Blues",
+        "Julien Ledru"
+      ],
+      "evidence": "Reviewed exact multi-artist event billing",
+      "reviewDate": "2026-10-03"
+    },
+    "Spineshank + (Hed) P.E.": {
+      "artists": [
+        "Spineshank",
+        "(Hed) P.E."
+      ],
+      "evidence": "Reviewed exact multi-artist event billing",
+      "reviewDate": "2026-10-03"
+    }
+  },
+  "reviewedDescriptions": {
+    "Jon Anderson and The Band Geeks (performing YES Epics, Classics & More)": {
+      "artist": "Jon Anderson and The Band Geeks",
+      "description": "performing YES Epics, Classics & More",
+      "evidence": "Reviewed exact artist plus show-description billing",
+      "reviewDate": "2026-10-03"
+    }
+  },
+  "sourceProfiles": {
+    "Alhambra": {"candidateSpacedPlus": true, "evidence": "Current programme samples use spaced plus in multi-act-looking flat titles; punctuation is not treated as proof", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Backstage By The Mill": {"candidateSpacedPlus": true, "evidence": "Current programme samples consistently expose multi-act-looking flat titles; corroboration is still required per record", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Bal Chavaux": {"candidateSpacedPlus": true, "evidence": "Current JSON-LD names use spaced plus, including nested and generic-guest contexts", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Base Productions": {"candidateSpacedPlus": true, "presenterPrefix": true, "evidence": "Promoter listings use flat multi-act-looking titles and explicit presenter prefixes; constituent evidence remains per record", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_and_presenter_wrapper"},
+    "Bataclan": {"candidateSpacedPlus": true, "evidence": "Official descriptions sometimes establish current-event performer roles independently of the title", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "File7": {"candidateSpacedPlus": true, "evidence": "The programme exposes flat artist-display strings with recurring wrapper conventions", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Garmonbozia": {"candidateSpacedPlus": true, "presenterPrefix": true, "evidence": "Hidden artist metadata and role prose can corroborate individual records; flat titles alone remain insufficient", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_and_presenter_wrapper"},
+    "Glazart": {"candidateSpacedPlus": true, "evidence": "Current concert-title samples use spaced plus without separate performer markup", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "La Boule Noire": {"candidateSpacedPlus": true, "evidence": "Current titles include release-party wrappers around spaced-plus text", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "La Machine du Moulin Rouge": {"candidateSpacedPlus": true, "evidence": "Detail-page artist biography headings provide per-record evidence when available", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "La Maroquinerie": {"candidateSpacedPlus": true, "evidence": "Current programme samples use spaced plus in flat titles without constituent markup", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Le Grand Rex": {"candidateSpacedPlus": true, "evidence": "Current titles may combine tour context and support text; spaced plus is diagnostic only", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Le Hasard Ludique": {"candidateSpacedPlus": true, "evidence": "Current titles use spaced plus but also carry festival and show suffixes", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Le Trabendo": {"candidateSpacedPlus": true, "evidence": "Current flat titles can be corroborated by structured records from other sources", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Le Zénith Paris – La Villette": {"candidateSpacedPlus": true, "evidence": "Current titles use spaced plus while structured roles may arrive from other official sources", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Live Nation": {"candidateSpacedPlus": true, "presenterPrefix": true, "evidence": "The API supplies a per-event lineup array and explicit presenter-style title conventions", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_and_presenter_wrapper"},
+    "Nouveau Casino": {"candidateSpacedPlus": true, "evidence": "Explicit line-break markup supplies per-record performers when present", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Persona Grata": {"candidateSpacedPlus": true, "presenterPrefix": true, "evidence": "Current flat titles have repeated cross-source corroboration; corroboration remains required per record", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_and_presenter_wrapper"},
+    "Point Éphémère": {"candidateSpacedPlus": true, "evidence": "Independently emphasized performer sections supply per-record evidence when present", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Zouave": {"candidateSpacedPlus": true, "evidence": "Current listings include festival wrappers around spaced-plus text", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"},
+    "Élysée Montmartre": {"candidateSpacedPlus": true, "evidence": "Official detail-page labels independently confirm performers for individual records", "reviewDate": "2026-10-03", "rulePurpose": "candidate_separator_only"}
+  }
+}

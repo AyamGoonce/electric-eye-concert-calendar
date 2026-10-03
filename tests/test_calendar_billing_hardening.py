@@ -9,6 +9,7 @@ from concert_calendar.event_state import canonical_event_identity, reconcile_sta
 from concert_calendar.deduplication import deduplicate_events, merge_events
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import prepare_upcoming_events
+from concert_calendar.production_export import event_to_data
 from concert_calendar.scrapers.gaite_lyrique import detail_performers
 from concert_calendar.scrapers.nouveau_casino import parse_items
 from concert_calendar.scrapers.machine_moulin_rouge import detail_performers as machine_performers
@@ -40,6 +41,16 @@ def event(
 
 
 class CalendarBillingHardeningTests(unittest.TestCase):
+    @staticmethod
+    def resolver_reviews(**profiles):
+        return {
+            "schemaVersion": 1,
+            "canonicalIdentities": {},
+            "reviewedBillings": {},
+            "reviewedDescriptions": {},
+            "sourceProfiles": profiles,
+        }
+
     def finish_pipeline(self, events, names):
         index = build_index([entry(name + ' @ Example Hall, Paris - August 10th, 2026', ['Concert Review', name],
                                    '2026-08-' + str(10 + i),
@@ -167,6 +178,366 @@ class CalendarBillingHardeningTests(unittest.TestCase):
         self.assertEqual(4, len(events[0].electric_eye_links))
         self.assertEqual('Electric Eye concert review', events[0].image_source)
         self.assertEqual([], machine_performers('<h1>Artist + Project</h1>'))
+
+    def test_reviewed_flat_bill_resolves_constituents_and_content_links(self):
+        item = event("SONGHOY BLUES + Julien Ledru")
+        item.source_names = ["DICE", "Vedettes"]
+        events, _, rows = self.finish_pipeline([item], ["Songhoy Blues"])
+
+        self.assertEqual("Songhoy Blues", events[0].headliner)
+        self.assertEqual(["Julien Ledru"], events[0].co_headliners)
+        self.assertEqual(
+            ["Songhoy Blues", "Julien Ledru"], events[0].performers
+        )
+        self.assertEqual("Songhoy Blues", rows[0]["h"])
+        self.assertEqual(["Julien Ledru"], rows[0]["ch"])
+        self.assertEqual(
+            ["Songhoy Blues"],
+            [link["name"] for link in events[0].electric_eye_links],
+        )
+        self.assertNotIn("SONGHOY BLUES + Julien Ledru", [
+            rows[0]["h"], *rows[0].get("ch", [])
+        ])
+
+    def test_structured_source_performers_are_definitive(self):
+        item = event("Unknown A + Unknown B", performers=["Unknown A", "Unknown B"])
+        diagnostics = {}
+        result = deduplicate_events([item], diagnostics=diagnostics)
+
+        self.assertEqual("Unknown A", result[0].headliner)
+        self.assertEqual(["Unknown B"], result[0].co_headliners)
+        record = diagnostics["artist_billing_resolution"]["records"][0]
+        self.assertEqual(("structured_source", 100), (record["method"], record["confidence"]))
+
+    def test_unseen_known_plus_known_resolves_without_registry_entry(self):
+        item = event("Trivium + In Flames")
+        diagnostics = {}
+        result = deduplicate_events([item], diagnostics=diagnostics)
+
+        self.assertEqual("Trivium", result[0].headliner)
+        self.assertEqual(["In Flames"], result[0].co_headliners)
+        self.assertEqual("canonical_identity", diagnostics["artist_billing_resolution"]["records"][0]["method"])
+
+    def test_known_plus_unknown_source_hint_remains_unresolved(self):
+        item = event("Known Artist + New Support")
+        item.source_names = ["Fixture Venue"]
+        diagnostics = {}
+        result = deduplicate_events(
+            [item], diagnostics=diagnostics,
+            billing_reviews=self.resolver_reviews(**{
+                "Fixture Venue": {"candidateSpacedPlus": True},
+            }),
+            billing_identity_catalog={"known artist": "Known Artist"},
+        )
+
+        self.assertEqual("Known Artist + New Support", result[0].headliner)
+        self.assertIsNone(result[0].co_headliners)
+        self.assertEqual(1, diagnostics["artist_billing_resolution"]["stillUnresolved"])
+
+    def test_structured_constituents_link_articles_independently(self):
+        item = event(
+            "Known Artist + New Support",
+            performers=["Known Artist", "New Support"],
+        )
+        item.source_names = ["Fixture Venue"]
+        result = deduplicate_events(
+            [item],
+            billing_reviews=self.resolver_reviews(**{
+                "Fixture Venue": {"candidateSpacedPlus": True},
+            }),
+            billing_identity_catalog={"known artist": "Known Artist"},
+        )
+        index = build_index([
+            entry(
+                "Known Artist @ Example Hall, Paris - August 10th, 2026",
+                ["Concert Review", "Known Artist"],
+                "2026-08-10",
+            )
+        ], generated_at="2026-09-20T00:00:00Z")
+        enrich_events(result, index)
+
+        self.assertEqual(
+            ["Known Artist"],
+            [link["name"] for link in result[0].electric_eye_links],
+        )
+
+    def test_unknown_plus_unknown_with_source_grammar_stays_unresolved(self):
+        item = event("Unknown Artist A + Unknown Artist B")
+        item.source_names = ["Fixture Venue"]
+        diagnostics = {}
+        result = deduplicate_events(
+            [item], diagnostics=diagnostics,
+            billing_reviews=self.resolver_reviews(**{
+                "Fixture Venue": {"candidateSpacedPlus": True},
+            }),
+            billing_identity_catalog={},
+        )
+
+        self.assertEqual("Unknown Artist A + Unknown Artist B", result[0].headliner)
+        self.assertIsNone(result[0].co_headliners)
+        audit = diagnostics["artist_billing_resolution"]
+        self.assertEqual(0, audit["sourceProfileOnlyResolutions"])
+        self.assertEqual(1, audit["stillUnresolved"])
+
+    def test_unknown_plus_unknown_with_punctuation_only_stays_opaque(self):
+        item = event("Unknown Artist A + Unknown Artist B")
+        diagnostics = {}
+        result = deduplicate_events(
+            [item], diagnostics=diagnostics,
+            billing_reviews=self.resolver_reviews(),
+            billing_identity_catalog={},
+        )
+
+        self.assertEqual("Unknown Artist A + Unknown Artist B", result[0].headliner)
+        self.assertIsNone(result[0].co_headliners)
+        self.assertEqual(1, diagnostics["artist_billing_resolution"]["stillUnresolved"])
+
+    def test_presenter_acts_and_show_title_are_separate_concepts(self):
+        item = event(
+            "Alex Goody presents: Jon Baddie & the Mediocre Kids + "
+            "Nico Jumpface HALLOWEEN SHINDIG"
+        )
+        item.source_names = ["Fixture Venue"]
+        result = deduplicate_events(
+            [item],
+            billing_reviews=self.resolver_reviews(**{
+                "Fixture Venue": {
+                    "candidateSpacedPlus": True,
+                    "presenterPrefix": True,
+                    "showTitleSuffixPatterns": [r"\s+HALLOWEEN SHINDIG$"],
+                },
+            }),
+            billing_identity_catalog={},
+        )
+
+        self.assertEqual(
+            "Jon Baddie & the Mediocre Kids + Nico Jumpface",
+            result[0].headliner,
+        )
+        self.assertIsNone(result[0].co_headliners)
+        self.assertEqual(["Alex Goody"], result[0].promoters)
+        self.assertEqual("HALLOWEEN SHINDIG", result[0].event_title)
+
+    def test_source_profile_does_not_split_reviewed_plus_project(self):
+        item = event("Mike + The Mechanics")
+        item.source_names = ["Fixture Venue"]
+        reviews = self.resolver_reviews(**{"Fixture Venue": {"candidateSpacedPlus": True}})
+        reviews["canonicalIdentities"] = {"Mike + The Mechanics": {"aliases": []}}
+        result = deduplicate_events([item], billing_reviews=reviews, billing_identity_catalog={})
+
+        self.assertEqual("Mike + The Mechanics", result[0].headliner)
+        self.assertIsNone(result[0].co_headliners)
+
+    def test_source_profile_preserves_ampersand_project_and_parenthesized_artist(self):
+        item = event("Earth, Wind & Fire + (Hed) P.E.")
+        item.source_names = ["Fixture Venue"]
+        result = deduplicate_events(
+            [item],
+            billing_reviews=self.resolver_reviews(**{"Fixture Venue": {"candidateSpacedPlus": True}}),
+            billing_identity_catalog={
+                "earth wind fire": "Earth, Wind & Fire",
+                "hed p e": "(Hed) P.E.",
+            },
+        )
+
+        self.assertEqual("Earth, Wind & Fire", result[0].headliner)
+        self.assertEqual(["(Hed) P.E."], result[0].co_headliners)
+
+    def test_cross_source_structured_performers_inform_flat_winner(self):
+        flat = event("Unknown A + Unknown B")
+        flat.source_names = ["Listing"]
+        structured = event("Unknown A", performers=["Unknown A", "Unknown B"])
+        structured.source_names = ["Official Venue"]
+        diagnostics = {}
+        result = deduplicate_events(
+            [flat, structured], diagnostics=diagnostics,
+            billing_reviews=self.resolver_reviews(),
+            billing_identity_catalog={},
+        )
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(["Unknown B"], result[0].co_headliners)
+        methods = {record["method"] for record in diagnostics["artist_billing_resolution"]["records"]}
+        self.assertIn("cross_source", methods)
+
+    def test_same_source_current_event_roles_resolve_unknown_bill(self):
+        item = event("Unknown A + Unknown B")
+        item.source_names = ["Official Venue"]
+        item.openers = ["Unknown B"]
+        diagnostics = {}
+
+        result = deduplicate_events(
+            [item], diagnostics=diagnostics,
+            billing_reviews=self.resolver_reviews(), billing_identity_catalog={},
+        )
+
+        self.assertEqual("Unknown A", result[0].headliner)
+        self.assertEqual(["Unknown B"], result[0].openers)
+        self.assertIsNone(result[0].co_headliners)
+        record = diagnostics["artist_billing_resolution"]["records"][0]
+        self.assertEqual(("same_source", 95), (record["method"], record["confidence"]))
+
+    def test_unknown_legitimate_plus_project_is_not_split_by_source_hint(self):
+        item = event("Artist + The Something")
+        item.source_names = ["Fixture Venue"]
+
+        result = deduplicate_events(
+            [item],
+            billing_reviews=self.resolver_reviews(**{
+                "Fixture Venue": {"candidateSpacedPlus": True},
+            }),
+            billing_identity_catalog={},
+        )
+
+        self.assertEqual("Artist + The Something", result[0].headliner)
+        self.assertIsNone(result[0].co_headliners)
+
+    def test_contextual_wrappers_and_generic_guests_do_not_create_artists(self):
+        titles = [
+            "SHRED FEST - OBSCURA + PESTILENCE + CRYPTIC SHIFT + THUS + DVRK",
+            "Les Femmes s'en mêlent : Metro Verlaine + Tessina",
+            "JETLAG : RELEASE PARTY DE BAOZI + CUMULUS. + ILO NAVAHY",
+            "Festival de Marne : Artist + Another Artist",
+            "Johnny Mafia + Guest",
+            "World brain + invités",
+            "MONKEYS ON MARS (Mars Red Sky + Monkey3) + Guest",
+        ]
+        items = [event(title, start_time=f"{index + 10:02d}:00") for index, title in enumerate(titles)]
+        for item in items:
+            item.source_names = ["Fixture Venue"]
+
+        result = deduplicate_events(
+            items,
+            billing_reviews=self.resolver_reviews(**{
+                "Fixture Venue": {"candidateSpacedPlus": True},
+            }),
+            billing_identity_catalog={},
+        )
+
+        self.assertEqual(titles, [item.headliner for item in result])
+        self.assertTrue(all(item.co_headliners is None for item in result))
+
+    def test_external_evidence_abstraction_honors_confidence_threshold(self):
+        evidence = {
+            "Unknown A + Unknown B": {
+                "artists": ["Unknown A", "Unknown B"],
+                "confidence": 89,
+                "evidence": ["fixture"],
+            }
+        }
+        low = deduplicate_events(
+            [event("Unknown A + Unknown B")],
+            billing_reviews=self.resolver_reviews(), billing_identity_catalog={},
+            billing_external_evidence=evidence,
+        )[0]
+        self.assertEqual("Unknown A + Unknown B", low.headliner)
+
+        evidence["Unknown A + Unknown B"]["confidence"] = 95
+        high = deduplicate_events(
+            [event("Unknown A + Unknown B")],
+            billing_reviews=self.resolver_reviews(), billing_identity_catalog={},
+            billing_external_evidence=evidence,
+        )[0]
+        self.assertEqual("Unknown A", high.headliner)
+        self.assertEqual(["Unknown B"], high.co_headliners)
+
+    def test_reviewed_flat_bill_preserves_parenthesized_artist_name(self):
+        item = deduplicate_events([event("SPINESHANK + (Hed) P.E.")])[0]
+        row = event_to_data(item)
+
+        self.assertEqual("Spineshank", item.headliner)
+        self.assertEqual(["(Hed) P.E."], item.co_headliners)
+        self.assertEqual(["(Hed) P.E."], row["ch"])
+
+    def test_existing_structured_plus_bill_remains_structured(self):
+        item = event(
+            "D'Accord Simon + Gizmo + Eliah",
+            performers=["D'Accord Simon", "Gizmo", "Eliah"],
+        )
+        item = deduplicate_events([item])[0]
+
+        self.assertEqual("D'Accord Simon", item.headliner)
+        self.assertEqual(["Gizmo", "Eliah"], item.co_headliners)
+
+    def test_reviewed_project_identity_and_show_description_deduplicate(self):
+        plain = event("Jon Anderson And The Band Geeks")
+        decorated = event(
+            "JON ANDERSON and THE BAND GEEKS "
+            "(performing YES Epics, Classics & More)"
+        )
+        plain.source_names = ["Bataclan"]
+        decorated.source_names = ["Persona Grata"]
+
+        result = deduplicate_events([plain, decorated])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual(
+            "Jon Anderson and The Band Geeks", result[0].headliner
+        )
+        self.assertIsNone(result[0].co_headliners)
+        self.assertEqual(
+            "performing YES Epics, Classics & More",
+            result[0].event_title,
+        )
+
+    def test_structured_and_reviewed_flat_bill_deduplicate(self):
+        flat = event("Songhoy Blues + Julien Ledru")
+        structured = event(
+            "Songhoy Blues",
+            performers=["Songhoy Blues", "Julien Ledru"],
+        )
+        flat.source_names = ["DICE"]
+        structured.source_names = ["Venue"]
+
+        result = deduplicate_events([flat, structured])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("Songhoy Blues", result[0].headliner)
+        self.assertEqual(["Julien Ledru"], result[0].co_headliners)
+
+    def test_reviewed_billing_normalization_preserves_public_id(self):
+        now = datetime(2026, 10, 1, tzinfo=timezone.utc)
+        previous = event("SONGHOY BLUES + Julien Ledru")
+        previous_state = reconcile_state([previous], None, now=now)
+
+        current = deduplicate_events([
+            event("SONGHOY BLUES + Julien Ledru")
+        ])[0]
+        reconcile_state(
+            [current], previous_state, now=now + timedelta(days=1)
+        )
+
+        self.assertEqual(previous._public_id, current._public_id)
+
+    def test_cross_source_normalization_preserves_public_id(self):
+        now = datetime(2026, 10, 1, tzinfo=timezone.utc)
+        previous = event("Unknown A + Unknown B")
+        previous_state = reconcile_state([previous], None, now=now)
+        current = event("Unknown A + Unknown B")
+        current.source_names = ["Listing"]
+        structured = event("Unknown A", performers=["Unknown A", "Unknown B"])
+        structured.source_names = ["Official Venue"]
+        current = deduplicate_events(
+            [current, structured],
+            billing_reviews=self.resolver_reviews(),
+            billing_identity_catalog={},
+        )[0]
+        reconcile_state([current], previous_state, now=now + timedelta(days=1))
+
+        self.assertEqual(previous._public_id, current._public_id)
+
+    def test_legitimate_compound_artist_names_remain_opaque(self):
+        names = [
+            "Mike + The Mechanics",
+            "Earth, Wind & Fire",
+            "Of Monsters and Men",
+            "(Hed) P.E.",
+        ]
+
+        result = deduplicate_events([event(name) for name in names])
+
+        self.assertEqual(names, [item.headliner for item in result])
+        self.assertTrue(all(item.co_headliners is None for item in result))
 
     def test_merge_retains_semantic_evidence(self):
         left = event('Artist'); right = event('Artist', performers=['Artist', 'Peer'])

@@ -94,6 +94,54 @@ class BillingExtractionRegressionTests(unittest.TestCase):
 
 class BillingExtractionSafetyTests(unittest.TestCase):
 
+    def _supersonic_event(self, title, lineup_names):
+        soup = BeautifulSoup(f"""
+        <li class="agenda-item" data-venue="supersonic-2">
+          <a class="agenda-item-link" href="/evenement/fixture/">
+            <time datetime="2026-10-27"></time>
+            <span class="agenda-item-venue">Supersonic</span>
+            <h3>{title}</h3>
+          </a>
+        </li>
+        """, "html.parser")
+        return parse_event_row(
+            soup.select_one("li.agenda-item"),
+            "https://supersonic-club.fr/agenda/",
+            lineup_names=lineup_names,
+        )
+
+    def test_supersonic_lineup_removes_reviewed_tour_title_from_artist(self):
+        title = "Camille Jansen : A Slice Of Life Tour + Laelou"
+        event = self._supersonic_event(title, ["Laelou", "Camille Jansen"])
+
+        self.assertEqual("Camille Jansen", event.headliner)
+        self.assertEqual(["Camille Jansen", "Laelou"], event.performers)
+        self.assertEqual(title, event.event_title)
+        self.assertEqual(title, event.raw_title)
+
+    def test_supersonic_lineup_removes_tgbb_festival_prefixes(self):
+        cases = [
+            ("Alien Boy", "Alien Boy", "mry"),
+            ("Rejoincein4K", "Rejoicein4K", "Burglar"),
+            ("Hungry", "Hungry", "lttl mort"),
+        ]
+        for artist, lineup_artist, support in cases:
+            with self.subTest(artist=artist):
+                title = f"TGBB fest : {artist} + {support}"
+                event = self._supersonic_event(title, [support, lineup_artist])
+
+                self.assertEqual(artist, event.headliner)
+                self.assertEqual([artist, support], event.performers)
+                self.assertEqual(title, event.event_title)
+
+    def test_supersonic_punctuated_artist_is_unchanged_without_lineup_proof(self):
+        title = "Artist: The Tour + Support"
+        event = self._supersonic_event(title, ["Different Artist", "Support"])
+
+        self.assertEqual(title, event.headliner)
+        self.assertIsNone(event.performers)
+        self.assertIsNone(event.event_title)
+
     def test_supersonic_does_not_split_other_title_punctuation(self):
         title = "The Devil And The Almighty Blues"
 
@@ -138,7 +186,7 @@ class BillingExtractionSafetyTests(unittest.TestCase):
         self.assertEqual(1, len(result))
         self.assertEqual(title, result[0].headliner)
 
-    def test_multi_plus_extension_is_not_promoted_as_one_artist(self):
+    def test_garmonbozia_multi_plus_extension_stays_opaque_without_evidence(self):
         short = ConcertEvent(
             date="2026-10-01",
             headliner="The Devil And The Almighty Blues",

@@ -14,6 +14,7 @@ from urllib.parse import parse_qsl, unquote, urlencode, urlparse, urlunparse
 
 from concert_calendar.models import ConcertEvent
 from concert_calendar.billing_semantics import apply_structured_performer_semantics
+from concert_calendar.artist_billings import apply_reviewed_artist_billings
 from concert_calendar.event_titles import (
     artist_title_parts, contextual_title_parts, evidenced_series_prefixes, title_identity,
     separate_performance_marker,
@@ -1518,6 +1519,15 @@ def _display_candidates(events: list[ConcertEvent]) -> dict[str, str]:
     candidates: dict[str, str] = {}
 
     for event in events:
+        resolution = getattr(event, "_billing_resolution", {}) or {}
+        if resolution.get("method") in {
+            "source_profile", "canonical_identity", "cross_source",
+            "external_corroboration",
+        }:
+            # Inferred constituents are valid identities, but their source
+            # casing must not override an independently structured/official
+            # spelling for the reconciled event.
+            continue
         for name in [
             event.headliner,
             *(event.openers or []),
@@ -2735,11 +2745,22 @@ def _apply_reviewed_calendar_identity_fixes(
 def deduplicate_events(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
+    *,
+    billing_reviews: dict | None = None,
+    billing_identity_catalog: dict[str, str] | None = None,
+    billing_external_evidence: dict[str, dict] | None = None,
 ) -> list[ConcertEvent]:
     """Collapse exact and explicitly reconcilable duplicate concerts."""
 
     _mark_reviewed_wrapper_semantics(events)
     apply_structured_performer_semantics(events)
+    apply_reviewed_artist_billings(
+        events,
+        diagnostics,
+        reviews=billing_reviews,
+        identity_catalog=billing_identity_catalog,
+        external_evidence=billing_external_evidence,
+    )
     _apply_reviewed_calendar_identity_fixes(events)
 
     initial_opener_state = defaultdict(list)
@@ -2783,6 +2804,13 @@ def deduplicate_events(
     )
 
     apply_structured_performer_semantics(reconciled)
+    apply_reviewed_artist_billings(
+        reconciled,
+        reviews=billing_reviews,
+        identity_catalog=billing_identity_catalog,
+        external_evidence=billing_external_evidence,
+        allow_inference=False,
+    )
 
     # Final safety pass: semantic normalization can make two independently
     # sourced representations identical only after the earlier reconciliation

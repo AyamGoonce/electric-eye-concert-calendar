@@ -37,6 +37,7 @@ from concert_calendar.content_index import (
     normalize_artist,
     write_assets,
 )
+from concert_calendar.artist_billings import identity_catalog_from_content_index
 from concert_calendar.deduplication import high_confidence_collision_pairs
 from concert_calendar.sources import load_events_with_report
 from concert_calendar.source_retention import (
@@ -712,11 +713,24 @@ def build(args) -> int:
     previous_source_state = read_published_source_state(
         published_pointer
     )
+    billing_identity_catalog = None
+    if published_pointer is not None and published_pointer.exists():
+        try:
+            billing_identity_catalog = identity_catalog_from_content_index(
+                load_published_content_index(published_pointer)
+            )
+        except ProductionValidationError as error:
+            print(
+                "Published content identity catalog unavailable; using "
+                f"reviewed static identities: {error}",
+                flush=True,
+            )
     print("PHASE START | source_and_pipeline_loading", flush=True)
     phase_started = time.perf_counter()
     try:
         events, pipeline_report = load_events_with_report(
             prior_source_state=previous_source_state, now=now,
+            billing_identity_catalog=billing_identity_catalog,
         )
     except SourceStateError as error:
         raise ProductionValidationError(f"Source retention is invalid: {error}") from error

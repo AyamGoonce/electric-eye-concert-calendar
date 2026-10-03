@@ -103,6 +103,7 @@ class PipelineReport:
     festival_artist_rows_collapsed: int
     opener_enriched_records: int
     billing_variants_merged: int
+    artist_billing_resolution: dict
     unresolved_deduplication_candidates: list[dict]
     suspicious_near_duplicate_candidates: list[dict]
     genre_report: dict
@@ -244,6 +245,7 @@ def load_events_with_report(
     retry_delay_seconds: float = 2.0,
     prior_source_state: dict | None = None,
     now: datetime | None = None,
+    billing_identity_catalog: dict[str, str] | None = None,
 ):
     now = now or datetime.now(timezone.utc)
     raw_events = []
@@ -474,6 +476,7 @@ def load_events_with_report(
     deduplicated_events = deduplicate_events(
         normalized_events,
         diagnostics=deduplication_diagnostics,
+        billing_identity_catalog=billing_identity_catalog,
     )
     failed_names = {item["source_name"] for item in source_health if item["status"] == "failed"}
     healthy_names = {item["source_name"] for item in source_health if item["status"] != "failed"}
@@ -539,6 +542,9 @@ def load_events_with_report(
         ),
         billing_variants_merged=deduplication_diagnostics.get(
             "billing_variants_merged", 0
+        ),
+        artist_billing_resolution=deduplication_diagnostics.get(
+            "artist_billing_resolution", {}
         ),
         unresolved_deduplication_candidates=deduplication_diagnostics.get(
             "unresolved_candidates", []
