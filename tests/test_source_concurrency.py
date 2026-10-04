@@ -94,8 +94,9 @@ class SourceConcurrencyTests(unittest.TestCase):
                     source("failed", Mock(side_effect=TimeoutError("offline"))),
                     source("empty", Mock(return_value=[]))]
         serial, parallel = modules(), modules()
-        left, a = run(serial, 1)
-        right, b = run(parallel, 4)
+        now = datetime(2026, 9, 22, 10, tzinfo=timezone.utc)
+        left, a = run(serial, 1, now=now)
+        right, b = run(parallel, 4, now=now)
         self.assertEqual(asdict(a), asdict(b))
         self.assertEqual([asdict(e) for e in left], [asdict(e) for e in right])
         self.assertEqual(prepare_upcoming_events(left, date(2026, 1, 1)),
