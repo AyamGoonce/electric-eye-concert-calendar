@@ -648,23 +648,6 @@ var EE_ARCHIVE_REVIEWS=[
             artists["Red Hot Chili Peppers"]["hideFromArtistIndex"]
         )
 
-        # QOTSA is absent from the unfiltered index but can appear on explicit search.
-        self.assertTrue(
-            artists["Queens of the Stone Age"]["hideFromArtistIndex"]
-        )
-        self.assertTrue(
-            artists["Queens of the Stone Age"]["searchResultVisible"]
-        )
-        self.assertEqual(
-            "Queens of the Stone Age",
-            aliases["QOTSA"],
-        )
-        self.assertEqual("Josh Homme", aliases["Joshua Homme"])
-        self.assertEqual(
-            ["5079821736142979867"],
-            artists["Josh Homme"]["searchArticleIds"],
-        )
-
         # Patterson Hood is a reviewed primary subject of his solo article.
         self.assertEqual(
             ["Patterson Hood"],

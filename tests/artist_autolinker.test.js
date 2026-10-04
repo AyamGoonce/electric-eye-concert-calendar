@@ -62,7 +62,7 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
   const secondParagraph = new Element("p", {parent: postBody});
   const secondOccurrence = new TextNode("Sparks returned for an encore.", secondParagraph);
   const ordinaryProse = new TextNode("The lights went down before the show.", secondParagraph);
-  const aliasProse = new TextNode("QOTSA closed the festival.", secondParagraph);
+  const aliasProse = new TextNode("Sheepdogs closed the festival.", secondParagraph);
 
   const existingAnchor = new Element("a", {parent: postBody});
   const anchorText = new TextNode("Sparks existing link", existingAnchor);
@@ -105,7 +105,7 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
     ElectricEyeArtistLookup: {
       artistPage: "https://example.test/artist.html?artist=",
       proseAutolinkExclusions: ["down"],
-      terms: {Sparks: "sparks", Down: "down", QOTSA: "queens-of-the-stone-age"},
+      terms: {Sparks: "sparks", Down: "down", Sheepdogs: "the-sheepdogs"},
     },
   };
   const source = fs.readFileSync("concert_calendar/static/artist-autolinker.js", "utf8");

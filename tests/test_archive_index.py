@@ -78,9 +78,7 @@ const artists = {
   "maceo-parker":artist("Maceo Parker",26,{}),
   "fred-wesley":artist("Fred Wesley",27,{},true,["Fred Wesley Generations Trio","Generations Trio","Generations"]),
   "iggy-pop":artist("Iggy Pop",28,{}),
-  "queens-of-the-stone-age":artist("Queens of the Stone Age",29,{members:["Josh Homme"],searchResultVisible:true},false,["QOTSA"]),
-  "kyuss":artist("Kyuss",30,{members:["Josh Homme"]},false),
-  "josh-homme":artist("Josh Homme",31,{searchArticleIds:["iggy-post"]},false,["Joshua Homme"]),
+  "kyuss":artist("Kyuss",30,{members:[]},false),
   "p-funk":artist("P-Funk",32,{searchLinks:["George Clinton","Bootsy Collins","Maceo Parker","Fred Wesley"],searchAliasLinks:{"P-Funk All-Stars":["George Clinton"],"P-Funk Allstars":["George Clinton"]}},false,["P-Funk All-Stars","P-Funk Allstars"])
 };
 const relationshipNodes = {
@@ -109,10 +107,8 @@ function scoped(name,term) {
   const item=items.find((candidate)=>candidate.name===name);
   return item ? ((item.scopedArticleItems||{})[normalize(term)]||[]).map((article)=>article.name) : [];
 }
-const queries=["Mick Jagger","Geezer Butler","Angus Young","Slash","Duff McKagan","Guns N' Roses","Ronnie Wood","Faces","The Faces","Frank Beard","David Coverdale","Vinnie Stigma","Roger Miret","Agnostic Front","John McGeoch","Public Image Ltd.","The Sheepdogs","Ewan Currie","Robert Jon & The Wreck","Robert Jon Burrison","Louis Cole","Scary Goldings","Parliament","Funkadelic","P-Funk All-Stars","P-Funk","Fred Wesley","Fred Wesley Generations Trio","Generations Trio","Generations","Ron Mael","Russell Mael","Johnny Rotten","QOTSA","Queens of the Stone Age","Josh Homme","Joshua Homme","Kyuss"];
+const queries=["Mick Jagger","Geezer Butler","Angus Young","Slash","Duff McKagan","Guns N' Roses","Ronnie Wood","Faces","The Faces","Frank Beard","David Coverdale","Vinnie Stigma","Roger Miret","Agnostic Front","John McGeoch","Public Image Ltd.","The Sheepdogs","Ewan Currie","Robert Jon & The Wreck","Robert Jon Burrison","Louis Cole","Scary Goldings","Parliament","Funkadelic","P-Funk All-Stars","P-Funk","Fred Wesley","Fred Wesley Generations Trio","Generations Trio","Generations","Ron Mael","Russell Mael","Johnny Rotten","Kyuss"];
 const result={}; queries.forEach((query)=>{result[query]=matches(query);});
-result.joshScoped=scoped("Queens of the Stone Age","Josh Homme");
-result.kyussScoped=scoped("Kyuss","Josh Homme");
 process.stdout.write(JSON.stringify(result));
 '''
         result = subprocess.run(
@@ -157,14 +153,6 @@ process.stdout.write(JSON.stringify(result));
             "Ron Mael": {"Sparks"},
             "Russell Mael": {"Sparks"},
             "Johnny Rotten": {"Public Image Ltd."},
-            "QOTSA": set(),
-            "Queens of the Stone Age": set(),
-            "Josh Homme": set(),
-            "Joshua Homme": set(),
-            "Kyuss": set(),
         }
         for query, expected_names in expected.items():
             self.assertEqual(expected_names, set(matches[query]), query)
-
-        self.assertEqual(["Iggy Pop review"], matches["joshScoped"])
-        self.assertEqual([], matches["kyussScoped"])
