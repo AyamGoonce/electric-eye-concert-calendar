@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Electric Eye Index | Artists, Venues & Genres</title>
-  <meta name="description" content="Browse the Electric Eye index by artist, venue or genre.">
+  <title>Electric Eye Index | Artists, Concerts, Articles, Venues & Genres</title>
+  <meta name="description" content="Search and browse Electric Eye artists, concerts, articles, venues and genres.">
   <link rel="canonical" href="https://archive.electriceyerock.com/">
   <link rel="stylesheet" href="/proof/archive-index.css">
 </head>
@@ -19,9 +19,37 @@
       <a class="ee-archive-kicker ee-home-link" href="https://www.electriceyerock.com/p/welcome-to-electric-eye.html">Electric Eye</a>
       <h1>Index</h1>
       <p class="ee-archive-intro">
-        Explore Electric Eye coverage by artist, venue or genre.
+        Search Electric Eye coverage, concerts, venues and genres.
       </p>
     </header>
+
+    <section class="ee-global-search" aria-labelledby="ee-global-search-label">
+      <form id="ee-global-search-form" role="search">
+        <label id="ee-global-search-label" for="ee-global-search-input">
+          Search Electric Eye Archive
+        </label>
+        <div class="ee-global-search-field">
+          <input
+            id="ee-global-search-input"
+            type="search"
+            placeholder="Search artists, concerts, articles, venues and genres…"
+            aria-controls="ee-global-search-results"
+            aria-expanded="false"
+            autocomplete="off"
+          >
+          <button
+            id="ee-global-search-clear"
+            type="button"
+            aria-label="Clear archive search"
+            hidden
+          >
+            Clear
+          </button>
+        </div>
+      </form>
+      <p id="ee-global-search-status" class="ee-global-search-status" aria-live="polite"></p>
+      <div id="ee-global-search-results" class="ee-global-search-results" hidden></div>
+    </section>
 
     <div class="ee-archive-sections">
       <section class="ee-index-section" id="ee-index-artists">

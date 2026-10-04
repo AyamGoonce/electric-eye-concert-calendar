@@ -411,6 +411,7 @@
                 seenArticleUrls[article.u] = true;
 
                 articleItems.push({
+                  articleIndex: articleIndex,
                   name: article.t,
                   href: article.u,
                   meta: article.d || ""
@@ -419,6 +420,7 @@
             );
 
           return {
+            slug: slug,
             name: name,
             href:
               "https://archive.electriceyerock.com/artist/" +
@@ -427,6 +429,7 @@
             meta: "",
             searchTerms: searchTermsBySlug[slug] || [],
             exactTerms: exactTerms,
+            aliasTerms: artist.al || [],
             articleItems: articleItems,
             scopedArticleItems: scopedArticlesBySlug[slug] || {}
           };
@@ -445,12 +448,14 @@
               var name = node.n || slug;
 
               return {
+                slug: slug,
                 name: name,
                 href: "",
                 meta: "",
                 searchOnly: true,
                 searchTerms: searchTermsBySlug[slug] || [],
                 exactTerms: [name].concat(node.al || []),
+                aliasTerms: node.al || [],
                 articleItems: [],
                 scopedArticleItems: {}
               };
@@ -494,6 +499,11 @@
             meta: city,
             address: venue.address || "",
             website: venue.website || "",
+            exactTerms: [name],
+            aliasTerms: []
+              .concat(venue.aliases || [])
+              .concat(venue.formerNames || [])
+              .concat(venue.currentName || []),
             searchTerms: []
               .concat(venue.aliases || [])
               .concat(venue.formerNames || [])
@@ -591,6 +601,670 @@
     }
 
     return sortItems(items.filter(shouldKeep));
+  }
+
+  var GLOBAL_RESULT_LIMIT = 8;
+  var GLOBAL_GROUPS = [
+    { key: "artists", label: "Artists" },
+    { key: "concerts", label: "Concerts" },
+    { key: "articles", label: "Articles" },
+    { key: "venues", label: "Venues" },
+    { key: "genres", label: "Genres" }
+  ];
+  var ARTICLE_TYPE_LABELS = {
+    concert_review: "Concert Review",
+    interview: "Interview",
+    album_review: "Album Review",
+    news: "News",
+    playlist: "Playlist",
+    other: "Article"
+  };
+
+  function uniqueNormalized(values) {
+    var seen = Object.create(null);
+
+    return (values || []).map(normalize).filter(function (value) {
+      if (!value || seen[value]) return false;
+      seen[value] = true;
+      return true;
+    });
+  }
+
+  function prepareSearchTerms(canonical, aliases, other) {
+    var canonicalTerms = uniqueNormalized(canonical);
+    var aliasTerms = uniqueNormalized(aliases);
+    var otherTerms = uniqueNormalized(other);
+
+    return {
+      canonical: canonicalTerms,
+      aliases: aliasTerms,
+      other: otherTerms,
+      all: uniqueNormalized(
+        canonicalTerms.concat(aliasTerms, otherTerms)
+      )
+    };
+  }
+
+  function startsWithQuery(value, query) {
+    return value.indexOf(query) === 0;
+  }
+
+  function containsQueryTokens(value, query) {
+    var valueTokens = value.split(" ");
+    var queryTokens = query.split(" ");
+
+    return queryTokens.every(function (token) {
+      return token && valueTokens.indexOf(token) !== -1;
+    });
+  }
+
+  function anyTerm(terms, predicate) {
+    return (terms || []).some(predicate);
+  }
+
+  function scoreSearchTerms(search, query, allowSubstring) {
+    if (!query) return Infinity;
+
+    if (anyTerm(search.canonical, function (term) {
+      return term === query;
+    })) return 0;
+
+    if (anyTerm(search.aliases, function (term) {
+      return term === query;
+    })) return 10;
+
+    if (anyTerm(search.canonical, function (term) {
+      return startsWithQuery(term, query);
+    })) return 20;
+
+    if (anyTerm(search.aliases, function (term) {
+      return startsWithQuery(term, query);
+    })) return 30;
+
+    if (
+      anyTerm(
+        search.all,
+        function (term) {
+          return containsQueryTokens(term, query);
+        }
+      )
+    ) return 40;
+
+    if (
+      allowSubstring &&
+      query.length >= 3 &&
+      anyTerm(
+        search.all,
+        function (term) {
+          return term.indexOf(query) !== -1;
+        }
+      )
+    ) return 50;
+
+    return Infinity;
+  }
+
+  function formatSearchDate(value) {
+    if (!value) return "";
+
+    try {
+      return new Intl.DateTimeFormat("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC"
+      }).format(new Date(value.slice(0, 10) + "T12:00:00Z"));
+    } catch (_error) {
+      return value;
+    }
+  }
+
+  function buildArticleSearchItems(artistItems) {
+    var content = window.ElectricEyeContentIndex;
+    var articleTerms = [];
+    var itemsBySlug = Object.create(null);
+    var articleIndexByUrl = Object.create(null);
+
+    if (!content || !Array.isArray(content.articles)) return [];
+
+    content.articles.forEach(function (article, articleIndex) {
+      articleTerms[articleIndex] = {
+        canonical: [],
+        aliases: [],
+        scoped: []
+      };
+
+      if (article && article.u) {
+        articleIndexByUrl[article.u] = articleIndex;
+      }
+    });
+
+    artistItems.forEach(function (item) {
+      if (!item.slug || !item.href) return;
+
+      itemsBySlug[item.slug] = item;
+
+      var artist = content.artists[item.slug] || {};
+
+      (artist.ar || []).forEach(function (articleIndex) {
+        var terms = articleTerms[articleIndex];
+        if (!terms) return;
+
+        terms.canonical.push(item.name);
+        terms.aliases = terms.aliases.concat(item.aliasTerms || []);
+      });
+
+      Object.keys(item.scopedArticleItems || {}).forEach(function (term) {
+        (item.scopedArticleItems[term] || []).forEach(function (article) {
+          var articleIndex = articleIndexByUrl[article.href];
+          var terms = articleTerms[articleIndex];
+
+          if (terms) terms.scoped.push(term);
+        });
+      });
+    });
+
+    // Retain forward associations as a fallback for historical records while
+    // applying the same artist visibility gate as the Artist result group.
+    content.articles.forEach(function (article, articleIndex) {
+      (article.a || []).forEach(function (slug) {
+        var item = itemsBySlug[slug];
+        var terms = articleTerms[articleIndex];
+
+        if (!item || !item.href || !terms) return;
+        terms.canonical.push(item.name);
+        terms.aliases = terms.aliases.concat(item.aliasTerms || []);
+      });
+    });
+
+    return content.articles.map(function (article, articleIndex) {
+      var terms = articleTerms[articleIndex];
+      var kind = ARTICLE_TYPE_LABELS[article.y] || "Article";
+      var date = article.d || "";
+
+      return {
+        name: article.t || "Untitled article",
+        href: article.u || "",
+        meta: [formatSearchDate(date), kind].filter(Boolean).join(" · "),
+        date: date,
+        search: prepareSearchTerms(
+          [article.t],
+          terms.canonical.concat(terms.aliases),
+          [article.y, kind, date, date.slice(0, 4)].concat(
+            terms.scoped
+          )
+        ),
+        taxonomySearch: prepareSearchTerms(article.l || [], [], [])
+      };
+    }).filter(function (item) {
+      return !!item.href;
+    });
+  }
+
+  function prepareArtistSearchItems(artistItems) {
+    return artistItems.map(function (item) {
+      item.globalSearch = prepareSearchTerms(
+        [item.name],
+        item.aliasTerms || [],
+        item.searchTerms || []
+      );
+      item.exactLookup = Object.create(null);
+
+      uniqueNormalized(item.exactTerms || [item.name]).forEach(
+        function (term) {
+          item.exactLookup[term] = true;
+        }
+      );
+
+      return item;
+    });
+  }
+
+  function resolveArtistTargets(artistItems, query) {
+    return artistItems.map(function (item) {
+      return {
+        item: item,
+        score: scoreSearchTerms(item.globalSearch, query, true)
+      };
+    }).filter(function (match) {
+      // Only navigable, legitimate artist results may qualify a structured
+      // bill. Hidden relationship nodes have already routed their terms onto
+      // those targets inside makeArtistItems().
+      return match.item.href && Number.isFinite(match.score);
+    });
+  }
+
+  function eventBill(event) {
+    return [
+      { name: event.h, role: 0 }
+    ].concat(
+      (event.ch || []).map(function (name) {
+        return { name: name, role: 1 };
+      }),
+      (event.o || []).map(function (name) {
+        return { name: name, role: 2 };
+      })
+    ).filter(function (item) {
+      return !!item.name;
+    });
+  }
+
+  function prepareConcertSearchItems(events) {
+    return (events || []).map(function (event) {
+      return {
+        name: concertName(event),
+        href: concertHref(event),
+        meta: concertMeta(event),
+        date: event.d || "",
+        bill: eventBill(event).map(function (bill) {
+          return {
+            identity: normalize(bill.name),
+            role: bill.role,
+            search: prepareSearchTerms([bill.name], [], [])
+          };
+        }),
+        metadataSearch: prepareSearchTerms([], [], [
+          event.v,
+          event.c,
+          event.et,
+          event.fn,
+          event.d,
+          (event.d || "").slice(0, 4),
+          event.st
+        ]),
+        taxonomySearch: prepareSearchTerms(event.x || [], [], [])
+      };
+    });
+  }
+
+  function resolvedConcertScore(concert, targets) {
+    var best = Infinity;
+
+    concert.bill.forEach(function (bill) {
+      targets.forEach(function (target) {
+        if (!target.item.exactLookup[bill.identity]) return;
+        best = Math.min(best, target.score + bill.role);
+      });
+    });
+
+    return best;
+  }
+
+  function directConcertScore(concert, query) {
+    var best = Infinity;
+
+    concert.bill.forEach(function (bill) {
+      best = Math.min(
+        best,
+        scoreSearchTerms(bill.search, query, true) + bill.role
+      );
+    });
+
+    var metadataScore = scoreSearchTerms(
+      concert.metadataSearch,
+      query,
+      true
+    );
+
+    var taxonomyScore = scoreSearchTerms(
+      concert.taxonomySearch,
+      query,
+      false
+    );
+
+    return Math.min(best, metadataScore, taxonomyScore);
+  }
+
+  function concertHref(event) {
+    if (Array.isArray(event.ee) && event.ee.length) {
+      return "https://archive.electriceyerock.com/concert/" +
+        event.i + "/";
+    }
+
+    return "https://www.electriceyerock.com/p/" +
+      "paris-area-concert-calendar.html#event-" + event.i;
+  }
+
+  function concertName(event) {
+    var names = [event.h].concat(event.ch || []).filter(Boolean);
+    return names.join(" + ");
+  }
+
+  function concertMeta(event) {
+    var venue = event.v || "";
+    var city = event.c || "";
+
+    if (city && normalize(city) !== "paris") {
+      venue += " (" + city + ")";
+    }
+
+    return [formatSearchDate(event.d), venue]
+      .filter(Boolean)
+      .join(" · ");
+  }
+
+  function buildGlobalSearchData(artistItems, venueItems, genreItems) {
+    var artists = prepareArtistSearchItems(artistItems);
+
+    return {
+      artists: artists,
+      articles: buildArticleSearchItems(artists),
+      concerts: prepareConcertSearchItems(
+        window.ElectricEyeConcertData || []
+      ),
+      venues: venueItems.map(function (item) {
+        item.globalSearch = prepareSearchTerms(
+          [item.name],
+          item.aliasTerms || [],
+          [item.meta, item.address]
+        );
+        return item;
+      }),
+      genres: genreItems.map(function (item) {
+        item.globalSearch = prepareSearchTerms([item.name], [], []);
+        return item;
+      })
+    };
+  }
+
+  function compareNamedResults(a, b) {
+    return a.score - b.score ||
+      sortKey(a.name).localeCompare(sortKey(b.name), "en", {
+        sensitivity: "base"
+      }) ||
+      a.href.localeCompare(b.href);
+  }
+
+  function searchGlobalData(data, rawQuery) {
+    var query = normalize(rawQuery);
+    var results = {
+      artists: [],
+      concerts: [],
+      articles: [],
+      venues: [],
+      genres: []
+    };
+
+    if (!query) return results;
+
+    results.artists = data.artists.map(function (item) {
+      return {
+        name: item.name,
+        href: item.href,
+        meta: item.searchOnly ? "Search relationship" : "Artist",
+        score: scoreSearchTerms(item.globalSearch, query, true)
+      };
+    }).filter(function (item) {
+      return Number.isFinite(item.score);
+    }).sort(compareNamedResults);
+
+    var artistTargets = resolveArtistTargets(data.artists, query);
+
+    results.concerts = data.concerts.map(function (concert) {
+      return {
+        name: concert.name,
+        href: concert.href,
+        meta: concert.meta,
+        date: concert.date,
+        score: Math.min(
+          directConcertScore(concert, query),
+          resolvedConcertScore(concert, artistTargets)
+        )
+      };
+    }).filter(function (item) {
+      return Number.isFinite(item.score);
+    }).sort(function (a, b) {
+      return a.score - b.score ||
+        a.date.localeCompare(b.date) ||
+        compareNamedResults(a, b);
+    });
+
+    results.articles = data.articles.map(function (item) {
+      return {
+        name: item.name,
+        href: item.href,
+        meta: item.meta,
+        date: item.date,
+        score: Math.min(
+          scoreSearchTerms(item.search, query, true),
+          scoreSearchTerms(item.taxonomySearch, query, false)
+        )
+      };
+    }).filter(function (item) {
+      return Number.isFinite(item.score);
+    }).sort(function (a, b) {
+      return a.score - b.score ||
+        b.date.localeCompare(a.date) ||
+        compareNamedResults(a, b);
+    });
+
+    results.venues = data.venues.map(function (item) {
+      return {
+        name: item.name,
+        href: item.href,
+        meta: item.meta,
+        score: scoreSearchTerms(item.globalSearch, query, true)
+      };
+    }).filter(function (item) {
+      return Number.isFinite(item.score);
+    }).sort(compareNamedResults);
+
+    results.genres = data.genres.map(function (item) {
+      return {
+        name: item.name,
+        href: item.href,
+        meta: item.parent ? "Subgenre of " + item.parent : "Genre",
+        score: scoreSearchTerms(item.globalSearch, query, false)
+      };
+    }).filter(function (item) {
+      return Number.isFinite(item.score);
+    }).sort(compareNamedResults);
+
+    return results;
+  }
+
+  function setupGlobalSearch(data) {
+    var form = document.getElementById("ee-global-search-form");
+    var input = document.getElementById("ee-global-search-input");
+    var clear = document.getElementById("ee-global-search-clear");
+    var status = document.getElementById("ee-global-search-status");
+    var container = document.getElementById("ee-global-search-results");
+    var expandedGroups = Object.create(null);
+
+    if (!form || !input || !clear || !status || !container) return;
+
+    function updateQueryUrl(value) {
+      var url = new URL(window.location.href);
+      var trimmed = value.trim();
+
+      if (trimmed) {
+        url.searchParams.set("q", trimmed);
+      } else {
+        url.searchParams.delete("q");
+      }
+
+      window.history.replaceState({}, "", url.pathname + url.search + url.hash);
+    }
+
+    function focusableResults() {
+      return Array.prototype.slice.call(
+        container.querySelectorAll("a, button")
+      ).filter(function (element) {
+        return !element.hidden;
+      });
+    }
+
+    function clearSearch() {
+      input.value = "";
+      expandedGroups = Object.create(null);
+      updateQueryUrl("");
+      render();
+      input.focus();
+    }
+
+    function createGlobalResult(item) {
+      var listItem = document.createElement("li");
+      var label = document.createElement(item.href ? "a" : "span");
+
+      listItem.className = "ee-global-result";
+      label.className = "ee-global-result-link";
+      label.textContent = item.name;
+      if (item.href) label.href = item.href;
+      listItem.appendChild(label);
+
+      if (item.meta) {
+        var meta = document.createElement("span");
+        meta.className = "ee-global-result-meta";
+        meta.textContent = item.meta;
+        listItem.appendChild(meta);
+      }
+
+      return listItem;
+    }
+
+    function render() {
+      var query = input.value;
+      var normalizedQuery = normalize(query);
+      var results = searchGlobalData(data, query);
+      var total = 0;
+      var groupCount = 0;
+
+      container.innerHTML = "";
+      clear.hidden = !normalizedQuery;
+
+      if (!normalizedQuery) {
+        container.hidden = true;
+        status.textContent = "";
+        input.setAttribute("aria-expanded", "false");
+        return;
+      }
+
+      GLOBAL_GROUPS.forEach(function (groupDefinition) {
+        var groupResults = results[groupDefinition.key] || [];
+
+        if (!groupResults.length) return;
+
+        total += groupResults.length;
+        groupCount += 1;
+
+        var section = document.createElement("section");
+        var heading = document.createElement("h2");
+        var count = document.createElement("span");
+        var list = document.createElement("ul");
+        var expanded = !!expandedGroups[groupDefinition.key];
+        var visible = expanded
+          ? groupResults
+          : groupResults.slice(0, GLOBAL_RESULT_LIMIT);
+
+        section.className = "ee-global-group";
+        heading.className = "ee-global-group-heading";
+        heading.textContent = groupDefinition.label;
+        count.className = "ee-global-group-count";
+        count.textContent = groupResults.length.toLocaleString("en");
+        heading.appendChild(count);
+        list.className = "ee-global-result-list";
+
+        visible.forEach(function (item) {
+          list.appendChild(createGlobalResult(item));
+        });
+
+        section.appendChild(heading);
+        section.appendChild(list);
+
+        if (groupResults.length > GLOBAL_RESULT_LIMIT) {
+          var showAll = document.createElement("button");
+
+          showAll.type = "button";
+          showAll.className = "ee-global-show-all";
+          showAll.textContent = expanded
+            ? "Show fewer"
+            : "Show all " + groupResults.length;
+          showAll.setAttribute("aria-expanded", expanded ? "true" : "false");
+          showAll.addEventListener("click", function () {
+            expandedGroups[groupDefinition.key] = !expanded;
+            render();
+          });
+          section.appendChild(showAll);
+        }
+
+        container.appendChild(section);
+      });
+
+      container.hidden = false;
+      input.setAttribute("aria-expanded", groupCount ? "true" : "false");
+      status.textContent = total
+        ? total.toLocaleString("en") +
+          (total === 1 ? " result" : " results") +
+          " in " + groupCount.toLocaleString("en") +
+          (groupCount === 1 ? " group." : " groups.")
+        : "No matches found.";
+
+      if (!groupCount) {
+        var empty = document.createElement("p");
+        empty.className = "ee-global-empty";
+        empty.textContent = "No matches found.";
+        container.appendChild(empty);
+      }
+    }
+
+    function moveResultFocus(event, direction) {
+      var focusable = focusableResults();
+      var current = focusable.indexOf(document.activeElement);
+      var next;
+
+      if (!focusable.length) return;
+
+      event.preventDefault();
+
+      if (current === -1) {
+        next = direction > 0 ? 0 : focusable.length - 1;
+      } else {
+        next = (current + direction + focusable.length) % focusable.length;
+      }
+
+      focusable[next].focus();
+    }
+
+    input.addEventListener("input", function () {
+      expandedGroups = Object.create(null);
+      updateQueryUrl(input.value);
+      render();
+    });
+
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowDown") moveResultFocus(event, 1);
+      if (event.key === "ArrowUp") moveResultFocus(event, -1);
+      if (event.key === "Escape" && input.value) {
+        event.preventDefault();
+        clearSearch();
+      }
+    });
+
+    container.addEventListener("keydown", function (event) {
+      if (event.key === "ArrowDown") moveResultFocus(event, 1);
+      if (event.key === "ArrowUp") moveResultFocus(event, -1);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        clearSearch();
+      }
+    });
+
+    clear.addEventListener("click", clearSearch);
+
+    form.addEventListener("submit", function (event) {
+      var firstLink = container.querySelector("a");
+      event.preventDefault();
+      if (firstLink) firstLink.click();
+    });
+
+    window.addEventListener("popstate", function () {
+      input.value = new URL(window.location.href).searchParams.get("q") || "";
+      expandedGroups = Object.create(null);
+      render();
+    });
+
+    input.value = new URL(window.location.href).searchParams.get("q") || "";
+    render();
   }
 
   function setupCollapsible(section) {
@@ -1041,6 +1715,9 @@
 
     state.rendered = true;
 
+    setupGlobalSearch(
+      buildGlobalSearchData(artists, venues, genres)
+    );
     setupSection("ee-index-artists", artists);
     setupSection("ee-index-venues", venues);
     setupGenreSection("ee-index-genres", genres);
