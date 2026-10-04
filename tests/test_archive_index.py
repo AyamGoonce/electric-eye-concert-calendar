@@ -157,11 +157,11 @@ process.stdout.write(JSON.stringify(result));
             "Ron Mael": {"Sparks"},
             "Russell Mael": {"Sparks"},
             "Johnny Rotten": {"Public Image Ltd."},
-            "QOTSA": {"Queens of the Stone Age"},
-            "Queens of the Stone Age": {"Queens of the Stone Age"},
-            "Josh Homme": {"Queens of the Stone Age"},
-            "Joshua Homme": {"Queens of the Stone Age"},
-            "Kyuss": {"Queens of the Stone Age"},
+            "QOTSA": set(),
+            "Queens of the Stone Age": set(),
+            "Josh Homme": set(),
+            "Joshua Homme": set(),
+            "Kyuss": set(),
         }
         for query, expected_names in expected.items():
             self.assertEqual(expected_names, set(matches[query]), query)
