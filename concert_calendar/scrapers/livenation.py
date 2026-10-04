@@ -32,37 +32,102 @@ def get_diagnostics():
     return list(_DIAGNOSTICS)
 
 
-def get_primary_headliner(document):
+def _billing_key(value):
+    return " ".join(
+        "".join(
+            character.lower() if character.isalnum() else " "
+            for character in (value or "")
+        ).split()
+    )
+
+
+def get_billing(document):
+    """
+    Preserve Live Nation's explicit headline/support roles.
+
+    Some records expose a synthetic primary headline representing a combined
+    bill, while also exposing the real headline artists as separate `headline`
+    lineup entries. Treat that primary value as a wrapper only when at least
+    two separate non-primary headline names are all present inside it.
+    """
     lineup = document.get("lineup") or []
 
-    for artist in lineup:
-        if artist.get("isPrimary"):
-            return (artist.get("name") or "").strip()
+    headline_entries = [
+        artist for artist in lineup
+        if artist.get("type") == "headline"
+        and (artist.get("name") or "").strip()
+    ]
+    support_entries = [
+        artist for artist in lineup
+        if artist.get("type") != "headline"
+        and (artist.get("name") or "").strip()
+    ]
 
-    for artist in lineup:
-        if artist.get("type") == "headline":
-            return (artist.get("name") or "").strip()
+    primary = next(
+        (
+            artist for artist in headline_entries
+            if artist.get("isPrimary")
+        ),
+        None,
+    )
 
-    return (document.get("name") or "").strip()
+    non_primary = [
+        artist for artist in headline_entries
+        if artist is not primary
+    ]
 
+    headline_names = []
 
-def get_openers(document, headliner):
-    lineup = document.get("lineup") or []
-    openers = []
+    if primary is not None:
+        primary_name = (primary.get("name") or "").strip()
+        primary_key = _billing_key(primary_name)
 
-    for artist in lineup:
-        name = (artist.get("name") or "").strip()
+        non_primary_names = [
+            (artist.get("name") or "").strip()
+            for artist in non_primary
+        ]
 
-        if not name:
-            continue
+        primary_is_wrapper = (
+            len(non_primary_names) >= 2
+            and all(
+                _billing_key(name)
+                and _billing_key(name) in primary_key
+                for name in non_primary_names
+            )
+        )
 
-        if name.casefold() == headliner.casefold():
-            continue
+        if primary_is_wrapper:
+            headline_names = non_primary_names
+        else:
+            headline_names = [
+                primary_name,
+                *non_primary_names,
+            ]
 
-        if name not in openers:
-            openers.append(name)
+    elif headline_entries:
+        headline_names = [
+            (artist.get("name") or "").strip()
+            for artist in headline_entries
+        ]
 
-    return openers[:5] or None
+    if not headline_names:
+        fallback = (document.get("name") or "").strip()
+        headline_names = [fallback] if fallback else []
+
+    headline_names = list(dict.fromkeys(headline_names))
+
+    support_names = list(dict.fromkeys(
+        (artist.get("name") or "").strip()
+        for artist in support_entries
+        if (artist.get("name") or "").strip()
+        not in headline_names
+    ))
+
+    headliner = headline_names[0] if headline_names else ""
+    co_headliners = headline_names[1:] or None
+    openers = support_names[:5] or None
+
+    return headliner, co_headliners, openers
 
 
 def get_genre(document):
@@ -129,7 +194,7 @@ def get_event_url(document):
 def document_to_event(document):
     venue_data = document.get("venue") or {}
 
-    headliner = get_primary_headliner(document)
+    headliner, co_headliners, openers = get_billing(document)
 
     if not headliner:
         return None
@@ -158,7 +223,8 @@ def document_to_event(document):
     return ConcertEvent(
         date=date,
         headliner=headliner,
-        openers=get_openers(document, headliner),
+        openers=openers,
+        co_headliners=co_headliners,
         venue=venue,
         city=city,
         department="",

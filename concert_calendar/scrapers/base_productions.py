@@ -49,8 +49,44 @@ def parse_date(value):
 
 
 def parse_lineup(value):
-    """A title alone does not establish individual artists or support roles."""
+    """A listing title alone does not establish individual artists or roles."""
     return clean_text(value), None
+
+
+def normalized_artist(value):
+    value = clean_text(value).casefold()
+    value = re.sub(r"^the\s+", "", value)
+    return re.sub(r"[^a-z0-9]+", "", value)
+
+
+def detail_performers(html, title):
+    """
+    Confirm a spaced-'+' bill from explicit artist headings on the official
+    Base Productions detail page. The title supplies display names/order;
+    page headings are evidence only.
+    """
+    components = [
+        clean_text(part)
+        for part in re.split(r"\s+\+\s+", title or "")
+        if clean_text(part)
+    ]
+    if len(components) < 2:
+        return []
+
+    soup = BeautifulSoup(html or "", "html.parser")
+    evidenced = {
+        normalized_artist(tag.get_text(" ", strip=True))
+        for tag in soup.select("div.col-12.col-md-7 strong")
+        if clean_text(tag.get_text(" ", strip=True))
+    }
+
+    if not evidenced:
+        return []
+
+    if all(normalized_artist(component) in evidenced for component in components):
+        return components
+
+    return []
 
 
 def split_venue_city(value):
@@ -160,12 +196,40 @@ def load_events():
     )
 
     events_by_key = {}
+    detail_cache = {}
 
     for card in cards:
         event = parse_card(card)
 
-        if event is not None:
-            events_by_key[event_key(event)] = event
+        if event is None:
+            continue
+
+        if (
+            event.ticket_url
+            and re.search(r"\s+\+\s+", event.headliner or "")
+        ):
+            if event.ticket_url not in detail_cache:
+                try:
+                    detail_response = session.get(
+                        event.ticket_url,
+                        headers=HEADERS,
+                        timeout=REQUEST_TIMEOUT,
+                    )
+                    detail_response.raise_for_status()
+                except requests.RequestException:
+                    detail_cache[event.ticket_url] = []
+                else:
+                    detail_cache[event.ticket_url] = detail_performers(
+                        detail_response.text,
+                        event.headliner,
+                    )
+
+            performers = detail_cache.get(event.ticket_url) or []
+            if performers:
+                event.performers = performers
+                event.raw_title = event.headliner
+
+        events_by_key[event_key(event)] = event
 
     events = list(events_by_key.values())
 
