@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-10-04T11:55:14Z",
+  "generatedAt": "2026-10-04T12:14:16Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -350,6 +350,49 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Abbey Blackwell",
+      "slug": "abbey-blackwell",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [
+        "Drink The Sea"
+      ],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "627495749006323358"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/a-conversation-with-drink-sea.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Abel Selaocoe",
       "slug": "abel-selaocoe",
       "aliases": [],
@@ -434,7 +477,9 @@
       "slug": "absu",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Proscriptor McGovern"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -452,7 +497,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 3,
       "hideFromArtistIndex": false,
@@ -522,6 +569,7 @@
         "7246169822937525098"
       ],
       "concertReviewArchiveArticleIds": [
+        "7246169822937525098",
         "1342756235464456825",
         "5856958886926760162"
       ],
@@ -947,7 +995,9 @@
       "alternateSpellings": [],
       "members": [],
       "formerMembers": [],
-      "associatedActs": [],
+      "associatedActs": [
+        "Drink The Sea"
+      ],
       "sideProjects": [],
       "collaborators": [],
       "searchLinks": [],
@@ -963,7 +1013,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 3,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -2499,7 +2551,9 @@
       "reviewedArticleIds": [
         "7246169822937525098"
       ],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "7246169822937525098"
+      ],
       "articleUrls": [
         "https://www.electriceyerock.com/2016/05/acdc-feat-axl-rose-stade-velodrome.html"
       ],
@@ -2628,6 +2682,49 @@
       "articleUrls": [
         "https://www.electriceyerock.com/2024/07/bad-religion-elysee-montmartre-paris.html",
         "https://www.electriceyerock.com/2019/04/album-review-bad-religion-age-of.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Barrett Martin",
+      "slug": "barrett-martin",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [
+        "Drink The Sea"
+      ],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "627495749006323358"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/a-conversation-with-drink-sea.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -3333,7 +3430,9 @@
       "schemaVersion": 1,
       "canonicalName": "Billy Corgan",
       "slug": "billy-corgan",
-      "aliases": [],
+      "aliases": [
+        "William Corgan"
+      ],
       "alternateSpellings": [],
       "members": [],
       "formerMembers": [],
@@ -5194,7 +5293,13 @@
       "slug": "cannibal-corpse",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "George Fisher",
+        "Rob Barrett",
+        "Alex Webster",
+        "Erik Rutan",
+        "Paul Mazurkiewicz"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -5212,7 +5317,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -5323,8 +5430,8 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Cavalera",
-      "slug": "cavalera",
+      "canonicalName": "Carly Harvey",
+      "slug": "carly-harvey",
       "aliases": [],
       "alternateSpellings": [],
       "members": [],
@@ -5346,16 +5453,20 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
+      "articleCount": 2,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
       "articleIds": [
-        "4824964011678406265"
+        "2056876380820259209",
+        "67072437969062040"
       ],
       "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "2056876380820259209"
+      ],
       "articleUrls": [
-        "https://www.electriceyerock.com/2025/11/attila-csihar-iggor-cavalera-mains.html"
+        "https://www.electriceyerock.com/2025/12/chicago-blues-festival-tour-feat-selwyn.html",
+        "https://www.electriceyerock.com/2025/06/the-chicago-blues-festival-tour-2025.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -5574,45 +5685,6 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2025/11/che-arthur-la-maroquinerie-paris.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Chicago Blues Festival Tour feat. Selwyn Birchwood & Carly Harvey",
-      "slug": "chicago-blues-festival-tour-feat-selwyn-birchwood-carly-harvey",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "searchAliasLinks": {},
-      "searchArticleIds": [],
-      "articleSearchTerms": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "2056876380820259209"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2025/12/chicago-blues-festival-tour-feat-selwyn.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -5916,8 +5988,8 @@
       "canonicalName": ".clipping",
       "slug": "clipping",
       "aliases": [
-        "Clipping",
-        "clipping."
+        "clipping.",
+        "Clipping"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -8152,7 +8224,11 @@
       "slug": "dinosaur-jr",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "J Mascis",
+        "Lou Barlow",
+        "Murph"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -8170,7 +8246,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -8707,7 +8785,14 @@
       "slug": "drink-the-sea",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Alain Johannes",
+        "Barrett Martin",
+        "Peter Buck",
+        "Abbey Blackwell",
+        "Duke Garwood",
+        "Lisette Garcia"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -8725,7 +8810,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 5,
       "directSubjectArticleCount": 4,
       "hideFromArtistIndex": false,
@@ -8844,6 +8931,49 @@
         "https://www.electriceyerock.com/2024/10/duff-mckagan-le-trianon-paris-october.html",
         "https://www.electriceyerock.com/2019/09/duff-mckagan-shooter-jenning-le.html",
         "https://www.electriceyerock.com/2019/06/album-review-duff-mckagan-tenderness.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Duke Garwood",
+      "slug": "duke-garwood",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [
+        "Drink The Sea"
+      ],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "627495749006323358"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/a-conversation-with-drink-sea.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -15052,47 +15182,6 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Jazz à la Villette",
-      "slug": "jazz-a-la-villette",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "searchAliasLinks": {},
-      "searchArticleIds": [],
-      "articleSearchTerms": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 2,
-      "directSubjectArticleCount": 2,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "3443810117381082199",
-        "5438955098219760565"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2026/08/jazz-la-villette-releases-2026-line-up.html",
-        "https://www.electriceyerock.com/2025/05/jazz-la-villette-releases-2025-line-up.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
       "canonicalName": "JD McPherson",
       "slug": "jd-mcpherson",
       "aliases": [],
@@ -15328,9 +15417,9 @@
       "canonicalName": "Jesse “Ed” Davis",
       "slug": "jesse-ed-davis",
       "aliases": [
-        "Jesse \"Ed\" Davis",
+        "Jesse Ed Davis",
         "Jesse ‘Ed’ Davis",
-        "Jesse Ed Davis"
+        "Jesse \"Ed\" Davis"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -18263,8 +18352,8 @@
       "slug": "les-insus",
       "aliases": [
         "Les Insus? (Téléphone)",
-        "Telephone",
-        "Téléphone"
+        "Téléphone",
+        "Telephone"
       ],
       "alternateSpellings": [],
       "members": [
@@ -18566,6 +18655,49 @@
       "articleUrls": [
         "https://www.electriceyerock.com/2026/06/limp-bizkit-hellfest-clisson-june-20th.html",
         "https://www.electriceyerock.com/2025/04/limp-bizkit-accor-arena-paris-april-2nd.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Lisette Garcia",
+      "slug": "lisette-garcia",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [
+        "Drink The Sea"
+      ],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "627495749006323358"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/a-conversation-with-drink-sea.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -21061,8 +21193,8 @@
       "canonicalName": "Mikkey Dee",
       "slug": "mikkey-dee",
       "aliases": [
-        "Mikkey Dee and Friends Play Motörhead",
         "Mikkey Dee and Friends play Motörhead",
+        "Mikkey Dee and Friends Play Motörhead",
         "Mikkey Dee & Friends Play Motörhead",
         "Mikkey Dee & Friends play Motörhead"
       ],
@@ -22441,8 +22573,8 @@
       "canonicalName": "Nick Mason",
       "slug": "nick-mason",
       "aliases": [
-        "Nick Mason's Saucerful of Secrets",
         "Nick Mason’s Saucerful of Secrets",
+        "Nick Mason's Saucerful of Secrets",
         "Saucerful of Secrets"
       ],
       "alternateSpellings": [],
@@ -23937,6 +24069,49 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Peter Buck",
+      "slug": "peter-buck",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [
+        "Drink The Sea"
+      ],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "627495749006323358"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/a-conversation-with-drink-sea.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Peter Hook & The Light",
       "slug": "peter-hook-the-light",
       "aliases": [],
@@ -24495,6 +24670,49 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Proscriptor McGovern",
+      "slug": "proscriptor-mcgovern",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [
+        "Absu"
+      ],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
+      "articleCount": 1,
+      "directSubjectArticleCount": 0,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "8697992859196451400"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/absu-30-years-of-sun-of-tiphareth.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Psychedelic Furs",
       "slug": "psychedelic-furs",
       "aliases": [],
@@ -24705,8 +24923,8 @@
       "aliases": [
         "P.I.L",
         "P.I.L.",
-        "PIL",
         "PiL",
+        "PIL",
         "Public Image Limited",
         "Public Image, Ltd."
       ],
@@ -27292,6 +27510,49 @@
     },
     {
       "schemaVersion": 1,
+      "canonicalName": "Selwyn Birchwood",
+      "slug": "selwyn-birchwood",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 2,
+      "directSubjectArticleCount": 1,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "2056876380820259209",
+        "67072437969062040"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [
+        "2056876380820259209"
+      ],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2025/12/chicago-blues-festival-tour-feat-selwyn.html",
+        "https://www.electriceyerock.com/2025/06/the-chicago-blues-festival-tour-2025.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
       "canonicalName": "Semblant",
       "slug": "semblant",
       "aliases": [],
@@ -27957,8 +28218,8 @@
       "canonicalName": "Slash",
       "slug": "slash",
       "aliases": [
-        "Slash feat. Myles Kennedy & the Conspirators",
-        "Slash feat. Myles Kennedy & The Conspirators"
+        "Slash feat. Myles Kennedy & The Conspirators",
+        "Slash feat. Myles Kennedy & the Conspirators"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -28102,7 +28363,9 @@
       "slug": "snow-patrol",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Gary Lightbody"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -28120,7 +28383,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -28991,7 +29256,9 @@
       "slug": "starsailor",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "James Walsh"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -29009,7 +29276,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 2,
       "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
@@ -29485,7 +29754,13 @@
       "slug": "suffocation",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Derek Boyer",
+        "Terrance Hobbs",
+        "Ricky Myers",
+        "Charlie Errigo",
+        "Eric Morotti"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -29503,7 +29778,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 7,
       "directSubjectArticleCount": 7,
       "hideFromArtistIndex": false,
@@ -31407,8 +31684,8 @@
       "canonicalName": "The E Street Band",
       "slug": "the-e-street-band",
       "aliases": [
-        "E-Street Band",
         "E Street Band",
+        "E-Street Band",
         "The E-Street Band"
       ],
       "alternateSpellings": [],
@@ -31907,7 +32184,9 @@
       "slug": "the-horrors",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Faris Badwan"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -31925,7 +32204,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -32302,7 +32583,11 @@
       "slug": "the-melvins",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Buzz Osborne",
+        "Dale Crover",
+        "Steven Shane McDonald"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -32320,7 +32605,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
@@ -33238,7 +33525,9 @@
       "aliases": [],
       "alternateSpellings": [],
       "members": [
-        "Billy Corgan"
+        "Billy Corgan",
+        "James Iha",
+        "Jimmy Chamberlin"
       ],
       "formerMembers": [],
       "associatedActs": [],
@@ -33604,7 +33893,9 @@
       "slug": "the-vaccines",
       "aliases": [],
       "alternateSpellings": [],
-      "members": [],
+      "members": [
+        "Justin Young"
+      ],
       "formerMembers": [],
       "associatedActs": [],
       "sideProjects": [],
@@ -33622,7 +33913,9 @@
       "appleArtistId": null,
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
-      "identityEvidence": [],
+      "identityEvidence": [
+        "Reviewed Electric Eye artist relationship"
+      ],
       "articleCount": 1,
       "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
