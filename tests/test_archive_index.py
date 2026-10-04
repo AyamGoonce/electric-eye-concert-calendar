@@ -30,6 +30,93 @@ class ArchiveIndexSearchTests(unittest.TestCase):
         self.assertNotIn("item.artistCount >= 2", source)
         self.assertIn("children[item.name].some(shouldKeep)", source)
 
+    def test_global_concert_search_resolves_reviewed_target_before_bill(self):
+        node = shutil.which("node")
+        if not node:
+            self.skipTest("Node.js is unavailable")
+
+        runner = r'''
+const fs = require("node:fs");
+const vm = require("node:vm");
+let source = fs.readFileSync(process.argv[1], "utf8");
+source = source.replace(/\}\(\)\);\s*$/, "globalThis.__archiveTest={makeArtistItems:makeArtistItems,buildGlobalSearchData:buildGlobalSearchData,searchGlobalData:searchGlobalData};}());");
+const articles = [
+  {t:"AC/DC announce a new tour",u:"https://example.test/acdc",d:"2026-01-01",y:"news",a:["ac-dc"],l:["AC/DC","News"],pi:"1"},
+  {t:"Ronnie Wood interview",u:"https://example.test/ronnie",d:"2026-01-02",y:"interview",a:["ronnie-wood"],l:["Ronnie Wood","Interview"],pi:"2"},
+  {t:"Unrelated taxonomy article",u:"https://example.test/trap",d:"2026-01-03",y:"other",a:[],l:["Trap","Psychedelic Rock"],pi:"3"}
+];
+function artist(name, articleId, identity, aliases) {
+  return {n:name,al:aliases||[],ar:[articleId],da:[articleId],identity:Object.assign({hideFromArtistIndex:false},identity||{})};
+}
+const artists = {
+  "ac-dc":artist("AC/DC",0,{members:["Angus Young"]}),
+  "ronnie-wood":artist("Ronnie Wood",1,{associatedActs:["Faces"]},["Ron Wood"])
+};
+const relationshipNodes = {
+  "faces":{n:"Faces",al:["The Faces"],identity:{members:["Ronnie Wood"],searchResultVisible:false}}
+};
+const terms = {"AC/DC":"ac-dc","Ronnie Wood":"ronnie-wood","Ron Wood":"ronnie-wood"};
+const concerts = [
+  {d:"2027-01-10",h:"AC/DC",ch:[],o:[],v:"Stade de France",c:"Saint-Denis",x:["Rock"],i:"1111111111111111"},
+  {d:"2027-01-11",h:"Ronnie Wood",ch:[],o:[],v:"L'Olympia Bruno Coquatrix",c:"Paris",x:["Rock"],i:"2222222222222222",ee:[{slug:"ronnie-wood"}]},
+  {d:"2027-01-12",h:"Unrelated Festival",ch:[],o:["Shared Billmate"],v:"Bataclan",c:"Paris",x:[],i:"3333333333333333"},
+  {d:"2027-01-13",h:"Taxonomy Test",ch:[],o:[],v:"Bataclan",c:"Paris",x:["Trap","Psychedelic Rock"],i:"4444444444444444"}
+];
+const sandbox = {window:{ElectricEyeArtistLookup:{terms},ElectricEyeContentIndex:{artists,articles,relationshipNodes},ElectricEyeConcertData:concerts},document:{readyState:"loading",addEventListener:function(){}},console,URL,Intl,Number};
+vm.createContext(sandbox);
+vm.runInContext(source,sandbox);
+const artistItems=sandbox.__archiveTest.makeArtistItems();
+const data=sandbox.__archiveTest.buildGlobalSearchData(artistItems,[],[
+  {name:"Rap",parent:"Hip-Hop",href:"https://archive.example/genre/rap/"},
+  {name:"Trap",parent:"Hip-Hop",href:"https://archive.example/genre/trap/"}
+]);
+function result(query){
+  const found=sandbox.__archiveTest.searchGlobalData(data,query);
+  return {artists:found.artists.map(x=>x.name),concerts:found.concerts.map(x=>x.name),articles:found.articles.map(x=>x.name),genres:found.genres.map(x=>x.name)};
+}
+process.stdout.write(JSON.stringify({acdc:result("AC/DC"),angus:result("Angus Young"),faces:result("Faces"),ronnie:result("Ronnie Wood"),qotsa:result("QOTSA"),billmate:result("Shared Billmate"),rap:result("Rap"),trap:result("Trap"),psyched:result("Psyched")}));
+'''
+        completed = subprocess.run(
+            [node, "-e", runner, str(ARCHIVE_INDEX)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        results = json.loads(completed.stdout)
+
+        self.assertEqual(["AC/DC"], results["angus"]["artists"])
+        self.assertEqual(["AC/DC"], results["angus"]["concerts"])
+        self.assertEqual([], results["angus"]["articles"])
+        self.assertEqual(
+            ["AC/DC announce a new tour"],
+            results["acdc"]["articles"],
+        )
+        self.assertEqual(["Ronnie Wood"], results["faces"]["artists"])
+        self.assertEqual(["Ronnie Wood"], results["faces"]["concerts"])
+        self.assertNotIn("Faces", results["ronnie"]["artists"])
+        self.assertEqual([], results["qotsa"]["artists"])
+        self.assertEqual([], results["qotsa"]["concerts"])
+        self.assertEqual(
+            ["Unrelated Festival"],
+            results["billmate"]["concerts"],
+        )
+        self.assertEqual(["Rap"], results["rap"]["genres"])
+        self.assertEqual([], results["rap"]["concerts"])
+        self.assertEqual([], results["rap"]["articles"])
+        self.assertEqual(["Taxonomy Test"], results["trap"]["concerts"])
+        self.assertEqual(
+            ["Unrelated taxonomy article"],
+            results["trap"]["articles"],
+        )
+        self.assertEqual(
+            ["Taxonomy Test"],
+            results["psyched"]["concerts"],
+        )
+        self.assertEqual(
+            ["Unrelated taxonomy article"],
+            results["psyched"]["articles"],
+        )
+
     def test_reviewed_relationship_graph_routes_systemically(self):
         node = shutil.which("node")
         if not node:

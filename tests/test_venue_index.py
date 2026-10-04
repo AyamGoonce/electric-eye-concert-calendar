@@ -328,6 +328,27 @@ class VenueIndexTests(unittest.TestCase):
         self.assertTrue(index["Mapped"]["mapReady"])
         self.assertFalse(index["Unmapped"]["mapReady"])
 
+    def test_exports_reviewed_canonical_aliases_for_search(self):
+        index = build_venue_index(
+            [],
+            {
+                "Accor Arena": {
+                    "city": "Paris",
+                    "lat": 48.839,
+                    "lng": 2.379,
+                }
+            },
+        )
+
+        aliases = index["Accor Arena"]["aliases"]
+
+        self.assertIn("bercy", aliases)
+        self.assertIn("popb", aliases)
+        self.assertIn("p o p b", aliases)
+        self.assertIn("accorhotels arena", aliases)
+        self.assertIn("palais omnisports de paris bercy", aliases)
+        self.assertNotIn("accor arena", aliases)
+
     def test_renamed_venue_promotes_current_name_and_keeps_former_alias(self):
         metadata = {
             "Batofar": {
@@ -356,7 +377,10 @@ class VenueIndexTests(unittest.TestCase):
 
         self.assertNotIn("Batofar", index)
         self.assertIn("Le Bateau Phare", index)
-        self.assertEqual(["Batofar"], index["Le Bateau Phare"]["aliases"])
+        self.assertEqual(
+            ["bateau phare", "Batofar"],
+            index["Le Bateau Phare"]["aliases"],
+        )
         self.assertEqual(1, len(index["Le Bateau Phare"]["events"]))
         self.assertEqual(1, len(index["Le Bateau Phare"]["articles"]))
 

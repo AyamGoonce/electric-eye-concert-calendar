@@ -10,6 +10,7 @@ from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import (
     ARTIST_SORT_OVERRIDES,
     PUBLIC_GENRES,
+    _archive_landing_page,
     alphabetical_sort_key,
     build_current_pointer,
     build_data_asset,
@@ -42,6 +43,24 @@ def make_event(
 
 
 class ProductionDataTests(unittest.TestCase):
+    def test_archive_landing_includes_accessible_global_search(self):
+        soup = BeautifulSoup(_archive_landing_page(), "html.parser")
+        search = soup.select_one("#ee-global-search-form[role='search']")
+        input_node = soup.select_one("#ee-global-search-input")
+
+        self.assertIsNotNone(search)
+        self.assertIsNotNone(input_node)
+        self.assertEqual(
+            "ee-global-search-results",
+            input_node.get("aria-controls"),
+        )
+        self.assertEqual("false", input_node.get("aria-expanded"))
+        self.assertIsNotNone(
+            soup.select_one("#ee-global-search-status[aria-live='polite']")
+        )
+        self.assertIsNotNone(soup.select_one("#ee-global-search-clear[hidden]"))
+        self.assertEqual(3, len(soup.select(".ee-index-search")))
+
     def test_article_aware_sort_keys_are_conservative(self):
         examples = {
             "The Black Keys": "black keys",

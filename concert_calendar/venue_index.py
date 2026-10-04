@@ -6,6 +6,7 @@ from typing import Any
 
 from concert_calendar.venue_metadata import VENUE_METADATA
 from concert_calendar.venues import (
+    VENUE_ALIASES,
     VENUE_GEOGRAPHY,
     clean_unknown_venue_name,
     normalize_venue_key,
@@ -190,6 +191,40 @@ def build_venue_index(
             record["aliases"] = list(source["former_names"])
 
         index[venue_name] = record
+
+    # Export the same reviewed aliases used by central venue
+    # canonicalization. Search consumers should not duplicate this identity
+    # layer in JavaScript. Normalized spellings are sufficient because public
+    # search applies punctuation and accent folding too.
+    for alias, canonical_name in VENUE_ALIASES.items():
+        record = index.get(canonical_name)
+
+        if (
+            record is None
+            or normalize_venue_key(alias)
+            == normalize_venue_key(canonical_name)
+        ):
+            continue
+
+        aliases = record.setdefault("aliases", [])
+
+        if alias not in aliases:
+            aliases.append(alias)
+
+    for record in index.values():
+        if record.get("aliases"):
+            unique_aliases = {}
+
+            for alias in record["aliases"]:
+                unique_aliases.setdefault(
+                    normalize_venue_key(alias),
+                    alias,
+                )
+
+            record["aliases"] = sorted(
+                unique_aliases.values(),
+                key=str.casefold,
+            )
 
     unknown = set()
     provisional = set()
