@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: electric-eye-apple-static-payloads
+  group: electric-eye-gh-pages-publication
   cancel-in-progress: false
 
 jobs:
