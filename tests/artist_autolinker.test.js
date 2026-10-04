@@ -118,7 +118,7 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
   assert.equal(links[0].href, "https://example.test/artist.html?artist=sparks/");
   assert.equal(linkedText(secondOccurrence).length, 0, "only the first occurrence is linked by default");
   assert.equal(linkedText(ordinaryProse).length, 0, "ordinary down prose is not linked to Down");
-  assert.equal(linkedText(aliasProse)[0].href, "https://example.test/artist.html?artist=queens-of-the-stone-age/");
+  assert.equal(linkedText(aliasProse)[0].href, "https://example.test/artist.html?artist=the-sheepdogs/");
   assert.equal(anchorText.replacement, null, "existing anchor is untouched");
   assert.equal(adText.replacement, null, "ad is untouched");
   assert.equal(embedText.replacement, null, "embed is untouched");
