@@ -242,8 +242,8 @@
           ) {
             [relatedEntity.name]
               .concat(relatedEntity.aliases || [])
-              .forEach(function (term) {
-                addSearchTerm(slug, term);
+              .forEach(function (relatedTerm) {
+                addSearchTerm(slug, relatedTerm);
               });
           }
 
