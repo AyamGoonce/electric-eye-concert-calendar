@@ -6435,7 +6435,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11654,7 +11654,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -12485,7 +12485,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -15032,7 +15032,7 @@
           "state_identity": "b7b4cd0520244d46e87cff0fb90104346e4c2b0a5e275a2fc81ad06ca2ae07dd"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -17244,7 +17244,7 @@
           "state_identity": "7756190357f9e408f8343007be639f53016d8dfd0dfe036e7caf15262310901a"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -17653,7 +17653,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -19683,7 +19683,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -21180,7 +21180,7 @@
           "state_identity": "46d7e2f294622f22c9f91c1c5c02fea92c16aa1a5887ed57eb3f40cb9ddd935f"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -21284,7 +21284,11 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "SILENT PLANET",
+              "VARIALS",
+              "ORTHODOX"
+            ],
             "date": "2026-10-06",
             "department": "75",
             "event_title": null,
@@ -21293,23 +21297,29 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre_method": "bill_consensus",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
+            "headliner": "THE AMITY AFFLICTION",
             "identity_aliases": [
+              "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
               "THE AMITY AFFLICTION"
             ],
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-amity-affliction-elysee-montmartre.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "THE AMITY AFFLICTION",
+              "SILENT PLANET",
+              "VARIALS",
+              "ORTHODOX"
+            ],
             "promoters": [
               "Base Productions"
             ],
-            "raw_title": null,
+            "raw_title": "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -23005,7 +23015,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -24915,7 +24925,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -26338,7 +26348,7 @@
           "state_identity": "8a1970796dc413904c9dfc8e573d04564d33fb36e57327b931e0b4e4a1406c0e"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -28138,7 +28148,7 @@
           "state_identity": "22a4cfcae44eef4a18d3baf54d454f8a26d8ac7a34c5898369f8feb5f23b52e6"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -29443,7 +29453,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -29981,7 +29991,7 @@
           "state_identity": "b83f7032e595a01ef4687947c42d1e20afdbc8b7bf0117c869b75b632a270f49"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -30524,7 +30534,7 @@
           "state_identity": "f7b0549113a9fb9718777e3b34e61d479a1f359148ffdd9cdc42400b5a69071e"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -32934,7 +32944,7 @@
           "state_identity": "5c7d59a0c6c7827900df81d3361b9bf5eff72c81749dcdaa5366a13ce256f5a5"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -33500,7 +33510,7 @@
           "state_identity": "1de5e8c96d04fb458f7cba1219f0df454d57dd852008bb04cc9a2fc85c48567c"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -36682,7 +36692,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -37636,7 +37646,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -40712,7 +40722,7 @@
           "state_identity": "4ee686992a1295d77ab6f159f655cbaf946c3fa8b3fb7ac3e8313388678d892a"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -45815,7 +45825,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -47148,7 +47158,7 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -48735,7 +48745,7 @@
           "state_identity": "7e4d8819bda9a74e5b806b0895e3f2087de6a72249cdaa2291e5d5e410fa226d"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -54385,7 +54395,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -56377,7 +56387,7 @@
           "state_identity": "ae549f194d130021ec0b52ebc05b967634529adb39d0ae18e58bf2f6bda87fcb"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -57111,7 +57121,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -57988,7 +57998,7 @@
           "state_identity": "ae46e191645929b4dbde3ad7ee86223b611389e7ba8e97b307fa9a598f0690e0"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -59637,7 +59647,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -61853,7 +61863,7 @@
           "state_identity": "00e91b103c6de46f932a665a3a2313e7d43a076a40538d282f626014c8bbf3b9"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -64914,7 +64924,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -65133,7 +65143,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Ronny Chieng"
+            ],
             "date": "2026-10-11",
             "department": "75",
             "event_title": "HASAN HATES RONNY | RONNY HATES HASAN",
@@ -65157,9 +65169,7 @@
             ],
             "image_source": "Le Trianon",
             "image_url": "https://www.letrianon.fr/wp-content/uploads/hasan-hates-ronny-ronny-hates-hasan-trianon.jpg",
-            "openers": [
-              "Ronny Chieng"
-            ],
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -66458,7 +66468,7 @@
           "state_identity": "13e96aa4c8ca9ca5abcbe014c379e34f0804e1bb828c1195ce7250b1672713d9"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -66834,7 +66844,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Dimmu Borgir"
+            ],
             "date": "2026-10-16",
             "department": "75",
             "event_title": null,
@@ -66852,12 +66864,12 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "Behemoth & Dimmu Borgir",
+            "headliner": "Behemoth",
             "identity_aliases": [
               "Behemoth x Dimmu Borgir"
             ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/f/n/w/894a751f-6139-46de-a2ca-4672bd203655.jpg",
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwwkJCkYzSfhGuSVTThKjy1q6T3a9JapdL530VEaLdmJl5qPKAxCtfOjlGOIOf7XWuhxaKj0A4SUNWKAQNCDCjAQOVvCsbDy366alcpCMe8wrTPOA1uMSV-o13jnhT79KjGbVb8V_rTvPPZOXlrAqZ4cfdA8zzvuMgc0AUqCoI4BLPSc_yPd7skHm4pu0/s72-w640-h426-c-rw/Behemoth20260621HellfestClisson_72.JPG",
             "openers": [
               "Dark Funeral"
             ],
@@ -70264,7 +70276,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "In Flames"
+            ],
             "date": "2027-04-07",
             "department": "75",
             "event_title": "In Flames x Trivium",
@@ -70284,25 +70298,20 @@
             "genres_public": null,
             "headliner": "Trivium",
             "identity_aliases": [
-              "Trivium + In Flames",
               "In Flames x Trivium"
             ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJywJ4ufKbWe9toOKqtrRQqNBj7ZfRNXpoCyY1bL4GCB3lOymSXMKKBzhI15s6kliM-jjWx9nm0P_34MV_HiBgqkKqBR9qVEkZJ4SZB-KrGF02gvkeFUQ3k3h2UKKpf1ui3C5BdMEcgC8GztDTfhMpnJth1A7CMIAlWGo0jFBTIo5Do1MA-2GoZCyD/s72-w400-h266-c-rw/Trivium01_02_2023OLYMPIAParis_17.jpg",
             "openers": [
-              "In Flames",
               "Paleface Swiss",
               "VOLA"
             ],
             "performance_marker": null,
-            "performers": [
-              "Trivium",
-              "In Flames"
-            ],
+            "performers": null,
             "promoters": [
               "Live Nation"
             ],
-            "raw_title": "Trivium + In Flames",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -71380,7 +71389,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -72245,7 +72254,7 @@
           "state_identity": "d2952fd95f700071908484d264c842b004610d145b165e7c65f5be6c5f9dd243"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72409,7 +72418,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Ronny Chieng"
+            ],
             "date": "2026-10-11",
             "department": "75",
             "event_title": "HASAN HATES RONNY | RONNY HATES HASAN",
@@ -72433,9 +72444,7 @@
             ],
             "image_source": "Le Trianon",
             "image_url": "https://www.letrianon.fr/wp-content/uploads/hasan-hates-ronny-ronny-hates-hasan-trianon.jpg",
-            "openers": [
-              "Ronny Chieng"
-            ],
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -72731,7 +72740,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Dimmu Borgir"
+            ],
             "date": "2026-10-16",
             "department": "75",
             "event_title": null,
@@ -72749,12 +72760,12 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "Behemoth & Dimmu Borgir",
+            "headliner": "Behemoth",
             "identity_aliases": [
               "Behemoth x Dimmu Borgir"
             ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/f/n/w/894a751f-6139-46de-a2ca-4672bd203655.jpg",
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwwkJCkYzSfhGuSVTThKjy1q6T3a9JapdL530VEaLdmJl5qPKAxCtfOjlGOIOf7XWuhxaKj0A4SUNWKAQNCDCjAQOVvCsbDy366alcpCMe8wrTPOA1uMSV-o13jnhT79KjGbVb8V_rTvPPZOXlrAqZ4cfdA8zzvuMgc0AUqCoI4BLPSc_yPd7skHm4pu0/s72-w640-h426-c-rw/Behemoth20260621HellfestClisson_72.JPG",
             "openers": [
               "Dark Funeral"
             ],
@@ -74075,7 +74086,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Kelsey Cook"
+            ],
             "date": "2026-10-29",
             "department": "75",
             "event_title": null,
@@ -74093,14 +74106,11 @@
             "genre_public": "Comedy / Spoken Word",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "Chad Daniels & Kelsey Cook",
+            "headliner": "Chad Daniels",
             "identity_aliases": null,
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/q/n/n/265bdde0-9328-4f98-a8f0-f0b7de68a78d.jpg",
-            "openers": [
-              "Chad Daniels",
-              "Kelsey Cook"
-            ],
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -75171,7 +75181,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "French Montana"
+            ],
             "date": "2026-11-08",
             "department": "75",
             "event_title": null,
@@ -75189,16 +75201,13 @@
             "genre_public": "Hip-hop / Rap",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "D-BLOCK EUROPE & French Montana",
+            "headliner": "D-Block Europe",
             "identity_aliases": [
               "D-BLOCK EUROPE & FRENCH MONTANA"
             ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/w/h/g/3c06bd98-59ce-4bfb-9c8c-1e5052531ed9.png",
-            "openers": [
-              "D-Block Europe",
-              "French Montana"
-            ],
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -76857,7 +76866,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Joey Mata"
+            ],
             "date": "2026-11-25",
             "department": "75",
             "event_title": null,
@@ -76879,9 +76890,7 @@
             "identity_aliases": null,
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/r/y/k/c1a632ad-c955-4cfc-b921-c59ddd09f8ce.png",
-            "openers": [
-              "Joey Mata"
-            ],
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -80731,7 +80740,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "In Flames"
+            ],
             "date": "2027-04-07",
             "department": "75",
             "event_title": "In Flames x Trivium",
@@ -80751,25 +80762,20 @@
             "genres_public": null,
             "headliner": "Trivium",
             "identity_aliases": [
-              "Trivium + In Flames",
               "In Flames x Trivium"
             ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJywJ4ufKbWe9toOKqtrRQqNBj7ZfRNXpoCyY1bL4GCB3lOymSXMKKBzhI15s6kliM-jjWx9nm0P_34MV_HiBgqkKqBR9qVEkZJ4SZB-KrGF02gvkeFUQ3k3h2UKKpf1ui3C5BdMEcgC8GztDTfhMpnJth1A7CMIAlWGo0jFBTIo5Do1MA-2GoZCyD/s72-w400-h266-c-rw/Trivium01_02_2023OLYMPIAParis_17.jpg",
             "openers": [
-              "In Flames",
               "Paleface Swiss",
               "VOLA"
             ],
             "performance_marker": null,
-            "performers": [
-              "Trivium",
-              "In Flames"
-            ],
+            "performers": null,
             "promoters": [
               "Live Nation"
             ],
-            "raw_title": "Trivium + In Flames",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -83100,7 +83106,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -83734,7 +83740,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -84132,108 +84138,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "b0ab90e9fbf7873c",
           "state_identity": "b0ab90e9fbf7873cb9cc1103e5d795b34b75deba2a5bbd02dc029250c7064f68"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-14",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
-            "genres_public": null,
-            "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": [
-              "David Numwami"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Radical Production"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/ghinzu/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "db57e10ea0083b8b",
-          "state_identity": "db57e10ea0083b8b8df4cc6baacd09913b70470f44b6e0bc8a5afe9ce737a5da"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-15",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
-            "genres_public": null,
-            "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": [
-              "David Numwami"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Radical Production"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/ghinzu/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "52b8b127aff9404b",
-          "state_identity": "52b8b127aff9404b10105dcae290832d4cd27d26c7c7a7fccc0b6f4bf32ed98b"
         },
         {
           "event": {
@@ -88529,7 +88433,7 @@
           "state_identity": "8f5604aeb409a9add816a319fa6e0ee8926de8523238a3e5739845b904833f87"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -91431,7 +91335,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -92263,7 +92167,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -92716,7 +92620,7 @@
           "state_identity": "3ed001823377b256e7dfb27c6225c65211b65af5387e3e99d2e0a711292b5e3e"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -94582,7 +94486,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -96802,7 +96706,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -97672,7 +97576,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -99361,7 +99265,7 @@
           "state_identity": "d4c2db7324b7373b21de42fd42fe9a194ddd613170ab16aa92ceaced335de365"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -99476,26 +99380,17 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
             "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": [
-              "David Numwami"
-            ],
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -99527,26 +99422,17 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
             "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": [
-              "David Numwami"
-            ],
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -100449,12 +100335,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -103975,7 +103861,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -104409,7 +104295,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -113151,7 +113037,7 @@
           "state_identity": "aabd4efab034afaa75a07a6ca06919cf6a426178eb4541c83c1b25bf44e6fb52"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -116869,7 +116755,7 @@
           "state_identity": "03fd80e1e6c126fbd95e4a8931d8ada8854fc73e207a0c1dbc5b8ba9ff95371e"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -117059,7 +116945,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -118468,7 +118354,7 @@
           "state_identity": "475448b492c7886cf42661e1cfc473cbad981a23ac482992e59d7fbe9b2ed3ca"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -121981,7 +121867,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -123685,7 +123571,7 @@
           "state_identity": "fe4e5cf42711a2a47fb3c0fee31e8303ceef1cc54ba38ddbce524480f02f7d0b"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -123696,7 +123582,11 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "SILENT PLANET",
+              "VARIALS",
+              "ORTHODOX"
+            ],
             "date": "2026-10-06",
             "department": "75",
             "event_title": null,
@@ -123705,23 +123595,29 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre_method": "bill_consensus",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
+            "headliner": "THE AMITY AFFLICTION",
             "identity_aliases": [
+              "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
               "THE AMITY AFFLICTION"
             ],
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-amity-affliction-elysee-montmartre.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "THE AMITY AFFLICTION",
+              "SILENT PLANET",
+              "VARIALS",
+              "ORTHODOX"
+            ],
             "promoters": [
               "Base Productions"
             ],
-            "raw_title": null,
+            "raw_title": "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -124576,7 +124472,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "French Montana"
+            ],
             "date": "2026-11-08",
             "department": "75",
             "event_title": null,
@@ -124594,16 +124492,13 @@
             "genre_public": "Hip-hop / Rap",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "D-BLOCK EUROPE & French Montana",
+            "headliner": "D-Block Europe",
             "identity_aliases": [
               "D-BLOCK EUROPE & FRENCH MONTANA"
             ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/w/h/g/3c06bd98-59ce-4bfb-9c8c-1e5052531ed9.png",
-            "openers": [
-              "D-Block Europe",
-              "French Montana"
-            ],
+            "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
@@ -126789,10 +126684,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-04T08:58:18Z",
+      "last_successful_at": "2026-10-04T10:21:21Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-10-04T08:58:18Z",
+  "updated_at": "2026-10-04T10:21:21Z",
   "version": 1
 }
