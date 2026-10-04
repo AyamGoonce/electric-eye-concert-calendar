@@ -231,12 +231,27 @@
           relatedSlug = resolveRelationshipSlug(relatedName);
           if (!relatedSlug) return;
 
+          relatedEntity = entitiesBySlug[relatedSlug];
+
+          if (
+            relatedEntity &&
+            (
+              entity.isArtist ||
+              identity.searchResultVisible
+            )
+          ) {
+            [relatedEntity.name]
+              .concat(relatedEntity.aliases || [])
+              .forEach(function (relatedTerm) {
+                addSearchTerm(slug, relatedTerm);
+              });
+          }
+
           addSearchEdge(slug, relatedSlug);
 
           if (!hasEditorialCoverage(content, slug)) return;
 
           addSearchEdge(relatedSlug, slug);
-          relatedEntity = entitiesBySlug[relatedSlug];
 
           if (
             relatedEntity &&
@@ -361,10 +376,17 @@
     return sortItems(
       Object.keys(content.artists)
         .filter(function (slug) {
-          return hasEditorialCoverage(content, slug);
+          var artist = content.artists[slug] || {};
+          var identity = artist.identity || {};
+
+          return (
+            hasEditorialCoverage(content, slug) ||
+            identity.searchResultVisible === true
+          );
         })
         .map(function (slug) {
           var artist = content.artists[slug] || {};
+          var identity = artist.identity || {};
           var name = artist.n || slug;
           var exactTerms = [name]
             .concat(artist.al || []);

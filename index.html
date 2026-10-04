@@ -10,8 +10,13 @@
 </head>
 <body>
   <main class="ee-archive">
+    <nav class="ee-archive-nav" aria-label="Archive navigation">
+      <button class="ee-back-link" type="button" onclick="if (history.length > 1) { history.back(); } else { location.href='https://www.electriceyerock.com/p/welcome-to-electric-eye.html'; }">
+        ← Back
+      </button>
+    </nav>
     <header class="ee-archive-hero">
-      <p class="ee-archive-kicker">Electric Eye</p>
+      <a class="ee-archive-kicker ee-home-link" href="https://www.electriceyerock.com/p/welcome-to-electric-eye.html">Electric Eye</a>
       <h1>Index</h1>
       <p class="ee-archive-intro">
         Explore Electric Eye coverage by artist, venue or genre.

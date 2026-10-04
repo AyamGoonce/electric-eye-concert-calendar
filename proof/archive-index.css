@@ -473,3 +473,30 @@ body {
 .ee-index-article-results .ee-index-items {
   width: 100%;
 }
+
+.ee-archive-nav {
+  margin: 0 0 18px;
+}
+.ee-back-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--ee-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ee-back-link:hover,
+.ee-back-link:focus {
+  color: var(--ee-accent);
+}
+.ee-home-link {
+  display: inline-block;
+  text-decoration: none;
+}
+.ee-home-link:hover,
+.ee-home-link:focus {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

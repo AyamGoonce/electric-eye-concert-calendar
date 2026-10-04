@@ -482,25 +482,9 @@
     var main = el("div", "ee-v-card-summary-main");
     main.append(el("h3", "", record.name));
 
-    var locationParts = [];
-
-    if (record.address) {
-      locationParts.push(record.address);
-    } else if (record.city) {
-      locationParts.push(record.city);
-    }
-
-    if (
-      record.address &&
-      record.city &&
-      normalize(record.address).indexOf(normalize(record.city)) === -1
-    ) {
-      locationParts.push(record.city);
-    }
-
-    if (locationParts.length) {
+    if (record.city) {
       main.append(
-        el("p", "ee-v-location", locationParts.join(" · "))
+        el("p", "ee-v-location", record.city)
       );
     }
 

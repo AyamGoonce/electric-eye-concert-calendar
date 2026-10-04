@@ -132,7 +132,7 @@
 
     mount.dataset.ready = "1";
 
-    text(mount, "p", "Electric Eye", "ee-page-kicker");
+    var home=document.createElement("a");home.href="https://www.electriceyerock.com/p/welcome-to-electric-eye.html";home.textContent="Electric Eye";home.className="ee-page-kicker ee-home-link";mount.append(home);
     text(mount, "h1", artistName, "ee-artist-title");
 
     var articleIds = artist ? (artist.ar || []) : [];
