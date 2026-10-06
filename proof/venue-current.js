@@ -1,6 +1,6 @@
 (function(){
   "use strict";
-  var manifest = Object.freeze({"data":"venue-data.77bb22081fc099ed.js","sha256":"77bb22081fc099edbd5790649f7701f4b8d0e07396f2cdae73733c6c48fe2fb6","count":169});
+  var manifest = Object.freeze({"data":"venue-data.e070f345441ce5cb.js","sha256":"e070f345441ce5cbe23fc651652bdb82640e422c78070238f6b2357060cc1af8","count":169});
   var currentSource = document.currentScript && document.currentScript.src;
   window.ElectricEyeVenueManifest = manifest;
   document.dispatchEvent(new CustomEvent("ee:venue-manifest-ready", {detail:manifest}));
