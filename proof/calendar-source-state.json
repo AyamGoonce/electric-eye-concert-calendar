@@ -2318,6 +2318,50 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Felix Antonio",
+            "identity_aliases": [
+              "FELIX ANTONIO"
+            ],
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-2.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/felix-antonio/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "17e939ee78c67f93",
+          "state_identity": "17e939ee78c67f93ab1bbbc0d265832ad8e5e21c71eac23c9c041aae75a22f1e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "concert",
             "city": "Paris",
             "co_headliners": null,
@@ -3695,7 +3739,7 @@
               "EMF"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8475.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8475.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -4294,10 +4338,10 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/821/dead_poet_society",
             "venue": "Bataclan"
           },
@@ -4489,7 +4533,7 @@
             "co_headliners": null,
             "date": "2027-02-09",
             "department": "75",
-            "event_title": null,
+            "event_title": "SAM QUEALY – WORLD TOUR",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -4504,9 +4548,10 @@
             "genre_public": "Pop",
             "genre_source": "L’Olympia Bruno Coquatrix",
             "genres_public": null,
-            "headliner": "SAM QUEALY – OLYMPIA",
+            "headliner": "Sam Quealy",
             "identity_aliases": [
-              "Sam Quealy"
+              "SAM QUEALY",
+              "SAM QUEALY – WORLD TOUR"
             ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/08/sam-quealy-concert-olympia-paris-Digitick-352x440.jpg.webp",
@@ -4516,7 +4561,7 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "SAM QUEALY – WORLD TOUR",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -4758,6 +4803,50 @@
           "first_seen": "2026-09-14T11:57:51Z",
           "public_id": "ef99604d849688c6",
           "state_identity": "ef99604d849688c6d7732b72d8e33fc41a21d2671c5b3e6ccfcb6e405ed4b267"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Slow Fiction",
+            "identity_aliases": [
+              "SLOW FICTION"
+            ],
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/1080x1080.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/slow-fiction/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "e13ca4361184176e",
+          "state_identity": "e13ca4361184176e758a55360b38c27ca521b1510522f2dcd2a8b92a3890da0a"
         },
         {
           "event": {
@@ -6534,7 +6623,7 @@
           "state_identity": "76e2adf16033a1c2f1aa457471a56c3e445bb8e2f98ce5d7d130149f65a373bf"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11806,7 +11895,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -12645,7 +12734,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -13065,10 +13154,10 @@
             "promoters": null,
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.alhambra-paris.com/tabber-lo4599.html",
             "venue": "L'Alhambra"
           },
@@ -13110,10 +13199,10 @@
             "promoters": null,
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.alhambra-paris.com/yaelokre-lo4545.html",
             "venue": "L'Alhambra"
           },
@@ -14617,10 +14706,10 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/821/dead_poet_society",
             "venue": "Bataclan"
           },
@@ -15192,7 +15281,7 @@
           "state_identity": "b7b4cd0520244d46e87cff0fb90104346e4c2b0a5e275a2fc81ad06ca2ae07dd"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -17618,7 +17707,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -18027,7 +18116,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -19229,10 +19318,6 @@
               {
                 "raw": "black metal",
                 "source": "Backstage By The Mill"
-              },
-              {
-                "raw": "Dark / Metal",
-                "source": "Garmonbozia"
               }
             ],
             "genre_method": "source_mapping",
@@ -19240,17 +19325,13 @@
             "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "DARVAZA + MERRIMACK + HELLERUIN + DETRESSE",
-            "identity_aliases": [
-              "DARVAZA + MERRIMACK + HELLERUIN + DETRESSE"
-            ],
+            "identity_aliases": null,
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/03/Darvaza_2026_02_square_bw.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": [
-              "Garmonbozia"
-            ],
+            "promoters": null,
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -20012,7 +20093,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -21551,7 +21632,7 @@
           "state_identity": "46d7e2f294622f22c9f91c1c5c02fea92c16aa1a5887ed57eb3f40cb9ddd935f"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -21625,11 +21706,10 @@
             "genres_public": null,
             "headliner": "THE AMITY AFFLICTION",
             "identity_aliases": [
-              "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
-              "THE AMITY AFFLICTION"
+              "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX"
             ],
-            "image_source": "Élysée Montmartre",
-            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-amity-affliction-elysee-montmartre.jpg",
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -21647,7 +21727,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/the-amity-affliction/",
+            "ticket_url": "https://www.base-productions.com/concerts/the-amity-affliction-silent-planet-varials-orthodox/",
             "venue": "Élysée Montmartre"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -23337,7 +23417,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -24546,7 +24626,7 @@
             "promoters": null,
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": null,
             "tags": null,
             "ticket_status": null,
@@ -24732,6 +24812,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-01-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "World / Latin",
+            "genre_source": "Official/current event description and reviewed exact artist catalog",
+            "genres_public": null,
+            "headliner": "LES LEGENDES ARABES",
+            "identity_aliases": null,
+            "image_source": "Bataclan",
+            "image_url": "https://bataclan-medias.s3.eu-west-3.amazonaws.com/list_photo_1080x1080_a1a08f1e05.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/819/les_legendes_arabes",
+            "venue": "Bataclan"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "6f830ae27b406641",
+          "state_identity": "6f830ae27b4066419810968eeb7b5f7a934c14d9428d8207fb2f8075e27a9711"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-01-19",
             "department": "75",
             "event_title": null,
@@ -24901,10 +25021,10 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/821/dead_poet_society",
             "venue": "Bataclan"
           },
@@ -25339,7 +25459,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -26882,7 +27002,7 @@
           "state_identity": "8a1970796dc413904c9dfc8e573d04564d33fb36e57327b931e0b4e4a1406c0e"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -28726,7 +28846,7 @@
           "state_identity": "343d244f93312a38714dca90536c5127a1d72debd4e0585031c1e752af12c6c5"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -30071,7 +30191,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -30609,7 +30729,7 @@
           "state_identity": "b83f7032e595a01ef4687947c42d1e20afdbc8b7bf0117c869b75b632a270f49"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -31152,7 +31272,7 @@
           "state_identity": "f7b0549113a9fb9718777e3b34e61d479a1f359148ffdd9cdc42400b5a69071e"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -31161,13 +31281,9 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "concert",
+            "category": null,
             "city": "Paris",
-            "co_headliners": [
-              "VILDHJARTA",
-              "ENTERPRISE EARTH",
-              "KARMANJAKAH"
-            ],
+            "co_headliners": null,
             "date": "2026-10-06",
             "department": "75",
             "event_title": null,
@@ -31185,32 +31301,25 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "HUMANITY’S LAST BREATH",
+            "headliner": "HUMANITY'S LAST BREATH",
             "identity_aliases": [
-              "HUMANITY’S LAST BREATH",
-              "HUMANITY’S LAST BREATH + VILDHJARTA + ENTERPRISE EARTH + KARMANJAKAH",
-              "HUMANITY'S LAST BREATH"
+              "HUMANITY’S LAST BREATH"
             ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqnbkVwwvI9GEo9yDb6a5hptUt0yigGtj6kBimCD8zXqERw1chlWZBKc1Y4D1JpMlVecZY57TY69O9gRvp31p-N1wyOyYOMl9zQxZlXp41_laZQlPo6T_psRn5n2v5rlHJxGovGkBSl4YQibPtCL7m2-Uy8xFEbRG_mquYdQg4OtToxFjsoxvhl01IBDY/s72-w640-h426-c-rw/HLB.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "HUMANITY’S LAST BREATH",
-              "VILDHJARTA",
-              "ENTERPRISE EARTH",
-              "KARMANJAKAH"
-            ],
+            "performers": null,
             "promoters": [
               "Garmonbozia"
             ],
-            "raw_title": "HUMANITY’S LAST BREATH + VILDHJARTA + ENTERPRISE EARTH + KARMANJAKAH",
+            "raw_title": null,
             "series_name": null,
-            "sold_out": true,
-            "start_time": "18:00",
+            "sold_out": false,
+            "start_time": null,
             "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/humanitys-last-breath/",
+            "ticket_status": null,
+            "ticket_url": "https://web.digitick.com/humanity-s-last-breath-concert-dark-metal-css5-garmonbozia-pg51-ei1124829.html",
             "venue": "La Machine du Moulin Rouge"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -32506,15 +32615,11 @@
             "date": "2026-12-10",
             "department": "75",
             "event_title": null,
-            "event_type": "black metal",
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "black metal",
+            "genre": "Dark / Metal",
             "genre_evidence": [
-              {
-                "raw": "black metal",
-                "source": "Backstage By The Mill"
-              },
               {
                 "raw": "Dark / Metal",
                 "source": "Garmonbozia"
@@ -32522,14 +32627,12 @@
             ],
             "genre_method": "source_mapping",
             "genre_public": "Metal / Hard Rock",
-            "genre_source": "Backstage By The Mill",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "DARVAZA + MERRIMACK + HELLERUIN + DETRESSE",
-            "identity_aliases": [
-              "DARVAZA + MERRIMACK + HELLERUIN + DETRESSE"
-            ],
-            "image_source": "Backstage By The Mill",
-            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/03/Darvaza_2026_02_square_bw.jpg",
+            "headliner": "DARVAZA + MERRIMACK + WRANG + DETRESSE",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -32541,13 +32644,13 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.backstage-btm.com/agenda/darvaza-merrimack-helleruin-detresse/",
+            "ticket_status": null,
+            "ticket_url": "https://web.digitick.com/darvaza-merrimack-wrang-detresse-concert-dark-metal-css5-garmonbozia-pg51-ei1104883.html",
             "venue": "Backstage By The Mill"
           },
-          "first_seen": "2026-09-20T17:25:09Z",
-          "public_id": "ab182fd569bf5082",
-          "state_identity": "ab182fd569bf5082e6e32952367f458d1397b8d2b319687c4b38f367d0208593"
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "585548b4c5140e7e",
+          "state_identity": "585548b4c5140e7eeaf803976403dc54d4327402d4ac8e46c72d08612c674f6c"
         },
         {
           "event": {
@@ -32685,6 +32788,7 @@
             "headliner": "ARKONA",
             "identity_aliases": [
               "ARKONA + SETH + THE GREAT OLD ONES",
+              "ARKONA",
               "ARKONA + SETH + THE GREAT OLD ONES + GUEST"
             ],
             "image_source": "La Machine du Moulin Rouge",
@@ -32695,7 +32799,9 @@
             ],
             "performance_marker": null,
             "performers": [
-              "ARKONA"
+              "ARKONA",
+              "SETH",
+              "THE GREAT OLD ONES"
             ],
             "promoters": [
               "Garmonbozia"
@@ -33732,7 +33838,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -34258,7 +34364,7 @@
           "state_identity": "1de5e8c96d04fb458f7cba1219f0df454d57dd852008bb04cc9a2fc85c48567c"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -34560,7 +34666,7 @@
               "LowDown Brass Band"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8471.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8471.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37144,6 +37250,53 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
+            "genre": "Humour",
+            "genre_evidence": [
+              {
+                "raw": "Humour",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Comedy / Spoken Word",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "BIANCA DEL RIO",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": null,
+            "venue": "Folies Bergère"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "d1e0bb8c79949888",
+          "state_identity": "d1e0bb8c79949888d45f4bc05af3b0270b3b7439d604a44c672b8ea792b5048b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
             "genre": "Blues",
             "genre_evidence": [
               {
@@ -37446,7 +37599,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -38400,7 +38553,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -39611,6 +39764,50 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Felix Antonio",
+            "identity_aliases": [
+              "FELIX ANTONIO"
+            ],
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-2.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/felix-antonio/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "17e939ee78c67f93",
+          "state_identity": "17e939ee78c67f93ab1bbbc0d265832ad8e5e21c71eac23c9c041aae75a22f1e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-11",
             "department": "75",
             "event_title": null,
@@ -39623,10 +39820,10 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "FELIX ANTONIO",
+            "headliner": "Felix Antonio",
             "identity_aliases": null,
-            "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-2.png",
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -40754,6 +40951,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-12-08",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "SOROSORO",
+            "identity_aliases": null,
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/1800x1800.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/sorosoro/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "c0b9feba76f9dcbe",
+          "state_identity": "c0b9feba76f9dcbe9afafc75e8bd4fec4a310843b1fb8bb35b4a67f6c9684ec7"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-12-09",
             "department": "75",
             "event_title": null,
@@ -41198,6 +41435,50 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Slow Fiction",
+            "identity_aliases": [
+              "SLOW FICTION"
+            ],
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/1080x1080.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/slow-fiction/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "e13ca4361184176e",
+          "state_identity": "e13ca4361184176e758a55360b38c27ca521b1510522f2dcd2a8b92a3890da0a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-20",
             "department": "75",
             "event_title": null,
@@ -41432,7 +41713,7 @@
           "state_identity": "4ee686992a1295d77ab6f159f655cbaf946c3fa8b3fb7ac3e8313388678d892a"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -41703,15 +41984,15 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": "19:40",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/ptite-soeur-2/",
             "venue": "La Cigale"
           },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "6bcc176274c07144",
-          "state_identity": "6bcc176274c07144515522a7edbe5031993c22f45d90b90467454e576562588c"
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "28dfd2031734cc97",
+          "state_identity": "28dfd2031734cc97016785014ede8133c2fb005314d4fe66e8aa395f300cb3b6"
         },
         {
           "event": {
@@ -46535,7 +46816,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -46861,6 +47142,144 @@
           "first_seen": "2026-10-06T10:04:19Z",
           "public_id": "bdfca7492fb1e20d",
           "state_identity": "bdfca7492fb1e20df56a5c377547e31b579e6d11f101f7364e6a4e5c99a2378b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Only Real",
+              "Tramhaus"
+            ],
+            "date": "2026-10-30",
+            "department": "75",
+            "event_title": "Arte Concert Festival : Soir 1",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "KNEECAP",
+            "identity_aliases": [
+              "Arte Concert Festival : Soir 1"
+            ],
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/pjsudbs51r9i0pjkp44hnw98l1c6?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "KNEECAP",
+              "Only Real",
+              "Tramhaus"
+            ],
+            "promoters": null,
+            "raw_title": "Arte Concert Festival : Soir 1",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.gaite-lyrique.net/agenda/2026/arte-concert-festival-2026/arte-concert-festival-soir-1/",
+            "venue": "La Gaîté Lyrique"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "ba495457987e696a",
+          "state_identity": "ba495457987e696ad3b995f121013c0869f0c68f366a7956f59356dfd97b7f55"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-10-31",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "ARTE Concert Festival 2026",
+            "identity_aliases": null,
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/xd84j6q94rlpq31613iaklnx3x8k?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.gaite-lyrique.net/agenda/2026/arte-concert-festival-2026/",
+            "venue": "La Gaîté Lyrique"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "2f0a8e550b0923db",
+          "state_identity": "2f0a8e550b0923dbf4f619da521be52c0a3cb95990c70cd58e749febff06a41d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Uzi Freya",
+              "Shy Girl"
+            ],
+            "date": "2026-10-31",
+            "department": "75",
+            "event_title": "Arte Concert Festival : Soir 2",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Pop",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "UCHE YARA",
+            "identity_aliases": [
+              "Arte Concert Festival : Soir 2"
+            ],
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/7a9rxwazj65impa3urhte3htiqsc?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "UCHE YARA",
+              "Uzi Freya",
+              "Shy Girl"
+            ],
+            "promoters": null,
+            "raw_title": "Arte Concert Festival : Soir 2",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.gaite-lyrique.net/agenda/2026/arte-concert-festival-2026/arte-concert-festival-soir-2/",
+            "venue": "La Gaîté Lyrique"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "2c5d2e3669785485",
+          "state_identity": "2c5d2e3669785485aa3357b211d43d8a914dd22880621770f16f321305b757d4"
         },
         {
           "event": {
@@ -47908,71 +48327,11 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "concert",
-            "city": "Paris",
-            "co_headliners": [
-              "VILDHJARTA",
-              "ENTERPRISE EARTH",
-              "KARMANJAKAH"
-            ],
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Dark / Metal",
-            "genre_evidence": [
-              {
-                "raw": "Dark / Metal",
-                "source": "Garmonbozia"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Garmonbozia",
-            "genres_public": null,
-            "headliner": "HUMANITY’S LAST BREATH",
-            "identity_aliases": [
-              "HUMANITY’S LAST BREATH",
-              "HUMANITY’S LAST BREATH + VILDHJARTA + ENTERPRISE EARTH + KARMANJAKAH",
-              "HUMANITY'S LAST BREATH"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqnbkVwwvI9GEo9yDb6a5hptUt0yigGtj6kBimCD8zXqERw1chlWZBKc1Y4D1JpMlVecZY57TY69O9gRvp31p-N1wyOyYOMl9zQxZlXp41_laZQlPo6T_psRn5n2v5rlHJxGovGkBSl4YQibPtCL7m2-Uy8xFEbRG_mquYdQg4OtToxFjsoxvhl01IBDY/s72-w640-h426-c-rw/HLB.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "HUMANITY’S LAST BREATH",
-              "VILDHJARTA",
-              "ENTERPRISE EARTH",
-              "KARMANJAKAH"
-            ],
-            "promoters": [
-              "Garmonbozia"
-            ],
-            "raw_title": "HUMANITY’S LAST BREATH + VILDHJARTA + ENTERPRISE EARTH + KARMANJAKAH",
-            "series_name": null,
-            "sold_out": true,
-            "start_time": "18:00",
-            "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/humanitys-last-breath/",
-            "venue": "La Machine du Moulin Rouge"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "eff94b42a6cc73ea",
-          "state_identity": "c1d468fe536f227e7f8c03057cc6edfa170ce89dce3967df446a42a2862d9c03"
-        },
         {
           "event": {
             "announced_at": null,
@@ -49061,6 +49420,7 @@
             "headliner": "ARKONA",
             "identity_aliases": [
               "ARKONA + SETH + THE GREAT OLD ONES",
+              "ARKONA",
               "ARKONA + SETH + THE GREAT OLD ONES + GUEST"
             ],
             "image_source": "La Machine du Moulin Rouge",
@@ -49071,7 +49431,9 @@
             ],
             "performance_marker": null,
             "performers": [
-              "ARKONA"
+              "ARKONA",
+              "SETH",
+              "THE GREAT OLD ONES"
             ],
             "promoters": [
               "Garmonbozia"
@@ -49503,7 +49865,7 @@
           "state_identity": "7e4d8819bda9a74e5b806b0895e3f2087de6a72249cdaa2291e5d5e410fa226d"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -55218,7 +55580,7 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -57168,6 +57530,54 @@
             "category": null,
             "city": "Boulogne-Billancourt",
             "co_headliners": null,
+            "date": "2027-05-19",
+            "department": "92",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz, Musiques du monde",
+            "genre_evidence": [
+              {
+                "raw": "Jazz, Musiques du monde",
+                "source": "La Seine Musicale"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "La Seine Musicale",
+            "genres_public": [
+              "Jazz / Blues",
+              "World / Latin"
+            ],
+            "headliner": "Richard Bona",
+            "identity_aliases": null,
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhAcTxp84dvQ2YKua2r55wkuYmJpw_ls7iSlbJ5NpltW5sWnRftw_F84IiqSOgWO-ZaMHtjr8V2ZhZhC8Hy5rMVwxbwe9jhlcFQBspNTqlzTNm0JTd8kKLey5aXwgW2VtYFDj3dBSPj654j2B9bgXv-aFWLhl36A_-CLc-JIAHMn_oeKHWn_1NZkyS1/s72-w640-h360-c-rw/Richard%20Bon-Alfredo%20Rodriguez%20Trio19_11_2022Salle%20PleyelParis08_39.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.laseinemusicale.com/fr/product/7572/auditorium_patrick_devedjian/richard_bona_2027_tbc",
+            "venue": "La Seine Musicale"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "1410f2be39875395",
+          "state_identity": "1410f2be3987539522756c2c513a571f4c05de6116a04a12ab9407fb730614d8"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Boulogne-Billancourt",
+            "co_headliners": null,
             "date": "2027-05-26",
             "department": "92",
             "event_title": null,
@@ -57210,7 +57620,7 @@
           "state_identity": "ae549f194d130021ec0b52ebc05b967634529adb39d0ae18e58bf2f6bda87fcb"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -57944,7 +58354,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -58018,10 +58428,10 @@
             "promoters": null,
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.talticket.com/evenement/james-blake-grand-rex-paris?idwl=38",
             "venue": "Le Grand Rex"
           },
@@ -58058,10 +58468,10 @@
             "promoters": null,
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.talticket.com/evenement/james-blake-grand-rex-paris?idwl=38",
             "venue": "Le Grand Rex"
           },
@@ -58821,7 +59231,7 @@
           "state_identity": "ae46e191645929b4dbde3ad7ee86223b611389e7ba8e97b307fa9a598f0690e0"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -60055,6 +60465,53 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-25",
+            "department": "75",
+            "event_title": "Laure Sanchez release party",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "##indiesoul #frenchpop #chanson",
+            "genre_evidence": [
+              {
+                "raw": "##indiesoul #frenchpop #chanson",
+                "source": "Le Hasard Ludique"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Le Hasard Ludique",
+            "genres_public": null,
+            "headliner": "Laure Sanchez",
+            "identity_aliases": [
+              "Laure Sanchez release party"
+            ],
+            "image_source": "Le Hasard Ludique",
+            "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/16591/header_site_hl.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": "Laure Sanchez release party",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.lehasardludique.paris/concert/2026-10-06/laure-sanchez-release-party#reservation",
+            "venue": "Le Hasard Ludique"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "c8772bc4680f6101",
+          "state_identity": "c8772bc4680f61014e3d449da8442b49e7fb787a82bf9ba243ab6ce90a0e8046"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-26",
             "department": "75",
             "event_title": null,
@@ -60515,7 +60972,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -62811,7 +63268,7 @@
           "state_identity": "00e91b103c6de46f932a665a3a2313e7d43a076a40538d282f626014c8bbf3b9"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -65917,7 +66374,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -66432,7 +66889,7 @@
             "promoters": null,
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "10:15",
             "tags": null,
             "ticket_status": null,
@@ -67461,7 +67918,7 @@
           "state_identity": "6c990891c810e4debdffb4e3b3e12bb0a79fbfa7b6e592ecb1ae6e6c330ed114"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -70435,6 +70892,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-23",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Electronic",
+            "genre_evidence": [
+              {
+                "raw": "Electronic",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Electronic",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "John Summit",
+            "identity_aliases": [
+              "John Summit"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/t/u/k/7d0aca95-0e28-423c-8756-30258fdc579e.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://le-zenith.com/shows/John%20Summit-22700",
+            "venue": "Le Zénith Paris – La Villette"
+          },
+          "first_seen": "2026-10-06T11:56:09Z",
+          "public_id": "36ebcc52c86ec6cc",
+          "state_identity": "36ebcc52c86ec6ccca67f447c9cd69070130aecb1158cd3b59cf4d5af2a6a185"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-24",
             "department": "75",
             "event_title": null,
@@ -71537,59 +72043,6 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2027-05-13",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Electronic, Pop, RnB / Soul",
-            "genre_evidence": [
-              {
-                "raw": "Electronic, Pop, RnB / Soul",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Electronic",
-            "genre_source": "Live Nation",
-            "genres_public": [
-              "Electronic",
-              "Pop",
-              "R&B / Soul / Funk"
-            ],
-            "headliner": "Craig David",
-            "identity_aliases": [
-              "Craig David"
-            ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/l/m/q/9b5e40c1-c9fe-4a2b-8fb1-740b3238260d.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Craig%20David-22499",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-09-28T12:08:30Z",
-          "public_id": "9f15605e23b1bb04",
-          "state_identity": "9f15605e23b1bb04ff07d481009cf567a2af241f53305f57ecd1abb6c5ed7297"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
             "date": "2027-05-14",
             "department": "75",
             "event_title": null,
@@ -72252,7 +72705,7 @@
             "headliner": "Alex Vizorek",
             "identity_aliases": null,
             "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-cover/6aa960a3be6e5301575814.jpg",
+            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6ac4fe5607c6a696898981.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72391,7 +72844,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -73305,7 +73758,7 @@
           "state_identity": "d2952fd95f700071908484d264c842b004610d145b165e7c65f5be6c5f9dd243"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -73350,7 +73803,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/aew-grand-slam-france-billet/idlist/6443/idtier/4827637",
+            "ticket_url": "https://www.livenation.fr/event/aew-grand-slam-france-paris-tickets-edp1692723",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-08-25T13:22:04Z",
@@ -81011,7 +81464,9 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "John Summit",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "John Summit"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/t/u/k/7d0aca95-0e28-423c-8756-30258fdc579e.jpg",
             "openers": null,
@@ -81026,7 +81481,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.livenation.fr/event/john-summit-paris-tickets-edp1699555",
+            "ticket_url": "https://le-zenith.com/shows/John%20Summit-22700",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-10-06T11:56:09Z",
@@ -82791,9 +83246,7 @@
               "R&B / Soul / Funk"
             ],
             "headliner": "Craig David",
-            "identity_aliases": [
-              "Craig David"
-            ],
+            "identity_aliases": null,
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/l/m/q/9b5e40c1-c9fe-4a2b-8fb1-740b3238260d.png",
             "openers": null,
@@ -82808,7 +83261,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Craig%20David-22499",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/craig-david-billet/idlist/6561/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-28T12:08:30Z",
@@ -84599,7 +85052,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -85233,7 +85686,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -85536,108 +85989,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "b0ab90e9fbf7873c",
           "state_identity": "b0ab90e9fbf7873cb9cc1103e5d795b34b75deba2a5bbd02dc029250c7064f68"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-14",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
-            "genres_public": null,
-            "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": [
-              "David Numwami"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Radical Production"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/ghinzu/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "db57e10ea0083b8b",
-          "state_identity": "db57e10ea0083b8b8df4cc6baacd09913b70470f44b6e0bc8a5afe9ce737a5da"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-15",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
-            "genres_public": null,
-            "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": [
-              "David Numwami"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Radical Production"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/ghinzu/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "52b8b127aff9404b",
-          "state_identity": "52b8b127aff9404b10105dcae290832d4cd27d26c7c7a7fccc0b6f4bf32ed98b"
         },
         {
           "event": {
@@ -88067,7 +88418,7 @@
             "co_headliners": null,
             "date": "2027-02-09",
             "department": "75",
-            "event_title": null,
+            "event_title": "SAM QUEALY – WORLD TOUR",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -88082,9 +88433,10 @@
             "genre_public": "Pop",
             "genre_source": "L’Olympia Bruno Coquatrix",
             "genres_public": null,
-            "headliner": "SAM QUEALY – OLYMPIA",
+            "headliner": "Sam Quealy",
             "identity_aliases": [
-              "Sam Quealy"
+              "SAM QUEALY",
+              "SAM QUEALY – WORLD TOUR"
             ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/08/sam-quealy-concert-olympia-paris-Digitick-352x440.jpg.webp",
@@ -88094,7 +88446,7 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "SAM QUEALY – WORLD TOUR",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -90026,7 +90378,7 @@
           "state_identity": "8f5604aeb409a9add816a319fa6e0ee8926de8523238a3e5739845b904833f87"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -90093,7 +90445,7 @@
             "headliner": "Michel Alibo",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8469.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8469.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90137,7 +90489,7 @@
               "Guinga & Yamandu Costa"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8435.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8435.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -90180,7 +90532,7 @@
             "headliner": "Tribute To Pupy Y Los Que Son Son",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8436.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8436.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90220,7 +90572,7 @@
             "headliner": "FELA DAY, Hommage à Fela Kuti",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8481.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8481.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90267,7 +90619,7 @@
               "LowDown Brass Band"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8471.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8471.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90309,7 +90661,7 @@
             "headliner": "Lakecia Benjamin",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8462.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8462.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90349,7 +90701,7 @@
             "headliner": "Lyre Le Temps",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8506.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8506.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90389,7 +90741,7 @@
             "headliner": "Azymuth",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8428.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8428.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90429,7 +90781,7 @@
             "headliner": "Jeru the Damaja",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8492.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8492.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90469,7 +90821,7 @@
             "headliner": "GoldFord",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8491.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8491.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90509,7 +90861,7 @@
             "headliner": "Benziê",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8508.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8508.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90549,7 +90901,7 @@
             "headliner": "Keyon Harrold",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8484.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8484.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90589,7 +90941,7 @@
             "headliner": "Leïla Duclos",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8455.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8455.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90629,7 +90981,7 @@
             "headliner": "Gaidaa",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8490.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8490.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90669,7 +91021,7 @@
             "headliner": "Mica Millar",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/7633.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/7633.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90709,7 +91061,7 @@
             "headliner": "Dub Pistols",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8400.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8400.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90749,7 +91101,7 @@
             "headliner": "Galliano",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8480.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8480.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90789,7 +91141,7 @@
             "headliner": "Elijah Fox",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8463.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8463.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90833,7 +91185,7 @@
               "The Messthetics & James Brandon Lewis"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8465.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8465.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -90876,7 +91228,7 @@
             "headliner": "Mark Guiliana",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8502.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8502.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90916,7 +91268,7 @@
             "headliner": "Shrizz N Maze",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8424.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8424.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -90996,7 +91348,7 @@
             "headliner": "Nils Landgren Funk Unit",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8479.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8479.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91036,7 +91388,7 @@
             "headliner": "Kurt Rosenwinkel",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8468.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8468.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91076,7 +91428,7 @@
             "headliner": "Isaiah Collier",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8483.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8483.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91116,7 +91468,7 @@
             "headliner": "Tyreek McDole",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8473.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8473.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91156,7 +91508,7 @@
             "headliner": "Sankofa Unit",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8516.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8516.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91196,7 +91548,7 @@
             "headliner": "Light Of The World",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8503.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8503.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91226,7 +91578,7 @@
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
-            "festival_name": "Festival Jazz'N'Klezmer",
+            "festival_name": null,
             "genre": null,
             "genre_evidence": [],
             "genre_method": null,
@@ -91236,7 +91588,7 @@
             "headliner": "Oi Va Voi",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8512.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8512.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91276,7 +91628,7 @@
             "headliner": "Steve Coleman & The Five Elements",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8466.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8466.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91316,7 +91668,7 @@
             "headliner": "Maryam Saleh",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8501.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8501.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91360,7 +91712,7 @@
               "BenArt Ensemble ft. Baptiste Herbin"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8509.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8509.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91400,7 +91752,7 @@
             "headliner": "Myles Sanko",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8439.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8439.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91440,7 +91792,7 @@
             "headliner": "Leee John of Imagination",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8442.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8442.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91480,7 +91832,7 @@
             "headliner": "Rymden",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8474.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8474.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91520,7 +91872,7 @@
             "headliner": "Gregory Hutchinson",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8505.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8505.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91560,7 +91912,7 @@
             "headliner": "Louis Matute",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8413.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8413.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91600,7 +91952,7 @@
             "headliner": "Joyce Moreno",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8446.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8446.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91640,7 +91992,7 @@
             "headliner": "Jason Miles",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8447.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8447.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91680,7 +92032,7 @@
             "headliner": "Chico Chico",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8431.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8431.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91720,7 +92072,7 @@
             "headliner": "Nubiyan Twist",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/7988.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/7988.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91764,7 +92116,7 @@
               "Little Odetta + The Zac Schulze Gang"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8425.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8425.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -91807,7 +92159,7 @@
             "headliner": "Ginton",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8470.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8470.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91847,7 +92199,7 @@
             "headliner": "MT Jones",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8440.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8440.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91887,7 +92239,7 @@
             "headliner": "Armandinho Macedo & Maestro Spok",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8517.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8517.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91927,7 +92279,7 @@
             "headliner": "Eek A Mouse",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8507.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8507.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -91967,7 +92319,7 @@
             "headliner": "Chicago Blues Festival",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8514.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8514.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92007,7 +92359,7 @@
             "headliner": "Kat Eaton",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8401.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8401.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92047,7 +92399,7 @@
             "headliner": "Jontavious Willis",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8478.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8478.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92089,7 +92441,7 @@
               "EMF"
             ],
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8475.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8475.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92131,7 +92483,7 @@
             "headliner": "Chlorine Free",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8519.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8519.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92171,7 +92523,7 @@
             "headliner": "Cigarillos En El Shtruddle",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8513.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8513.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92211,7 +92563,7 @@
             "headliner": "Antoine Karacostas Quartet",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8489.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8489.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92251,7 +92603,7 @@
             "headliner": "Vowski",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8510.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8510.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92291,7 +92643,7 @@
             "headliner": "David Walters",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8451.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8451.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92331,7 +92683,7 @@
             "headliner": "Bilal",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8426.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8426.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92371,7 +92723,7 @@
             "headliner": "The Puppini Sisters",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8414.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8414.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92411,7 +92763,7 @@
             "headliner": "MUSIC IS OUR SANCTUARY : TRIBUTE TO MIZELL BROTHERS by ALDORANDE & Friends",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8518.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8518.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92438,7 +92790,7 @@
             "co_headliners": null,
             "date": "2026-12-26",
             "department": "75",
-            "event_title": "No Mess ! The James Brown Tribute",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -92448,19 +92800,15 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Driss Farrio & the Soulbrothaz",
-            "identity_aliases": [
-              "No Mess ! The James Brown Tribute"
-            ],
+            "headliner": "No Mess ! The James Brown Tribute",
+            "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8520.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8520.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Driss Farrio & the Soulbrothaz"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "No Mess ! The James Brown Tribute",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -92495,7 +92843,7 @@
             "headliner": "Jean-Jacques Milteau",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8448.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8448.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92535,7 +92883,7 @@
             "headliner": "Shalosh",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8500.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8500.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92575,7 +92923,7 @@
             "headliner": "Jerron Paxton",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8488.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8488.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92615,7 +92963,7 @@
             "headliner": "Nils Petter Molvaer",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8495.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8495.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92655,7 +93003,7 @@
             "headliner": "La La Brooks (of the Crystals)",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8464.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8464.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92695,7 +93043,7 @@
             "headliner": "Francesca Tandoi",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8499.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8499.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92735,7 +93083,7 @@
             "headliner": "K.Maro",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8511.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8511.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92775,7 +93123,7 @@
             "headliner": "Pokey Lafarge",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8476.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8476.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92815,7 +93163,7 @@
             "headliner": "Aaron Parks",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8494.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8494.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92855,7 +93203,7 @@
             "headliner": "Elba Ramalho",
             "identity_aliases": null,
             "image_source": "New Morning",
-            "image_url": "https://www.newmorning.com/photos/evenements/formations/300/8482.jpg",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8482.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -92874,7 +93222,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -93430,10 +93778,10 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Afro",
+            "genre": "Afrobeats, Amapiano",
             "genre_evidence": [
               {
-                "raw": "Afro",
+                "raw": "Afrobeats, Amapiano",
                 "source": "Nouveau Casino"
               }
             ],
@@ -93441,7 +93789,7 @@
             "genre_public": null,
             "genre_source": "Nouveau Casino",
             "genres_public": null,
-            "headliner": "Sifoor Live",
+            "headliner": "SIFOOR",
             "identity_aliases": null,
             "image_source": "Nouveau Casino",
             "image_url": "https://nouveaucasino.fr/media/pages/events/sifoor-live/732b128529-1790688461/capture-decran-2026-09-29-a-15.23.42-1800x.png",
@@ -93449,7 +93797,7 @@
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": "Sifoor Live",
+            "raw_title": "SIFOOR",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:00",
@@ -93796,7 +94144,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -94195,7 +94543,7 @@
           "state_identity": "3ed001823377b256e7dfb27c6225c65211b65af5387e3e99d2e0a711292b5e3e"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -96019,7 +96367,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -96028,13 +96376,9 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "concert",
+            "category": null,
             "city": "Paris",
-            "co_headliners": [
-              "VILDHJARTA",
-              "ENTERPRISE EARTH",
-              "KARMANJAKAH"
-            ],
+            "co_headliners": null,
             "date": "2026-10-06",
             "department": "75",
             "event_title": null,
@@ -96052,32 +96396,25 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "HUMANITY’S LAST BREATH",
+            "headliner": "HUMANITY'S LAST BREATH",
             "identity_aliases": [
-              "HUMANITY’S LAST BREATH",
-              "HUMANITY’S LAST BREATH + VILDHJARTA + ENTERPRISE EARTH + KARMANJAKAH",
-              "HUMANITY'S LAST BREATH"
+              "HUMANITY’S LAST BREATH"
             ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqnbkVwwvI9GEo9yDb6a5hptUt0yigGtj6kBimCD8zXqERw1chlWZBKc1Y4D1JpMlVecZY57TY69O9gRvp31p-N1wyOyYOMl9zQxZlXp41_laZQlPo6T_psRn5n2v5rlHJxGovGkBSl4YQibPtCL7m2-Uy8xFEbRG_mquYdQg4OtToxFjsoxvhl01IBDY/s72-w640-h426-c-rw/HLB.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "HUMANITY’S LAST BREATH",
-              "VILDHJARTA",
-              "ENTERPRISE EARTH",
-              "KARMANJAKAH"
-            ],
+            "performers": null,
             "promoters": [
               "Garmonbozia"
             ],
-            "raw_title": "HUMANITY’S LAST BREATH + VILDHJARTA + ENTERPRISE EARTH + KARMANJAKAH",
+            "raw_title": null,
             "series_name": null,
-            "sold_out": true,
-            "start_time": "18:00",
+            "sold_out": false,
+            "start_time": null,
             "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/humanitys-last-breath/",
+            "ticket_status": null,
+            "ticket_url": "https://web.digitick.com/humanity-s-last-breath-concert-dark-metal-css5-garmonbozia-pg51-ei1124829.html",
             "venue": "La Machine du Moulin Rouge"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -97366,6 +97703,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Tobiahs",
+            "identity_aliases": null,
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/10/insta-4-5-avec-photo-1-800x800.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://petitbain.org/evenement/tobiahs/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "75f98eb530973a4e",
+          "state_identity": "75f98eb530973a4e146c5d7017b3fb7b46c371c3f518456772199e5d81794648"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-30",
             "department": "75",
             "event_title": null,
@@ -98199,7 +98576,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -99069,7 +99446,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -100758,7 +101135,7 @@
           "state_identity": "d4c2db7324b7373b21de42fd42fe9a194ddd613170ab16aa92ceaced335de365"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -100873,25 +101250,18 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
             "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": [
-              "David Numwami"
+              "We Hate You Please Die"
             ],
             "performance_marker": null,
             "performers": null,
@@ -100924,25 +101294,18 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
             "headliner": "Ghinzu",
-            "identity_aliases": [
-              "Ghinzu"
-            ],
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2023/11/ghinzu-affiche-concert-olympia-paris-352x440.jpg.webp",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": [
-              "David Numwami"
+              "We Hate You Please Die"
             ],
             "performance_marker": null,
             "performers": null,
@@ -101846,12 +102209,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -105422,7 +105785,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -105856,7 +106219,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -109436,15 +109799,15 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": "20:30",
             "tags": null,
             "ticket_status": "tickets",
             "ticket_url": "https://billetterie.sunset-sunside.com/event/827883-django-meets-armstrong-romain-vuillemin-noe-codjia-quartet",
             "venue": "Sunset/Sunside — Sunside"
           },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "6cc354849c554597",
-          "state_identity": "6cc354849c5545971563c7ef6899086c597d47e9a6a2513ea62af6fa8258231f"
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "04b101bec9567109",
+          "state_identity": "04b101bec95671095b9aa9acb23b6d6573108311aaed7e48104936b0bc1b5d3c"
         },
         {
           "event": {
@@ -113764,6 +114127,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-12-09",
+            "department": "75",
+            "event_title": "Guillaume Barraud Quartet",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "event_context",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "venue",
+            "genres_public": null,
+            "headliner": "Guillaume Barraud Quartet",
+            "identity_aliases": null,
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/10/6/6ac50a58a259a-guillaume-barraud-4tet-tales-of-the-bamboo-reed.jpeg_thumbs/340-340.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/857544-guillaume-barraud-quartet",
+            "venue": "Sunset/Sunside — Sunset"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "53236b15d4625d1e",
+          "state_identity": "53236b15d4625d1e0a05598707426e4cdbb5316bd796876e65b0e24624f37b1b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-12-11",
             "department": "75",
             "event_title": "Kasia Pietrzko Trio",
@@ -114465,7 +114868,7 @@
           "state_identity": "aabd4efab034afaa75a07a6ca06919cf6a426178eb4541c83c1b25bf44e6fb52"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -115765,7 +116168,7 @@
             "city": "Paris",
             "co_headliners": [
               "mry",
-              "LAWN CHAIR",
+              "Lawn Chair",
               "Date Camp",
               "Al Cologne",
               "Tracey Nelson",
@@ -115792,7 +116195,7 @@
             "performers": [
               "Alien Boy",
               "mry",
-              "LAWN CHAIR",
+              "Lawn Chair",
               "Date Camp",
               "Al Cologne",
               "Tracey Nelson",
@@ -115822,7 +116225,7 @@
             "city": "Paris",
             "co_headliners": [
               "Burglar",
-              "Flowers for the Dead",
+              "Flowers For The Dead",
               "The Sewing Club",
               "Why Horses?",
               "Sunset Images",
@@ -115849,7 +116252,7 @@
             "performers": [
               "Rejoincein4K",
               "Burglar",
-              "Flowers for the Dead",
+              "Flowers For The Dead",
               "The Sewing Club",
               "Why Horses?",
               "Sunset Images",
@@ -116172,6 +116575,7 @@
             "category": null,
             "city": "Paris",
             "co_headliners": [
+              "Veys",
               "Bleu Death"
             ],
             "date": "2026-11-03",
@@ -116188,7 +116592,7 @@
             "genres_public": null,
             "headliner": "Scott Lavene",
             "identity_aliases": [
-              "Scott Lavene + Bleu Death"
+              "Scott Lavene + Veys + Bleu Death"
             ],
             "image_source": null,
             "image_url": null,
@@ -116196,18 +116600,19 @@
             "performance_marker": null,
             "performers": [
               "Scott Lavene",
+              "Veys",
               "Bleu Death"
             ],
             "promoters": [
               "Supersonic"
             ],
-            "raw_title": "Scott Lavene + Bleu Death",
+            "raw_title": "Scott Lavene + Veys + Bleu Death",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://supersonic-club.fr/evenement/scott-lavene-bleu-death-3rd-nov-supersonic-paris-tickets/",
+            "ticket_url": "https://supersonic-club.fr/evenement/scott-lavene-veys-bleu-death-3rd-nov-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -117878,6 +118283,48 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-03-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "A.R.T",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "A.R.T",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://supersonic-club.fr/evenement/art-12th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "2eaae8700d45e0c8",
+          "state_identity": "2eaae8700d45e0c8ca79a0d41e590e583d200a679442b5ccc7fbcdc4596847ed"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-03-18",
             "department": "75",
             "event_title": null,
@@ -118090,7 +118537,7 @@
           "state_identity": "03fd80e1e6c126fbd95e4a8931d8ada8854fc73e207a0c1dbc5b8ba9ff95371e"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -118280,7 +118727,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -119689,7 +120136,7 @@
           "state_identity": "475448b492c7886cf42661e1cfc473cbad981a23ac482992e59d7fbe9b2ed3ca"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -123109,7 +123556,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -124813,65 +125260,11 @@
           "state_identity": "fe4e5cf42711a2a47fb3c0fee31e8303ceef1cc54ba38ddbce524480f02f7d0b"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "SILENT PLANET",
-              "VARIALS",
-              "ORTHODOX"
-            ],
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "THE AMITY AFFLICTION",
-            "identity_aliases": [
-              "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
-              "THE AMITY AFFLICTION"
-            ],
-            "image_source": "Élysée Montmartre",
-            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-amity-affliction-elysee-montmartre.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "THE AMITY AFFLICTION",
-              "SILENT PLANET",
-              "VARIALS",
-              "ORTHODOX"
-            ],
-            "promoters": [
-              "Base Productions"
-            ],
-            "raw_title": "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/the-amity-affliction/",
-            "venue": "Élysée Montmartre"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "321ce2e35fd01137",
-          "state_identity": "321ce2e35fd011377b24610fa9dbe215f7f592db4387dfe5d1a8af5cab399b3b"
-        },
         {
           "event": {
             "announced_at": null,
@@ -128019,10 +128412,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-06T11:56:09Z",
+      "last_successful_at": "2026-10-06T17:16:10Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-10-06T11:56:09Z",
+  "updated_at": "2026-10-06T17:16:10Z",
   "version": 1
 }
