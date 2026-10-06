@@ -7,99 +7,6 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "Chrissy Chlapecka",
-            "identity_aliases": [
-              "CHRISSY CHLAPECKA"
-            ],
-            "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Chrissy_2_1-scaled.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://laboule-noire.fr/chrissy-chlapecka/",
-            "venue": "La Boule Noire"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "d3cb376c64fa8af8",
-          "state_identity": "d3cb376c64fa8af86c1364c4adda512a2858fe71b7142e942e1922a065273408"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Musique alternative / Indé",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Musique alternative / Indé",
-            "genre_evidence": [
-              {
-                "raw": "Musique alternative / Indé",
-                "source": "Alhambra"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Alhambra",
-            "genres_public": null,
-            "headliner": "Father of Peace",
-            "identity_aliases": [
-              "Father of Peace"
-            ],
-            "image_source": "Alhambra",
-            "image_url": "https://www.alhambra-paris.com/files/125/v_2607201257230.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": true,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.aegpresents.fr/event/father-of-peace/",
-            "venue": "La Maroquinerie"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "8f51c236b9cd75e9",
-          "state_identity": "8f51c236b9cd75e9a8bf2d92beffade11af59ba10e5955fb78dfb70777087b75"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
             "city": "Nanterre",
             "co_headliners": null,
             "date": "2026-10-07",
@@ -6623,7 +6530,7 @@
           "state_identity": "76e2adf16033a1c2f1aa457471a56c3e445bb8e2f98ce5d7d130149f65a373bf"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11895,7 +11802,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -12734,60 +12641,11 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Musique alternative / Indé",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Musique alternative / Indé",
-            "genre_evidence": [
-              {
-                "raw": "Musique alternative / Indé",
-                "source": "Alhambra"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Alhambra",
-            "genres_public": null,
-            "headliner": "Father of Peace",
-            "identity_aliases": [
-              "Father of Peace"
-            ],
-            "image_source": "Alhambra",
-            "image_url": "https://www.alhambra-paris.com/files/125/v_2607201257230.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": true,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.aegpresents.fr/event/father-of-peace/",
-            "venue": "La Maroquinerie"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "8f51c236b9cd75e9",
-          "state_identity": "8f51c236b9cd75e9a8bf2d92beffade11af59ba10e5955fb78dfb70777087b75"
-        },
         {
           "event": {
             "announced_at": null,
@@ -15281,7 +15139,7 @@
           "state_identity": "b7b4cd0520244d46e87cff0fb90104346e4c2b0a5e275a2fc81ad06ca2ae07dd"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -17021,11 +16879,9 @@
             "genre_source": "Wikidata genre statements (P136)",
             "genres_public": null,
             "headliner": "Waxx",
-            "identity_aliases": [
-              "Waxx"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a3beac978c4a096611769.jpg",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -17038,7 +16894,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Waxx-22354",
+            "ticket_url": "https://tix.to/waxxSI/vogqo",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -17707,7 +17563,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -18116,7 +17972,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -20093,53 +19949,11 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "JAZZ",
-            "identity_aliases": null,
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/2026-09/JAZZ%206%20oct%2026%20-%20insta%20carre.png?h=57024e64&itok=2j-_XAW0",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "JAZZ"
-            ],
-            "promoters": null,
-            "raw_title": "JAZZ",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://balchavaux.fr/agenda/jazz",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-10-05T14:53:22Z",
-          "public_id": "00e69d888b1da299",
-          "state_identity": "00e69d888b1da29951ea53dc5816214c2cc294594a8fc4925b1f2c75543af2e7"
-        },
         {
           "event": {
             "announced_at": null,
@@ -21632,157 +21446,11 @@
           "state_identity": "46d7e2f294622f22c9f91c1c5c02fea92c16aa1a5887ed57eb3f40cb9ddd935f"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "I Prevail",
-            "identity_aliases": [
-              "I Prevail"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/68dff597aec9f258609993.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Base Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/I%20Prevail-21424",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "6dd8faeccbb9d589",
-          "state_identity": "6dd8faeccbb9d5893d693c1cea9ce4b6ca7f19911d0ae37715b2c903578fffba"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "SILENT PLANET",
-              "VARIALS",
-              "ORTHODOX"
-            ],
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "THE AMITY AFFLICTION",
-            "identity_aliases": [
-              "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX"
-            ],
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "THE AMITY AFFLICTION",
-              "SILENT PLANET",
-              "VARIALS",
-              "ORTHODOX"
-            ],
-            "promoters": [
-              "Base Productions"
-            ],
-            "raw_title": "THE AMITY AFFLICTION + SILENT PLANET + VARIALS + ORTHODOX",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.base-productions.com/concerts/the-amity-affliction-silent-planet-varials-orthodox/",
-            "venue": "Élysée Montmartre"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "321ce2e35fd01137",
-          "state_identity": "321ce2e35fd011377b24610fa9dbe215f7f592db4387dfe5d1a8af5cab399b3b"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "#reggae #soul #ska",
-            "genre_evidence": [
-              {
-                "raw": "#reggae #soul #ska",
-                "source": "Le Hasard Ludique"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Reggae / Dub / Ska",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "The Slackers",
-            "identity_aliases": [
-              "The Slackers"
-            ],
-            "image_source": "Le Hasard Ludique",
-            "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/15040/header_site_hl.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Base Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.lehasardludique.paris/concert/2026-06-03/the-slackers#reservation",
-            "venue": "Le Hasard Ludique"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "3fc04e645b033d77",
-          "state_identity": "3fc04e645b033d77b6b823c52d4e422b94dd2c25c5b32bde815be42b32fccf60"
-        },
         {
           "event": {
             "announced_at": null,
@@ -23417,7 +23085,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -25459,7 +25127,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -27002,56 +26670,11 @@
           "state_identity": "8a1970796dc413904c9dfc8e573d04564d33fb36e57327b931e0b4e4a1406c0e"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Chanson",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Chanson",
-            "genre_evidence": [
-              {
-                "raw": "Chanson",
-                "source": "Café de la Danse"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Chanson Française / Variétés",
-            "genre_source": "Café de la Danse",
-            "genres_public": null,
-            "headliner": "OLIVIER DAGUERRE – CORPS VOYOU",
-            "identity_aliases": null,
-            "image_source": "Café de la Danse",
-            "image_url": "https://www.cafedeladanse.com/wp-content/uploads/2026/06/DAGUERRE-cFlora-Courier-Les-FacA©ties-de-Lulusam-952x579.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.seetickets.fr/olivier-daguerre-corps-voyou-concert-cafe-de-la-danse-paris-06-octobre-2026-css5-lecafedeladanse-pg101-ri11795565.html%20",
-            "venue": "Café de la Danse"
-          },
-          "first_seen": "2026-09-02T22:59:38Z",
-          "public_id": "78b6eb67b8aceea2",
-          "state_identity": "78b6eb67b8aceea236bb349b295af93021c06a20fa9280fe0141a922bfc481d1"
-        },
         {
           "event": {
             "announced_at": null,
@@ -28846,7 +28469,7 @@
           "state_identity": "343d244f93312a38714dca90536c5127a1d72debd4e0585031c1e752af12c6c5"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -30191,7 +29814,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -30203,29 +29826,22 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-10-08",
+            "date": "2026-10-09",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Salle Pleyel"
-              }
-            ],
+            "genre": null,
+            "genre_evidence": [],
             "genre_method": "artist_mapping",
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "MusicBrainz artist tags via exact Wikidata identity",
             "genres_public": null,
             "headliner": "Ed O'Brien",
-            "identity_aliases": [
-              "ED O'BRIEN"
-            ],
-            "image_source": "Salle Pleyel",
-            "image_url": "https://www.sallepleyel.com/app/uploads/2026/03/EDOBRIEN-SITE-333x483.jpg",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -30241,9 +29857,9 @@
             "ticket_url": "https://www.sallepleyel.com/evenement/ed-obrien/",
             "venue": "Salle Pleyel"
           },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "7d5fc0dd96189a27",
-          "state_identity": "7d5fc0dd96189a274961b17319ce7b41f66310f6dcaccaf4f241ed98f4d30431"
+          "first_seen": "2026-08-27T22:24:58Z",
+          "public_id": "5e29bdc6db727f55",
+          "state_identity": "5e29bdc6db727f55fb776dee733f729f2fc8a83758fefe90fba8747bca14896b"
         },
         {
           "event": {
@@ -30620,50 +30236,6 @@
             "genre_source": "Wikidata genre statements (P136)",
             "genres_public": null,
             "headliner": "gaetan roussel",
-            "identity_aliases": [
-              "Gaëtan Roussel"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/696e19a1dea79557935869.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Corida"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Ga%C3%ABtan%20Roussel-22191",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-26T09:01:58Z",
-          "public_id": "b415dfcff3a51ced",
-          "state_identity": "b415dfcff3a51cede72a77b0959fd069cdd95eba2a4b49add6c1e83be4bd50ac"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-04-18",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "Ben Harper",
             "identity_aliases": null,
             "image_source": null,
             "image_url": null,
@@ -30679,12 +30251,12 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://philharmoniedeparis.fr/fr/activite/concert/29228-steel-dreams",
-            "venue": "Philharmonie de Paris"
+            "ticket_url": "https://gaetanroussel.francebillet.com/event/gaetan-roussel-tournee-zenith-paris-la-villette-21223989/",
+            "venue": "Le Zénith Paris – La Villette"
           },
-          "first_seen": "2026-08-26T13:45:57Z",
-          "public_id": "d20714ce3568551f",
-          "state_identity": "d20714ce3568551f42ff3d106750764962cc23ca55eeaaa91c6d3ce9ada8e476"
+          "first_seen": "2026-08-26T09:01:58Z",
+          "public_id": "b415dfcff3a51ced",
+          "state_identity": "b415dfcff3a51cede72a77b0959fd069cdd95eba2a4b49add6c1e83be4bd50ac"
         },
         {
           "event": {
@@ -30727,9 +30299,51 @@
           "first_seen": "2026-08-26T13:45:57Z",
           "public_id": "b83f7032e595a01e",
           "state_identity": "b83f7032e595a01ef4687947c42d1e20afdbc8b7bf0117c869b75b632a270f49"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Ben Harper",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Corida"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://philharmoniedeparis.fr/fr/activite/concert/29228-steel-dreams",
+            "venue": "Philharmonie de Paris"
+          },
+          "first_seen": "2026-08-27T22:24:58Z",
+          "public_id": "401f1787f5908830",
+          "state_identity": "401f1787f5908830a62e9bd4024c348b78f2bcccc6f262a7c10229a974cb10ad"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -31272,58 +30886,11 @@
           "state_identity": "f7b0549113a9fb9718777e3b34e61d479a1f359148ffdd9cdc42400b5a69071e"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Dark / Metal",
-            "genre_evidence": [
-              {
-                "raw": "Dark / Metal",
-                "source": "Garmonbozia"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Garmonbozia",
-            "genres_public": null,
-            "headliner": "HUMANITY'S LAST BREATH",
-            "identity_aliases": null,
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiqnbkVwwvI9GEo9yDb6a5hptUt0yigGtj6kBimCD8zXqERw1chlWZBKc1Y4D1JpMlVecZY57TY69O9gRvp31p-N1wyOyYOMl9zQxZlXp41_laZQlPo6T_psRn5n2v5rlHJxGovGkBSl4YQibPtCL7m2-Uy8xFEbRG_mquYdQg4OtToxFjsoxvhl01IBDY/s72-w640-h426-c-rw/HLB.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Garmonbozia"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://web.digitick.com/humanity-s-last-breath-concert-dark-metal-css5-garmonbozia-pg51-ei1124829.html",
-            "venue": "La Machine du Moulin Rouge"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "eff94b42a6cc73ea",
-          "state_identity": "c1d468fe536f227e7f8c03057cc6edfa170ce89dce3967df446a42a2862d9c03"
-        },
         {
           "event": {
             "announced_at": null,
@@ -33836,7 +33403,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -34362,67 +33929,11 @@
           "state_identity": "1de5e8c96d04fb458f7cba1219f0df454d57dd852008bb04cc9a2fc85c48567c"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Gérard Drouot Productions"
-              },
-              {
-                "raw": "Metal / Hard Rock, Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Gérard Drouot Productions",
-            "genres_public": [
-              "Metal / Hard Rock",
-              "Rock / Indie / Punk"
-            ],
-            "headliner": "Europe",
-            "identity_aliases": [
-              "Europe"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjHi0dAtx4lS4dV0x-Axk_0dLfWIavSsvhgBZDIXUl9BimxegDOGOtubPfxDFC-ItIQTYd_eVbPztve6rOubRN44XWRlQZN7F68C2i5LRbDrDoGogptxg6PxT5rosTFhdxHXRytSNTWVplZb2_X4jdPmbzBVARspiug4iDKbPP6-eEwDfnUeo-zlhFiLAM/s72-w640-h426-c-rw/Europe%2003151023Salle%20PleyelParis%2008_1.JPG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/europe/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "c9661b68e1afeaac",
-          "state_identity": "c9661b68e1afeaac66eeed204e5c91890f8318b3b6c0209b556cd65b14ae8280"
-        },
         {
           "event": {
             "announced_at": null,
@@ -34708,12 +34219,10 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Wikidata genre statements (P136)",
             "genres_public": null,
-            "headliner": "Amon Amarth",
-            "identity_aliases": [
-              "Amon Amarth"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/69e8c2ba5d38c964902585.jpg",
+            "headliner": "AMON AMARTH",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34726,7 +34235,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Amon%20Amarth-21573",
+            "ticket_url": "https://www.gdp.fr/fr/catalogue/amon-amarth-paris-2026-10-13",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -35964,10 +35473,8 @@
             "genre_public": "Pop",
             "genre_source": "Gérard Drouot Productions",
             "genres_public": null,
-            "headliner": "Bryan Adams",
-            "identity_aliases": [
-              "Bryan Adams"
-            ],
+            "headliner": "BRYAN ADAMS",
+            "identity_aliases": null,
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjb-90v812fT2iflc7pD6cP-0CToIc46-lBQNEfnzvRrTAM_gA5xCsPjtXw1J9s8tTzlJApUWc-lZPetcnd-GdGZmiEBPRd4GnFZSV56MrxcQvcLMQ7FckRNPs0SNMCTAgtbYjfdDnv2bSDXvY3MCsF-yAcqOeoKoHyqPkB_p7LRKhTNqCrCg1pRgZsw8g/s72-w640-h426-c-rw/Bryan%20Adams011024Le%20Ze%CC%81nithParis%2019_70.JPG",
             "openers": null,
@@ -35982,7 +35489,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Bryan%20Adams-22138",
+            "ticket_url": "https://www.gdp.fr/fr/catalogue/bryan-adams-paris-2026-12-03",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -36121,11 +35628,10 @@
             "genres_public": null,
             "headliner": "The Dire Straits Experience",
             "identity_aliases": [
-              "The Dire Straits Experience",
               "ELECTRIC PYRAMID"
             ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/694132bd47f6c215683556.jpg",
+            "image_source": null,
+            "image_url": null,
             "openers": [
               "Electric Pyramid"
             ],
@@ -36140,7 +35646,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/The%20Dire%20Straits%20Experience-21793",
+            "ticket_url": "https://www.gdp.fr/fr/catalogue/the-dire-straits-experience-paris-2026-12-07",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -36519,7 +36025,9 @@
             "genre_source": "Gérard Drouot Productions",
             "genres_public": null,
             "headliner": "The Last Internationale",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "THE LAST INTERNATIONALE"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8h-IGhSJA4sxckwH-dddD848q33J-Xhdfqr4k3I6Dgwshrnq9vkYv3aZe6d4NRro78zoKgyNUR9P4ZR11lDMjGHkOx38oDp5xGZKLKNz_p-gmqFOBNS5tqn5Icz5IAAvsAT6G7mtwfMNIp52zhpXyKTs5QwEr3QDkOuRq6o_7rGFdVYr0XAKPTBmh_6g/s72-w640-h426-c-rw/The%20Last%20Internationale20260827Adidas%20ArenaParis_5.JPG",
             "openers": null,
@@ -36531,10 +36039,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.gdp.fr/fr/catalogue/the-last-internationale-paris-2027-02-05",
+            "ticket_url": "https://www.letrianon.fr/fr/programmation/the-last-internationale/",
             "venue": "Le Trianon"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -37107,10 +36615,8 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Gérard Drouot Productions",
             "genres_public": null,
-            "headliner": "Megadeth",
-            "identity_aliases": [
-              "Megadeth"
-            ],
+            "headliner": "MEGADETH",
+            "identity_aliases": null,
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicCXa3gHkzvrcCjadOB4KgsgbBlfBSBuiHrXVkRHvYJIEmhJnCUd77ILgO54W_ZG09WC0cBsjDq2zAdGN6JusYNLwWTU0UizkXO4HQw5Fr-avB4HuxVyLiSJJEzYFSEQxaSvPKge320xfXYnlTwd_NK5mmc0A-xlMVULIL1CbCVPb-egF5pkmTiNg4ZfI/s72-w640-h426-c-rw/Megadeth20260621HellfestClisson_18.JPG",
             "openers": null,
@@ -37125,7 +36631,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Megadeth-22053",
+            "ticket_url": "https://www.gdp.fr/fr/catalogue/megadeth-paris-2027-03-21",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -37465,10 +36971,8 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "Gérard Drouot Productions",
             "genres_public": null,
-            "headliner": "Lynyrd Skynyrd",
-            "identity_aliases": [
-              "Lynyrd Skynyrd"
-            ],
+            "headliner": "LYNYRD SKYNYRD",
+            "identity_aliases": null,
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWb8ssS0Ri1hoMT3W-f_Uxr_FTroKvs2nOdvyg-kr8EvZASyxKqlhjyQz2-Uob0Tigp0H5oWjHFk-UvjLY3mOPHWMfIK16EubvkqXLREa3eO0JHglDIROjCmQQ2sLWeQpkqKVTYk0KM9tN3px0Ni63ZQbFOeIys4DGI_eaIi6bKPFII1Cabi7fH5J7248/s72-w640-h426-c-rw/Lynyrd%20Skynyrd20250711Le%20Ze%CC%81nithParis%2019_3.jpg",
             "openers": null,
@@ -37483,7 +36987,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Lynyrd%20Skynyrd-22551",
+            "ticket_url": "https://www.gdp.fr/fr/catalogue/lynyrd-skynyrd-paris-2027-06-29",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-14T11:57:51Z",
@@ -37597,51 +37101,11 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "LÜCY",
-            "identity_aliases": null,
-            "image_source": "La Bellevilloise",
-            "image_url": "https://www.labellevilloise.com/uploads/2026/10/lucy-tour-poster-city-3-paris-1152x1440.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.labellevilloise.com/evenement/lucy/",
-            "venue": "La Bellevilloise"
-          },
-          "first_seen": "2026-10-05T09:47:53Z",
-          "public_id": "9357131ee36cb7a4",
-          "state_identity": "9357131ee36cb7a4b755587a02c238a35ea8bf69b343e4a11d002ea7d205a6ac"
-        },
         {
           "event": {
             "announced_at": null,
@@ -38551,55 +38015,11 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "Chrissy Chlapecka",
-            "identity_aliases": [
-              "CHRISSY CHLAPECKA"
-            ],
-            "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Chrissy_2_1-scaled.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://laboule-noire.fr/chrissy-chlapecka/",
-            "venue": "La Boule Noire"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "d3cb376c64fa8af8",
-          "state_identity": "d3cb376c64fa8af86c1364c4adda512a2858fe71b7142e942e1922a065273408"
-        },
         {
           "event": {
             "announced_at": null,
@@ -41711,7 +41131,7 @@
           "state_identity": "4ee686992a1295d77ab6f159f655cbaf946c3fa8b3fb7ac3e8313388678d892a"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -46814,7 +46234,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -48325,7 +47745,7 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -49863,7 +49283,7 @@
           "state_identity": "7e4d8819bda9a74e5b806b0895e3f2087de6a72249cdaa2291e5d5e410fa226d"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -55578,59 +54998,11 @@
           "state_identity": "b92ee0652ab9434b53dab704f1d4314f2f0bc9f071f2abaf5337a6f68b162672"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Boulogne-Billancourt",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "92",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz, Musiques du monde",
-            "genre_evidence": [
-              {
-                "raw": "Jazz, Musiques du monde",
-                "source": "La Seine Musicale"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "La Seine Musicale",
-            "genres_public": [
-              "Jazz / Blues",
-              "World / Latin"
-            ],
-            "headliner": "Blackmany Trio",
-            "identity_aliases": null,
-            "image_source": "La Seine Musicale",
-            "image_url": "https://www.laseinemusicale.com/app/uploads/2026/09/Site-Blackmany-trio-Les-impromptus-du-Mardi.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "12:30",
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "#",
-            "venue": "La Seine Musicale"
-          },
-          "first_seen": "2026-09-15T11:55:27Z",
-          "public_id": "a2777b65e3758c13",
-          "state_identity": "a2777b65e3758c138a7d387b979632d09f2836c5d3ba9a7233429cb2da4514b1"
-        },
         {
           "event": {
             "announced_at": null,
@@ -57618,7 +56990,7 @@
           "state_identity": "ae549f194d130021ec0b52ebc05b967634529adb39d0ae18e58bf2f6bda87fcb"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -58352,7 +57724,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -59229,60 +58601,11 @@
           "state_identity": "ae46e191645929b4dbde3ad7ee86223b611389e7ba8e97b307fa9a598f0690e0"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "#reggae #soul #ska",
-            "genre_evidence": [
-              {
-                "raw": "#reggae #soul #ska",
-                "source": "Le Hasard Ludique"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Reggae / Dub / Ska",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "The Slackers",
-            "identity_aliases": [
-              "The Slackers"
-            ],
-            "image_source": "Le Hasard Ludique",
-            "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/15040/header_site_hl.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Base Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.lehasardludique.paris/concert/2026-06-03/the-slackers#reservation",
-            "venue": "Le Hasard Ludique"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "3fc04e645b033d77",
-          "state_identity": "3fc04e645b033d77b6b823c52d4e422b94dd2c25c5b32bde815be42b32fccf60"
-        },
         {
           "event": {
             "announced_at": null,
@@ -60970,51 +60293,11 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": "https://fb.me/e/6gCSKzcp8",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Mardi Jazz!",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://link.dice.fm/z86a17e57f99?dice_id=z86a17e57f99",
-            "venue": "Le Pop-Up du Label"
-          },
-          "first_seen": "2026-09-08T16:33:21Z",
-          "public_id": "4bfea01fd6642443",
-          "state_identity": "4bfea01fd66424434a54e793b26275e75bb25a114abc4ded443e3f4255357671"
-        },
         {
           "event": {
             "announced_at": null,
@@ -63266,7 +62549,7 @@
           "state_identity": "00e91b103c6de46f932a665a3a2313e7d43a076a40538d282f626014c8bbf3b9"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -66372,53 +65655,11 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": "JAMES BAKER",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "James Baker",
-            "identity_aliases": [
-              "James Baker - Romy Tour"
-            ],
-            "image_source": "Le Trianon",
-            "image_url": "https://www.letrianon.fr/wp-content/uploads/james-baker-trianon.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "James Baker - Romy Tour",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.letrianon.fr/fr/programmation/james-baker/",
-            "venue": "Le Trianon"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "0408c828ab0e73b3",
-          "state_identity": "0408c828ab0e73b3957bd9520c5d88045ec7880f8579cd872d380399ccc9e67a"
-        },
         {
           "event": {
             "announced_at": null,
@@ -67914,13 +67155,7 @@
           "first_seen": "2026-10-05T00:00:03Z",
           "public_id": "6c990891c810e4de",
           "state_identity": "6c990891c810e4debdffb4e3b3e12bb0a79fbfa7b6e592ecb1ae6e6c330ed114"
-        }
-      ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
-      "source_name": "Le Trianon"
-    },
-    "Le Zénith Paris – La Villette": {
-      "events": [
+        },
         {
           "event": {
             "announced_at": null,
@@ -67928,43 +67163,54 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-10-06",
+            "date": "2027-02-05",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "I Prevail",
-            "identity_aliases": [
-              "I Prevail"
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Gérard Drouot Productions"
+              }
             ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/68dff597aec9f258609993.jpg",
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "The Last Internationale",
+            "identity_aliases": [
+              "THE LAST INTERNATIONALE"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8h-IGhSJA4sxckwH-dddD848q33J-Xhdfqr4k3I6Dgwshrnq9vkYv3aZe6d4NRro78zoKgyNUR9P4ZR11lDMjGHkOx38oDp5xGZKLKNz_p-gmqFOBNS5tqn5Icz5IAAvsAT6G7mtwfMNIp52zhpXyKTs5QwEr3QDkOuRq6o_7rGFdVYr0XAKPTBmh_6g/s72-w640-h426-c-rw/The%20Last%20Internationale20260827Adidas%20ArenaParis_5.JPG",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "Base Productions"
+              "Gérard Drouot Productions"
             ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/I%20Prevail-21424",
-            "venue": "Le Zénith Paris – La Villette"
+            "ticket_url": "https://www.letrianon.fr/fr/programmation/the-last-internationale/",
+            "venue": "Le Trianon"
           },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "6dd8faeccbb9d589",
-          "state_identity": "6dd8faeccbb9d5893d693c1cea9ce4b6ca7f19911d0ae37715b2c903578fffba"
-        },
+          "first_seen": "2026-08-23T16:46:51Z",
+          "public_id": "e9b93839624b6af9",
+          "state_identity": "e9b93839624b6af99d3eb49e8427152cbfdfa5b809420e55ce493ba7148dccd1"
+        }
+      ],
+      "last_successful_at": "2026-10-06T22:43:02Z",
+      "source_name": "Le Trianon"
+    },
+    "Le Zénith Paris – La Villette": {
+      "events": [
         {
           "event": {
             "announced_at": null,
@@ -68156,55 +67402,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "e07ccb1ed1821df2",
           "state_identity": "e07ccb1ed1821df2e93d84adf5ad3820ef7c06f0e92868cfbc4d3757ee2f88fa"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-13",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "ML",
-            "genre_evidence": [
-              {
-                "raw": "ML",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "Amon Amarth",
-            "identity_aliases": [
-              "Amon Amarth"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/69e8c2ba5d38c964902585.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Amon%20Amarth-21573",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "80607a8b58ba3fa8",
-          "state_identity": "80607a8b58ba3fa8c35012c918bae5092c8a9fdfff6b8183dd3e9c02d1068160"
         },
         {
           "event": {
@@ -69504,55 +68701,6 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2026-12-03",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Pop",
-            "genre_evidence": [
-              {
-                "raw": "Pop",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "source_explicit",
-            "genre_public": "Pop",
-            "genre_source": "Gérard Drouot Productions",
-            "genres_public": null,
-            "headliner": "Bryan Adams",
-            "identity_aliases": [
-              "Bryan Adams"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjb-90v812fT2iflc7pD6cP-0CToIc46-lBQNEfnzvRrTAM_gA5xCsPjtXw1J9s8tTzlJApUWc-lZPetcnd-GdGZmiEBPRd4GnFZSV56MrxcQvcLMQ7FckRNPs0SNMCTAgtbYjfdDnv2bSDXvY3MCsF-yAcqOeoKoHyqPkB_p7LRKhTNqCrCg1pRgZsw8g/s72-w640-h426-c-rw/Bryan%20Adams011024Le%20Ze%CC%81nithParis%2019_70.JPG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Bryan%20Adams-22138",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-23T16:46:51Z",
-          "public_id": "5dfabb7107cde899",
-          "state_identity": "5dfabb7107cde899244dcd215ddc19f801bae98ce66ac457e8dee0e269e19900"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
             "date": "2026-12-05",
             "department": "75",
             "event_title": null,
@@ -69636,58 +68784,6 @@
           "first_seen": "2026-09-01T13:15:20Z",
           "public_id": "1a45d306406d316d",
           "state_identity": "1a45d306406d316d764d28d2d18b161a83315924a11939008837520e76e50698"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-12-07",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Gérard Drouot Productions",
-            "genres_public": null,
-            "headliner": "The Dire Straits Experience",
-            "identity_aliases": [
-              "The Dire Straits Experience",
-              "ELECTRIC PYRAMID"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/694132bd47f6c215683556.jpg",
-            "openers": [
-              "Electric Pyramid"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/The%20Dire%20Straits%20Experience-21793",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-23T16:46:51Z",
-          "public_id": "b5d2bb51c52e6660",
-          "state_identity": "b5d2bb51c52e6660d4c935960a6bf7e577a3f1d9068707bcd1eea7a56795eb25"
         },
         {
           "event": {
@@ -70191,53 +69287,6 @@
           "first_seen": "2026-09-01T13:15:20Z",
           "public_id": "2670d077e68238f8",
           "state_identity": "2670d077e68238f88f2afbf386c4c38b19d26f99d07bf5fd3b928c001f89c298"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-01-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "Imminence",
-            "identity_aliases": [
-              "IMMINENCE"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a6b5a72c8f88322398008.jpg",
-            "openers": [
-              "AUGUST BURNS RED",
-              "House Of Protection"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "VeryShow"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Imminence-21969",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "3ef11bc12e50b92b",
-          "state_identity": "3ef11bc12e50b92bd43debaca7a388a3e5cc0069b12c77699e7b5f98833204e7"
         },
         {
           "event": {
@@ -70979,50 +70028,6 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2027-02-25",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "gaetan roussel",
-            "identity_aliases": [
-              "Gaëtan Roussel"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/696e19a1dea79557935869.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Corida"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Ga%C3%ABtan%20Roussel-22191",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-26T09:01:58Z",
-          "public_id": "b415dfcff3a51ced",
-          "state_identity": "b415dfcff3a51cede72a77b0959fd069cdd95eba2a4b49add6c1e83be4bd50ac"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
             "date": "2027-02-26",
             "department": "75",
             "event_title": null,
@@ -71312,50 +70317,6 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2027-03-17",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "Waxx",
-            "identity_aliases": [
-              "Waxx"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a3beac978c4a096611769.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Alias Production"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Waxx-22354",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "97916c6550fb6b63",
-          "state_identity": "97916c6550fb6b637e9055dd0f089f342753a95a7007deb8584cf71c545da683"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
             "date": "2027-03-18",
             "department": "75",
             "event_title": null,
@@ -71468,55 +70429,6 @@
           "first_seen": "2026-09-01T13:15:20Z",
           "public_id": "7937b26d0073eb76",
           "state_identity": "7937b26d0073eb76735cd9160336fee7dcc912b8f4a8c3f99212f4290b9a6f81"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-03-21",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Hard / Metal",
-            "genre_evidence": [
-              {
-                "raw": "Hard / Metal",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Gérard Drouot Productions",
-            "genres_public": null,
-            "headliner": "Megadeth",
-            "identity_aliases": [
-              "Megadeth"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEicCXa3gHkzvrcCjadOB4KgsgbBlfBSBuiHrXVkRHvYJIEmhJnCUd77ILgO54W_ZG09WC0cBsjDq2zAdGN6JusYNLwWTU0UizkXO4HQw5Fr-avB4HuxVyLiSJJEzYFSEQxaSvPKge320xfXYnlTwd_NK5mmc0A-xlMVULIL1CbCVPb-egF5pkmTiNg4ZfI/s72-w640-h426-c-rw/Megadeth20260621HellfestClisson_18.JPG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Megadeth-22053",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-23T16:46:51Z",
-          "public_id": "e9eba357440fec52",
-          "state_identity": "e9eba357440fec52a21930c95c95deb5a84a08398135b03bc2059b4064ca7ea9"
         },
         {
           "event": {
@@ -71829,50 +70741,6 @@
           "first_seen": "2026-08-25T09:12:05Z",
           "public_id": "e70edb9d1e06eccb",
           "state_identity": "90870e1428d234dad418e84a0e2b3a8eea39ce3a54539000ad38e1744d933dd5"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-04-08",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Chanson Française / Variétés",
-            "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
-            "genres_public": null,
-            "headliner": "Vianney",
-            "identity_aliases": [
-              "VIANNEY"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a1054f47f3fe691453780.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Zouave"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Vianney-21435",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "1454797b6d7771f5",
-          "state_identity": "1454797b6d7771f5b5e681655c79afd8a7399e33a535cb228bbf0cc998619568"
         },
         {
           "event": {
@@ -72343,55 +71211,6 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2027-06-29",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Gérard Drouot Productions",
-            "genres_public": null,
-            "headliner": "Lynyrd Skynyrd",
-            "identity_aliases": [
-              "Lynyrd Skynyrd"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiWb8ssS0Ri1hoMT3W-f_Uxr_FTroKvs2nOdvyg-kr8EvZASyxKqlhjyQz2-Uob0Tigp0H5oWjHFk-UvjLY3mOPHWMfIK16EubvkqXLREa3eO0JHglDIROjCmQQ2sLWeQpkqKVTYk0KM9tN3px0Ni63ZQbFOeIys4DGI_eaIi6bKPFII1Cabi7fH5J7248/s72-w640-h426-c-rw/Lynyrd%20Skynyrd20250711Le%20Ze%CC%81nithParis%2019_3.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Lynyrd%20Skynyrd-22551",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-09-14T11:57:51Z",
-          "public_id": "86d83adf1d515542",
-          "state_identity": "86d83adf1d515542d015933c156aba6c465a542e4bd776e7b1918a6fa06df428"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
             "date": "2027-07-06",
             "department": "75",
             "event_title": null,
@@ -72516,50 +71335,6 @@
           "first_seen": "2026-09-25T10:38:40Z",
           "public_id": "23aa2ccf6317179e",
           "state_identity": "23aa2ccf6317179ec3122803eb7fac0b7816d9fbb758625da5a72bd9e25edefd"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-10-08",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Epica",
-            "identity_aliases": [
-              "EPICA"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGfX_eoitKrUa6UBZtSyPEpVEmhQNOz4LL1ca5yfhEGy-0ZbdKVX2ZpiOdjMtBDpROkjOJUiBRATJ-T-xMviqZU_h_P5Z_-Gwg9XJcvAbKwDXWvQN3j6ucVTva1qJXOcbG7hjgH0yxV_jksz4p76ZpDOtRr65WdHVycxqKvdkvrkTkmugPQLhO_Iq5/s72-w400-h266-c-rw/IMG_0452.JPG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "VeryShow"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Epica-22082",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-09-15T09:41:17Z",
-          "public_id": "3ab92723c65b6d4b",
-          "state_identity": "3ab92723c65b6d4b49a9219307c73c4a09eb3c39cb6a446b01840fbccaaa64b5"
         },
         {
           "event": {
@@ -73756,58 +72531,11 @@
           "state_identity": "d2952fd95f700071908484d264c842b004610d145b165e7c65f5be6c5f9dd243"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Other",
-            "genre_evidence": [
-              {
-                "raw": "Other",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Live Nation",
-            "genres_public": null,
-            "headliner": "All Elite Wrestling",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/d/i/a/3700d837-23ae-406a-b2f6-f5d6c6e0a4da.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.livenation.fr/event/aew-grand-slam-france-paris-tickets-edp1692723",
-            "venue": "Adidas Arena"
-          },
-          "first_seen": "2026-08-25T13:22:04Z",
-          "public_id": "b967bfc5a6f8e2f3",
-          "state_identity": "b967bfc5a6f8e2f3e252ac6e9033ab3d651969fc5b0c03ac3a17657659dfe2bb"
-        },
         {
           "event": {
             "announced_at": null,
@@ -73825,12 +72553,16 @@
             "genre_evidence": [
               {
                 "raw": "Hip Hop / Rap, Jazz and Blues, RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Hip Hop / Rap, Jazz and Blues, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Hip-hop / Rap",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Hip-hop / Rap",
               "Jazz / Blues",
@@ -73856,7 +72588,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Jill%20Scott-22253",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/jill-scott-billet/idlist/5886/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74032,12 +72764,16 @@
             "genre_evidence": [
               {
                 "raw": "Afrobeats, Electronic, Pop, RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Afrobeats, Electronic, Pop, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Electronic",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Electronic",
               "Pop",
@@ -74065,7 +72801,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Tyla-22498",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/tyla-billet/idlist/6406/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74255,16 +72991,20 @@
             "genre_evidence": [
               {
                 "raw": "Hard rock / Metal",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Hard rock / Metal",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Metal / Hard Rock",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Behemoth",
             "identity_aliases": [
-              "Behemoth x Dimmu Borgir"
+              "Behemoth"
             ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwwkJCkYzSfhGuSVTThKjy1q6T3a9JapdL530VEaLdmJl5qPKAxCtfOjlGOIOf7XWuhxaKj0A4SUNWKAQNCDCjAQOVvCsbDy366alcpCMe8wrTPOA1uMSV-o13jnhT79KjGbVb8V_rTvPPZOXlrAqZ4cfdA8zzvuMgc0AUqCoI4BLPSc_yPd7skHm4pu0/s72-w640-h426-c-rw/Behemoth20260621HellfestClisson_72.JPG",
@@ -74282,7 +73022,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Behemoth%20x%20Dimmu%20Borgir-21686",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/behemoth-dimmu-borgir-billet/idlist/5622/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74513,6 +73253,10 @@
             "genre_evidence": [
               {
                 "raw": "Alternative and Indie, Other, Pop",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Alternative and Indie, Other, Pop",
                 "source": "Live Nation"
               }
             ],
@@ -74540,7 +73284,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Myles%20Smith-22259",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/myles-smith-billet/idlist/5934/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -75242,6 +73986,10 @@
             "genre_evidence": [
               {
                 "raw": "Other",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Other",
                 "source": "Live Nation"
               }
             ],
@@ -75267,7 +74015,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Dena%20Mwana-21856",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/dena-mwana-billet/idlist/5647/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -75953,18 +74701,24 @@
             "genre_evidence": [
               {
                 "raw": "Hip Hop / Rap, RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Hip Hop / Rap, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Hip-hop / Rap",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Hip-hop / Rap",
               "R&B / Soul / Funk"
             ],
             "headliner": "Saint Levant",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Saint Levant"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/l/t/j/f22313c1-02d4-48c0-9fa7-4678483951f5.jpg",
             "openers": null,
@@ -76104,18 +74858,24 @@
             "genre_evidence": [
               {
                 "raw": "Hip Hop / Rap, RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Hip Hop / Rap, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Hip-hop / Rap",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Hip-hop / Rap",
               "R&B / Soul / Funk"
             ],
             "headliner": "Saint Levant",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Saint Levant"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/l/t/j/f22313c1-02d4-48c0-9fa7-4678483951f5.jpg",
             "openers": null,
@@ -77302,12 +76062,16 @@
             "genre_evidence": [
               {
                 "raw": "RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "R&B / Soul / Funk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Zaho",
             "identity_aliases": [
@@ -77327,7 +76091,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Zaho-21798",
+            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/zaho-billet/idmanif/644093",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -77509,12 +76273,16 @@
             "genre_evidence": [
               {
                 "raw": "Other, Pop",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Other, Pop",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Westlife",
             "identity_aliases": [
@@ -77536,7 +76304,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Westlife-21826",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/westlife-billet/idlist/5491/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -77713,12 +76481,16 @@
             "genre_evidence": [
               {
                 "raw": "Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Good Charlotte",
             "identity_aliases": [
@@ -77741,7 +76513,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Good%20Charlotte-21887",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/good-charlotte-billet/idlist/6139/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -78943,12 +77715,16 @@
             "genre_evidence": [
               {
                 "raw": "Jazz and Blues, Pop, Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Jazz and Blues, Pop, Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Jazz / Blues",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Jazz / Blues",
               "Pop",
@@ -78974,7 +77750,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Hermanos%20Guti%C3%A9rrez-21981",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/hermanos-gutierrez-billet/idlist/6168/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -79145,57 +77921,6 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Alternative and Indie",
-            "genre_evidence": [
-              {
-                "raw": "Alternative and Indie",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
-            "genres_public": null,
-            "headliner": "Beabadoobee",
-            "identity_aliases": [
-              "beabadoobee"
-            ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/o/n/k/47c075aa-3647-4ffb-a9c9-f21c1734ff92.png",
-            "openers": [
-              "Violet Grohl"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Beabadoobee-21955",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "82d2d2c5d4c8b937",
-          "state_identity": "82d2d2c5d4c8b9371af1597b31beffef264fd0f21e57cb6159e85a6f7c9fd570"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-30",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
             "genre": "Electronic, Pop",
             "genre_evidence": [
               {
@@ -79236,6 +77961,61 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "4ac8769d501776bb",
           "state_identity": "4ac8769d501776bbffad535268974f31b2c4fb2358ab5093043728a17784c521"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-30",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alternative and Indie",
+            "genre_evidence": [
+              {
+                "raw": "Alternative and Indie",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Alternative and Indie",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Le Zénith Paris – La Villette",
+            "genres_public": null,
+            "headliner": "beabadoobee",
+            "identity_aliases": [
+              "beabadoobee"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/o/n/k/47c075aa-3647-4ffb-a9c9-f21c1734ff92.png",
+            "openers": [
+              "Violet Grohl"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/beabadoobee-billet/idlist/6366/idtier/4827637",
+            "venue": "Le Zénith Paris – La Villette"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "82d2d2c5d4c8b937",
+          "state_identity": "82d2d2c5d4c8b9371af1597b31beffef264fd0f21e57cb6159e85a6f7c9fd570"
         },
         {
           "event": {
@@ -79667,12 +78447,16 @@
             "genre_evidence": [
               {
                 "raw": "Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Skip The Use",
             "identity_aliases": [
@@ -79692,7 +78476,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Skip%20The%20Use-20507",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/skip-the-use-billet/idlist/5589/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -79917,12 +78701,16 @@
             "co_headliners": null,
             "date": "2026-12-09",
             "department": "75",
-            "event_title": "Polyphia: BE NOT AFRAID World Tour",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": "Hard rock / Metal, Other, Rock",
             "genre_evidence": [
+              {
+                "raw": "Hard rock / Metal, Other, Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
               {
                 "raw": "Hard rock / Metal, Other, Rock",
                 "source": "Live Nation"
@@ -79934,7 +78722,6 @@
             "genres_public": null,
             "headliner": "Polyphia",
             "identity_aliases": [
-              "Polyphia: BE NOT AFRAID World Tour",
               "Polyphia"
             ],
             "image_source": "Live Nation",
@@ -79949,13 +78736,13 @@
               "Live Nation",
               "VeryShow"
             ],
-            "raw_title": "Polyphia: BE NOT AFRAID World Tour",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Polyphia-21883",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/polyphia-billet/idlist/6315/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -80030,12 +78817,16 @@
             "genre_evidence": [
               {
                 "raw": "Alternative and Indie, Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Alternative and Indie, Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Nothing But Thieves",
             "identity_aliases": [
@@ -80055,7 +78846,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Nothing%20But%20Thieves-21051",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/nothing-but-thieves-billet/idlist/6145/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -80128,14 +78919,18 @@
             "genre_evidence": [
               {
                 "raw": "Hip Hop / Rap",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Hip Hop / Rap",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Hip-hop / Rap",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
-            "headliner": "Nono La Grinta",
+            "headliner": "Nono la Grinta",
             "identity_aliases": [
               "Nono la Grinta"
             ],
@@ -80153,7 +78948,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Nono%20La%20Grinta-22413",
+            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/nono-la-grinta-billet/idmanif/664355/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -80592,12 +79387,16 @@
             "genre_evidence": [
               {
                 "raw": "Pop",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Pop",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_explicit",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Naïka",
             "identity_aliases": [
@@ -80617,7 +79416,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Na%C3%AFka-22514",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/naika-billet/idlist/6523/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-30T12:01:31Z",
@@ -80697,15 +79496,21 @@
             "genre_evidence": [
               {
                 "raw": "Pop",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Pop",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_explicit",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Naïka",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Naïka"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/m/o/k/d48c7674-7cfe-46f0-9974-6a02d0667c6c.png",
             "openers": null,
@@ -81196,14 +80001,18 @@
             "genre_evidence": [
               {
                 "raw": "Alternative and Indie, Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Alternative and Indie, Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
-            "headliner": "Role Model",
+            "headliner": "ROLE MODEL",
             "identity_aliases": [
               "ROLE MODEL"
             ],
@@ -81223,7 +80032,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Role%20Model-22279",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/role-model-presents-billet/idlist/6345/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -81399,12 +80208,16 @@
             "genre_evidence": [
               {
                 "raw": "Alternative and Indie, Pop, RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Alternative and Indie, Pop, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Pop",
               "R&B / Soul / Funk",
@@ -81430,7 +80243,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Malcolm%20Todd-22688",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/malcolm-todd-billet/idlist/6508/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-14T11:57:51Z",
@@ -81454,12 +80267,16 @@
             "genre_evidence": [
               {
                 "raw": "Electronic",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Electronic",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_explicit",
             "genre_public": "Electronic",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "John Summit",
             "identity_aliases": [
@@ -81479,7 +80296,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/John%20Summit-22700",
+            "ticket_url": "https://www.livenation.fr/event/john-summit-europe-ctrl-escape-arena-tour-paris-tickets-edp1699555",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-10-06T11:56:09Z",
@@ -81767,14 +80584,18 @@
             "genre_evidence": [
               {
                 "raw": "RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "R&B / Soul / Funk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
-            "headliner": "Flo",
+            "headliner": "FLO",
             "identity_aliases": [
               "FLO"
             ],
@@ -81792,7 +80613,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Flo-21930",
+            "ticket_url": "https://www.livenation.fr/event/flo-therapy-at-the-club-tour-paris-tickets-edp1698510",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-10-05T14:53:22Z",
@@ -82180,12 +81001,16 @@
             "genre_evidence": [
               {
                 "raw": "Other",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Other",
                 "source": "Live Nation"
               }
             ],
             "genre_method": null,
             "genre_public": null,
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "The Warning",
             "identity_aliases": [
@@ -82205,7 +81030,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/The%20Warning-22585",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/the-warning-billet/idlist/6519/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-14T14:33:21Z",
@@ -82399,14 +81224,18 @@
             "genre_evidence": [
               {
                 "raw": "Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
-            "headliner": "Kaleo",
+            "headliner": "KALEO",
             "identity_aliases": [
               "KALEO"
             ],
@@ -82424,7 +81253,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Kaleo-22377",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/kaleo-billet/idlist/6374/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -82638,7 +81467,7 @@
             ],
             "date": "2027-04-07",
             "department": "75",
-            "event_title": "In Flames x Trivium",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -82646,16 +81475,20 @@
             "genre_evidence": [
               {
                 "raw": "Hard rock / Metal",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Hard rock / Metal",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Metal / Hard Rock",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Trivium",
             "identity_aliases": [
-              "In Flames x Trivium"
+              "Trivium"
             ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjJywJ4ufKbWe9toOKqtrRQqNBj7ZfRNXpoCyY1bL4GCB3lOymSXMKKBzhI15s6kliM-jjWx9nm0P_34MV_HiBgqkKqBR9qVEkZJ4SZB-KrGF02gvkeFUQ3k3h2UKKpf1ui3C5BdMEcgC8GztDTfhMpnJth1A7CMIAlWGo0jFBTIo5Do1MA-2GoZCyD/s72-w640-h426-c/Trivium01_02_2023OLYMPIAParis_17.jpg",
@@ -82674,7 +81507,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/In%20Flames%20x%20Trivium-21756",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/in-flames-trivium-billet/idlist/6446/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-25T09:12:05Z",
@@ -83232,19 +82065,25 @@
             "genre_evidence": [
               {
                 "raw": "Electronic, Pop, RnB / Soul",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Electronic, Pop, RnB / Soul",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Electronic",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Electronic",
               "Pop",
               "R&B / Soul / Funk"
             ],
             "headliner": "Craig David",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Craig David"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/l/m/q/9b5e40c1-c9fe-4a2b-8fb1-740b3238260d.png",
             "openers": null,
@@ -83283,12 +82122,16 @@
             "genre_evidence": [
               {
                 "raw": "Pop",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Pop",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_explicit",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Hilary Duff",
             "identity_aliases": [
@@ -83310,7 +82153,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Hilary%20Duff-22537",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/hilary-duff-billet/idlist/6542/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-23T13:09:44Z",
@@ -83496,12 +82339,16 @@
             "genre_evidence": [
               {
                 "raw": "Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": null,
             "headliner": "Weezer",
             "identity_aliases": [
@@ -83523,7 +82370,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Weezer-22453",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/weezer-billet/idlist/6411/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -83698,12 +82545,16 @@
             "genre_evidence": [
               {
                 "raw": "Pop, Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
+              {
+                "raw": "Pop, Rock",
                 "source": "Live Nation"
               }
             ],
             "genre_method": "source_mapping",
             "genre_public": "Pop",
-            "genre_source": "Live Nation",
+            "genre_source": "Le Zénith Paris – La Villette",
             "genres_public": [
               "Pop",
               "Rock / Indie / Punk"
@@ -83726,7 +82577,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Take%20That-22690",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/take-that-billet/idlist/6451/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-28T09:17:24Z",
@@ -85050,53 +83901,11 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Jean Felzine",
-            "identity_aliases": null,
-            "image_source": "Los Production",
-            "image_url": "https://www.losproduction.com/wp-content/uploads/jf-zebre-1080x1080enzotrupiano-380x380.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Jean Felzine"
-            ],
-            "promoters": null,
-            "raw_title": "Jean Felzine",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://losproduction.trium.fr/fr/t/-/event/69214",
-            "venue": "Le Zèbre de Belleville"
-          },
-          "first_seen": "2026-09-30T12:01:31Z",
-          "public_id": "7a783442e2cf517a",
-          "state_identity": "7a783442e2cf517a4866846a9ae0d39d84fb4d8812d49137f9f3e17c5d730adf"
-        },
         {
           "event": {
             "announced_at": null,
@@ -85684,67 +84493,11 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Gérard Drouot Productions"
-              },
-              {
-                "raw": "Metal / Hard Rock, Rock",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Gérard Drouot Productions",
-            "genres_public": [
-              "Metal / Hard Rock",
-              "Rock / Indie / Punk"
-            ],
-            "headliner": "Europe",
-            "identity_aliases": [
-              "Europe"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjHi0dAtx4lS4dV0x-Axk_0dLfWIavSsvhgBZDIXUl9BimxegDOGOtubPfxDFC-ItIQTYd_eVbPztve6rOubRN44XWRlQZN7F68C2i5LRbDrDoGogptxg6PxT5rosTFhdxHXRytSNTWVplZb2_X4jdPmbzBVARspiug4iDKbPP6-eEwDfnUeo-zlhFiLAM/s72-w640-h426-c-rw/Europe%2003151023Salle%20PleyelParis%2008_1.JPG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/europe/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "c9661b68e1afeaac",
-          "state_identity": "c9661b68e1afeaac66eeed204e5c91890f8318b3b6c0209b556cd65b14ae8280"
-        },
         {
           "event": {
             "announced_at": null,
@@ -90376,51 +89129,11 @@
           "state_identity": "8f5604aeb409a9add816a319fa6e0ee8926de8523238a3e5739845b904833f87"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "Monty Alexander",
-            "identity_aliases": null,
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5PaCvncYwhpO6_WEnLgRo5N-223prsRJJuM0VBBMn4IlyvMx6wLBWkw1bWpEBgRzmRToi-_TQY9IIdo4NvMTTQH94IveEkGXzZCiHQ4woK2OoN8-m8DhwLj7miE038vkCjMfUsARk2EYKuROJ9S605CY4eZXhW4juTggEdXcF5St6CABBbG6bl6Q0k8Y/s72-w640-h426-c-rw/Monty%20Alexander20260813BirdlandNYC_38.JPG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.newmorning.com/20261006-7749-45-ans-du-new-monty-alexander.html",
-            "venue": "New Morning"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "3e04efb1646f99e7",
-          "state_identity": "3e04efb1646f99e7de9e9ea8bc90a2c11fb984e1bbf071f6e5af6850608bf260"
-        },
         {
           "event": {
             "announced_at": null,
@@ -93220,56 +91933,11 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Pop Rock, Indie Rock",
-            "genre_evidence": [
-              {
-                "raw": "Pop Rock, Indie Rock",
-                "source": "Nouveau Casino"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Nouveau Casino",
-            "genres_public": null,
-            "headliner": "Nicotine Dolls",
-            "identity_aliases": null,
-            "image_source": "Nouveau Casino",
-            "image_url": "https://nouveaucasino.fr/media/pages/events/nicotine-dolls/7d2668b36c-1778594285/nd_paris_header-1800x.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Nicotine Dolls",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://shotgun.live/en/events/nicotine-dolls",
-            "venue": "Nouveau Casino"
-          },
-          "first_seen": "2026-09-03T08:19:39Z",
-          "public_id": "0adc205e0e400699",
-          "state_identity": "0adc205e0e40069974c862d75aad29397f3d2326753636248e6dc581f57e788d"
-        },
         {
           "event": {
             "announced_at": null,
@@ -94142,7 +92810,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -94541,95 +93209,11 @@
           "state_identity": "3ed001823377b256e7dfb27c6225c65211b65af5387e3e99d2e0a711292b5e3e"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Banned from Utopia (Frank zappa Alumni)",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Banned from Utopia (Frank zappa Alumni)"
-            ],
-            "promoters": null,
-            "raw_title": "Banned from Utopia (Frank zappa Alumni)",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.facebook.com/share/1Auor7Hc8a/?mibextid=wwXIfr",
-            "venue": "La Marbrerie"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "37284fe34f3c75c3",
-          "state_identity": "37284fe34f3c75c3a7b7087469540e2699bf04b9a702c12e250ab25fe64a8790"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Bleib Modern + Konstantin Unwohl",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Bleib Modern + Konstantin Unwohl"
-            ],
-            "promoters": null,
-            "raw_title": "Bleib Modern + Konstantin Unwohl",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://dice.fm/event/69b084f158a0750001c9b510",
-            "venue": "QG Oberkampf"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "f627eac403eaaa19",
-          "state_identity": "f627eac403eaaa1934aee19ceb44a122db60e13e76eef67081e564dce818daa3"
-        },
         {
           "event": {
             "announced_at": null,
@@ -96365,7 +94949,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -98525,7 +97109,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -99395,56 +97979,11 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "concert Math Rock, Noise Rock",
-            "genre_evidence": [
-              {
-                "raw": "concert Math Rock, Noise Rock",
-                "source": "Point Éphémère"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Point Éphémère",
-            "genres_public": null,
-            "headliner": "DAZZLING KILLMEN + PORD",
-            "identity_aliases": null,
-            "image_source": "Point Éphémère",
-            "image_url": "https://images.prismic.io/pointf/aeegj8BOoF08xL0A_06.10-DAZZLINGKILLMENcopie.png?auto=format,compress",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://link.dice.fm/Pc1bfd413538",
-            "venue": "Point Éphémère"
-          },
-          "first_seen": "2026-09-20T17:25:09Z",
-          "public_id": "b15d61c3abfaea13",
-          "state_identity": "b15d61c3abfaea1355458d5acd17e055cc2e93faaf53c75146edca05fd2f62ed"
-        },
         {
           "event": {
             "announced_at": null,
@@ -101084,7 +99623,7 @@
           "state_identity": "d4c2db7324b7373b21de42fd42fe9a194ddd613170ab16aa92ceaced335de365"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -102158,12 +100697,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -102193,17 +100732,13 @@
             "genre_source": "MusicBrainz artist tags via exact Wikidata identity",
             "genres_public": null,
             "headliner": "Ed O'Brien",
-            "identity_aliases": [
-              "ED O'BRIEN"
-            ],
+            "identity_aliases": null,
             "image_source": "Salle Pleyel",
             "image_url": "https://www.sallepleyel.com/app/uploads/2026/03/EDOBRIEN-SITE-333x483.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": [
-              "Corida"
-            ],
+            "promoters": null,
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -105734,7 +104269,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -106168,58 +104703,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": "Aneta George & Melem - Nouvel album \"Eclipses\"",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz actuel",
-            "genre_evidence": [
-              {
-                "raw": "Jazz actuel",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Aneta George & Melem",
-            "identity_aliases": [
-              "Aneta George & Melem - Nouvel album \"Eclipses\""
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/8/4/6a71fb2943bb3-aneta-george-press-photo-2026.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Aneta George & Melem - Nouvel album \"Eclipses\"",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "21:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/824670-aneta-george-melem-nouvel-album-eclipses",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "1aa212b6d89b327a",
-          "state_identity": "1aa212b6d89b327aad3f76b83fe2493c43e574514589404aeb6b1ad840bd2623"
-        },
         {
           "event": {
             "announced_at": null,
@@ -115108,62 +113596,11 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "Darmstadt",
-              "Ferals"
-            ],
-            "date": "2026-10-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "Man of Moon",
-            "identity_aliases": [
-              "Man of Moon + Darmstadt + Ferals"
-            ],
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Man of Moon",
-              "Darmstadt",
-              "Ferals"
-            ],
-            "promoters": [
-              "Supersonic"
-            ],
-            "raw_title": "Man of Moon + Darmstadt + Ferals",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://supersonic-club.fr/evenement/man-of-moon-darmstadt-ferals-6th-oct-supersonic-paris-tickets/",
-            "venue": "Supersonic"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "98fdc2048c4538b0",
-          "state_identity": "98fdc2048c4538b0503b15cc8e47bd2ab09c0b3d41665746a8b2f6c829e89715"
-        },
         {
           "event": {
             "announced_at": null,
@@ -118777,7 +117214,7 @@
           "state_identity": "03fd80e1e6c126fbd95e4a8931d8ada8854fc73e207a0c1dbc5b8ba9ff95371e"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -118967,7 +117404,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -120376,7 +118813,7 @@
           "state_identity": "475448b492c7886cf42661e1cfc473cbad981a23ac482992e59d7fbe9b2ed3ca"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -122056,12 +120493,16 @@
             "co_headliners": null,
             "date": "2026-12-09",
             "department": "75",
-            "event_title": "Polyphia: BE NOT AFRAID World Tour",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": "Hard rock / Metal, Other, Rock",
             "genre_evidence": [
+              {
+                "raw": "Hard rock / Metal, Other, Rock",
+                "source": "Le Zénith Paris – La Villette"
+              },
               {
                 "raw": "Hard rock / Metal, Other, Rock",
                 "source": "Live Nation"
@@ -122073,7 +120514,6 @@
             "genres_public": null,
             "headliner": "Polyphia",
             "identity_aliases": [
-              "Polyphia: BE NOT AFRAID World Tour",
               "Polyphia"
             ],
             "image_source": "Live Nation",
@@ -122088,13 +120528,13 @@
               "Live Nation",
               "VeryShow"
             ],
-            "raw_title": "Polyphia: BE NOT AFRAID World Tour",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Polyphia-21883",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/polyphia-billet/idlist/6315/idtier/4827637",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -122381,12 +120821,10 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
-            "headliner": "Imminence",
-            "identity_aliases": [
-              "IMMINENCE"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a6b5a72c8f88322398008.jpg",
+            "headliner": "IMMINENCE",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": [
               "AUGUST BURNS RED",
               "House Of Protection"
@@ -122402,7 +120840,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Imminence-21969",
+            "ticket_url": "https://bit.ly/Imminence_Paris27",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -123677,10 +122115,8 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Epica",
-            "identity_aliases": [
-              "EPICA"
-            ],
+            "headliner": "EPICA",
+            "identity_aliases": null,
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhGfX_eoitKrUa6UBZtSyPEpVEmhQNOz4LL1ca5yfhEGy-0ZbdKVX2ZpiOdjMtBDpROkjOJUiBRATJ-T-xMviqZU_h_P5Z_-Gwg9XJcvAbKwDXWvQN3j6ucVTva1qJXOcbG7hjgH0yxV_jksz4p76ZpDOtRr65WdHVycxqKvdkvrkTkmugPQLhO_Iq5/s72-w400-h266-c-rw/IMG_0452.JPG",
             "openers": null,
@@ -123695,7 +122131,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Epica-22082",
+            "ticket_url": "http://bit.ly/Epica_Paris27",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-09-15T09:41:17Z",
@@ -123796,7 +122232,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -125306,12 +123742,10 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
             "genres_public": null,
-            "headliner": "Vianney",
-            "identity_aliases": [
-              "VIANNEY"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a1054f47f3fe691453780.png",
+            "headliner": "VIANNEY",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -125324,7 +123758,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Vianney-21435",
+            "ticket_url": "https://events.billyapp.live/efb8489d-5731-4700-b662-68b37b725f0b",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -125350,7 +123784,7 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
             "genres_public": null,
-            "headliner": "Vianney",
+            "headliner": "VIANNEY",
             "identity_aliases": null,
             "image_source": null,
             "image_url": null,
@@ -125392,7 +123826,7 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
             "genres_public": null,
-            "headliner": "Vianney",
+            "headliner": "VIANNEY",
             "identity_aliases": null,
             "image_source": null,
             "image_url": null,
@@ -125500,7 +123934,7 @@
           "state_identity": "fe4e5cf42711a2a47fb3c0fee31e8303ceef1cc54ba38ddbce524480f02f7d0b"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -128652,10 +127086,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-06T18:40:31Z",
+      "last_successful_at": "2026-10-06T22:43:02Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-10-06T18:40:31Z",
+  "updated_at": "2026-10-06T22:43:02Z",
   "version": 1
 }
