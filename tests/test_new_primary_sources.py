@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.geography import is_ile_de_france_event, normalize_event_geography
 from concert_calendar.models import ConcertEvent
+from concert_calendar.scrapers import aeg
 from concert_calendar.scraper_loader import discover_scrapers
 from concert_calendar.scrapers import (
     bal_chavaux,
@@ -665,6 +666,24 @@ class NewPrimarySourceTests(TestCase):
         idf = [event for event in events if is_ile_de_france_event(event)]
         self.assertEqual(["Petit Bain"], [event.venue for event in idf])
         self.assertTrue(all(event.promoters is None for event in events))
+
+    def test_aeg_venue_suffix_is_not_part_of_artist_identity(self):
+        self.assertEqual(
+            "SAM QUEALY",
+            aeg.strip_confirmed_venue_suffix(
+                "SAM QUEALY - OLYMPIA",
+                "L'Olympia",
+            ),
+        )
+
+    def test_aeg_hyphenated_artist_name_is_preserved(self):
+        self.assertEqual(
+            "Artist-Name",
+            aeg.strip_confirmed_venue_suffix(
+                "Artist-Name",
+                "L'Olympia",
+            ),
+        )
 
     def test_orda_production_bill_and_component_rows_become_one_event(self):
         metadata = {

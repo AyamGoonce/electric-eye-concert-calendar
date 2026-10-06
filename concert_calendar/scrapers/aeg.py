@@ -133,6 +133,43 @@ def split_venue_city(text):
     return cleaned, ""
 
 
+def _normalized_venue_label(value):
+    value = re.sub(r"\s+", " ", value or "").strip().casefold()
+    value = value.replace("’", "'")
+    value = re.sub(r"^(?:l'|le |la |les )", "", value)
+    return re.sub(r"[^a-z0-9]+", "", value)
+
+
+def strip_confirmed_venue_suffix(headliner, venue):
+    """
+    Remove a trailing venue label from an AEG artist/title only when that
+    suffix independently matches the parsed venue.
+
+    Example:
+        "SAM QUEALY - OLYMPIA" + "L'Olympia" -> "SAM QUEALY"
+
+    Ordinary hyphenated artist names are left unchanged.
+    """
+
+    title = re.sub(r"\s+", " ", headliner or "").strip()
+    venue_key = _normalized_venue_label(venue)
+
+    if not title or not venue_key:
+        return title
+
+    match = re.match(r"^(.*?)\s+(?:-|–|—)\s+(.+)$", title)
+    if not match:
+        return title
+
+    artist = match.group(1).strip()
+    suffix = match.group(2).strip()
+
+    if artist and _normalized_venue_label(suffix) == venue_key:
+        return artist
+
+    return title
+
+
 def json_ld_location(json_ld):
     """Return structured venue and locality when the visible row omits city."""
 
@@ -295,7 +332,7 @@ def parse_detail_page(detail_url, headliner):
 
         event = ConcertEvent(
             date=iso_date,
-            headliner=headliner,
+            headliner=strip_confirmed_venue_suffix(headliner, venue),
             venue=venue,
             city=city,
             department="",
