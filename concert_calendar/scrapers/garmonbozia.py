@@ -37,7 +37,7 @@ def parse_lineup(value):
 
 
 def parse_structured_billing(value, *, structured_artists=None, info_text=""):
-    """Use a '+' bill only when Garmonbozia supplies explicit current-role evidence."""
+    """Split '+' bills only when every component has independent source evidence."""
 
     title = clean_text(value)
     parts = [
@@ -53,62 +53,103 @@ def parse_structured_billing(value, *, structured_artists=None, info_text=""):
         for artist in (structured_artists or [])
         if clean_text(artist)
     }
-    part_keys = {part.casefold() for part in parts}
 
-    # Hidden metadata is corroboration, not a complete artist list:
-    # Garmonbozia occasionally omits a billed artist from this field.
-    if (
-        len(structured_keys.intersection(part_keys)) < 2
-        or parts[0].casefold() not in structured_keys
-    ):
+    info = clean_text(info_text)
+
+    # Remove the leading duplicated presentation of the full title so that
+    # "GARMONBOZIA présente FLORENCE + THE MACHINE" cannot by itself prove
+    # that Florence and The Machine are separate artists.
+    title_pattern = re.escape(title)
+    prose = re.sub(
+        rf"^\s*garmonbozia\s+pr[ée]sente\s+{title_pattern}"
+        rf"(?:\s*[.!:;–—-]\s*|\s+)?",
+        "",
+        info,
+        count=1,
+        flags=re.IGNORECASE,
+    )
+    # Remove every verbatim occurrence of the complete compound title before
+    # testing its components. Otherwise an artist name such as
+    # "Florence + The Machine" would falsely establish "Florence" and
+    # "The Machine" as two independent artists.
+    evidence_prose = re.sub(
+        re.escape(title),
+        " ",
+        prose,
+        flags=re.IGNORECASE,
+    )
+    prose_folded = prose.casefold()
+    evidence_prose_folded = evidence_prose.casefold()
+
+    def independently_evidenced(part):
+        key = part.casefold()
+
+        if key in structured_keys:
+            return True
+
+        return bool(
+            re.search(
+                rf"(?<![\w]){re.escape(key)}(?![\w])",
+                evidence_prose_folded,
+                re.IGNORECASE,
+            )
+        )
+
+    if not all(independently_evidenced(part) for part in parts):
         return None
 
-    info = clean_text(info_text).casefold()
     openers = []
 
     for part in parts[1:]:
         artist = re.escape(part.casefold())
-        role_pattern = (
-            r"(?:l['’]ouverture de soirée\s+)?"
-            r"sera assur(?:ée|e) par\s+"
-            + artist
-            + r"(?=$|[\s(,.;:!?\-])"
+
+        explicit_role_patterns = (
+            rf"(?:l['’]ouverture de soirée\s+)?"
+            rf"sera assur(?:ée|e) par\s+{artist}"
+            rf"(?=$|[\s(,.;:!?\-])",
+            rf"invités? spéciaux?.{{0,160}}{artist}",
+            rf"special guests?.{{0,160}}{artist}",
         )
-        if re.search(role_pattern, info, re.IGNORECASE):
+
+        if any(
+            re.search(pattern, prose_folded, re.IGNORECASE)
+            for pattern in explicit_role_patterns
+        ):
             openers.append(part)
 
-    # Do not reinterpret the bill unless a billed artist has an explicit
-    # current-event opening role in Garmonbozia's own description.
-    if not openers:
-        sillage = re.search(r"\bdans\s+(?:son|leur)\s+sillage\b", info, re.I)
-        current_headlining = bool(sillage) and (
-            bool(re.search(
-                re.escape(parts[0].casefold())
-                + r".{0,110}\bdans\s+(?:son|leur)\s+sillage\b",
-                info,
-                re.I,
-            ))
-            or bool(re.search(
-                r"\b(?:a|à)\s+la\s+t[eê]te\s+de\s+sa\s+propre\s+tourn[ée]e\b",
-                info[:sillage.start()],
-                re.I,
-            ))
+    headliner_evidence = bool(
+        re.search(
+            rf"(?<![\w]){re.escape(parts[0].casefold())}(?![\w]).{{0,180}}"
+            rf"(?:tournée en tête d['’]affiche|headlin(?:e|er|ing))",
+            prose_folded,
+            re.IGNORECASE,
         )
-        if not current_headlining or not all(
-            part.casefold() in info[sillage.end():] for part in parts[1:]
-        ):
-            return None
+    )
+
+    collective_guest_evidence = bool(
+        re.search(
+            r"deux invités? spéciaux?|"
+            r"invités? spéciaux?.{0,80}(?:complètent|viennent compléter) l['’]affiche|"
+            r"special guests?",
+            prose_folded,
+            re.IGNORECASE,
+        )
+    )
+
+    if headliner_evidence and collective_guest_evidence:
         return parts[0], parts[1:], [parts[0]]
 
-    performers = [
-        part
-        for part in parts
-        if part not in openers
-    ]
-    if not performers:
-        return None
+    if openers:
+        performers = [
+            part
+            for part in parts
+            if part not in openers
+        ]
+        if not performers:
+            return None
+        return performers[0], openers, performers
 
-    return performers[0], openers, performers
+    return parts[0], None, parts
 
 
 def parse_city(value):
