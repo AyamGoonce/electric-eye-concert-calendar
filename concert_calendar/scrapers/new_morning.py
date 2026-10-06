@@ -317,8 +317,15 @@ def parse_card(link, session=None):
     if event_date < date.today():
         return None
 
-    card = link.find_parent("div", class_="bg-white")
-    title_element = card.select_one("h3") if card else None
+    card = (
+        link.find_parent("article", class_="nm-card")
+        or link.find_parent("div", class_="bg-white")
+    )
+    title_element = (
+        card.select_one("h3.nm-titre, h3")
+        if card
+        else None
+    )
     raw_title = (
         clean_text(title_element.get_text(" ", strip=True))
         if title_element
@@ -329,7 +336,7 @@ def parse_card(link, session=None):
         return None
 
     image_url = element_image_url(
-        card.select_one("a.d-block img.img-fluid"),
+        card.select_one(".nm-media img, a.d-block img.img-fluid"),
         base_url=PROGRAMME_URL,
     )
 
