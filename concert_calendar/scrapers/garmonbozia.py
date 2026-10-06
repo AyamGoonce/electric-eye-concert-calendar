@@ -36,7 +36,13 @@ def parse_lineup(value):
     return clean_text(value), None
 
 
-def parse_structured_billing(value, *, structured_artists=None, info_text=""):
+def parse_structured_billing(
+    value,
+    *,
+    structured_artists=None,
+    info_text="",
+    info_blocks=None,
+):
     """Split '+' bills only when every component has independent source evidence."""
 
     title = clean_text(value)
@@ -81,22 +87,38 @@ def parse_structured_billing(value, *, structured_artists=None, info_text=""):
     prose_folded = prose.casefold()
     evidence_prose_folded = evidence_prose.casefold()
 
-    def independently_evidenced(part):
+    blocks = [
+        clean_text(block)
+        for block in (info_blocks or [])
+        if clean_text(block)
+    ]
+
+    def biography_evidenced(part):
         key = part.casefold()
 
-        if key in structured_keys:
-            return True
+        for block in blocks:
+            folded = block.casefold()
 
-        return bool(
-            re.search(
+            if not re.search(
                 rf"(?<![\w]){re.escape(key)}(?![\w])",
-                evidence_prose_folded,
+                folded,
+                re.IGNORECASE,
+            ):
+                continue
+
+            # A genuine artist biography block is substantial and establishes
+            # this artist near the beginning. This distinguishes Garmonbozia's
+            # separate artist biographies from a closing billing sentence such
+            # as "S'unissant à MERRIMACK, HELLERUIN et DETRESSE...".
+            match = re.search(
+                rf"(?<![\w]){re.escape(key)}(?![\w])",
+                folded,
                 re.IGNORECASE,
             )
-        )
+            if match and match.start() <= 100 and len(block) >= 180:
+                return True
 
-    if not all(independently_evidenced(part) for part in parts):
-        return None
+        return False
 
     openers = []
 
@@ -109,6 +131,8 @@ def parse_structured_billing(value, *, structured_artists=None, info_text=""):
             rf"(?=$|[\s(,.;:!?\-])",
             rf"invités? spéciaux?.{{0,160}}{artist}",
             rf"special guests?.{{0,160}}{artist}",
+            rf"(?:dans|embarque(?:nt)? dans) (?:son|leur) sillage"
+            rf".{{0,220}}{artist}",
         )
 
         if any(
@@ -135,6 +159,44 @@ def parse_structured_billing(value, *, structured_artists=None, info_text=""):
             re.IGNORECASE,
         )
     )
+
+    explicit_current_role_evidence = bool(
+        openers or (headliner_evidence and collective_guest_evidence)
+    )
+
+    def independently_evidenced(part):
+        key = part.casefold()
+
+        if key in structured_keys:
+            return True
+
+        if biography_evidenced(part):
+            return True
+
+        if explicit_current_role_evidence:
+            return bool(
+                re.search(
+                    rf"(?<![\w]){re.escape(key)}(?![\w])",
+                    evidence_prose_folded,
+                    re.IGNORECASE,
+                )
+            )
+
+        return False
+
+    if not all(independently_evidenced(part) for part in parts):
+        return None
+
+    # Hidden artist metadata alone must never unlock a '+' title. Require
+    # either explicit role evidence for this current bill, or substantial
+    # separate biography blocks for every billed artist.
+    all_biographically_evidenced = all(
+        biography_evidenced(part)
+        for part in parts
+    )
+
+    if not explicit_current_role_evidence and not all_biographically_evidenced:
+        return None
 
     if headliner_evidence and collective_guest_evidence:
         return parts[0], parts[1:], [parts[0]]
@@ -215,11 +277,21 @@ def parse_card(card):
         if info_element
         else ""
     )
+    info_blocks = (
+        [
+            clean_text(part)
+            for part in info_element.get_text("\n", strip=True).splitlines()
+            if clean_text(part)
+        ]
+        if info_element
+        else []
+    )
 
     structured_billing = parse_structured_billing(
         title,
         structured_artists=structured_artists,
         info_text=info_text,
+        info_blocks=info_blocks,
     )
     if structured_billing:
         headliner, openers, performers = structured_billing

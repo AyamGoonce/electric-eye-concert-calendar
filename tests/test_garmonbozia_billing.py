@@ -44,13 +44,38 @@ class GarmonboziaBillingTests(unittest.TestCase):
             structured_artists=[],
             info_text=(
                 "GARMONBOZIA présente PEELINGFLESH + SNUFFED ON SIGHT + "
-                "CORPSE PILE + GIRL OF GLASS. "
-                "Formé en 2021, PEELINGFLESH a fait une entrée fracassante. "
-                "Depuis leur formation en 2020, SNUFFED ON SIGHT a publié "
-                "plusieurs titres. CORPSE PILE a sorti plusieurs démos. "
-                "Originaire de Houston, GIRL OF GLASS insuffle une violence "
-                "brute à la scène deathcore moderne."
+                "CORPSE PILE + GIRL OF GLASS."
             ),
+            info_blocks=[
+                (
+                    "Formé en 2021, le quatuor PEELINGFLESH a fait une entrée "
+                    "fracassante sur la scène musicale avec son premier album. "
+                    "Avec un son mêlant agressivité brute et précision rythmique, "
+                    "le groupe développe depuis plusieurs années une approche du "
+                    "slam death nourrie par plusieurs sorties et tournées."
+                ),
+                (
+                    "Depuis leur formation en 2020, SNUFFED ON SIGHT a publié de "
+                    "nombreux titres, démos, singles et EPs. Le groupe poursuit "
+                    "une activité soutenue dans le brutal death metal et le slam, "
+                    "avec plusieurs enregistrements et sorties qui ont développé "
+                    "son identité musicale au fil des années."
+                ),
+                (
+                    "Né en 2019 à Houston, CORPSE PILE a sorti plusieurs démos, "
+                    "singles et EPs avant de signer chez Maggot Stomp. Le groupe "
+                    "s'est progressivement imposé dans la nouvelle vague du death "
+                    "metal brutal et du slam grâce à plusieurs enregistrements, "
+                    "concerts et sorties successives."
+                ),
+                (
+                    "Originaire de Houston, GIRL OF GLASS insuffle une violence "
+                    "brute à la scène deathcore moderne. Le groupe développe une "
+                    "écriture viscérale ancrée dans le hardcore, le metal et le "
+                    "deathcore, avec plusieurs enregistrements et sorties qui ont "
+                    "contribué à définir son identité musicale."
+                ),
+            ],
         )
 
         self.assertEqual(
