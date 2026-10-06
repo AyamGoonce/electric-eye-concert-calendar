@@ -111,6 +111,37 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
             [record.headliner for record in events],
         )
 
+    def test_reviewed_venue_move_collapses_old_and_new_venue_records(self):
+        stale = ConcertEvent(
+            "2027-01-26",
+            "Dead Poet Society",
+            "L'Alhambra",
+            "Paris",
+            "75",
+            ticket_url="https://www.alhambra-paris.com/dead-poet-society-lo4608.html",
+            source_names=["Alhambra"],
+        )
+
+        current = ConcertEvent(
+            "2027-01-26",
+            "Dead Poet Society",
+            "Bataclan",
+            "Paris",
+            "75",
+            ticket_url="https://www.aegpresents.fr/event/dead-poet-society/",
+            source_names=["AEG Presents France"],
+        )
+
+        result = deduplicate_events([stale, current])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("Dead Poet Society", result[0].headliner)
+        self.assertEqual("Bataclan", result[0].venue)
+        self.assertEqual(
+            ["AEG Presents France", "Alhambra"],
+            result[0].source_names,
+        )
+
     def test_distinct_performance_times_remain_separate(self):
         early = ConcertEvent(
             "2026-11-24",

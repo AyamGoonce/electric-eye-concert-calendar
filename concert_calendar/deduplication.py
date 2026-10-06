@@ -213,6 +213,7 @@ REVIEWED_EVENT_MOVES = (
     ("2026-10-30", "clawfinger", "Élysée Montmartre", "Le Trabendo"),
     ("2026-09-13", "os garotin", "Cabaret Sauvage", "New Morning"),
     ("2027-03-18", "south arcade", "Backstage By The Mill", "L'Alhambra"),
+    ("2027-01-26", "dead poet society", "L'Alhambra", "Bataclan"),
 )
 
 
