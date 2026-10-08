@@ -1,2 +1,2 @@
-window.ElectricEyeContentManifest=Object.freeze({"data":"electric-eye-content.f5fe0db13d1533cf.js","sha256":"f5fe0db13d1533cf27e00efd49a7902d2d274fcb766dd6118758483fffc5ba53","artists":847,"articles":1545});
+window.ElectricEyeContentManifest=Object.freeze({"data":"electric-eye-content.8c06c5cfeb68a74c.js","sha256":"8c06c5cfeb68a74c7bf3e10d913c61dd9c876696e35a4d7262294ade7faeb9fb","artists":847,"articles":1545});
 (function(){var s=document.createElement('script'),c=document.currentScript;s.src=new URL(window.ElectricEyeContentManifest.data,c&&c.src||location.href).href;document.head.appendChild(s);}());
