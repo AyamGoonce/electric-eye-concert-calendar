@@ -1,0 +1,57 @@
+name: Publish Electric Eye Newsletters
+
+on:
+  workflow_dispatch:
+    inputs:
+      frequency:
+        description: Newsletter edition to publish
+        required: true
+        type: choice
+        options:
+          - weekly
+          - monthly
+  schedule:
+    - cron: "0 6,7 * * 1"
+    - cron: "0 6,7 1 * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: electric-eye-newsletter-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out newsletter generator
+        uses: actions/checkout@v4
+        with:
+          ref: supersonic-scraper
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run newsletter regression tests
+        run: python -m unittest discover -s tests -p 'test_newsletter_*.py'
+
+      - name: Publish weekly edition
+        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || github.event.schedule == '0 6,7 * * 1'
+        env:
+          NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
+        run: python -m newsletter.run --frequency weekly --scheduled --publish
+
+      - name: Publish monthly edition
+        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || github.event.schedule == '0 6,7 1 * *'
+        env:
+          NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
+        run: python -m newsletter.run --frequency monthly --scheduled --publish

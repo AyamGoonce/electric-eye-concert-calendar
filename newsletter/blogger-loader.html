@@ -1,0 +1,102 @@
+<div id="ee-newsletter-viewer">
+  <p id="ee-newsletter-status">Loading Electric Eye newsletter…</p>
+  <iframe
+    id="ee-newsletter-frame"
+    title="Electric Eye Newsletter"
+    style="display:none;width:100%;border:0;min-height:600px"
+    scrolling="no"
+    referrerpolicy="no-referrer"
+  ></iframe>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  /* Independent newsletter hosting. Set this after deployment. */
+  var NEWSLETTER_ORIGIN = "https://ayamgoonce.github.io/electric-eye-newsletters";
+
+  var frame = document.getElementById("ee-newsletter-frame");
+  var status = document.getElementById("ee-newsletter-status");
+  var params = new URLSearchParams(window.location.search);
+
+  var month = params.get("month");
+  var week = params.get("week");
+  var filename = null;
+
+  if (month && !week && /^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
+    filename = "monthly/" + month + ".html";
+  } else if (week && !month &&
+             /^\d{4}-W(0[1-9]|[1-4]\d|5[0-3])$/.test(week)) {
+    filename = "weekly/" + week + ".html";
+  }
+
+  var useLatest = !month && !week;
+
+  if (!filename && !useLatest) {
+    status.textContent = "Select a valid weekly or monthly newsletter edition.";
+    return;
+  }
+
+  var editionUrl = filename ? NEWSLETTER_ORIGIN + "/" + filename : null;
+  var ready = false;
+
+  function unavailable() {
+    if (ready) return;
+    status.textContent = "This newsletter edition is currently unavailable.";
+    frame.style.display = "none";
+  }
+
+  window.addEventListener("message", function(event) {
+    if (event.origin !== new URL(NEWSLETTER_ORIGIN).origin) return;
+    if (event.source !== frame.contentWindow) return;
+
+    var data = event.data;
+    if (!data || typeof data !== "object") return;
+
+    if (data.type === "electric-eye-newsletter-ready") {
+      ready = true;
+      status.style.display = "none";
+      frame.style.display = "block";
+      return;
+    }
+
+    if (data.type === "electric-eye-newsletter-height") {
+      var height = Number(data.height);
+      if (!Number.isFinite(height) || height < 200 || height > 100000) return;
+      frame.style.height = Math.ceil(height) + "px";
+    }
+  });
+
+  frame.addEventListener("error", unavailable);
+
+  // The ready message, not the iframe load event, confirms an edition.
+  // Show a fallback if no confirmation arrives within 15 seconds.
+  window.setTimeout(unavailable, 15000);
+
+  function displayEdition(url) {
+    frame.src = url;
+  }
+
+  if (editionUrl) {
+    displayEdition(editionUrl);
+  } else {
+    // Classic script loading works across GitHub Pages and Blogger origins.
+    var script = document.createElement("script");
+    script.src = NEWSLETTER_ORIGIN + "/latest.js";
+    script.onload = function() {
+      var manifest = window.ElectricEyeNewsletterLatest;
+      var path = manifest && manifest.latest && manifest.latest.path;
+
+      if (!path || !/^(weekly\/\d{4}-W\d{2}|monthly\/\d{4}-\d{2})\.html$/.test(path)) {
+        unavailable();
+        return;
+      }
+
+      displayEdition(NEWSLETTER_ORIGIN + "/" + path);
+    };
+    script.onerror = unavailable;
+    document.head.appendChild(script);
+  }
+}());
+</script>
