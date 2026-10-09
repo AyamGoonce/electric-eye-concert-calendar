@@ -165,3 +165,81 @@ def update_latest_manifest(snapshot, *, token=None, session=None):
     raise RuntimeError(
         "Newsletter manifest changed concurrently; retries exhausted"
     )
+
+
+def update_latest_javascript(manifest, *, token=None, session=None):
+    """Synchronize latest.js with the authoritative latest.json."""
+    import json
+    from newsletter.manifest import render_latest_javascript
+
+    credential = token or os.environ.get("NEWSLETTER_PUBLISH_TOKEN")
+    if not credential:
+        raise RuntimeError("NEWSLETTER_PUBLISH_TOKEN is not configured")
+
+    session = session or requests.Session()
+    headers = {
+        "Authorization": f"Bearer {credential}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+    }
+
+    for attempt in range(3):
+        # Always use the current published manifest, never a stale copy.
+        response = session.get(
+            f"{API_BASE}/contents/latest.json",
+            headers=headers,
+            timeout=TIMEOUT,
+        )
+        response.raise_for_status()
+        data = response.json()
+        authoritative = json.loads(
+            base64.b64decode(data["content"]).decode("utf-8")
+        )
+        script = render_latest_javascript(authoritative)
+
+        for item in authoritative["editions"].values():
+            path = item["path"]
+            response = session.get(
+                f"{API_BASE}/contents/{path}",
+                headers=headers,
+                timeout=TIMEOUT,
+            )
+            if response.status_code != 200:
+                raise RuntimeError(
+                    f"Cannot update latest.js: edition unavailable: {path}"
+                )
+
+        url = f"{API_BASE}/contents/latest.js"
+        response = session.get(url, headers=headers, timeout=TIMEOUT)
+
+        if response.status_code == 404:
+            sha = None
+        else:
+            response.raise_for_status()
+            data = response.json()
+            sha = data["sha"]
+            existing = base64.b64decode(data["content"]).decode("utf-8")
+            if existing == script:
+                return {"action": "unchanged"}
+
+        payload = {
+            "message": "Update Electric Eye Blogger newsletter reference",
+            "content": base64.b64encode(script.encode("utf-8")).decode("ascii"),
+            "branch": "main",
+        }
+        if sha:
+            payload["sha"] = sha
+
+        response = session.put(
+            url, json=payload, headers=headers, timeout=TIMEOUT
+        )
+        if response.status_code in (200, 201):
+            return {
+                "action": "updated",
+                "commit": response.json()["commit"]["sha"],
+            }
+        if response.status_code not in (409, 422):
+            response.raise_for_status()
+            raise RuntimeError("JavaScript manifest publication failed")
+
+    raise RuntimeError("latest.js publication conflicts exhausted")

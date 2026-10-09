@@ -6,7 +6,11 @@ from zoneinfo import ZoneInfo
 
 from concert_calendar.content_index import fetch_entries
 from newsletter.calendar_feed import fetch_calendar
-from newsletter.github_publish import publish_edition, update_latest_manifest
+from newsletter.github_publish import (
+    publish_edition,
+    update_latest_manifest,
+    update_latest_javascript,
+)
 from newsletter.periods import reporting_period
 from newsletter.render import render_newsletter
 from newsletter.snapshot import build_snapshot
@@ -92,6 +96,11 @@ def main():
 
     manifest_result = update_latest_manifest(snapshot)
     print(f"Latest manifest: {manifest_result['action']}")
+
+    javascript_result = update_latest_javascript(
+        manifest_result["manifest"]
+    )
+    print(f"Blogger latest.js: {javascript_result['action']}")
 
 
 if __name__ == "__main__":

@@ -24,11 +24,6 @@
   var week = params.get("week");
   var filename = null;
 
-  // Default edition until automated publication is configured.
-  if (!month && !week) {
-    month = "2026-09";
-  }
-
   if (month && !week && /^\d{4}-(0[1-9]|1[0-2])$/.test(month)) {
     filename = "monthly/" + month + ".html";
   } else if (week && !month &&
@@ -36,12 +31,14 @@
     filename = "weekly/" + week + ".html";
   }
 
-  if (!filename) {
+  var useLatest = !month && !week;
+
+  if (!filename && !useLatest) {
     status.textContent = "Select a valid weekly or monthly newsletter edition.";
     return;
   }
 
-  var editionUrl = NEWSLETTER_ORIGIN + "/" + filename;
+  var editionUrl = filename ? NEWSLETTER_ORIGIN + "/" + filename : null;
   var ready = false;
 
   function unavailable() {
@@ -77,6 +74,29 @@
   // Show a fallback if no confirmation arrives within 15 seconds.
   window.setTimeout(unavailable, 15000);
 
-  frame.src = editionUrl;
+  function displayEdition(url) {
+    frame.src = url;
+  }
+
+  if (editionUrl) {
+    displayEdition(editionUrl);
+  } else {
+    // Classic script loading works across GitHub Pages and Blogger origins.
+    var script = document.createElement("script");
+    script.src = NEWSLETTER_ORIGIN + "/latest.js";
+    script.onload = function() {
+      var manifest = window.ElectricEyeNewsletterLatest;
+      var path = manifest && manifest.latest && manifest.latest.path;
+
+      if (!path || !/^(weekly\/\d{4}-W\d{2}|monthly\/\d{4}-\d{2})\.html$/.test(path)) {
+        unavailable();
+        return;
+      }
+
+      displayEdition(NEWSLETTER_ORIGIN + "/" + path);
+    };
+    script.onerror = unavailable;
+    document.head.appendChild(script);
+  }
 }());
 </script>

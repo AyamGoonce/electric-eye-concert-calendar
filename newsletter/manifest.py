@@ -130,3 +130,26 @@ def merge_manifest(existing, published):
     }
 
     return result
+
+
+def render_latest_javascript(manifest):
+    """Render cross-origin-readable latest-edition metadata for Blogger."""
+    import json
+
+    latest = latest_edition(manifest)
+    if latest is None:
+        raise ValueError("Cannot publish latest.js without an edition")
+
+    # JSON is valid JavaScript expression syntax. Escape characters that
+    # could terminate a script element if this data is ever embedded.
+    data = json.dumps(
+        {
+            "schema_version": 1,
+            "latest": latest,
+            "editions": manifest["editions"],
+        },
+        ensure_ascii=True,
+        separators=(",", ":"),
+    ).replace("<", "\\u003c")
+
+    return "window.ElectricEyeNewsletterLatest = Object.freeze(" + data + ");\n"
