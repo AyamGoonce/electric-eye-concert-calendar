@@ -928,7 +928,14 @@ JSON.stringify({caught:caught,count:logs.length,status:log.terminalStatus,reason
         )
 
     def test_artist_discovery_diagnostics_are_wired_to_existing_calls_only(self):
-        self.assertIn("eeDiscoveryDiagnosticAppleCall_();\n      var response=UrlFetchApp.fetch(url,options);", self.code)
+        self.assertIn("eeDiscoveryDiagnosticAppleCall_();", self.code)
+        self.assertIn("response=UrlFetchApp.fetch(url,options);", self.code)
+        self.assertIn("if(eeAppleDailyQuotaError_(error))", self.code)
+        self.assertIn("eeAppleDailyQuotaCooldown_(error);", self.code)
+        self.assertLess(
+            self.code.index("eeDiscoveryDiagnosticAppleCall_();"),
+            self.code.index("response=UrlFetchApp.fetch(url,options);"),
+        )
         self.assertEqual(2, self.code.count("if(cached){eeDiscoveryDiagnosticCacheHit_();"))
         self.assertIn("var queryDiagnostic=eeDiscoveryDiagnosticQuery_(query);", self.code)
         self.assertIn("eeDiscoveryDiagnosticCandidates_(queryDiagnostic,response);", self.code)
@@ -1293,6 +1300,358 @@ var status=eeArchitectureStatus();JSON.stringify({verified:status.verifiedAppleI
 ''')
         self.assertEqual(
             '{"verified":2,"full":1,"pending":1,"partial":1,"stale":1,"deferred":1,"waiting":1}',
+            result,
+        )
+
+    def test_daily_urlfetch_quota_sets_24_hour_cooldown(self):
+        result = self.run_apps_script(r"""
+var props = {};
+PropertiesService = {
+  getScriptProperties: function() {
+    return {
+      getProperty: function(key) { return props[key] || ""; },
+      setProperty: function(key, value) { props[key] = value; }
+    };
+  }
+};
+
+var before = Date.now();
+var error = new Error(
+  "Service invoked too many times for one day: urlfetch."
+);
+var detected = eeAppleDailyQuotaError_(error);
+var handled = eeAppleDailyQuotaCooldown_(error);
+var remaining = Number(props.EE_APPLE_COOLDOWN_UNTIL) - before;
+
+JSON.stringify({
+  detected: detected,
+  handled: handled,
+  atLeast24Hours: remaining >= 86400000,
+  atMost24HoursPlusOneSecond: remaining <= 86401000,
+  recorded: props.EE_APPLE_LAST_TRANSIENT_FAILURE.indexOf(
+    "URLFETCH_DAILY_QUOTA"
+  ) !== -1
+});
+""")
+        self.assertEqual(
+            '{"detected":true,"handled":true,'
+            '"atLeast24Hours":true,'
+            '"atMost24HoursPlusOneSecond":true,'
+            '"recorded":true}',
+            result,
+        )
+
+    def test_production_worker_handles_daily_urlfetch_quota(self):
+        result = self.run_apps_script(r"""
+var props = {
+  EE_APPLE_PRODUCTION_GENERATION: String(EE_APPLE_CONFIG.generationVersion),
+  EE_APPLE_PRODUCTION_INDEX: "37"
+};
+var released = false;
+
+PropertiesService = {
+  getScriptProperties: function() {
+    return {
+      getProperty: function(key) { return props[key] || ""; },
+      setProperty: function(key, value) { props[key] = value; }
+    };
+  }
+};
+
+eeAppleSettings_ = function() { return {enabled: true}; };
+eeAcquireWorkerLease_ = function() { return true; };
+eeReleaseWorkerLease_ = function() { released = true; };
+eeSetExecutionDeadline_ = function() {};
+eeClearExecutionDeadline_ = function() {};
+eeProductionPayloadState_ = function() { return {}; };
+
+eeFetchPosts_ = function() {
+  throw new Error("Service invoked too many times for one day: urlfetch.");
+};
+
+var result = eeAppleRecommendationsProductionWorker();
+
+JSON.stringify({
+  status: result.status,
+  cursor: props.EE_APPLE_PRODUCTION_INDEX,
+  released: released,
+  cooldownSet: Number(props.EE_APPLE_COOLDOWN_UNTIL) > Date.now(),
+  retryLater: result.retryLater
+});
+""")
+        self.assertEqual(
+            '{"status":"QUOTA_EXHAUSTED",'
+            '"cursor":"37",'
+            '"released":true,'
+            '"cooldownSet":true,'
+            '"retryLater":1}',
+            result,
+        )
+
+    def test_production_worker_preserves_failed_archive_article(self):
+        result = self.run_apps_script(r"""
+var props = {
+  EE_APPLE_PRODUCTION_GENERATION: String(EE_APPLE_CONFIG.generationVersion),
+  EE_APPLE_PRODUCTION_INDEX: "37"
+};
+
+PropertiesService = {
+  getScriptProperties: function() {
+    return {
+      getProperty: function(key) { return props[key] || ""; },
+      setProperty: function(key, value) { props[key] = value; }
+    };
+  }
+};
+
+eeAppleSettings_ = function() { return {enabled: true}; };
+eeAcquireWorkerLease_ = function() { return true; };
+eeReleaseWorkerLease_ = function() {};
+eeSetExecutionDeadline_ = function() {};
+eeClearExecutionDeadline_ = function() {};
+eeProductionPayloadState_ = function() { return {}; };
+
+eeFetchPosts_ = function(cursor) {
+  if(cursor === 1) return [];
+  return [{id:"failed-post"}];
+};
+
+eeProcessPost_ = function() {
+  var error = new Error("APPLE_SEARCH_HTTP_429");
+  error.code = "APPLE_SEARCH_HTTP_429";
+  error.retryable = true;
+  throw error;
+};
+
+var result = eeAppleRecommendationsProductionWorker();
+
+JSON.stringify({
+  status: result.status,
+  cursor: props.EE_APPLE_PRODUCTION_INDEX,
+  retryLater: result.retryLater
+});
+""")
+        self.assertEqual(
+            '{"status":"RETRY_LATER","cursor":"37","retryLater":1}',
+            result,
+        )
+
+    def test_discovery_daily_quota_preserves_artist_and_cursor(self):
+        result = self.run_apps_script(r"""
+var props = {
+  EE_APPLE_ARTIST_DISCOVERY_INDEX:"1",
+  EE_APPLE_ARTIST_DISCOVERY_RESOLVER_VERSION:
+    String(EE_APPLE_IDENTITY_RESOLVER_VERSION)
+};
+var writes = 0;
+var row = [
+  "test-artist","Test Artist",1,1,"","","",
+  "UNRESOLVED","","","","post-1","",2,"","",
+  EE_APPLE_IDENTITY_RESOLVER_VERSION
+];
+
+PropertiesService = {
+  getScriptProperties:function(){
+    return {
+      getProperty:function(k){return props[k]||"";},
+      setProperty:function(k,v){props[k]=v;}
+    };
+  }
+};
+
+eeAcquireWorkerLease_=function(){return true;};
+eeReleaseWorkerLease_=function(){};
+eeSetExecutionDeadline_=function(v){
+  EE_APPLE_EXECUTION_DEADLINE=v;
+};
+eeClearExecutionDeadline_=function(){};
+eeArtistCatalogueSheet_=function(){
+  return {getDataRange:function(){
+    return {getValues:function(){
+      return [["header"],row];
+    }};
+  }};
+};
+eeArtistRegistry_=function(){
+  return {artists:[{
+    slug:"test-artist",
+    canonicalName:"Test Artist"
+  }]};
+};
+eeFetchArtistRepresentativePost_=function(){
+  return {id:"post-1"};
+};
+eeDiscoverArtistCatalogue_=function(){
+  throw new Error(
+    "Service invoked too many times for one day: urlfetch."
+  );
+};
+eePutArtistCatalogue_=function(){writes++;};
+
+var result=eeDiscoverArtistsMaintenanceWorker_();
+
+JSON.stringify({
+  status:result.status,
+  cursor:props.EE_APPLE_ARTIST_DISCOVERY_INDEX,
+  retryCount:row[13],
+  artistStatus:row[7],
+  writes:writes,
+  cooldown:Number(props.EE_APPLE_COOLDOWN_UNTIL)>Date.now()
+});
+""")
+        self.assertEqual(
+            '{"status":"QUOTA_EXHAUSTED",'
+            '"cursor":"1",'
+            '"retryCount":2,'
+            '"artistStatus":"UNRESOLVED",'
+            '"writes":0,'
+            '"cooldown":true}',
+            result,
+        )
+
+    def test_stale_refresh_daily_quota_preserves_catalogue(self):
+        result = self.run_apps_script(r"""
+var props = {EE_APPLE_STALE_REFRESH_INDEX:"1"};
+var writes = 0;
+var row = [
+  "artist","Artist",1,1,"123","","HIGH","RESOLVED",
+  "","","2000-01-01T00:00:00.000Z","post-1",
+  "",2,"","",EE_APPLE_IDENTITY_RESOLVER_VERSION
+];
+
+PropertiesService = {
+  getScriptProperties:function(){
+    return {
+      getProperty:function(k){return props[k]||"";},
+      setProperty:function(k,v){props[k]=v;}
+    };
+  }
+};
+
+eeAcquireWorkerLease_=function(){return true;};
+eeReleaseWorkerLease_=function(){};
+eeSetExecutionDeadline_=function(v){
+  EE_APPLE_EXECUTION_DEADLINE=v;
+};
+eeClearExecutionDeadline_=function(){};
+
+eeArtistCatalogueSheet_=function(){
+  return {getDataRange:function(){
+    return {getValues:function(){
+      return [["header"],row];
+    }};
+  }};
+};
+
+eeArtistRegistry_=function(){
+  return {artists:[{
+    slug:"artist",
+    canonicalName:"Artist"
+  }]};
+};
+
+eeFetchArtistRepresentativePost_=function(){
+  return {id:"post-1"};
+};
+
+eeDiscoverArtistCatalogue_=function(){
+  throw new Error(
+    "Service invoked too many times for one day: urlfetch."
+  );
+};
+
+eePutArtistCatalogue_=function(){writes++;};
+
+var result=eeRefreshStaleArtistsMaintenanceWorker_();
+
+JSON.stringify({
+  status:result.status,
+  cursor:props.EE_APPLE_STALE_REFRESH_INDEX,
+  retryCount:row[13],
+  artistStatus:row[7],
+  appleArtistId:row[4],
+  writes:writes,
+  cooldown:Number(props.EE_APPLE_COOLDOWN_UNTIL)>Date.now()
+});
+""")
+        self.assertEqual(
+            '{"status":"QUOTA_EXHAUSTED",'
+            '"cursor":"1",'
+            '"retryCount":2,'
+            '"artistStatus":"RESOLVED",'
+            '"appleArtistId":"123",'
+            '"writes":0,'
+            '"cooldown":true}',
+            result,
+        )
+
+    def test_production_propagates_maintenance_quota_exhaustion(self):
+        result = self.run_apps_script(r"""
+var props = {
+  EE_APPLE_PRODUCTION_GENERATION:
+    String(EE_APPLE_CONFIG.generationVersion),
+  EE_APPLE_PRODUCTION_INDEX:"37",
+  EE_APPLE_COOLDOWN_UNTIL:String(Date.now()+86400000)
+};
+var released=false;
+
+PropertiesService={
+  getScriptProperties:function(){
+    return {
+      getProperty:function(k){return props[k]||"";},
+      setProperty:function(k,v){props[k]=v;}
+    };
+  }
+};
+
+eeAppleSettings_=function(){return {enabled:true};};
+eeAcquireWorkerLease_=function(){return true;};
+eeReleaseWorkerLease_=function(){released=true;};
+eeSetExecutionDeadline_=function(){};
+eeClearExecutionDeadline_=function(){};
+eeProductionPayloadState_=function(){return {};};
+eeFetchPosts_=function(){return [];};
+
+eeProductionMaintenanceStep_=function(){
+  return {
+    phase:"DISCOVERY",
+    status:"QUOTA_EXHAUSTED",
+    result:{
+      status:"QUOTA_EXHAUSTED",
+      artistKey:"test-artist"
+    }
+  };
+};
+
+// Allow entry into the worker, then simulate the cooldown
+// established during its maintenance phase.
+props.EE_APPLE_COOLDOWN_UNTIL="0";
+
+eeProductionMaintenanceStep_=function(){
+  props.EE_APPLE_COOLDOWN_UNTIL=String(Date.now()+86400000);
+  return {
+    phase:"DISCOVERY",
+    status:"QUOTA_EXHAUSTED",
+    result:{status:"QUOTA_EXHAUSTED"}
+  };
+};
+
+var result=eeAppleRecommendationsProductionWorker();
+
+JSON.stringify({
+  status:result.status,
+  retryLater:result.retryLater,
+  maintenance:result.maintenance.result.status,
+  retryAfter:!!result.retryAfter,
+  released:released
+});
+""")
+        self.assertEqual(
+            '{"status":"QUOTA_EXHAUSTED",'
+            '"retryLater":1,'
+            '"maintenance":"QUOTA_EXHAUSTED",'
+            '"retryAfter":true,'
+            '"released":true}',
             result,
         )
 

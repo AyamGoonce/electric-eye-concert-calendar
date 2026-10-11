@@ -787,6 +787,30 @@ function eeAppleHttpError_(label, code) {
   return error;
 }
 
+function eeAppleDailyQuotaError_(error) {
+  return /Service invoked too many times for one day:\s*urlfetch/i.test(
+    String((error && error.message) || error || "")
+  );
+}
+
+function eeAppleDailyQuotaCooldown_(error) {
+  if (!eeAppleDailyQuotaError_(error)) return false;
+
+  var properties = PropertiesService.getScriptProperties();
+  var existing = Number(
+    properties.getProperty("EE_APPLE_COOLDOWN_UNTIL") || 0
+  );
+  var until = Math.max(existing, Date.now() + 86400000);
+
+  properties.setProperty("EE_APPLE_COOLDOWN_UNTIL", String(until));
+  properties.setProperty(
+    "EE_APPLE_LAST_TRANSIENT_FAILURE",
+    new Date().toISOString() + " URLFETCH_DAILY_QUOTA"
+  );
+
+  return true;
+}
+
 function eeAppleFetch_(url, options, label) {
   var lock=LockService.getScriptLock();
   lock.waitLock(30000);
@@ -812,7 +836,16 @@ function eeAppleFetch_(url, options, label) {
       }
       if(wait)Utilities.sleep(wait);
       eeDiscoveryDiagnosticAppleCall_();
-      var response=UrlFetchApp.fetch(url,options);
+      var response;
+      try {
+        response=UrlFetchApp.fetch(url,options);
+      } catch(error) {
+        if(eeAppleDailyQuotaError_(error)){
+          if(!readOnly)eeAppleDailyQuotaCooldown_(error);
+          throw error;
+        }
+        throw error;
+      }
       if(readOnly){
         EE_APPLE_READ_ONLY_LAST_REQUEST_AT=Date.now();
       }else{
@@ -1040,8 +1073,18 @@ function eeProductionMaintenanceStep_(properties,deadline) {
   if(phase==="DISCOVERY")result=eeDiscoverArtistsMaintenanceWorker_();
   else if(phase==="ENRICHMENT")result=eeRefreshStaleArtistsMaintenanceWorker_();
   else result=eeAssembleArticlePayloadsMaintenanceWorker_();
-  properties.setProperty("EE_APPLE_PRODUCTION_MAINTENANCE_PHASE",String((index+1)%phases.length));
-  return {phase:phase,status:String((result||{}).status||""),result:result||null};
+  var resultStatus=String((result||{}).status||"");
+  if(resultStatus!=="QUOTA_EXHAUSTED"){
+    properties.setProperty(
+      "EE_APPLE_PRODUCTION_MAINTENANCE_PHASE",
+      String((index+1)%phases.length)
+    );
+  }
+  return {
+    phase:phase,
+    status:resultStatus,
+    result:result||null
+  };
 }
 
 function eeAppleRecommendationsProductionWorker() {
@@ -1059,15 +1102,40 @@ function eeAppleRecommendationsProductionWorker() {
       if(!eeProductionNeedsPost_(prior)){if(prior&&prior.status==="READY")totals.skippedReady+=1;return false;}
       attemptedThisRun[postId]=true;totals.attempted+=1;if(source==="NEWEST")totals.newestAttempted+=1;else totals.archiveAttempted+=1;
       try{var payload=eeProcessPost_(post,prior?prior.retryCount+1:0),ready=eePayloadHasRecommendations_(payload);if(ready)totals.ready+=1;else totals.empty+=1;state[postId]={status:ready?"READY":"EMPTY",generationVersion:EE_APPLE_CONFIG.generationVersion,hasRecommendations:ready,retryCount:prior?prior.retryCount+1:0};}
-      catch(error){if(error&&(error.retryable||eeEnrichmentTransient_(error))){totals.retryLater+=1;totals.status="RETRY_LATER";stopRequested=true;return false;}totals.error+=1;state[postId]={status:"ERROR",generationVersion:EE_APPLE_CONFIG.generationVersion,hasRecommendations:false,error:String(error&&error.message||error),retryCount:prior?prior.retryCount+1:1};}
+      catch(error){if(eeAppleDailyQuotaCooldown_(error)){totals.retryLater+=1;totals.status="QUOTA_EXHAUSTED";stopRequested=true;if(source==="ARCHIVE"){properties.setProperty("EE_APPLE_PRODUCTION_INDEX",String(Math.max(1,cursor-1)));}return false;}if(error&&(error.retryable||eeEnrichmentTransient_(error))){totals.retryLater+=1;totals.status="RETRY_LATER";stopRequested=true;if(source==="ARCHIVE"){properties.setProperty("EE_APPLE_PRODUCTION_INDEX",String(Math.max(1,cursor-1)));}return false;}totals.error+=1;state[postId]={status:"ERROR",generationVersion:EE_APPLE_CONFIG.generationVersion,hasRecommendations:false,error:String(error&&error.message||error),retryCount:prior?prior.retryCount+1:1};}
       return true;
     }
     var newest=eeFetchPosts_(1,EE_APPLE_PRODUCTION_NEWEST_SCAN);
     for(var index=0;index<newest.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline;index+=1)if(!attemptedThisRun[String(newest[index].id)]&&eeProductionNeedsPost_(state[String(newest[index].id)]||null)){processPost(newest[index],"NEWEST");break;}
     var cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_PRODUCTION_INDEX")||1));
     while(!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline){var posts=eeFetchPosts_(cursor,25);if(!posts.length){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}var found=false;for(var row=0;row<posts.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline;row+=1){var post=posts[row];cursor+=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX",String(cursor));if(attemptedThisRun[String(post.id)]||!eeProductionNeedsPost_(state[String(post.id)]||null)){if((state[String(post.id)]||{}).status==="READY")totals.skippedReady+=1;continue;}found=true;processPost(post,"ARCHIVE");break;}if(found)continue;if(posts.length<25){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}}
-    if(!stopRequested)totals.maintenance=eeProductionMaintenanceStep_(properties,deadline);
+    if(!stopRequested){
+      totals.maintenance=eeProductionMaintenanceStep_(properties,deadline);
+      var maintenanceResult=(totals.maintenance||{}).result||{};
+      if(maintenanceResult.status==="QUOTA_EXHAUSTED"){
+        totals.status="QUOTA_EXHAUSTED";
+        totals.retryLater+=1;
+        totals.retryAfter=new Date(Number(
+          properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")
+        )).toISOString();
+      }
+    }
     totals.nextCursor=Math.max(1,Number(properties.getProperty("EE_APPLE_PRODUCTION_INDEX")||1));totals.elapsedMs=Date.now()-started;if(Date.now()>=deadline&&totals.status==="OK")totals.status="TIME_LIMIT";console.log(JSON.stringify(totals));return totals;
+  }catch(error){
+    if(eeAppleDailyQuotaCooldown_(error)){
+      totals.status="QUOTA_EXHAUSTED";
+      totals.retryLater+=1;
+      totals.nextCursor=Math.max(1,Number(
+        properties.getProperty("EE_APPLE_PRODUCTION_INDEX")||1
+      ));
+      totals.retryAfter=new Date(Number(
+        properties.getProperty("EE_APPLE_COOLDOWN_UNTIL")
+      )).toISOString();
+      totals.elapsedMs=Date.now()-started;
+      console.log(JSON.stringify(totals));
+      return totals;
+    }
+    throw error;
   }finally{eeClearExecutionDeadline_();eeReleaseWorkerLease_("PRODUCTION");}
 }
 
@@ -4357,7 +4425,7 @@ function eePrimaryArtistIdentityPayload_(artist,post) {
 
 var EE_APPLE_ENRICHMENT_QUERIES_PER_RUN=3;
 function eeEnrichmentQueryKey_(query){return [query.category,query.media,query.entity,eeNorm_(query.term||""),String(query.storefront||"").toUpperCase()].join("|");}
-function eeEnrichmentTransient_(error){var value=String((error&&error.code)||(error&&error.message)||error||"");return !!(error&&error.retryable)||/HTTP_(?:403|429|5\d\d)|HEADROOM|COOLDOWN|network|timed?\s*out|connection|service unavailable|fetch failed/i.test(value);}
+function eeEnrichmentTransient_(error){var value=String((error&&error.code)||(error&&error.message)||error||"");return !!(error&&error.retryable)||/HTTP_(?:403|429|5\d\d)|HEADROOM|COOLDOWN|network|timed?\s*out|connection|service unavailable|fetch failed|Service invoked too many times for one day/i.test(value);}
 
 function eeArtistLockedAnalysis_(artist,post,appleArtistId) {
   artist=artist||{};post=post||{};
@@ -5376,6 +5444,80 @@ def build_code() -> str:
         PRODUCTION_ORCHESTRATOR + "\n\nfunction eeDiscoverArtistsMaintenanceWorker_() {",
         "live single-trigger production orchestration",
     )
+    # Daily Google URL Fetch exhaustion must not penalize an artist.
+    discovery_start = code.index(
+        "function eeDiscoverArtistsMaintenanceWorker_()"
+    )
+    discovery_end = code.index(
+        "function eeRefreshStaleArtistsWorker()",
+        discovery_start
+    )
+    discovery = code[discovery_start:discovery_end]
+
+    old = """      }catch(error){
+        if(eeEnrichmentTransient_(error)){"""
+
+    new = """      }catch(error){
+        if(eeAppleDailyQuotaCooldown_(error)){
+          properties.setProperty(
+            "EE_APPLE_ARTIST_DISCOVERY_INDEX",String(row)
+          );
+          return {
+            status:"QUOTA_EXHAUSTED",
+            artistKey:artistKey,
+            cursor:row
+          };
+        }
+        if(eeEnrichmentTransient_(error)){"""
+
+    if discovery.count(old) != 1:
+        raise RuntimeError(
+            "Artist discovery exception handler not found exactly once"
+        )
+
+    code = (
+        code[:discovery_start]
+        + discovery.replace(old, new, 1)
+        + code[discovery_end:]
+    )
+
+    # Preserve stale artist records when Google's daily URL Fetch quota is exhausted.
+    stale_start = code.index(
+        "function eeRefreshStaleArtistsWorker()"
+    )
+    stale_end = code.index(
+        "function eeAssembleArticlePayloadsWorker()",
+        stale_start
+    )
+    stale = code[stale_start:stale_end]
+
+    old = """    }catch(error){
+      var errorReason=String(error&&error.code||error&&error.message||error);"""
+
+    new = """    }catch(error){
+      if(eeAppleDailyQuotaCooldown_(error)){
+        properties.setProperty(
+          "EE_APPLE_STALE_REFRESH_INDEX",String(row)
+        );
+        return {
+          status:"QUOTA_EXHAUSTED",
+          artistKey:artistKey,
+          cursor:row
+        };
+      }
+      var errorReason=String(error&&error.code||error&&error.message||error);"""
+
+    if stale.count(old) != 1:
+        raise RuntimeError(
+            "Stale refresh exception handler not found exactly once"
+        )
+
+    code = (
+        code[:stale_start]
+        + stale.replace(old, new, 1)
+        + code[stale_end:]
+    )
+
     code = replace_once(
         code,
         "function eeRefreshStaleArtistsWorker() {",
