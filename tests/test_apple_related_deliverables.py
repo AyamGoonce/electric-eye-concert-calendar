@@ -235,6 +235,51 @@ JSON.stringify({calls:calls,phases:[first.maintenance.phase,second.maintenance.p
             '"attempted":[0,0,0]}',
             result,
         )
+    def test_maintenance_quota_exhaustion_preserves_phase_until_success(self):
+        result = self.run_apps_script(r'''
+var props = {EE_APPLE_PRODUCTION_MAINTENANCE_PHASE:"1"};
+var calls = [];
+var deadline = Date.now() + 60000;
+
+var properties = {
+  getProperty:function(key){return props[key]||"";},
+  setProperty:function(key,value){props[key]=value;}
+};
+
+eeSetExecutionDeadline_=function(){};
+eeDiscoverArtistsMaintenanceWorker_=function(){
+  calls.push("DISCOVERY");
+  return {status:"OK"};
+};
+eeRefreshStaleArtistsMaintenanceWorker_=function(){
+  calls.push("ENRICHMENT");
+  return {status:calls.length===1?"QUOTA_EXHAUSTED":"ENRICHMENT_REFRESHED"};
+};
+eeAssembleArticlePayloadsMaintenanceWorker_=function(){
+  calls.push("ASSEMBLY");
+  return {status:"OK"};
+};
+
+var first=eeProductionMaintenanceStep_(properties,deadline);
+var afterFirst=props.EE_APPLE_PRODUCTION_MAINTENANCE_PHASE;
+var second=eeProductionMaintenanceStep_(properties,deadline);
+var afterSecond=props.EE_APPLE_PRODUCTION_MAINTENANCE_PHASE;
+
+JSON.stringify({
+  phases:[first.phase,second.phase],
+  statuses:[first.status,second.status],
+  afterFirst:afterFirst,
+  afterSecond:afterSecond,
+  calls:calls
+});
+''')
+        self.assertEqual(
+            '{"phases":["ENRICHMENT","ENRICHMENT"],'
+            '"statuses":["QUOTA_EXHAUSTED","ENRICHMENT_REFRESHED"],'
+            '"afterFirst":"1","afterSecond":"2",'
+            '"calls":["ENRICHMENT","ENRICHMENT"]}',
+            result,
+        )
 
     def test_production_orchestrator_prioritizes_new_article_then_advances_enrichment(self):
         result = self.run_apps_script(r'''
