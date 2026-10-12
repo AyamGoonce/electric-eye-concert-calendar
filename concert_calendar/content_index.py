@@ -497,6 +497,13 @@ def _title_artist_candidate(title, article_type):
         )
         if interview:
             return interview.group(1).strip()
+    infinitive = re.match(
+        r"^(.+?)\s+to\s+celebrate\b",
+        title,
+        re.I,
+    )
+    if infinitive:
+        return infinitive.group(1).strip()
     action = re.match(
         r"^(.+?)\s+(?:announce|announces|release|releases|share|shares|"
         r"unveil|unveils|return|returns|back|perform|performs)\b",

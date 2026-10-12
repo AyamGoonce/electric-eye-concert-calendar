@@ -32,6 +32,19 @@ class ContentIndexTests(unittest.TestCase):
         item["link"][0]["href"] = url
         return item
 
+    def test_stevie_wonder_to_celebrate_headline_seeds_artist(self):
+        index = build_index([
+            entry(
+                "Stevie Wonder to celebrate half a century of Songs In The Key Of Life in Paris next month!",
+                ["News", "Paris", "Soul", "Songs In The Key Of Life", "Stevie Wonder"],
+            ),
+        ], generated_at="2026-10-12T00:00:00Z")
+
+        self.assertIn("stevie-wonder", index["artists"])
+        self.assertEqual(["stevie-wonder"], index["articles"][0]["a"])
+        self.assertNotIn("songs-in-the-key-of-life", index["artists"])
+        self.assertNotIn("paris", index["artists"])
+
     def test_geographic_label_is_structural_without_hiding_real_artists(self):
         index = build_index([
             entry(
