@@ -574,6 +574,51 @@ JSON.stringify({
             '{"sananda":["Sananda Maitreya"],"generic":[],"venue":[],"context":[]}',
             result,
         )
+    def test_album_resolver_respects_approved_artist_mapping(self):
+        result = self.run_apps_script(r'''
+eeIdentityMappings_=function(){
+  return [
+    {alias:"The Darts",artistId:"1146114068",status:"APPROVED"},
+    {alias:"The Darts",artistId:"1438562925",status:"REJECTED"}
+  ];
+};
+
+var analysis={
+  primaryArtists:["The Darts"],
+  existingAppleArtistIds:["1523627235"]
+};
+
+var wrong=[
+  {artistId:1523627235,artistName:"The Darts"},
+  {artistId:1523627235,artistName:"The Darts"},
+  {artistId:1523627235,artistName:"The Darts"}
+];
+
+var withApproved=wrong.concat([
+  {artistId:1146114068,artistName:"The Darts"}
+]);
+
+var confirmed=eeResolveIdentity_(analysis,withApproved);
+var absent=eeResolveIdentity_(analysis,wrong);
+
+JSON.stringify({
+  confirmedId:String(confirmed.artistId||""),
+  confirmedLevel:confirmed.level,
+  absentId:String(absent.artistId||""),
+  absentLevel:absent.level,
+  absentReason:absent.decisionReason,
+  absentHardAmbiguity:absent.hardAmbiguity
+});
+''')
+        self.assertEqual(
+            '{"confirmedId":"1146114068",'
+            '"confirmedLevel":"HIGH",'
+            '"absentId":"",'
+            '"absentLevel":"MODERATE",'
+            '"absentReason":"APPROVED_IDENTITY_NOT_CONFIRMED",'
+            '"absentHardAmbiguity":true}',
+            result,
+        )
     def test_approved_artist_mapping_overrides_conflicting_existing_id(self):
         result = self.run_apps_script(r'''
 var mappings = [

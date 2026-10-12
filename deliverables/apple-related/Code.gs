@@ -1345,7 +1345,40 @@ function eeResolveIdentity_(analysis, musicResults) {
   var subject=eeNorm_(analysis.primaryArtists[0]||""), existingId=String((analysis.existingAppleArtistIds||[])[0]||""), mappings=eeIdentityMappings_(), scores={};
   (musicResults||[]).forEach(function(raw){var id=String(raw.artistId||""),name=eeNorm_(raw.artistName),key=id;if(!id)return;if(!scores[key])scores[key]={artistId:id,score:0,releases:0,exactName:false};if(name===subject&&!scores[key].exactName){scores[key].exactName=true;scores[key].score+=30;}scores[key].releases+=1;});
   mappings.forEach(function(mapping){if(eeNorm_(mapping.alias)!==subject)return;if(mapping.status==="REJECTED")delete scores[String(mapping.artistId)];else if(scores[String(mapping.artistId)])scores[String(mapping.artistId)].score+=70;});
+  var approvedIds=eeUnique_(mappings.filter(function(mapping){
+    return eeNorm_(mapping.alias)===subject &&
+      (mapping.status==="APPROVED" || mapping.status==="VERIFIED");
+  }).map(function(mapping){
+    return String(mapping.artistId||"");
+  }).filter(Boolean));
 
+  if(approvedIds.length===1){
+    if(scores[approvedIds[0]]){
+      return {
+        level:"HIGH",
+        artistId:approvedIds[0],
+        confidenceScore:100,
+        decisionReason:"TRUSTED_IDENTITY_MAPPING"
+      };
+    }
+    return {
+      level:"MODERATE",
+      artistId:null,
+      confidenceScore:50,
+      decisionReason:"APPROVED_IDENTITY_NOT_CONFIRMED",
+      hardAmbiguity:true
+    };
+  }
+
+  if(approvedIds.length>1){
+    return {
+      level:"MODERATE",
+      artistId:null,
+      confidenceScore:55,
+      decisionReason:"MULTIPLE_TRUSTED_IDENTITY_MAPPINGS",
+      hardAmbiguity:true
+    };
+  }
   if(existingId&&scores[existingId])scores[existingId].score+=70;
   var exactKeys=Object.keys(scores).filter(function(key){
     return scores[key].exactName;
