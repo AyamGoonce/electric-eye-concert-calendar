@@ -574,6 +574,46 @@ JSON.stringify({
             '{"sananda":["Sananda Maitreya"],"generic":[],"venue":[],"context":[]}',
             result,
         )
+    def test_approved_artist_mapping_overrides_conflicting_existing_id(self):
+        result = self.run_apps_script(r'''
+var mappings = [
+  {alias:"The Darts",artistId:"1146114068",status:"APPROVED"},
+  {alias:"The Darts",artistId:"1438562925",status:"REJECTED"}
+];
+
+eeIdentityMappings_=function(){return mappings;};
+
+var artist={
+  canonicalName:"The Darts",
+  slug:"the-darts",
+  ambiguityClass:"distinctive"
+};
+
+var analysis={
+  primaryArtists:["The Darts"],
+  existingAppleArtistIds:["1523627235"]
+};
+
+var candidates=[
+  {artistId:1523627235,artistName:"The Darts"},
+  {artistId:1146114068,artistName:"The Darts"}
+];
+
+var result=eeResolveDirectArtistIdentity_(
+  artist,analysis,candidates,null,false,"","FR"
+);
+
+JSON.stringify({
+  artistId:String(result.artistId||""),
+  level:result.level,
+  reason:result.decisionReason
+});
+''')
+        self.assertEqual(
+            '{"artistId":"1146114068","level":"HIGH",'
+            '"reason":"TRUSTED_IDENTITY_MAPPING"}',
+            result,
+        )
 
     def test_artist_catalogue_reuse_avoids_repeat_discovery(self):
         result = self.run_apps_script(r'''
@@ -602,7 +642,53 @@ JSON.stringify({discovery:discovery,first:first.categories[0].items.length,secon
             "appleArtistId:relationshipProvenance",
             self.code,
         )
+    def test_conflicting_approved_artist_id_requires_revalidation(self):
+        result = self.run_apps_script(r'''
+eeIdentityMappings_=function(){
+  return [
+    {alias:"The Darts",artistId:"1146114068",status:"APPROVED"},
+    {alias:"The Darts",artistId:"1438562925",status:"REJECTED"}
+  ];
+};
 
+var wrong={
+  artistKey:"the-darts",
+  canonicalName:"The Darts",
+  appleArtistId:"1523627235",
+  status:"RESOLVED",
+  identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION
+};
+
+var correct={
+  artistKey:"the-darts",
+  canonicalName:"The Darts",
+  appleArtistId:"1146114068",
+  status:"RESOLVED",
+  identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION
+};
+
+var unrelated={
+  artistKey:"sparks",
+  canonicalName:"Sparks",
+  appleArtistId:"99",
+  status:"RESOLVED",
+  identityResolverVersion:EE_APPLE_IDENTITY_RESOLVER_VERSION
+};
+
+JSON.stringify({
+  wrongConflict:eeArtistHasConflictingApprovedId_(wrong),
+  wrongNeedsResolution:eeArtistNeedsIdentityResolution_(wrong),
+  correctConflict:eeArtistHasConflictingApprovedId_(correct),
+  correctNeedsResolution:eeArtistNeedsIdentityResolution_(correct),
+  unrelatedNeedsResolution:eeArtistNeedsIdentityResolution_(unrelated)
+});
+''')
+        self.assertEqual(
+            '{"wrongConflict":true,"wrongNeedsResolution":true,'
+            '"correctConflict":false,"correctNeedsResolution":false,'
+            '"unrelatedNeedsResolution":false}',
+            result,
+        )
     def test_resolved_catalogue_requires_nonempty_apple_artist_id(self):
         result = self.run_apps_script(r'''
 JSON.stringify({
@@ -1027,7 +1113,85 @@ JSON.stringify({status:record.status,confidence:record.identityConfidence,primar
             '{"status":"AMBIGUOUS","confidence":"MODERATE","primarySearches":1,"legacyCalls":0,"error":""}',
             result,
         )
+    def test_forced_refresh_revalidates_conflicting_approved_artist(self):
+        result = self.run_apps_script(r'''
+var saved=null, enrichmentCalls=0, resolutionCalls=0;
+var properties={};
 
+eeIdentityMappings_=function(){
+  return [
+    {alias:"The Darts",artistId:"1146114068",status:"APPROVED"}
+  ];
+};
+
+eeAcquireWorkerLease_=function(){return true;};
+eeReleaseWorkerLease_=function(){};
+
+eeGetArtistCatalogue_=function(){
+  return {
+    artistKey:"the-darts",
+    canonicalName:"The Darts",
+    appleArtistId:"1523627235",
+    identityConfidence:"HIGH",
+    status:"RESOLVED",
+    catalogue:{categories:[]}
+  };
+};
+
+eeIncrementalResolvedEnrichment_=function(){
+  enrichmentCalls+=1;
+  throw new Error("WRONG_ARTIST_ENRICHMENT");
+};
+
+eePrimaryArtistIdentityPayload_=function(){
+  resolutionCalls+=1;
+  return {
+    identity:{level:"HIGH",artistId:"1146114068"},
+    categories:[{
+      category:"LISTEN",
+      items:[{
+        stableId:"correct-release",
+        appleArtistId:"1146114068",
+        creator:"The Darts",
+        title:"Correct Artist Release"
+      }]
+    }]
+  };
+};
+
+eePutArtistCatalogue_=function(record){saved=record;};
+
+PropertiesService={
+  getScriptProperties:function(){
+    return {
+      getProperty:function(key){return properties[key]||"";},
+      setProperty:function(key,value){properties[key]=value;}
+    };
+  }
+};
+
+var record=eeDiscoverArtistCatalogue_(
+  {slug:"the-darts",canonicalName:"The Darts"},
+  {id:"2142834135613944877"},
+  true,
+  false
+);
+
+JSON.stringify({
+  enrichmentCalls:enrichmentCalls,
+  resolutionCalls:resolutionCalls,
+  appleArtistId:record.appleArtistId,
+  savedArtistId:saved.appleArtistId,
+  status:record.status
+});
+''')
+        self.assertEqual(
+            '{"enrichmentCalls":0,"resolutionCalls":1,'
+            '"appleArtistId":"1146114068",'
+            '"savedArtistId":"1146114068",'
+            '"status":"RESOLVED"}',
+            result,
+        )
     def test_forced_refresh_finalizes_target_locked_enrichment_without_legacy_generation(self):
         result = self.run_apps_script(r'''
 var saved=null,fastCalls=0,legacyCalls=0,enrichmentCalls=0,properties={};
