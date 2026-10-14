@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-10-14T21:51:47Z",
+  "generatedAt": "2026-10-14T22:16:16Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -6146,8 +6146,8 @@
       "canonicalName": ".clipping",
       "slug": "clipping",
       "aliases": [
-        "Clipping",
-        "clipping."
+        "clipping.",
+        "Clipping"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -12833,8 +12833,8 @@
       "aliases": [
         "Funkadelic",
         "George Clinton and Parliament/Funkadelic",
-        "George Clinton and The P-Funk All Stars",
         "George Clinton and The P-Funk All-Stars",
+        "George Clinton and The P-Funk All Stars",
         "George Clinton and The P-Funk AllStars",
         "George Clinton & Parliament/Funkadelic",
         "George Clinton & The P-Funk All Stars",
@@ -15790,8 +15790,8 @@
       "canonicalName": "Jesse “Ed” Davis",
       "slug": "jesse-ed-davis",
       "aliases": [
-        "Jesse Ed Davis",
         "Jesse \"Ed\" Davis",
+        "Jesse Ed Davis",
         "Jesse ‘Ed’ Davis"
       ],
       "alternateSpellings": [],
@@ -21650,8 +21650,8 @@
       "canonicalName": "Mikkey Dee",
       "slug": "mikkey-dee",
       "aliases": [
-        "Mikkey Dee and Friends Play Motörhead",
         "Mikkey Dee and Friends play Motörhead",
+        "Mikkey Dee and Friends Play Motörhead",
         "Mikkey Dee & Friends play Motörhead",
         "Mikkey Dee & Friends Play Motörhead"
       ],
@@ -23110,8 +23110,8 @@
       "canonicalName": "Nick Mason",
       "slug": "nick-mason",
       "aliases": [
-        "Nick Mason's Saucerful of Secrets",
         "Nick Mason’s Saucerful of Secrets",
+        "Nick Mason's Saucerful of Secrets",
         "Saucerful of Secrets"
       ],
       "alternateSpellings": [],
@@ -25460,8 +25460,8 @@
       "canonicalName": "Public Image Ltd.",
       "slug": "public-image-ltd",
       "aliases": [
-        "P.I.L",
         "P.I.L.",
+        "P.I.L",
         "PiL",
         "PIL",
         "Public Image Limited",
@@ -25747,6 +25747,47 @@
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/07/queen-bee-bataclan-paris-july-26th-2026.html"
+      ],
+      "lastIdentityUpdatedAt": null,
+      "lastAppleCatalogueUpdatedAt": null
+    },
+    {
+      "schemaVersion": 1,
+      "canonicalName": "Queens of the Stone Age",
+      "slug": "queens-of-the-stone-age",
+      "aliases": [],
+      "alternateSpellings": [],
+      "members": [],
+      "formerMembers": [],
+      "associatedActs": [],
+      "sideProjects": [],
+      "collaborators": [],
+      "searchLinks": [],
+      "searchAssociations": [],
+      "searchAliasLinks": {},
+      "searchArticleIds": [],
+      "articleSearchTerms": [],
+      "producers": [],
+      "songwriters": [],
+      "genres": [],
+      "keywords": [],
+      "musicBrainzId": null,
+      "appleArtistId": null,
+      "appleIdentityConfidence": null,
+      "ambiguityClass": "distinctive",
+      "identityEvidence": [],
+      "articleCount": 2,
+      "directSubjectArticleCount": 2,
+      "hideFromArtistIndex": false,
+      "articleIds": [
+        "3520198630383362330",
+        "3119127713851500652"
+      ],
+      "reviewedArticleIds": [],
+      "concertReviewArchiveArticleIds": [],
+      "articleUrls": [
+        "https://www.electriceyerock.com/2026/10/album-review-queens-of-stone-age.html",
+        "https://www.electriceyerock.com/2026/08/queens-of-stone-age-reveal-new-album-in.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
@@ -28800,8 +28841,8 @@
       "canonicalName": "Slash",
       "slug": "slash",
       "aliases": [
-        "Slash feat. Myles Kennedy & The Conspirators",
-        "Slash feat. Myles Kennedy & the Conspirators"
+        "Slash feat. Myles Kennedy & the Conspirators",
+        "Slash feat. Myles Kennedy & The Conspirators"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -32315,8 +32356,8 @@
       "canonicalName": "The E Street Band",
       "slug": "the-e-street-band",
       "aliases": [
-        "E-Street Band",
         "E Street Band",
+        "E-Street Band",
         "The E-Street Band"
       ],
       "alternateSpellings": [],
@@ -37915,45 +37956,6 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Zeal and Ardor",
-      "slug": "zeal-and-ardor",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "searchAliasLinks": {},
-      "searchArticleIds": [],
-      "articleSearchTerms": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "8785593433083274146"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [],
-      "articleUrls": [
-        "https://www.electriceyerock.com/2018/12/zeal-and-ardour-la-cigale-paris.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
       "canonicalName": "Zeal & Ardor",
       "slug": "zeal-ardor",
       "aliases": [],
@@ -37977,16 +37979,18 @@
       "appleIdentityConfidence": null,
       "ambiguityClass": "distinctive",
       "identityEvidence": [],
-      "articleCount": 1,
-      "directSubjectArticleCount": 1,
+      "articleCount": 2,
+      "directSubjectArticleCount": 2,
       "hideFromArtistIndex": false,
       "articleIds": [
-        "6237841168689306416"
+        "6237841168689306416",
+        "8785593433083274146"
       ],
       "reviewedArticleIds": [],
       "concertReviewArchiveArticleIds": [],
       "articleUrls": [
-        "https://www.electriceyerock.com/2019/03/album-review-zeal-ardor-live-in-london.html"
+        "https://www.electriceyerock.com/2019/03/album-review-zeal-ardor-live-in-london.html",
+        "https://www.electriceyerock.com/2018/12/zeal-and-ardour-la-cigale-paris.html"
       ],
       "lastIdentityUpdatedAt": null,
       "lastAppleCatalogueUpdatedAt": null
