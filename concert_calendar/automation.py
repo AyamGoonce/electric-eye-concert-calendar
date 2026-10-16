@@ -760,13 +760,23 @@ def build(args) -> int:
         previous_state = load_state(
             Path(args.published_state) if args.published_state else None
         )
-        candidate_state = reconcile_state(
-            events,
-            previous_state,
-            now=now,
+
+        from concert_calendar.event_state import (
+            canonical_event_identity, reconcile_state_quarantining_collisions,
+        )
+        candidate_state, quarantined = reconcile_state_quarantining_collisions(
+            events, previous_state, now=now,
             previous_public_events=published_events,
         )
-        validate_retained_identities(events, candidate_state, pipeline_report.retained_snapshots)
+        # Quarantine applies to retained-source checks as well as fresh data.
+        valid_retained_snapshots = {
+            source: [
+                snapshot for snapshot in snapshots
+                if canonical_event_identity(snapshot["event"]) not in quarantined
+            ]
+            for source, snapshots in pipeline_report.retained_snapshots.items()
+        }
+        validate_retained_identities(events, candidate_state, valid_retained_snapshots)
         change_report = build_change_report(events, previous_state, candidate_state, now=now)
         state_digest = write_state(output_dir / STATE_FILENAME, candidate_state)
         candidate_source_state = build_source_state(

@@ -30,6 +30,19 @@ class EventStateError(ValueError):
     pass
 
 
+class UnresolvedPerformanceCollision(EventStateError):
+    """Ambiguous canonical event identity eligible for event-level quarantine."""
+
+    def __init__(self, event: ConcertEvent):
+        self.base_identity = canonical_event_identity(event)
+        self.headliner = event.headliner
+        self.date = event.date
+        self.venue = event.venue
+        super().__init__(
+            'Unresolved duplicate without a performance discriminator: ' + event.headliner
+        )
+
+
 def canonical_event_identity(event: ConcertEvent | dict) -> str:
     """Return a stable identity unaffected by non-semantic metadata changes."""
 
@@ -602,7 +615,7 @@ def assign_performance_identities(
             key, public_id = base, base[:16]
         else:
             if not discriminator:
-                raise EventStateError('Unresolved duplicate without a performance discriminator: ' + event.headliner)
+                raise UnresolvedPerformanceCollision(event)
             key = hashlib.sha256((base + '\x1fperformance\x1f' + discriminator).encode()).hexdigest()
             public_id = key[:16]
         if supplied and supplied not in used_ids and supplied not in reserved_ids:
@@ -612,6 +625,40 @@ def assign_performance_identities(
         event._state_identity, event._public_id = key, public_id
         used_keys.add(key)
         used_ids.add(public_id)
+
+
+
+def reconcile_state_quarantining_collisions(
+    events, previous, *, now, previous_public_events=None,
+):
+    """Isolate ambiguous identities and retain all unrelated concerts."""
+    quarantined = set()
+    while True:
+        try:
+            candidate = reconcile_state(
+                events, previous, now=now,
+                previous_public_events=previous_public_events,
+            )
+            return candidate, quarantined
+        except UnresolvedPerformanceCollision as collision:
+            affected = [
+                event for event in events
+                if canonical_event_identity(event) == collision.base_identity
+            ]
+            if not affected:
+                raise
+            events[:] = [
+                event for event in events
+                if canonical_event_identity(event) != collision.base_identity
+            ]
+            quarantined.add(collision.base_identity)
+            print(
+                f"QUARANTINED AMBIGUOUS EVENT | {collision.headliner} | "
+                f"{collision.date} | {collision.venue} | excluded_records={len(affected)}",
+                flush=True,
+            )
+            if not events:
+                raise EventStateError('All events were quarantined; refusing empty publication')
 
 
 def reconcile_state(
