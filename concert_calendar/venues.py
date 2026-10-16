@@ -3,7 +3,10 @@ import unicodedata
 from html import unescape
 
 from concert_calendar.models import ConcertEvent
-from concert_calendar.venue_metadata import VENUE_METADATA
+from concert_calendar.venue_metadata import reviewed_venue_metadata
+
+
+VENUE_METADATA = reviewed_venue_metadata()
 
 
 VENUE_ALIASES = {
@@ -15,6 +18,7 @@ VENUE_ALIASES = {
     "backstage": "Backstage By The Mill",
     "le backstage by the mill": "Backstage By The Mill",
     "bal chavaux": "Bal Chavaux",
+    "bal chaveaux": "Bal Chavaux",
     "bataclan": "Bataclan",
     "le bataclan": "Bataclan",
     "babour sauvage": "Cabaret Sauvage",
@@ -94,8 +98,8 @@ VENUE_ALIASES = {
     "pavillon baltard": "Pavillon Baltard",
     "point ephemere": "Point Éphémère",
     "le point ephemere": "Point Éphémère",
-    "gq oberkampf": "QG Oberkampf",
-    "qg oberkampf": "QG Oberkampf",
+    "gq oberkampf": "Quartier Général Oberkampf",
+    "qg oberkampf": "Quartier Général Oberkampf",
     "philarmonie de paris": "Philharmonie de Paris",
     "philharmonie": "Philharmonie de Paris",
     "philharmonie de paris": "Philharmonie de Paris",
@@ -153,25 +157,33 @@ VENUE_ALIASES = {
     "le klub": "Le Klub",
     "la bellevilloise": "La Bellevilloise",
     "badaboum": "Badaboum",
+    "le badaboum": "Badaboum",
     "batofar": "Batofar",
     "bateau phare": "Batofar",
     "le bateau phare": "Batofar",
     "grande halle de la villette": "Grande Halle de la Villette",
+    "la grande halle de la villette": "Grande Halle de la Villette",
     "glazart": "Glazart",
     "la dame de canton": "La Dame de Canton",
     "la mecanique ondulatoire": "La Mécanique Ondulatoire",
     "mains d oeuvres": "Mains d'Oeuvres",
+    "mains d uvres": "Mains d'Oeuvres",
     "palais de la porte doree": "Palais de la Porte Dorée",
     "quartier general oberkampf": "Quartier Général Oberkampf",
     "le sub pigalle": "Le Sub Pigalle",
     "hippodrome de longchamp": "Hippodrome de Longchamp",
     "cite de la musique": "Cité de la Musique",
+    "cite du cinema": "Cité du Cinéma",
+    "la cite du cinema": "Cité du Cinéma",
     "pan piper": "Pan Piper",
     "la fleche d or": "La Flèche d'Or",
     "le 104": "Le 104",
     "le zebre de belleville": "Le Zèbre de Belleville",
     "sunset sunside": "Sunset/Sunside",
     "flow": "Flow",
+    "essaim main room": "Essaim – Main Room",
+    "folies bergere": "Folies Bergère",
+    "les folies bergere": "Folies Bergère",
     "jazz club etoile": "Jazz Club Étoile",
     "athenee theatre louis jouvet": "Athénée-Théatre Louis Jouvet",
     "theatre du chatelet": "Théatre du Châtelet",
@@ -235,12 +247,15 @@ VENUE_GEOGRAPHY = {
     "Le Sub Pigalle": ("Paris", "75"),
     "Hippodrome de Longchamp": ("Paris", "75"),
     "Cité de la Musique": ("Paris", "75"),
+    "Cité du Cinéma": ("Saint-Denis", "93"),
     "Pan Piper": ("Paris", "75"),
     "La Flèche d'Or": ("Paris", "75"),
     "Le 104": ("Paris", "75"),
     "Le Zèbre de Belleville": ("Paris", "75"),
     "Sunset/Sunside": ("Paris", "75"),
     "Flow": ("Paris", "75"),
+    "Folies Bergère": ("Paris", "75"),
+    "Essaim – Main Room": ("Paris", "75"),
     "Jazz Club Étoile": ("Paris", "75"),
     "Athénée-Théatre Louis Jouvet": ("Paris", "75"),
     "Théatre du Châtelet": ("Paris", "75"),
@@ -374,6 +389,20 @@ def _wrapped_known_venue(value: str) -> str | None:
 
     for index in range(1, len(parts)):
         candidate = " ".join(parts[index:])
+        normalized = VENUE_ALIASES.get(normalize_venue_key(candidate))
+        if normalized is not None:
+            return normalized
+
+    # Some tour feeds append billing to a valid venue, for example
+    # ``La Maroquinerie – support Zed Yun Pavarotti``. Discard only a
+    # recognized billing suffix and only when the prefix independently
+    # resolves through the reviewed alias registry.
+    if re.match(
+        r"^(?:support|premi(?:ere|ère) partie(?: de)?)\b",
+        parts[-1],
+        flags=re.IGNORECASE,
+    ):
+        candidate = " ".join(parts[:-1])
         normalized = VENUE_ALIASES.get(normalize_venue_key(candidate))
         if normalized is not None:
             return normalized

@@ -127,6 +127,72 @@ class PublicIdContinuityTests(unittest.TestCase):
             ),
         )
 
+    def test_folies_bergere_canonicalization_keeps_public_id(self):
+        self.assert_continuity(
+            event(
+                date="2027-05-19",
+                headliner="Jay-Jay Johanson",
+                venue="LES FOLIES BERGERE",
+            ),
+            event(
+                date="2027-05-19",
+                headliner="Jay-Jay Johanson",
+                venue="Folies Bergère",
+            ),
+        )
+
+    def test_essaim_parent_context_keeps_main_room_public_id(self):
+        self.assert_continuity(
+            event(
+                date="2026-10-29",
+                headliner="Pluko",
+                venue="Main Room",
+                ticket_url="https://bit.ly/Pluko-AEG26",
+            ),
+            event(
+                date="2026-10-29",
+                headliner="Pluko",
+                venue="Essaim – Main Room",
+                ticket_url="https://bit.ly/Pluko-AEG26",
+            ),
+        )
+
+    def test_cite_du_cinema_article_variant_keeps_public_id(self):
+        self.assert_continuity(
+            event(
+                date="2026-12-20",
+                headliner="Marlon Hoffstadt",
+                venue="La Cité du Cinéma",
+                city="Saint-Denis",
+                department="93",
+            ),
+            event(
+                date="2026-12-20",
+                headliner="Marlon Hoffstadt",
+                venue="Cité du Cinéma",
+                city="Saint-Denis",
+                department="93",
+            ),
+        )
+
+    def test_reviewed_venue_spelling_variant_keeps_public_id(self):
+        self.assert_continuity(
+            event(
+                date="2026-11-12",
+                headliner="Example Artist",
+                venue="Mains d'œuvres",
+                city="Saint-Ouen",
+                department="93",
+            ),
+            event(
+                date="2026-11-12",
+                headliner="Example Artist",
+                venue="Mains d'Oeuvres",
+                city="Saint-Ouen",
+                department="93",
+            ),
+        )
+
     def test_different_ticket_product_does_not_force_continuity(self):
         old = event(
             date="2026-10-01",

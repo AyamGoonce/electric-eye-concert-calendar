@@ -4,7 +4,7 @@ from copy import deepcopy
 import re
 from typing import Any
 
-from concert_calendar.venue_metadata import VENUE_METADATA
+from concert_calendar.venue_metadata import reviewed_venue_metadata
 from concert_calendar.venues import (
     VENUE_ALIASES,
     VENUE_GEOGRAPHY,
@@ -12,6 +12,9 @@ from concert_calendar.venues import (
     normalize_venue_key,
     resolve_venue_name,
 )
+
+
+VENUE_METADATA = reviewed_venue_metadata()
 
 
 INVALID_PROVISIONAL_VENUE_KEYS = {

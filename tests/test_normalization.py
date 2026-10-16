@@ -646,6 +646,8 @@ class VenueNormalizationTests(unittest.TestCase):
             "Le Zénith": "Le Zénith Paris – La Villette",
             "THÉÂTRE ALEXANDRE DUMAS": "Théâtre Alexandre Dumas",
             "Théâtre de L’Européen": "L'Européen",
+            "LES FOLIES BERGERE": "Folies Bergère",
+            "FOLIES BERGÈRE": "Folies Bergère",
         }
 
         for source, expected in aliases.items():
@@ -786,6 +788,20 @@ class VenueNormalizationTests(unittest.TestCase):
                     for variant in variants
                 }
                 self.assertEqual({expected}, normalized)
+
+    def test_cite_du_cinema_article_variant_merges_same_show(self):
+        aeg = make_event("Marlon Hoffstadt", "Cité du Cinéma")
+        dice = make_event("Marlon Hoffstadt", "La Cité du Cinéma")
+        for item in (aeg, dice):
+            item.date = "2026-12-20"
+            item.city, item.department = "Saint-Denis", "93"
+            normalize_event_venue(item)
+
+        merged = deduplicate_events([aeg, dice])
+
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Cité du Cinéma", merged[0].venue)
+        self.assertEqual(("Saint-Denis", "93"), (merged[0].city, merged[0].department))
 
     def test_accord_parfait_aliases_and_verified_geography(self):
         normalized = []
@@ -1361,6 +1377,31 @@ Stéphane Chandelier • Batterie
 
 
 class DiscoveryAndDetailEnrichmentTests(unittest.TestCase):
+    def test_aeg_essaim_resolution_is_limited_to_reviewed_events(self):
+        html = """
+        <script type="application/ld+json">{
+          "@type":"Event", "startDate":"2026-10-29",
+          "location":{"name":"Main Room","address":{"addressLocality":"Paris"}}
+        }</script>
+        <div class="event-details">
+          <p class="event-date">29 oct.</p>
+          <p class="event-venue">Main Room</p>
+        </div>
+        """
+        response = Mock(text=html)
+        response.raise_for_status = Mock()
+
+        with patch("concert_calendar.scrapers.aeg.requests.get", return_value=response):
+            verified = parse_aeg_detail(
+                "https://www.aegpresents.fr/event/pluko/", "Pluko"
+            )
+            unrelated = parse_aeg_detail(
+                "https://www.aegpresents.fr/event/unrelated/", "Other Artist"
+            )
+
+        self.assertEqual("Essaim – Main Room", verified[0].venue)
+        self.assertEqual("Main Room", unrelated[0].venue)
+
     def test_aeg_json_ld_locality_recovers_cityless_montell_row(self):
         html = """
         <script type="application/ld+json">{

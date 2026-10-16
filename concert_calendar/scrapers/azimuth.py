@@ -94,7 +94,7 @@ def parse_card(card):
 
     support_match = re.fullmatch(
         r"(.+?)\s+[–-]\s+"
-        r"première partie de\s+"
+        r"(?:support|première partie(?: de)?)\s+"
         r"(.+?)(?:\s+[–-]\s+.*)?",
         venue,
         flags=re.IGNORECASE,
@@ -103,7 +103,12 @@ def parse_card(card):
     if support_match:
         venue, main_artist = support_match.groups()
         openers = [headliner]
-        headliner = clean_text(main_artist)
+        headliner = re.sub(
+            r"\s+solo show$",
+            "",
+            clean_text(main_artist),
+            flags=re.IGNORECASE,
+        ).strip()
         venue = clean_text(venue)
 
     if not event_date:

@@ -14,6 +14,23 @@ def event(title):
 
 
 class DiceBillingNormalizationTests(TestCase):
+    def test_essaim_main_room_requires_the_reviewed_dice_venue_id(self):
+        payload = {
+            "id": "essaim-event",
+            "name": "Artist",
+            "dates": {"event_start_date": "2026-11-03T20:00:00+00:00"},
+            "venues": [{
+                "name": "Main Room",
+                "id": "15305",
+                "city": {"name": "Paris"},
+            }],
+        }
+
+        self.assertEqual("Essaim – Main Room", parse_event(payload).venue)
+
+        payload["venues"][0]["id"] = "unrelated-main-room"
+        self.assertEqual("Main Room", parse_event(payload).venue)
+
     def test_festival_suffix_is_series_metadata(self):
         parsed = event("ear + guests — Pitchfork Music Festival 2026")
         self.assertEqual("ear", parsed.headliner)

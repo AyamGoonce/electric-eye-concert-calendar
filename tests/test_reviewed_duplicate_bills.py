@@ -1,6 +1,7 @@
 import unittest
 
 from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.event_state import canonical_event_identity
 from concert_calendar.models import ConcertEvent
 from concert_calendar.venues import normalize_event_venue
 
@@ -31,6 +32,81 @@ def event(
 
 
 class ReviewedDuplicateBillTests(unittest.TestCase):
+
+    def test_morbidfest_brand_merges_with_authoritative_artist_bill(self):
+        artist_bill = ConcertEvent(
+            date="2026-12-13",
+            headliner="I AM MORBID",
+            venue="La Machine du Moulin Rouge",
+            city="Paris",
+            department="75",
+            openers=["STELLVRIS"],
+            co_headliners=["ATHEIST", "CANCER"],
+            performers=["I AM MORBID", "ATHEIST", "CANCER"],
+            promoters=["Garmonbozia"],
+            ticket_url="https://tickets.example/morbidfest",
+            source_names=["Garmonbozia"],
+            electric_eye_links=[{
+                "name": "I Am Morbid",
+                "url": "https://www.electriceyerock.com/morbidfest",
+            }],
+        )
+        festival_card = ConcertEvent(
+            date="2026-12-13",
+            headliner="MORBIDFEST",
+            venue="La Machine du Moulin Rouge",
+            city="Paris",
+            department="75",
+            ticket_url="https://www.lamachinedumoulinrouge.com/evenement/morbidfest-3/",
+            image_url="https://www.lamachinedumoulinrouge.com/morbidfest.png",
+            image_source="La Machine du Moulin Rouge",
+            source_names=["La Machine du Moulin Rouge"],
+        )
+
+        result = deduplicate_events([artist_bill, festival_card])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual("I AM MORBID", result[0].headliner)
+        self.assertEqual(["ATHEIST", "CANCER"], result[0].co_headliners)
+        self.assertEqual(["STELLVRIS"], result[0].openers)
+        self.assertEqual("MORBIDFEST", result[0].festival_name)
+        self.assertEqual(festival_card.ticket_url, result[0].ticket_url)
+        self.assertEqual(festival_card.image_url, result[0].image_url)
+        self.assertEqual(artist_bill.electric_eye_links, result[0].electric_eye_links)
+        self.assertEqual(
+            "3a598d64685d086d",
+            canonical_event_identity(result[0])[:16],
+        )
+
+    def test_reviewed_morbidfest_rule_does_not_merge_another_same_day_show(self):
+        events = [
+            event(
+                "2026-12-13",
+                "I AM MORBID",
+                "La Machine du Moulin Rouge",
+                source="Garmonbozia",
+            ),
+            event(
+                "2026-12-13",
+                "MORBIDFEST",
+                "La Machine du Moulin Rouge",
+                source="La Machine du Moulin Rouge",
+            ),
+            event(
+                "2026-12-13",
+                "Late Night Metal Afterparty",
+                "La Machine du Moulin Rouge",
+                source="La Machine du Moulin Rouge",
+            ),
+        ]
+
+        result = deduplicate_events(events)
+
+        self.assertEqual(2, len(result))
+        self.assertEqual(
+            {"I AM MORBID", "Late Night Metal Afterparty"},
+            {item.headliner for item in result},
+        )
 
     def test_finojet_full_bill_merges_with_structured_dice_bill(self):
         events = [

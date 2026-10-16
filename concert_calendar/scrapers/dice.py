@@ -20,6 +20,7 @@ REQUEST_TIMEOUT = 30
 PAGE_SIZE = 24
 MAX_PAGES = 100
 MAX_DIAGNOSTICS = 200
+ESSAIM_MAIN_ROOM_VENUE_ID = "15305"
 _DIAGNOSTICS = []
 
 
@@ -300,11 +301,18 @@ def parse_event(data):
         return None
 
     venue_data = venues[0]
-    venue = clean_text(venue_data.get("name"))
+    raw_venue = clean_text(venue_data.get("name"))
+    venue_id = clean_text(venue_data.get("id"))
     city = clean_text((venue_data.get("city") or {}).get("name"))
 
-    if not venue or not city:
+    if not raw_venue or not city:
         return None
+
+    venue = (
+        "Essaim – Main Room"
+        if venue_id == ESSAIM_MAIN_ROOM_VENUE_ID
+        else raw_venue
+    )
 
     try:
         event_date = datetime.fromisoformat(start_date).date().isoformat()
@@ -354,8 +362,8 @@ def parse_event(data):
             "detail_url": f"https://dice.fm/event/{event_id}",
             "raw_event_title": event_name,
             "raw_performer_array": data.get("artists") or data.get("performers"),
-            "raw_venue": venue,
-            "raw_venue_id": venue_data.get("id"),
+            "raw_venue": raw_venue,
+            "raw_venue_id": venue_id,
             "raw_room": venue_data.get("room") or venue_data.get("space") or venue_data.get("stage"),
             "raw_parent_venue": venue_data.get("parent_name") or venue_data.get("parentVenue"),
             "raw_address": venue_data.get("address"),

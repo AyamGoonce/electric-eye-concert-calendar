@@ -20,6 +20,13 @@ API_URL = "https://www.aegpresents.fr/wp-json/dest/v1/events"
 BASE_URL = "https://www.aegpresents.fr"
 REQUEST_TIMEOUT = 30
 
+# AEG exposes these Essaim listings only as "Main Room" / Paris, without a
+# stable venue id or street address. Keep this review event-specific.
+REVIEWED_ESSAIM_MAIN_ROOM_EVENTS = {
+    ("https://www.aegpresents.fr/event/pluko/", "2026-10-29", "pluko"),
+    ("https://www.aegpresents.fr/event/liim/", "2026-11-03", "liim"),
+}
+
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -168,6 +175,21 @@ def strip_confirmed_venue_suffix(headliner, venue):
         return artist
 
     return title
+
+
+def reviewed_venue_name(detail_url, event_date, headliner, venue, city):
+    """Resolve venue names backed by reviewed, event-specific AEG evidence."""
+
+    normalized_url = f"{detail_url.rstrip('/')}/"
+    key = (normalized_url, event_date, re.sub(r"\s+", " ", headliner).strip().casefold())
+    if (
+        key in REVIEWED_ESSAIM_MAIN_ROOM_EVENTS
+        and venue.casefold() == "main room"
+        and city.casefold() == "paris"
+    ):
+        return "Essaim – Main Room"
+
+    return venue
 
 
 def json_ld_location(json_ld):
@@ -328,6 +350,13 @@ def parse_detail_page(detail_url, headliner):
         ticket_url = find_ticket_url(
             row,
             detail_url,
+        )
+        venue = reviewed_venue_name(
+            detail_url,
+            iso_date,
+            headliner,
+            venue,
+            city,
         )
 
         event = ConcertEvent(

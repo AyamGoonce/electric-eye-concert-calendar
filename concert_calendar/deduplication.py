@@ -221,6 +221,17 @@ REVIEWED_EVENT_MOVES = (
 # date, canonical venue, and the complete set of source-card artist identities.
 REVIEWED_EVENT_BILLS = (
     {
+        # La Machine lists the festival brand while Garmonbozia supplies the
+        # explicit artist hierarchy for the same physical concert.
+        "date": "2026-12-13",
+        "venue": "La Machine du Moulin Rouge",
+        "artists": ("i am morbid", "morbidfest"),
+        "headliner": "I AM MORBID",
+        "co_headliners": ["ATHEIST", "CANCER"],
+        "openers": ["STELLVRIS"],
+        "festival_name": "MORBIDFEST",
+    },
+    {
         "date": "2027-03-09",
         "venue": "Élysée Montmartre",
         "artists": ("graveyard and blues pills",),
@@ -1691,6 +1702,8 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
         base.co_headliners = _stable_unique([
             *(base.co_headliners or []), *(rule.get("co_headliners", [])),
         ]) or None
+        if rule.get("festival_name"):
+            base.festival_name = rule["festival_name"]
 
     return [event for event in events if id(event) not in removed]
 

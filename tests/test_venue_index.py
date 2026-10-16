@@ -1,9 +1,26 @@
 import unittest
+from unittest.mock import patch
 
+from concert_calendar.venue_metadata import (
+    VENUE_METADATA,
+    VENUE_METADATA_ADDITIONS,
+    reviewed_venue_metadata,
+)
 from concert_calendar.venue_index import build_venue_index
 
 
 class VenueIndexTests(unittest.TestCase):
+
+    def test_reviewed_metadata_additions_merge_without_overwriting_base(self):
+        self.assertFalse(set(VENUE_METADATA) & set(VENUE_METADATA_ADDITIONS))
+        merged = reviewed_venue_metadata()
+        for name, metadata in VENUE_METADATA_ADDITIONS.items():
+            self.assertEqual(metadata, merged[name])
+
+    def test_reviewed_metadata_additions_reject_base_collisions(self):
+        with patch.dict(VENUE_METADATA_ADDITIONS, {"Accor Arena": {}}):
+            with self.assertRaisesRegex(RuntimeError, "Accor Arena"):
+                reviewed_venue_metadata()
 
     @staticmethod
     def event(venue, *, city="Paris", event_id="aaaaaaaaaaaaaaaa"):
@@ -215,6 +232,28 @@ class VenueIndexTests(unittest.TestCase):
             },
             set(diagnostics["excludedInvalidEventVenues"]),
         )
+
+    def test_reviewed_variants_use_canonical_filter_and_index_names(self):
+        events = [
+            self.event("LES FOLIES BERGERE", event_id="1111111111111111"),
+            self.event("FOLIES BERGÈRE", event_id="2222222222222222"),
+            self.event("Essaim – Main Room", event_id="3333333333333333"),
+            self.event("Main Room", event_id="4444444444444444"),
+        ]
+
+        index, diagnostics = build_venue_index(
+            events,
+            include_diagnostics=True,
+        )
+
+        self.assertEqual(2, len(index["Folies Bergère"]["events"]))
+        self.assertEqual(1, len(index["Essaim – Main Room"]["events"]))
+        self.assertNotIn("LES FOLIES BERGERE", index)
+        self.assertNotIn("FOLIES BERGÈRE", index)
+        self.assertNotIn("Main Room", index)
+        self.assertNotIn("LES FOLIES BERGERE", diagnostics["unknownEventVenues"])
+        self.assertIn("Main Room", diagnostics["unknownEventVenues"])
+        self.assertIn("Main Room", diagnostics["excludedInvalidEventVenues"])
 
     def test_reviewed_suffix_in_contaminated_label_resolves_canonically(self):
         metadata = {

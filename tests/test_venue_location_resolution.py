@@ -27,6 +27,11 @@ class VenueLocationResolutionTests(unittest.TestCase):
             "Élyée-Montmartre": "Élysée Montmartre",
             "O'Sullivan's Backstage By The Mill": "Backstage By The Mill",
             "O' Sullivans Backstage By The Mill": "Backstage By The Mill",
+            "Bal Chaveaux": "Bal Chavaux",
+            "Le Badaboum": "Badaboum",
+            "La Grande Halle de La Villette": "Grande Halle de la Villette",
+            "Mains d'œuvres": "Mains d'Oeuvres",
+            "QG Oberkampf": "Quartier Général Oberkampf",
         }
 
         for raw, expected in cases.items():
@@ -50,6 +55,7 @@ class VenueLocationResolutionTests(unittest.TestCase):
             ("Le Sub Pigalle", "Paris"),
             ("Hippodrome de Longchamp", "Paris"),
             ("Cité de la Musique", "Paris"),
+            ("Cité du Cinéma", "Saint-Denis"),
             ("Pan Piper", "Paris"),
             ("La Flèche d'Or", "Paris"),
             ("Le 104", "Paris"),
@@ -137,8 +143,15 @@ class VenueLocationResolutionTests(unittest.TestCase):
 
     def test_generic_unknown_venue_is_still_not_guessed(self):
         self.assertIsNone(resolve_venue_name("Main Room", "Paris"))
+        self.assertIsNone(resolve_venue_name("Main Room", "Montreuil"))
         self.assertIsNone(resolve_venue_name("Club", "Paris"))
         self.assertIsNone(resolve_venue_name("Imaginary Hall", "Paris"))
+
+    def test_cite_du_cinema_article_variant_resolves_canonically(self):
+        self.assertEqual(
+            "Cité du Cinéma",
+            resolve_venue_name("La Cité du Cinéma", "Saint-Denis"),
+        )
 
 
 if __name__ == "__main__":

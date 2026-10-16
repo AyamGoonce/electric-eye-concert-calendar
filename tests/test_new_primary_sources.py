@@ -390,7 +390,7 @@ class NewPrimarySourceTests(TestCase):
         ])
 
         self.assertEqual(1, len(result))
-        self.assertEqual("QG Oberkampf", result[0].venue)
+        self.assertEqual("Quartier Général Oberkampf", result[0].venue)
         self.assertEqual("19:00", result[0].start_time)
 
     def test_persona_reviewed_exact_ticket_title_variants_reconcile(self):

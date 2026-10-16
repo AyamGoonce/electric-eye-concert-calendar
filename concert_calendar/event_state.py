@@ -259,7 +259,10 @@ def _public_ticket_identity(value: str | None) -> str | None:
     ))
 
 
-def _public_venue_identity(value: str | None) -> str:
+def _public_venue_identity(
+    value: str | None,
+    city: str | None = None,
+) -> str:
     """Return the canonical known-venue identity used for route continuity."""
 
     key = normalize_venue_key(value or "")
@@ -267,9 +270,9 @@ def _public_venue_identity(value: str | None) -> str:
         return ""
 
     # Local import avoids changing module dependency order.
-    from concert_calendar.venues import VENUE_ALIASES
+    from concert_calendar.venues import resolve_venue_name
 
-    canonical = VENUE_ALIASES.get(key)
+    canonical = resolve_venue_name(value or "", city)
     return normalize_venue_key(canonical or value or "")
 
 
@@ -305,8 +308,11 @@ def _published_continuity_score(event: ConcertEvent, published: dict) -> int | N
     new_ticket = _public_ticket_identity(event.ticket_url)
     same_ticket = bool(old_ticket and old_ticket == new_ticket)
 
-    old_venue = _public_venue_identity(published.get("v", ""))
-    new_venue = _public_venue_identity(event.venue)
+    old_venue = _public_venue_identity(
+        published.get("v", ""),
+        published.get("c", ""),
+    )
+    new_venue = _public_venue_identity(event.venue, event.city)
     same_venue = bool(old_venue and old_venue == new_venue)
 
     old_bill_phrase = _public_bill_phrase(

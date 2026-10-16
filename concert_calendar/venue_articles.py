@@ -9,9 +9,12 @@ from concert_calendar.content_index import (
     classify_article,
     resized_blogger_image,
 )
-from concert_calendar.venue_metadata import VENUE_METADATA
+from concert_calendar.venue_metadata import reviewed_venue_metadata
 from concert_calendar.venue_index import canonicalize_venue_metadata
 from concert_calendar.venues import resolve_venue_name
+
+
+VENUE_METADATA = reviewed_venue_metadata()
 
 
 # Explicit reviewed exceptions only. Do not turn this into a fuzzy-title system.
