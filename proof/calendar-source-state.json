@@ -6225,7 +6225,7 @@
           "state_identity": "44e224606b7dc4a5abbcd49c519d6f575cb9f68730af95077c961cf5d7b125c3"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11395,7 +11395,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -12198,7 +12198,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -14735,7 +14735,7 @@
           "state_identity": "5f1c421c2190cb4553cfcb36193b5fc584e65b9a5f9acc74d86957d68d5827fc"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -16814,7 +16814,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -17177,7 +17177,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -18970,7 +18970,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -19025,9 +19025,7 @@
             "authoritative_billing": false,
             "category": "Synth wave",
             "city": "Montreuil",
-            "co_headliners": [
-              "THE DREAMS + GUEST"
-            ],
+            "co_headliners": null,
             "date": "2026-10-22",
             "department": "93",
             "event_title": null,
@@ -19040,22 +19038,19 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "The Dreams + Lutèce Lockness",
-            "identity_aliases": [
-              "THE DREAMS + GUEST"
-            ],
+            "headliner": "THE DREAMS + GUEST",
+            "identity_aliases": null,
             "image_source": null,
             "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": [
-              "The Dreams + Lutèce Lockness",
               "THE DREAMS + GUEST"
             ],
             "promoters": [
               "La Marbrerie"
             ],
-            "raw_title": "The Dreams + Lutèce Lockness",
+            "raw_title": "THE DREAMS + GUEST",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:30",
@@ -19074,14 +19069,12 @@
             "authoritative_billing": false,
             "category": "french indie",
             "city": "Montreuil",
-            "co_headliners": [
-              "Koudlam"
-            ],
+            "co_headliners": null,
             "date": "2026-10-23",
             "department": "93",
             "event_title": null,
             "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1855789475795649",
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -19090,16 +19083,13 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "KOUDLAM + LA MVERTE + FRANKY GOGO",
-            "identity_aliases": [
-              "Koudlam"
-            ],
+            "identity_aliases": null,
             "image_source": null,
             "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": [
-              "KOUDLAM + LA MVERTE + FRANKY GOGO",
-              "Koudlam"
+              "KOUDLAM + LA MVERTE + FRANKY GOGO"
             ],
             "promoters": [
               "La Marbrerie"
@@ -19225,9 +19215,7 @@
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
             "headliner": "GONG",
-            "identity_aliases": [
-              "GONG"
-            ],
+            "identity_aliases": null,
             "image_source": "Bal Chavaux",
             "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/923-field_illustration_id-1779441897.jpg?h=f4f23771&itok=lMNwXz8V",
             "openers": null,
@@ -19350,7 +19338,7 @@
             "department": "93",
             "event_title": null,
             "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/4396513047328817",
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -19359,9 +19347,7 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "MAREUX",
-            "identity_aliases": [
-              "Mareux"
-            ],
+            "identity_aliases": null,
             "image_source": "Bal Chavaux",
             "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/925-field_illustration_id-1779784088.png?h=57024e64&itok=nF9eJR7Q",
             "openers": null,
@@ -19575,9 +19561,7 @@
             "authoritative_billing": false,
             "category": "Italo-disco, Electro-clash , Synth wave",
             "city": "Montreuil",
-            "co_headliners": [
-              "NO SEX LAST NIGHT"
-            ],
+            "co_headliners": null,
             "date": "2026-11-13",
             "department": "93",
             "event_title": null,
@@ -19591,16 +19575,13 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES",
-            "identity_aliases": [
-              "NO SEX LAST NIGHT"
-            ],
+            "identity_aliases": null,
             "image_source": "Bal Chavaux",
             "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/2026-10/LFSM_affiche_concert_spe-13nov-4X5.png?h=e8711843&itok=DmxMQ0QX",
             "openers": null,
             "performance_marker": null,
             "performers": [
-              "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES",
-              "NO SEX LAST NIGHT"
+              "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES"
             ],
             "promoters": [
               "La Marbrerie"
@@ -19720,7 +19701,7 @@
             "department": "93",
             "event_title": null,
             "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1467918094982117/",
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -19729,9 +19710,7 @@
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
             "headliner": "L.A. GUNS",
-            "identity_aliases": [
-              "L.A. GUNS"
-            ],
+            "identity_aliases": null,
             "image_source": "Bal Chavaux",
             "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/865-illustration_id-1772728755.png?h=e8711843&itok=0Am_Oqf7",
             "openers": null,
@@ -19810,7 +19789,7 @@
             "department": "93",
             "event_title": null,
             "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1749623383150485/",
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -19819,9 +19798,7 @@
             "genre_source": "Official/current event description and reviewed catalog",
             "genres_public": null,
             "headliner": "WEDNESDAY 13 & THE BIRTHDAY MASSACRE",
-            "identity_aliases": [
-              "Wednesday 13 & The Birthday Massacre"
-            ],
+            "identity_aliases": null,
             "image_source": "Bal Chavaux",
             "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/941-field_illustration_id-1780647979.jpg?h=6c539970&itok=-M71haOz",
             "openers": null,
@@ -20027,14 +20004,12 @@
             "authoritative_billing": false,
             "category": "#MusiquesItaliennes, Rock",
             "city": "Montreuil",
-            "co_headliners": [
-              "AFTERHOURS"
-            ],
+            "co_headliners": null,
             "date": "2027-01-17",
             "department": "93",
             "event_title": null,
             "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1503565961394058/",
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -20043,16 +20018,13 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Afterhours tour 2027 - quello che non c'è",
-            "identity_aliases": [
-              "AFTERHOURS"
-            ],
+            "identity_aliases": null,
             "image_source": null,
             "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": [
-              "Afterhours tour 2027 - quello che non c'è",
-              "AFTERHOURS"
+              "Afterhours tour 2027 - quello che non c'è"
             ],
             "promoters": [
               "Persona Grata"
@@ -20134,9 +20106,7 @@
             "genre_source": "Apple Music + Bandcamp",
             "genres_public": null,
             "headliner": "THE LEGENDARY PINK DOTS",
-            "identity_aliases": [
-              "The Legendary Pink Dots"
-            ],
+            "identity_aliases": null,
             "image_source": "Bal Chavaux",
             "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/1037-field_illustration_id-1789029282.png?h=57024e64&itok=_6GshXoG",
             "openers": null,
@@ -20343,7 +20313,7 @@
           "state_identity": "b958a0354f81b07c35bf32994860a447cdb5ffe09c790746131aefece6cd341b"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -21949,7 +21919,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -22317,8 +22287,8 @@
             "date": "2026-11-15",
             "department": "75",
             "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/775836828926266/",
+            "event_type": null,
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": "Elec, Electro / Dance / Club",
             "genre_evidence": [
@@ -22331,19 +22301,15 @@
             "genre_public": "Electronic",
             "genre_source": "Bataclan",
             "genres_public": null,
-            "headliner": "Boy Harsher",
-            "identity_aliases": [
-              "Boy Harsher"
-            ],
+            "headliner": "BOY HARSHER",
+            "identity_aliases": null,
             "image_source": "Bataclan",
             "image_url": "https://bataclan-medias.s3.eu-west-3.amazonaws.com/list_1080x1080_c7e6d98012.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Boy Harsher"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "Boy Harsher",
+            "raw_title": null,
             "series_name": null,
             "sold_out": true,
             "start_time": null,
@@ -23767,7 +23733,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -25314,7 +25280,7 @@
           "state_identity": "fd5e8756763e42b3d7b98017d2857fabfb8da5ab6baad909b989ac99ff4a627e"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -26214,16 +26180,14 @@
         {
           "event": {
             "announced_at": null,
-            "authoritative_billing": true,
+            "authoritative_billing": false,
             "category": "Pop/Rock",
             "city": "Paris",
-            "co_headliners": [
-              "THE CINELLI BROTHERS"
-            ],
+            "co_headliners": null,
             "date": "2026-12-03",
             "department": "75",
-            "event_title": "MAZINGO + THE CINELLI BROTHERS",
-            "event_type": "concert",
+            "event_title": null,
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": "Pop/Rock",
@@ -26241,21 +26205,14 @@
               "Rock / Indie / Punk"
             ],
             "headliner": "MAZINGO",
-            "identity_aliases": [
-              "MAZINGO"
-            ],
+            "identity_aliases": null,
             "image_source": "Café de la Danse",
             "image_url": "https://www.cafedeladanse.com/wp-content/uploads/2026/07/MAZINGO-1382_COLORA©YANN_ORHAN_3000PX-952x579.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "MAZINGO",
-              "THE CINELLI BROTHERS"
-            ],
-            "promoters": [
-              "ORDA"
-            ],
-            "raw_title": "MAZINGO + THE CINELLI BROTHERS",
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": "20:00",
@@ -27085,7 +27042,7 @@
           "state_identity": "90716293fd943618bb05e2d75d6f2a5a5333d07968b66300fd79fc954a2ae1d5"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -28426,7 +28383,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -29008,7 +28965,7 @@
           "state_identity": "b83f7032e595a01ef4687947c42d1e20afdbc8b7bf0117c869b75b632a270f49"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -29669,7 +29626,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -32187,7 +32144,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -32679,7 +32636,7 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -35886,7 +35843,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -36756,7 +36713,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -39670,7 +39627,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -44546,7 +44503,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -46015,7 +45972,7 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -47401,7 +47358,7 @@
             "date": "2027-03-07",
             "department": "75",
             "event_title": null,
-            "event_type": "concert",
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
@@ -47410,19 +47367,15 @@
             "genre_public": "Folk / Country",
             "genre_source": "MusicBrainz artist tags via exact Wikidata identity",
             "genres_public": null,
-            "headliner": "Mannarino",
-            "identity_aliases": [
-              "Mannarino"
-            ],
+            "headliner": "MANNARINO",
+            "identity_aliases": null,
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/09/mmr-shotgun-banniere-1-1000x523.png",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Mannarino"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "Mannarino",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": "19:00",
@@ -47574,7 +47527,7 @@
           "state_identity": "0c1a312fe16e825181e51bb1b117e4a23b1dc3f4bc2116abe15428cbbe27a744"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -53216,7 +53169,7 @@
           "state_identity": "d5e9f2e00091edec3f1c3b6e75f19349ede05905962d9a4489be1085fac26e26"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -54968,7 +54921,7 @@
           "state_identity": "ae549f194d130021ec0b52ebc05b967634529adb39d0ae18e58bf2f6bda87fcb"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -55782,7 +55735,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -56579,7 +56532,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -58042,7 +57995,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -60003,7 +59956,7 @@
           "state_identity": "6bb00dcf476a1c7a1e65b6097449e40b0c9dcca57f15e384cdbd0d0faff10858"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -61891,8 +61844,8 @@
             "date": "2027-02-04",
             "department": "75",
             "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1526534685642442",
+            "event_type": null,
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": "rock",
             "genre_evidence": [
@@ -61905,19 +61858,15 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "Le Trabendo",
             "genres_public": null,
-            "headliner": "TRAMHAUS",
-            "identity_aliases": [
-              "TRAMHAUS"
-            ],
+            "headliner": "Tramhaus",
+            "identity_aliases": null,
             "image_source": "Le Trabendo",
             "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/06/Image-site-Trabendo-9-1500x844.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "TRAMHAUS"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "TRAMHAUS",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -63279,7 +63228,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -64826,7 +64775,7 @@
           "state_identity": "e396176a9bedd4ee0d9913896010d8bd519770da7738b7a62fe370c3f8fd0246"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -69395,7 +69344,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -70152,7 +70101,7 @@
           "state_identity": "d2952fd95f700071908484d264c842b004610d145b165e7c65f5be6c5f9dd243"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -81196,7 +81145,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -81697,7 +81646,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -86365,7 +86314,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -89082,7 +89031,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -89788,7 +89737,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -89964,63 +89913,6 @@
         {
           "event": {
             "announced_at": null,
-            "authoritative_billing": true,
-            "category": "Pop/Rock",
-            "city": "Paris",
-            "co_headliners": [
-              "THE CINELLI BROTHERS"
-            ],
-            "date": "2026-12-03",
-            "department": "75",
-            "event_title": "MAZINGO + THE CINELLI BROTHERS",
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Pop/Rock",
-            "genre_evidence": [
-              {
-                "raw": "Pop/Rock",
-                "source": "Café de la Danse"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Café de la Danse",
-            "genres_public": [
-              "Pop",
-              "Rock / Indie / Punk"
-            ],
-            "headliner": "MAZINGO",
-            "identity_aliases": [
-              "MAZINGO"
-            ],
-            "image_source": "Café de la Danse",
-            "image_url": "https://www.cafedeladanse.com/wp-content/uploads/2026/07/MAZINGO-1382_COLORA©YANN_ORHAN_3000PX-952x579.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "MAZINGO",
-              "THE CINELLI BROTHERS"
-            ],
-            "promoters": [
-              "ORDA"
-            ],
-            "raw_title": "MAZINGO + THE CINELLI BROTHERS",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://my.weezevent.com/mazingo-cafe-de-la-danse-paris-031226",
-            "venue": "Café de la Danse"
-          },
-          "first_seen": "2026-09-02T22:59:38Z",
-          "public_id": "0c652afd0300cfff",
-          "state_identity": "0c652afd0300cfffc67157783057a38590c3c2fd0dc33cc7131b4fe04625380a"
-        },
-        {
-          "event": {
-            "announced_at": null,
             "authoritative_billing": false,
             "category": null,
             "city": "Courbevoie",
@@ -90112,104 +90004,6 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "Synth wave",
-            "city": "Montreuil",
-            "co_headliners": [
-              "THE DREAMS + GUEST"
-            ],
-            "date": "2026-10-22",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "The Dreams + Lutèce Lockness",
-            "identity_aliases": [
-              "THE DREAMS + GUEST"
-            ],
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "The Dreams + Lutèce Lockness",
-              "THE DREAMS + GUEST"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "The Dreams + Lutèce Lockness",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/dreams-guest",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "86408b78b048d645",
-          "state_identity": "86408b78b048d645c13656ae14490abc7d96ed4e5c3d6601562ec780e8df3b43"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "french indie",
-            "city": "Montreuil",
-            "co_headliners": [
-              "Koudlam"
-            ],
-            "date": "2026-10-23",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1855789475795649",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "KOUDLAM + LA MVERTE + FRANKY GOGO",
-            "identity_aliases": [
-              "Koudlam"
-            ],
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "KOUDLAM + LA MVERTE + FRANKY GOGO",
-              "Koudlam"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "KOUDLAM + LA MVERTE + FRANKY GOGO",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/koudlam-la-mverte-franky-gogo",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-09-30T12:01:31Z",
-          "public_id": "0d8b6a935327abdb",
-          "state_identity": "0d8b6a935327abdb2e4fe77da4d0d6fcfac0bded1016234b8812d4d1022e324c"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
             "category": null,
             "city": "Montreuil",
             "co_headliners": null,
@@ -90253,56 +90047,6 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-24",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "concert Post-Punk déluré",
-            "genre_evidence": [
-              {
-                "raw": "concert Post-Punk déluré",
-                "source": "Point Éphémère"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Point Éphémère",
-            "genres_public": null,
-            "headliner": "La Sécurité",
-            "identity_aliases": [
-              "La Sécurité",
-              "LA SECURITE + GRIFE"
-            ],
-            "image_source": "Point Éphémère",
-            "image_url": "https://images.prismic.io/pointf/aivd-KlQnVZVESBM_Instagram-LaS%C3%A9curit%C3%A9-EU_UKTour-Spring_Summer2026-blank-copie.jpg?auto=format,compress",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "La Sécurité"
-            ],
-            "promoters": null,
-            "raw_title": "La Sécurité",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://link.dice.fm/v12d5d654695",
-            "venue": "Point Éphémère"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "e672ec6faaf3f005",
-          "state_identity": "e672ec6faaf3f0059ac957c9fe735e542de3fe4ebeeac881e27d6cc640aa1230"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
             "city": "Montreuil",
             "co_headliners": null,
             "date": "2026-10-29",
@@ -90339,98 +90083,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "fb719b268102c223",
           "state_identity": "fb719b268102c223ea130bdbb25035d50af7059d03bb02b3953e20733b44f5d3"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Rock psychédélique",
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2026-10-30",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "GONG",
-            "identity_aliases": [
-              "GONG"
-            ],
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/923-field_illustration_id-1779441897.jpg?h=f4f23771&itok=lMNwXz8V",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "GONG"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "GONG",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/gong",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-08-23T21:52:57Z",
-          "public_id": "b326a2ef6619afd8",
-          "state_identity": "b326a2ef6619afd8794c5d675fe3d9157dccd4fcdc6fadb4af985ce1f6615716"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Darkwave, Post-punk",
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2026-10-31",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/4396513047328817",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "MAREUX",
-            "identity_aliases": [
-              "Mareux"
-            ],
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/925-field_illustration_id-1779784088.png?h=57024e64&itok=nF9eJR7Q",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "MAREUX"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "MAREUX",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/mareux",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-09-07T18:18:21Z",
-          "public_id": "7cd76463ddaa11bd",
-          "state_identity": "7cd76463ddaa11bd14acf48934c2716d0f1ab96780f99bdd8016394c2fb3c50a"
         },
         {
           "event": {
@@ -90557,157 +90209,6 @@
           "first_seen": "2026-09-30T12:01:31Z",
           "public_id": "639c9dac35d415ad",
           "state_identity": "639c9dac35d415ad785f817c6ecbdfbd666b79c3e6a3a1830cfa4a7840e4ad57"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Italo-disco, Electro-clash , Synth wave",
-            "city": "Montreuil",
-            "co_headliners": [
-              "NO SEX LAST NIGHT"
-            ],
-            "date": "2026-11-13",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES",
-            "identity_aliases": [
-              "NO SEX LAST NIGHT"
-            ],
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/2026-10/LFSM_affiche_concert_spe-13nov-4X5.png?h=e8711843&itok=DmxMQ0QX",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES",
-              "NO SEX LAST NIGHT"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-09-30T12:01:31Z",
-          "public_id": "480b290161c7bfc6",
-          "state_identity": "480b290161c7bfc6bf89cf031f0849caaa86002f85da8d3a7738f1b46198bb0b"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-15",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/775836828926266/",
-            "festival_name": null,
-            "genre": "Elec, Electro / Dance / Club",
-            "genre_evidence": [
-              {
-                "raw": "Elec, Electro / Dance / Club",
-                "source": "Bataclan"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Electronic",
-            "genre_source": "Bataclan",
-            "genres_public": null,
-            "headliner": "Boy Harsher",
-            "identity_aliases": [
-              "Boy Harsher"
-            ],
-            "image_source": "Bataclan",
-            "image_url": "https://bataclan-medias.s3.eu-west-3.amazonaws.com/list_1080x1080_c7e6d98012.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Boy Harsher"
-            ],
-            "promoters": null,
-            "raw_title": "Boy Harsher",
-            "series_name": null,
-            "sold_out": true,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/778/boy_harsher",
-            "venue": "Bataclan"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "656eac4be3f3b1d1",
-          "state_identity": "656eac4be3f3b1d168b2981e3c39b9758aa3f8ff2efc919835be232622b96fcd"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "YOLANDE BASHING"
-            ],
-            "date": "2026-11-19",
-            "department": "75",
-            "event_title": "PAR.SEK + YOLANDE BASHING",
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "concert - Electro Punk",
-            "genre_evidence": [
-              {
-                "raw": "concert - Electro Punk",
-                "source": "Point Éphémère"
-              }
-            ],
-            "genre_method": "bill_consensus",
-            "genre_public": "Pop",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "PAR.SEK",
-            "identity_aliases": [
-              "PAR.SEK + YOLANDE BASHING",
-              "YOLANDE BASHING"
-            ],
-            "image_source": "Point Éphémère",
-            "image_url": "https://images.prismic.io/pointf/emtnJy8P57iL9M2R_PARSEKFMR_Facebook1200x628.png?auto=format,compress",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "PAR.SEK",
-              "YOLANDE BASHING"
-            ],
-            "promoters": null,
-            "raw_title": "PAR.SEK + YOLANDE BASHING",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://shotgun.live/fr/events/par-sek-yolande-bashing",
-            "venue": "Point Éphémère"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "4964f6a79816110d",
-          "state_identity": "4964f6a79816110ddabe2584bd7873e7ff91caa1b9aaa8f09b9fc6a54091f5bf"
         },
         {
           "event": {
@@ -90841,98 +90342,6 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "Rock",
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2026-11-24",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1467918094982117/",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "L.A. GUNS",
-            "identity_aliases": [
-              "L.A. GUNS"
-            ],
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/865-illustration_id-1772728755.png?h=e8711843&itok=0Am_Oqf7",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "L.A. GUNS"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "L.A. GUNS",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/la-guns",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "eb8c8992ac61301a",
-          "state_identity": "eb8c8992ac61301a8d96e11baa32a3d7464c7a0e4cd4972d6d353963299b63f5"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2026-11-28",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1749623383150485/",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Official/current event description and reviewed catalog",
-            "genres_public": null,
-            "headliner": "WEDNESDAY 13 & THE BIRTHDAY MASSACRE",
-            "identity_aliases": [
-              "Wednesday 13 & The Birthday Massacre"
-            ],
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/941-field_illustration_id-1780647979.jpg?h=6c539970&itok=-M71haOz",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "WEDNESDAY 13 & THE BIRTHDAY MASSACRE"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "WEDNESDAY 13 & THE BIRTHDAY MASSACRE",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/wednesday-13-birthday-massacre",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "40caf06be56166dc",
-          "state_identity": "40caf06be56166dc855551921a12b1ced6e20782bfa51feb801a708de5f984df"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
             "category": null,
             "city": "Montreuil",
             "co_headliners": [
@@ -91023,50 +90432,6 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-12-06",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/990950083764591/",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Apple Music exact artist record",
-            "genres_public": null,
-            "headliner": "Pearl & The Oysters",
-            "identity_aliases": [
-              "Pearl & The Oysters"
-            ],
-            "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/08/pto-bananas-cropped-1-pic-by-max-flick.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Pearl & The Oysters"
-            ],
-            "promoters": null,
-            "raw_title": "Pearl & The Oysters",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://petitbain.org/evenement/pearl-the-oysters/",
-            "venue": "Petit Bain"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "01d98942d88be191",
-          "state_identity": "01d98942d88be191ddc6f6c61dbf3304021045febbb42ac05825d491cdbd0e0d"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
             "city": "Montreuil",
             "co_headliners": null,
             "date": "2026-12-17",
@@ -91150,55 +90515,6 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "#MusiquesItaliennes, Rock",
-            "city": "Montreuil",
-            "co_headliners": [
-              "AFTERHOURS"
-            ],
-            "date": "2027-01-17",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1503565961394058/",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Afterhours tour 2027 - quello che non c'è",
-            "identity_aliases": [
-              "AFTERHOURS"
-            ],
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Afterhours tour 2027 - quello che non c'è",
-              "AFTERHOURS"
-            ],
-            "promoters": [
-              "Persona Grata"
-            ],
-            "raw_title": "Afterhours tour 2027 - quello che non c'è",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/afterhours-tour-2027-quello-che-non-ce",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "9d808277e4c225cb",
-          "state_identity": "9d808277e4c225cbfd9d6da95d34443a3f8b2b1cf15baab366c503c77ade9f91"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
             "category": null,
             "city": "Paris",
             "co_headliners": null,
@@ -91236,101 +90552,6 @@
           "first_seen": "2026-09-30T19:34:11Z",
           "public_id": "eb7237f891807a26",
           "state_identity": "eb7237f891807a26b53358dd549e688897e35a42cdca17c64a942c9855380db7"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Post-punk, Rock, Rock psychédélique",
-            "city": "Montreuil",
-            "co_headliners": null,
-            "date": "2027-02-01",
-            "department": "93",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Apple Music + Bandcamp",
-            "genres_public": null,
-            "headliner": "THE LEGENDARY PINK DOTS",
-            "identity_aliases": [
-              "The Legendary Pink Dots"
-            ],
-            "image_source": "Bal Chavaux",
-            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/1037-field_illustration_id-1789029282.png?h=57024e64&itok=_6GshXoG",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "THE LEGENDARY PINK DOTS"
-            ],
-            "promoters": [
-              "La Marbrerie"
-            ],
-            "raw_title": "THE LEGENDARY PINK DOTS",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://balchavaux.fr/agenda/legendary-pink-dots",
-            "venue": "Bal Chavaux"
-          },
-          "first_seen": "2026-09-10T10:44:10Z",
-          "public_id": "738e5cca88a1141a",
-          "state_identity": "738e5cca88a1141ad4a24e98363e2c32be834ac39d1c8900a1e0b3701830c581"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-02-04",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/1526534685642442",
-            "festival_name": null,
-            "genre": "rock",
-            "genre_evidence": [
-              {
-                "raw": "rock",
-                "source": "Le Trabendo"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Le Trabendo",
-            "genres_public": null,
-            "headliner": "TRAMHAUS",
-            "identity_aliases": [
-              "TRAMHAUS"
-            ],
-            "image_source": "Le Trabendo",
-            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/06/Image-site-Trabendo-9-1500x844.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "TRAMHAUS"
-            ],
-            "promoters": null,
-            "raw_title": "TRAMHAUS",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.letrabendo.net/programmation/tramhaus/",
-            "venue": "Le Trabendo"
-          },
-          "first_seen": "2026-09-01T13:15:20Z",
-          "public_id": "082769f38dd8cda9",
-          "state_identity": "082769f38dd8cda99315d2537b8b246bbfbbeeeeebc37355ab182d45abb2766b"
         },
         {
           "event": {
@@ -91462,98 +90683,6 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "concert",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-03-07",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Folk / Country",
-            "genre_source": "MusicBrainz artist tags via exact Wikidata identity",
-            "genres_public": null,
-            "headliner": "Mannarino",
-            "identity_aliases": [
-              "Mannarino"
-            ],
-            "image_source": "La Machine du Moulin Rouge",
-            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/09/mmr-shotgun-banniere-1-1000x523.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Mannarino"
-            ],
-            "promoters": null,
-            "raw_title": "Mannarino",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/mannarino/",
-            "venue": "La Machine du Moulin Rouge"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "0b805a95485ce7b4",
-          "state_identity": "0b805a95485ce7b47e6e75ef70571b9f7705132a555ddb1fd82f32757187081c"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "Cinder Well"
-            ],
-            "date": "2027-04-13",
-            "department": "75",
-            "event_title": "EMMA RUTH RUNDLE + CINDER WELL",
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Emma Ruth Rundle",
-            "identity_aliases": [
-              "Emma Ruth Rundle",
-              "EMMA RUTH RUNDLE + CINDER WELL"
-            ],
-            "image_source": "Élysée Montmartre",
-            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/emma-ruth-rundle-elysee-montmartre.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Emma Ruth Rundle",
-              "Cinder Well"
-            ],
-            "promoters": null,
-            "raw_title": "Emma Ruth Rundle",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/emma-ruth-rundle-cinder-well/",
-            "venue": "Élysée Montmartre"
-          },
-          "first_seen": "2026-09-02T17:45:45Z",
-          "public_id": "0b5856ae78f0b3e1",
-          "state_identity": "a9f0ffca392d0f6aef057c123abd5a4d82bd5487f242c6934f8cd071decaea5d"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
             "category": null,
             "city": "Montreuil",
             "co_headliners": null,
@@ -91633,50 +90762,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "ddd60a0e8d748b76",
           "state_identity": "ddd60a0e8d748b76e26d737a57436de7b9fb53a3d0a2596123ce1e47af78252c"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2027-10-17",
-            "department": "75",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "The Mission",
-            "identity_aliases": [
-              "THE MISSION + GUEST"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXyQH9sDtSIq8apWJ-mIQCL26ypFRSpzi7RMoL_f9yE4fHnA3wZsuCG8OH5XmLivwCuKcvoQoeH7_kbqovHFy-TvSIUSHURmHGt0UN-v2f0YQ-Qwr-sV8Uem7viB7u6QU-Ga5y0Uft0F7r/s72-c-rw/The+Mission16112017_2.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "The Mission"
-            ],
-            "promoters": null,
-            "raw_title": "The Mission",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/the-mission/",
-            "venue": "Élysée Montmartre"
-          },
-          "first_seen": "2026-09-01T13:15:20Z",
-          "public_id": "ed00cbfbaea9e224",
-          "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
       "last_successful_at": "2026-10-18T04:43:15Z",
@@ -93054,8 +92139,8 @@
             "date": "2026-12-06",
             "department": "75",
             "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": "https://www.facebook.com/events/990950083764591/",
+            "event_type": null,
+            "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -93064,18 +92149,14 @@
             "genre_source": "Apple Music exact artist record",
             "genres_public": null,
             "headliner": "Pearl & The Oysters",
-            "identity_aliases": [
-              "Pearl & The Oysters"
-            ],
+            "identity_aliases": null,
             "image_source": "Petit Bain",
             "image_url": "https://petitbain.org/wp-content/uploads/2026/08/pto-bananas-cropped-1-pic-by-max-flick.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Pearl & The Oysters"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "Pearl & The Oysters",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -93711,7 +92792,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -94361,7 +93442,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -94519,7 +93600,7 @@
             "date": "2026-10-24",
             "department": "75",
             "event_title": null,
-            "event_type": "concert",
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": "concert Post-Punk déluré",
@@ -94533,20 +93614,15 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "Point Éphémère",
             "genres_public": null,
-            "headliner": "La Sécurité",
-            "identity_aliases": [
-              "La Sécurité",
-              "LA SECURITE + GRIFE"
-            ],
+            "headliner": "LA SECURITE + GRIFE",
+            "identity_aliases": null,
             "image_source": "Point Éphémère",
             "image_url": "https://images.prismic.io/pointf/aivd-KlQnVZVESBM_Instagram-LaS%C3%A9curit%C3%A9-EU_UKTour-Spring_Summer2026-blank-copie.jpg?auto=format,compress",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "La Sécurité"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "La Sécurité",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -95219,7 +94295,7 @@
             "date": "2026-11-19",
             "department": "75",
             "event_title": "PAR.SEK + YOLANDE BASHING",
-            "event_type": "concert",
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": "concert - Electro Punk",
@@ -95235,8 +94311,7 @@
             "genres_public": null,
             "headliner": "PAR.SEK",
             "identity_aliases": [
-              "PAR.SEK + YOLANDE BASHING",
-              "YOLANDE BASHING"
+              "PAR.SEK + YOLANDE BASHING"
             ],
             "image_source": "Point Éphémère",
             "image_url": "https://images.prismic.io/pointf/emtnJy8P57iL9M2R_PARSEKFMR_Facebook1200x628.png?auto=format,compress",
@@ -95921,7 +94996,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -96898,12 +95973,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -100380,7 +99455,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -100814,58 +99889,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-18",
-            "department": "75",
-            "event_title": "Jazz & goûter fête Walt Disney",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz kids",
-            "genre_evidence": [
-              {
-                "raw": "Jazz kids",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Morgane Dessislava",
-            "identity_aliases": [
-              "Jazz & goûter fête Walt Disney avec Morgane Dessislava"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/7/3/6a4786fe43f40-format-carre-2-700x700-c-default.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Jazz & goûter fête Walt Disney avec Morgane Dessislava",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "11:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/791507-jazz-gouter-fete-walt-disney-avec-morgane-dessislava",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "a947caba37d6dab0",
-          "state_identity": "a947caba37d6dab061c17f1bb2b573149463637dbe6b058b7a0c3694640f2b05"
-        },
         {
           "event": {
             "announced_at": null,
@@ -100910,8 +99938,8 @@
             "venue": "Sunset/Sunside — Sunside"
           },
           "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "990471ba5c7b1724",
-          "state_identity": "990471ba5c7b172468ce63e33d2a8ecf28e803c600c7ba5961d988e487b2c733"
+          "public_id": "a947caba37d6dab0",
+          "state_identity": "a947caba37d6dab061c17f1bb2b573149463637dbe6b058b7a0c3694640f2b05"
         },
         {
           "event": {
@@ -108470,7 +107498,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -111780,7 +110808,7 @@
           "state_identity": "03fd80e1e6c126fbd95e4a8931d8ada8854fc73e207a0c1dbc5b8ba9ff95371e"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -111970,7 +110998,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -113422,7 +112450,7 @@
           "state_identity": "fd5e8756763e42b3d7b98017d2857fabfb8da5ab6baad909b989ac99ff4a627e"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -116832,7 +115860,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -117745,7 +116773,7 @@
           "state_identity": "b8ce8258d26b0761338cda0577e6228a4f4c163b38271e35a126dfd8fc176a1a"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -120274,7 +119302,7 @@
             "date": "2027-04-13",
             "department": "75",
             "event_title": "EMMA RUTH RUNDLE + CINDER WELL",
-            "event_type": "concert",
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
@@ -120285,7 +119313,6 @@
             "genres_public": null,
             "headliner": "Emma Ruth Rundle",
             "identity_aliases": [
-              "Emma Ruth Rundle",
               "EMMA RUTH RUNDLE + CINDER WELL"
             ],
             "image_source": "Élysée Montmartre",
@@ -120297,7 +119324,7 @@
               "Cinder Well"
             ],
             "promoters": null,
-            "raw_title": "Emma Ruth Rundle",
+            "raw_title": "EMMA RUTH RUNDLE + CINDER WELL",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -120590,7 +119617,7 @@
             "date": "2027-10-17",
             "department": "75",
             "event_title": null,
-            "event_type": "concert",
+            "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
             "genre": null,
@@ -120599,19 +119626,15 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "The Mission",
-            "identity_aliases": [
-              "THE MISSION + GUEST"
-            ],
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhXyQH9sDtSIq8apWJ-mIQCL26ypFRSpzi7RMoL_f9yE4fHnA3wZsuCG8OH5XmLivwCuKcvoQoeH7_kbqovHFy-TvSIUSHURmHGt0UN-v2f0YQ-Qwr-sV8Uem7viB7u6QU-Ga5y0Uft0F7r/s72-c-rw/The+Mission16112017_2.jpg",
+            "headliner": "THE MISSION + GUEST",
+            "identity_aliases": null,
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-mission-elysee-montmartre.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "The Mission"
-            ],
+            "performers": null,
             "promoters": null,
-            "raw_title": "The Mission",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -120625,10 +119648,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-18T04:43:15Z",
+      "last_successful_at": "2026-10-18T11:19:07Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-10-18T04:43:15Z",
+  "updated_at": "2026-10-18T11:19:07Z",
   "version": 1
 }
