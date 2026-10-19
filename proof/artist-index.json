@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "contentIndexSchema": 2,
-  "generatedAt": "2026-10-19T04:56:00Z",
+  "generatedAt": "2026-10-19T08:26:47Z",
   "structuralLabels": [
     "ad",
     "advertisement",
@@ -12839,8 +12839,8 @@
       "aliases": [
         "Funkadelic",
         "George Clinton and Parliament/Funkadelic",
-        "George Clinton and The P-Funk All-Stars",
         "George Clinton and The P-Funk All Stars",
+        "George Clinton and The P-Funk All-Stars",
         "George Clinton and The P-Funk AllStars",
         "George Clinton & Parliament/Funkadelic",
         "George Clinton & The P-Funk All Stars",
@@ -15798,9 +15798,9 @@
       "canonicalName": "Jesse “Ed” Davis",
       "slug": "jesse-ed-davis",
       "aliases": [
-        "Jesse ‘Ed’ Davis",
+        "Jesse \"Ed\" Davis",
         "Jesse Ed Davis",
-        "Jesse \"Ed\" Davis"
+        "Jesse ‘Ed’ Davis"
       ],
       "alternateSpellings": [],
       "members": [],
@@ -18854,8 +18854,8 @@
       "slug": "les-insus",
       "aliases": [
         "Les Insus? (Téléphone)",
-        "Téléphone",
-        "Telephone"
+        "Telephone",
+        "Téléphone"
       ],
       "alternateSpellings": [],
       "members": [
@@ -20123,9 +20123,12 @@
     },
     {
       "schemaVersion": 1,
-      "canonicalName": "Mammoth",
-      "slug": "mammoth",
-      "aliases": [],
+      "canonicalName": "Mammoth (WVH)",
+      "slug": "mammoth-wvh",
+      "aliases": [
+        "Mammoth",
+        "Mammoth WVH"
+      ],
       "alternateSpellings": [],
       "members": [
         "Wolfgang Van Halen"
@@ -20163,57 +20166,13 @@
       "reviewedArticleIds": [],
       "concertReviewArchiveArticleIds": [
         "7113763137758752286",
-        "5007458594618480719"
+        "5007458594618480719",
+        "6619553090665931604",
+        "3019747543026428010"
       ],
       "articleUrls": [
         "https://www.electriceyerock.com/2026/07/mammoth-accor-arena-paris-july-3rd-2026.html",
         "https://www.electriceyerock.com/2026/07/mammoth-accor-arena-paris-july-1st-2026.html",
-        "https://www.electriceyerock.com/2024/04/mammoth-wvh-zenith-paris-april-29th-2024.html",
-        "https://www.electriceyerock.com/2023/03/listen-to-mammoth-wvhs-new-song-here.html",
-        "https://www.electriceyerock.com/2022/11/mammoth-wvh-palais-des-sports-paris.html"
-      ],
-      "lastIdentityUpdatedAt": null,
-      "lastAppleCatalogueUpdatedAt": null
-    },
-    {
-      "schemaVersion": 1,
-      "canonicalName": "Mammoth WVH",
-      "slug": "mammoth-wvh",
-      "aliases": [],
-      "alternateSpellings": [],
-      "members": [],
-      "formerMembers": [],
-      "associatedActs": [],
-      "sideProjects": [],
-      "collaborators": [],
-      "searchLinks": [],
-      "searchAssociations": [],
-      "searchAliasLinks": {},
-      "searchArticleIds": [],
-      "articleSearchTerms": [],
-      "producers": [],
-      "songwriters": [],
-      "genres": [],
-      "keywords": [],
-      "musicBrainzId": null,
-      "appleArtistId": null,
-      "appleIdentityConfidence": null,
-      "ambiguityClass": "distinctive",
-      "identityEvidence": [],
-      "articleCount": 3,
-      "directSubjectArticleCount": 3,
-      "hideFromArtistIndex": false,
-      "articleIds": [
-        "6619553090665931604",
-        "5116080140774464053",
-        "3019747543026428010"
-      ],
-      "reviewedArticleIds": [],
-      "concertReviewArchiveArticleIds": [
-        "6619553090665931604",
-        "3019747543026428010"
-      ],
-      "articleUrls": [
         "https://www.electriceyerock.com/2024/04/mammoth-wvh-zenith-paris-april-29th-2024.html",
         "https://www.electriceyerock.com/2023/03/listen-to-mammoth-wvhs-new-song-here.html",
         "https://www.electriceyerock.com/2022/11/mammoth-wvh-palais-des-sports-paris.html"
@@ -25550,8 +25509,8 @@
       "aliases": [
         "P.I.L.",
         "P.I.L",
-        "PIL",
         "PiL",
+        "PIL",
         "Public Image Limited",
         "Public Image, Ltd."
       ],
@@ -35846,12 +35805,10 @@
       "identityEvidence": [
         "Reviewed Electric Eye artist relationship"
       ],
-      "articleCount": 3,
-      "directSubjectArticleCount": 3,
+      "articleCount": 1,
+      "directSubjectArticleCount": 1,
       "hideFromArtistIndex": false,
       "articleIds": [
-        "4792317011323756214",
-        "5515148429134391015",
         "3304797490155395438"
       ],
       "reviewedArticleIds": [],
@@ -35859,8 +35816,6 @@
         "3304797490155395438"
       ],
       "articleUrls": [
-        "https://www.electriceyerock.com/2025/01/toto-to-return-to-paris-with.html",
-        "https://www.electriceyerock.com/2023/11/toto-to-play-paris-next-summer.html",
         "https://www.electriceyerock.com/2015/05/toto-le-zenith-paris-may-27-2015.html"
       ],
       "lastIdentityUpdatedAt": null,
