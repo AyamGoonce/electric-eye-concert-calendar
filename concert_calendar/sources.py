@@ -482,6 +482,17 @@ def load_events_with_report(
         len(historical_audit["conflicts"]),
         len(historical_audit["ambiguous"]),
     ), flush=True)
+    # Persist detailed records in the existing production report pipeline,
+    # without adding another state file, service or deployment component.
+    # This makes every conflict and ambiguous match inspectable in the
+    # published workflow report rather than logging only aggregate counts.
+    for kind in ("restored", "conflicts", "ambiguous"):
+        for item in historical_audit[kind]:
+            source_diagnostics.append({
+                "source_name": "Historical billing reconciliation",
+                "kind": kind,
+                **item,
+            })
 
     deduplication_diagnostics = {}
     deduplicated_events = deduplicate_events(

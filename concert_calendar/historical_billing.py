@@ -59,7 +59,11 @@ def restore_published_billing(events, published_rows):
         old = prior.get(key) or []
         if len(old) != 1 or len(records) != 1:
             if old and (len(old) > 1 or len(records) > 1):
-                report["ambiguous"].append({"date": key[2], "venue": key[1]})
+                report["ambiguous"].append({
+                    "date": key[2], "venue": key[1],
+                    "ticket_url": key[0],
+                    "previous_rows": len(old), "current_rows": len(records),
+                })
             continue
         event, old = records[0], old[0]
         main = old.get("h")
@@ -75,14 +79,18 @@ def restore_published_billing(events, published_rows):
         if len(existing) >= 2:
             if {_norm(n) for n in existing} != {_norm(n) for n in prior_roles}:
                 report["conflicts"].append({"date": key[2], "venue": key[1],
-                                           "reason": "new structured performer roster differs"})
+                                           "reason": "new structured performer roster differs", "ticket_url": key[0],
+                                           "previous_artists": prior_roles,
+                                           "current_title": event.raw_title or event.headliner})
             continue
         raw = event.raw_title or event.headliner
         # Only recover a previous bill if all listed principal artists still
         # appear in the current title. No inference from URL slug or punctuation.
         if not all(_contains_artist(raw, n) for n in prior_roles):
             report["conflicts"].append({"date": key[2], "venue": key[1],
-                                       "reason": "current bill omits historical principal artist"})
+                                       "reason": "current bill omits historical principal artist", "ticket_url": key[0],
+                                           "previous_artists": prior_roles,
+                                           "current_title": event.raw_title or event.headliner})
             continue
         # A historical opener is retained only if still present in the source
         # title or explicitly named in current opening-act evidence.
@@ -96,8 +104,18 @@ def restore_published_billing(events, published_rows):
         event.headliner = main
         event.co_headliners = colleagues
         event.performers = prior_roles
+        # Retain a verified event/series title only if it still appears in
+        # the current source billing. Never invent one from a ticket URL.
+        historical_title = old.get("et")
+        if (not event.event_title and isinstance(historical_title, str)
+                and historical_title.strip()
+                and _contains_artist(raw, historical_title)):
+            event.event_title = historical_title
         if opening:
             event.openers = list(dict.fromkeys([*(event.openers or []), *opening]))
-        report["restored"].append({"date": key[2], "venue": event.venue,
-                                    "artists": prior_roles, "source": "published_verified_bill"})
+        report["restored"].append({
+            "date": key[2], "venue": event.venue,
+            "artists": prior_roles, "source": "published_verified_bill",
+            "ticket_url": key[0],
+        })
     return report

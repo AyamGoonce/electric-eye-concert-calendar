@@ -12,6 +12,32 @@ def published():
              "h":"King Buffalo", "ch":["Spirit Mother"], "o":[]}]
 
 class HistoricalBillingTest(unittest.TestCase):
+    def test_preserves_supported_historical_festival_title(self):
+        e = make("Shred Fest - Obscura + Pestilence")
+        prior = [{"d": "2027-03-11", "v": "Petit Bain", "t": URL,
+                  "h": "Obscura", "ch": ["Pestilence"], "o": [],
+                  "et": "Shred Fest"}]
+        report = restore_published_billing([e], prior)
+        self.assertEqual("Obscura", e.headliner)
+        self.assertEqual("Shred Fest", e.event_title)
+        self.assertEqual(1, len(report["restored"]))
+
+    def test_does_not_invent_absent_historical_festival_title(self):
+        e = make("Obscura + Pestilence")
+        prior = [{"d": "2027-03-11", "v": "Petit Bain", "t": URL,
+                  "h": "Obscura", "ch": ["Pestilence"], "o": [],
+                  "et": "Shred Fest"}]
+        restore_published_billing([e], prior)
+        self.assertEqual("Obscura", e.headliner)
+        self.assertIsNone(e.event_title)
+
+    def test_conflicts_are_identifiable_by_source_event(self):
+        e = make("King Buffalo")
+        report = restore_published_billing([e], published())
+        issue = report["conflicts"][0]
+        self.assertEqual(URL, issue["ticket_url"])
+        self.assertEqual(["King Buffalo", "Spirit Mother"], issue["previous_artists"])
+
     def test_reuses_verified_two_artist_bill(self):
         e = make("King Buffalo + Spirit Mother")
         report = restore_published_billing([e], published())
