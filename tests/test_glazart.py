@@ -61,6 +61,36 @@ class GlazartTests(TestCase):
             event.performers,
         )
 
+    def test_detail_sidebar_cannot_replace_billed_artists(self):
+        detail = """
+        <p>Unrelated Artist (Metal, France)</p>
+        <p>Pain Of Truth (Hardcore, USA)</p>
+        <p>Headbussa (Hardcore, France)</p>
+        <p>Big Boy (Hardcore, France)</p>
+        """
+        response = Mock(text=detail)
+        response.raise_for_status = Mock()
+        session = Mock()
+        session.get.return_value = response
+        self.assertEqual(
+            ["Pain Of Truth", "Headbussa", "Big Boy"],
+            glazart.resolve_detail_bill("https://example.com/concert", "Pain Of Truth + Headbussa + Big Boy", session),
+        )
+
+    def test_detail_unrelated_genre_lines_do_not_unlock_flat_bill(self):
+        detail = """
+        <p>Unrelated Artist (Metal, France)</p>
+        <p>Headbussa (Hardcore, France)</p>
+        <p>Big Boy (Hardcore, France)</p>
+        """
+        response = Mock(text=detail)
+        response.raise_for_status = Mock()
+        session = Mock()
+        session.get.return_value = response
+        self.assertIsNone(
+            glazart.resolve_detail_bill("https://example.com/concert", "Pain Of Truth + Headbussa + Big Boy", session)
+        )
+
     def test_load_uses_official_concert_taxonomy_only(self):
         response = Mock(text=FIXTURE.read_text())
         response.raise_for_status = Mock()

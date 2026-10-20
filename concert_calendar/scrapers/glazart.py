@@ -62,42 +62,56 @@ def parse_detail_artists(html):
 
 
 def resolve_detail_bill(detail_url, raw_title, session=None):
-    """
-    Resolve a '+' programme title only when the Glazart detail page
-    independently lists every artist in billing order.
-    """
-    parts = [
-        clean_text(part)
-        for part in re.split(r"\s+\+\s+", raw_title)
-        if clean_text(part)
-    ]
+    """Require independently listed performers *and* lineup correspondence.
 
+    A detail-page footer/sidebar can contain other acts in genre-labelled
+    paragraphs. Never take the first N entries without checking the card bill.
+    A near-exact correction of a misspelled name is allowed only when the
+    remaining names match in the same order and all assignments are unique.
+    """
+    from difflib import SequenceMatcher
+    import unicodedata
+
+    parts = [clean_text(part) for part in re.split(r"\s+\+\s+", raw_title)
+             if clean_text(part)]
     if len(parts) < 2:
         return None
 
     client = session or requests.Session()
-
     try:
-        response = client.get(
-            detail_url,
-            headers=HEADERS,
-            timeout=REQUEST_TIMEOUT,
-        )
+        response = client.get(detail_url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()
     except requests.RequestException:
         return None
 
     detailed = parse_detail_artists(response.text)
-
     if len(detailed) < len(parts):
         return None
 
-    resolved = detailed[:len(parts)]
+    def normalized(value):
+        decomposed = unicodedata.normalize("NFKD", value)
+        return "".join(ch for ch in decomposed if not unicodedata.combining(ch)).casefold()
 
-    if len(resolved) != len(parts):
-        return None
-
-    return resolved
+    result = []
+    used = set()
+    for part in parts:
+        target = normalized(part)
+        matches = []
+        for idx, name in enumerate(detailed):
+            if idx in used:
+                continue
+            candidate = normalized(name)
+            similarity = SequenceMatcher(None, target, candidate).ratio()
+            if target == candidate or (len(target) >= 8 and similarity >= 0.85):
+                matches.append((similarity, idx, name))
+        matches.sort(reverse=True)
+        if not matches or (len(matches) > 1 and matches[0][0] - matches[1][0] < 0.08):
+            return None
+        _, idx, name = matches[0]
+        used.add(idx)
+        result.append(name)
+    # Only a one-to-one assignment justifies changing the opaque title.
+    return result
 
 
 def parse_card(card, *, today=None, session=None):
