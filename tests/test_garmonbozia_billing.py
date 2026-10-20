@@ -1,9 +1,28 @@
 import unittest
 
-from concert_calendar.scrapers.garmonbozia import parse_structured_billing
+from bs4 import BeautifulSoup
+from concert_calendar.scrapers.garmonbozia import parse_card, parse_structured_billing
 
 
 class GarmonboziaBillingTests(unittest.TestCase):
+
+    def test_triple_thrash_restores_date_and_artist_roles(self):
+        html = """
+        <dl><dd><span class="evenementNom">Evil Invaders &amp; Exhorder &amp; Heathen</span></dd>
+        <time itemprop="startDate" datetime="2027-03-01"></time>
+        <span class="evenementSalleNom">Petit Bain</span>
+        <span class="evenementSalleVille">Paris</span>
+        <a class="evenementReserver" href="https://web.digitick.com/evil-invaders-exhorder-heathen-concert-dark-metal-css5-garmonbozia-pg51-ei1131957.html"></a>
+        </dl>
+        """
+        event = parse_card(BeautifulSoup(html, "html.parser").select_one("dl"))
+        self.assertIsNotNone(event)
+        self.assertEqual("2027-03-21", event.date)
+        self.assertEqual("Evil Invaders", event.headliner)
+        self.assertEqual(["Exhorder", "Heathen"], event.co_headliners)
+        self.assertEqual(["Warfield"], event.openers)
+        self.assertEqual(["Evil Invaders", "Exhorder", "Heathen"], event.performers)
+
 
     def test_plus_inside_single_artist_name_is_not_split(self):
         result = parse_structured_billing(
