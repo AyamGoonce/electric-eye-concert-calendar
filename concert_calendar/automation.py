@@ -731,6 +731,7 @@ def build(args) -> int:
         events, pipeline_report = load_events_with_report(
             prior_source_state=previous_source_state, now=now,
             billing_identity_catalog=billing_identity_catalog,
+            published_billing_rows=published_events,
         )
     except SourceStateError as error:
         raise ProductionValidationError(f"Source retention is invalid: {error}") from error

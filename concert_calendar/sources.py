@@ -246,6 +246,7 @@ def load_events_with_report(
     prior_source_state: dict | None = None,
     now: datetime | None = None,
     billing_identity_catalog: dict[str, str] | None = None,
+    published_billing_rows: list[dict] | None = None,
 ):
     now = now or datetime.now(timezone.utc)
     raw_events = []
@@ -471,6 +472,16 @@ def load_events_with_report(
     normalized_events.extend(retained_events)
 
     enrich_official_venue_images(normalized_events)
+
+    from concert_calendar.historical_billing import restore_published_billing
+    historical_audit = restore_published_billing(
+        normalized_events, published_billing_rows,
+    )
+    print("HISTORICAL BILLING | restored={0} conflicts={1} ambiguous={2}".format(
+        len(historical_audit["restored"]),
+        len(historical_audit["conflicts"]),
+        len(historical_audit["ambiguous"]),
+    ), flush=True)
 
     deduplication_diagnostics = {}
     deduplicated_events = deduplicate_events(
