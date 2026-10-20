@@ -368,6 +368,7 @@ def resolve_artist_billings(
                 _set_resolution(
                     event, artists, method="reviewed_registry", confidence=100,
                     evidence=[billing_review.get("evidence") or "exact reviewed billing"],
+                    description=_clean(billing_review.get("eventTitle")) or None,
                 )
                 _record(audit, event)
                 continue

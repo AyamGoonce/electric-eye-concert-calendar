@@ -2,9 +2,39 @@ import unittest
 
 from bs4 import BeautifulSoup
 from concert_calendar.scrapers.garmonbozia import parse_card, parse_structured_billing
+from concert_calendar.artist_billings import resolve_artist_billings
+from concert_calendar.models import ConcertEvent
+
 
 
 class GarmonboziaBillingTests(unittest.TestCase):
+
+    def test_reviewed_garmonbozia_billings_survive_without_source_biographies(self):
+        cases = [
+            ("2027-02-02", "The Black Dahlia Murder + Fuming Mouth",
+             ["The Black Dahlia Murder", "Fuming Mouth"], None),
+            ("2027-03-11", "King Buffalo + Spirit Mother",
+             ["King Buffalo", "Spirit Mother"], None),
+            ("2027-02-14", "Shred Fest - Obscura + Pestilence + Cryptic Shift + Thus + Dvrk",
+             ["Obscura", "Pestilence", "Cryptic Shift", "Thus", "Dvrk"], "Shred Fest"),
+        ]
+        events = [ConcertEvent(date=day, headliner=billing, venue="Petit Bain",
+                               city="Paris", department="75",
+                               source_names=["Garmonbozia"], performers=None)
+                  for day, billing, _, _ in cases]
+        resolve_artist_billings(events, identity_catalog={})
+        for event, (_, billing, artists, festival) in zip(events, cases):
+            with self.subTest(billing=billing):
+                self.assertEqual(artists[0], event.headliner)
+                self.assertEqual(artists, event.performers)
+                self.assertEqual(artists[1:], event.co_headliners)
+                self.assertEqual(festival, event.event_title)
+                self.assertIn(billing, event.identity_aliases)
+        # A later conservative re-pass must not undo an already resolved bill.
+        resolve_artist_billings(events, identity_catalog={}, allow_inference=False)
+        for event, (_, _, artists, _) in zip(events, cases):
+            self.assertEqual(artists, event.performers)
+
 
     def test_triple_thrash_restores_date_and_artist_roles(self):
         html = """
