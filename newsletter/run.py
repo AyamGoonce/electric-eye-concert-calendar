@@ -11,6 +11,8 @@ from newsletter.github_publish import (
     update_latest_manifest,
     update_latest_javascript,
 )
+from newsletter.archive_publish import publish_archive
+from newsletter.landing_pages import publish_landing_pages
 from newsletter.periods import reporting_period
 from newsletter.render import render_newsletter
 from newsletter.snapshot import build_snapshot
@@ -101,6 +103,19 @@ def main():
         manifest_result["manifest"]
     )
     print(f"Blogger latest.js: {javascript_result['action']}")
+
+    page_results = publish_landing_pages()
+    for frequency, result in page_results.items():
+        print(f"{frequency.title()} landing page: {result['action']}")
+
+    archive_result = publish_archive()
+    print(
+        "Newsletter archives: "
+        f"{archive_result['counts']['weekly']} weekly, "
+        f"{archive_result['counts']['monthly']} monthly; "
+        f"index {archive_result['data']['action']}, "
+        f"page {archive_result['page']['action']}"
+    )
 
 
 if __name__ == "__main__":
