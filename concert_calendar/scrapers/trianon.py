@@ -118,5 +118,10 @@ def load_events():
         if event:
             events_by_key.setdefault(event_key(event), event)
     events = list(events_by_key.values())
+    if not events:
+        raise RuntimeError(
+            "Le Trianon returned no future events; treat as source failure "
+            "and retain bounded previously published source records"
+        )
     print(f"Created {len(events)} Le Trianon ConcertEvent records")
     return events

@@ -158,7 +158,13 @@ def load_events():
                 events.setdefault((event.date, event.headliner.casefold(), event.venue.casefold()), event)
         if not soup.select_one("link[rel='next']"):
             break
-    return discard_repeated_generic_images(list(events.values()))
+    result = discard_repeated_generic_images(list(events.values()))
+    if not result:
+        raise RuntimeError(
+            "Élysée Montmartre returned no future events; treat as source failure "
+            "and retain bounded previously published source records"
+        )
+    return result
 
 
 def get_diagnostics():
