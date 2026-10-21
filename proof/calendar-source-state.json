@@ -203,7 +203,7 @@
               "ARKAYLA"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -792,7 +792,7 @@
               "TIGERCUB – 16H"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -1116,7 +1116,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-10",
@@ -1132,9 +1132,11 @@
             "genre_source": "Reviewed current source and authoritative catalog evidence",
             "genres_public": null,
             "headliner": "Jessie Ware",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "JESSIE WARE"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-04/jw_paris_1920x1080-1-copie_0.jpg?itok=FrSbkMSQ",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -1143,11 +1145,11 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.aegpresents.fr/event/jessie-ware/",
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Jessie-Ware-The-Superbloom-Tour-2026-10-Novembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-26T13:45:57Z",
@@ -1692,7 +1694,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-15",
@@ -1708,9 +1710,11 @@
             "genre_source": "Reviewed current source and authoritative catalog evidence",
             "genres_public": null,
             "headliner": "Montell Fish",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "MONTELL FISH"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-08/mf_cdp_1920x1080.jpg?itok=6AHknMpe",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -1720,10 +1724,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/MontellFish-AEG26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Montell-Fish-En-Concert-15-Novembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-26T13:45:57Z",
@@ -6105,7 +6109,7 @@
           "state_identity": "44e224606b7dc4a5abbcd49c519d6f575cb9f68730af95077c961cf5d7b125c3"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11283,7 +11287,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -12086,7 +12090,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -14668,7 +14672,7 @@
           "state_identity": "5f1c421c2190cb4553cfcb36193b5fc584e65b9a5f9acc74d86957d68d5827fc"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -16035,7 +16039,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-03-17",
@@ -16051,9 +16055,11 @@
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
             "headliner": "Passenger",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "PASSENGER"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-08/1280x720.jpg?itok=dF0VJwFN",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -16063,10 +16069,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://tix.to/passengerliveSI/rtrac",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Passenger-En-Concert-17-Mars-2027-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-24T13:21:23Z",
@@ -16828,7 +16834,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -17189,7 +17195,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -18929,7 +18935,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -20393,7 +20399,7 @@
           "state_identity": "b958a0354f81b07c35bf32994860a447cdb5ffe09c790746131aefece6cd341b"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -21952,7 +21958,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -23814,7 +23820,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -25444,7 +25450,7 @@
           "state_identity": "fd5e8756763e42b3d7b98017d2857fabfb8da5ab6baad909b989ac99ff4a627e"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -27116,51 +27122,11 @@
           "state_identity": "90716293fd943618bb05e2d75d6f2a5a5333d07968b66300fd79fc954a2ae1d5"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "concert",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "GOLD",
-            "identity_aliases": null,
-            "image_source": "Casino de Paris",
-            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2025-10/image-billeterie.jpg?itok=4o0VjC8z",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.casinodeparis.fr/fr/Gold-40-Ans-De-Scene-21-Octobre-2026-Billetterie-Paris",
-            "venue": "Casino de Paris"
-          },
-          "first_seen": "2026-09-03T11:32:28Z",
-          "public_id": "e53669ec04319cdf",
-          "state_identity": "e53669ec04319cdf8dda39dda815f144fde29f3789f332b2bc7176d7a2531544"
-        },
         {
           "event": {
             "announced_at": null,
@@ -27328,6 +27294,50 @@
             "category": "concert",
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Reviewed current source and authoritative catalog evidence",
+            "genres_public": null,
+            "headliner": "Jessie Ware",
+            "identity_aliases": [
+              "JESSIE WARE"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-04/jw_paris_1920x1080-1-copie_0.jpg?itok=FrSbkMSQ",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Jessie-Ware-The-Superbloom-Tour-2026-10-Novembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-26T13:45:57Z",
+          "public_id": "b87857b78591146b",
+          "state_identity": "b87857b78591146b6db6105ba02c5816c87db0bb9b64189b513c2f806f97cd9c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-11",
             "department": "75",
             "event_title": null,
@@ -27368,6 +27378,148 @@
             "category": "concert",
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-11-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Reviewed current source and authoritative catalog evidence",
+            "genres_public": null,
+            "headliner": "Montell Fish",
+            "identity_aliases": [
+              "MONTELL FISH"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-08/mf_cdp_1920x1080.jpg?itok=6AHknMpe",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Montell-Fish-En-Concert-15-Novembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-26T13:45:57Z",
+          "public_id": "e3859acd6a8abfb2",
+          "state_identity": "e3859acd6a8abfb2308747c24c11768ca15c02e17cdd2826209f911917b20832"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "artist_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Reviewed stable artist classification, 2026-08-23",
+            "genres_public": null,
+            "headliner": "Uriah Heep",
+            "identity_aliases": [
+              "URIAH HEEP"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7YDDrKYJb3cUGMdqRACcCKzB_KO1Me7J211jmbCHapStalHp2jteJ6_vFXDZZdThZzt9EcUsi2Rr6LbSEPShJXwpeHSZy0ueAlLkU1IcBcoI80cRmzQt5nWhsp25GZUFNaukKNMNZ5D7hUQvcmR-XKLsUSNbIGlRrIaMCkIqg7vJFoxq3xTZs7c9ONw/s72-w640-h426-c-rw/Uriah%20Heep.%2002%20(Electric)16_10_2022OlympiaParis_124.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Uriah-Heep-Magician-S-Farewell-16-Novembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-23T16:46:51Z",
+          "public_id": "e1715b6c35045f32",
+          "state_identity": "e1715b6c35045f325856e603b11ebee3ab605c310ee9258892657e37561ee7a7"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop",
+            "genre_evidence": [
+              {
+                "raw": "Pop",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Blue",
+            "identity_aliases": [
+              "Blue"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-03/vignettes_web_salle_1920x1080.jpg?itok=OMpWMYv1",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Blue-25Th-Anniversary-Tour-20-Novembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "4d3ec24d39ea1412",
+          "state_identity": "4d3ec24d39ea14123170fd48b1c8dc0b4ba7080ba805e885bfc57ee578f9c365"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-11-21",
             "department": "75",
             "event_title": null,
@@ -27400,6 +27552,58 @@
           "first_seen": "2026-09-03T11:32:28Z",
           "public_id": "9b71910200fe04a7",
           "state_identity": "9b71910200fe04a78e4a17f9fd784bb00d67b7962ad1126523509e605d4f57ea"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop, RnB / Soul",
+            "genre_evidence": [
+              {
+                "raw": "Pop, RnB / Soul",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Live Nation",
+            "genres_public": [
+              "Pop",
+              "R&B / Soul / Funk"
+            ],
+            "headliner": "Yamashita Tomohisa",
+            "identity_aliases": [
+              "Yamashita Tomohisa"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-07/whatsapp-image-2026-07-23-at-14.05.07-1.jpeg?itok=IZod9Jc_",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Yamashita-Tomohisa-A-Paris-22-Novembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "d8c438373145d2a9",
+          "state_identity": "d8c438373145d2a978626ebce913f102e9ecf32f2c642fb0c16afcc1ffc63e2d"
         },
         {
           "event": {
@@ -27648,6 +27852,95 @@
             "category": "concert",
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-12-16",
+            "department": "75",
+            "event_title": "Chelsea Wolfe: THE DARK World Tour",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Chelsea Wolfe",
+            "identity_aliases": [
+              "Chelsea Wolfe: THE DARK World Tour",
+              "CHELSEA WOLFE"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-06/chelsea-wolfe-1920x1080-sans-texte.jpg?itok=1Co6m_G6",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": "Chelsea Wolfe: THE DARK World Tour",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Chelsea-Wolfe-The-Dark-World-Tour-En-Concert-16-Decembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "0dab1a0cad9eacf5",
+          "state_identity": "0dab1a0cad9eacf53d7a1b0a1922716fcbd090e222c08b06ac9b53eca9f442fd"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": "concert",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Soweto Gospel Choir",
+            "identity_aliases": [
+              "Soweto Gospel Choir"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-05/capture-d-ecran-2026-05-27-174122-1.png?itok=Z8hEEapk",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Soweto Gospel Choir"
+            ],
+            "promoters": null,
+            "raw_title": "Soweto Gospel Choir",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Soweto-Gospel-Choir-Pou-Zot-Du-18-Au-20-Decembre-2026-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-09-03T11:32:28Z",
+          "public_id": "6c11f761ca7492f5",
+          "state_identity": "6c11f761ca7492f5fa5dfc46e9e2ef79e3bba6fdb6d93e2ae3964e22f4cffded"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-12-21",
             "department": "75",
             "event_title": null,
@@ -27888,6 +28181,94 @@
             "category": "concert",
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-03-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Passenger",
+            "identity_aliases": [
+              "PASSENGER"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-08/1280x720.jpg?itok=dF0VJwFN",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Passenger-En-Concert-17-Mars-2027-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-24T13:21:23Z",
+          "public_id": "09d3e485637fa619",
+          "state_identity": "09d3e485637fa619c0094c9df69da38cb079599326883a37a5198821f212cad6"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": "https://www.facebook.com/events/1782497689555089",
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "PETER HOOK & THE LIGHT : A JOY DIVISION CELEBRATION",
+            "identity_aliases": [
+              "PETER HOOK & THE LIGHT"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-09/1920x1080px.jpg?itok=78svZ8HF",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Vedettes"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Peter-Hook-The-Light-En-Concert-29-Mars-2027-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-09-04T11:34:41Z",
+          "public_id": "c116e8c4cf50de99",
+          "state_identity": "c116e8c4cf50de994e4526d87913467b4b8d78a4ae1fd3118e07c194ae2a4cdd"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-03-31",
             "department": "75",
             "event_title": null,
@@ -28002,7 +28383,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-10-21T12:00:01Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -28685,7 +29066,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -29346,7 +29727,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -31834,7 +32215,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -32280,58 +32661,11 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
-            "genres_public": null,
-            "headliner": "ART GARFUNKEL",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": null,
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "a15b3877eddea5ba",
-          "state_identity": "a15b3877eddea5ba504c352b062768683256e7f65e3bc64d0a832095001faf2f"
-        },
         {
           "event": {
             "announced_at": null,
@@ -32934,7 +33268,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-16",
@@ -32955,7 +33289,9 @@
             "genre_source": "Reviewed stable artist classification, 2026-08-23",
             "genres_public": null,
             "headliner": "Uriah Heep",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "URIAH HEEP"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7YDDrKYJb3cUGMdqRACcCKzB_KO1Me7J211jmbCHapStalHp2jteJ6_vFXDZZdThZzt9EcUsi2Rr6LbSEPShJXwpeHSZy0ueAlLkU1IcBcoI80cRmzQt5nWhsp25GZUFNaukKNMNZ5D7hUQvcmR-XKLsUSNbIGlRrIaMCkIqg7vJFoxq3xTZs7c9ONw/s72-w640-h426-c-rw/Uriah%20Heep.%2002%20(Electric)16_10_2022OlympiaParis_124.jpg",
             "openers": null,
@@ -32967,10 +33303,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.gdp.fr/fr/catalogue/uriah-heep-paris-2026-11-16",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Uriah-Heep-Magician-S-Farewell-16-Novembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -35673,7 +36009,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -36499,7 +36835,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -36530,7 +36866,7 @@
               "LIARS"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/LIARS_1800×1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/LIARS_1800×1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36574,7 +36910,7 @@
               "ARKAYLA"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36656,7 +36992,7 @@
             "headliner": "Gs",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-4.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-4.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36696,7 +37032,7 @@
             "headliner": "GRANDMAS HOUSE",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-grandmas-house-1.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-grandmas-house-1.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36739,7 +37075,7 @@
               "Crenoka + mita"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36821,7 +37157,7 @@
             "headliner": "ZOH AMBA (LES FEMMES S’EN MÊLENT)",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800PX.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800PX.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36864,7 +37200,7 @@
               "TIGERCUB – 16H"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36906,7 +37242,7 @@
             "headliner": "TIGERCUB – 20H",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36946,7 +37282,7 @@
             "headliner": "REALLY GOOD TIME",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/PRESS-SHOT-ALT-2048x2048.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/PRESS-SHOT-ALT-2048x2048.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37035,7 +37371,7 @@
             "headliner": "LMZG",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800-x-1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800-x-1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37075,7 +37411,7 @@
             "headliner": "PAOLO",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1080x1080.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1080x1080.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37115,7 +37451,7 @@
             "headliner": "BEL COBAIN",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-BEL-COBAIN.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-BEL-COBAIN.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37195,7 +37531,7 @@
             "headliner": "TONY & THE KIKI",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-toni.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-toni.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37235,7 +37571,7 @@
             "headliner": "GINGERELLA",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37319,7 +37655,7 @@
             "headliner": "ROBB",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-Barlow-1.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-Barlow-1.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37359,7 +37695,7 @@
             "headliner": "2120",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Photo-Boule-Noire-1800x1800-1.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Photo-Boule-Noire-1800x1800-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37399,7 +37735,7 @@
             "headliner": "KILIMANJARO (LIVE)",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-kilimanjaro.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-kilimanjaro.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37438,8 +37774,8 @@
             "genres_public": null,
             "headliner": "EZEK",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800X1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -39373,7 +39709,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -44249,7 +44585,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -45678,7 +46014,7 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -47223,7 +47559,7 @@
           "state_identity": "0c1a312fe16e825181e51bb1b117e4a23b1dc3f4bc2116abe15428cbbe27a744"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -52988,7 +53324,7 @@
           "state_identity": "d5e9f2e00091edec3f1c3b6e75f19349ede05905962d9a4489be1085fac26e26"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -54793,7 +55129,7 @@
           "state_identity": "c65ae25ac4ba1629dbac18b322fdc8832da8e85d2405d7b64d6ea0a498d7801e"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -55607,7 +55943,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -56404,56 +56740,11 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "#altpop #electropop #pop",
-            "genre_evidence": [
-              {
-                "raw": "#altpop #electropop #pop",
-                "source": "Le Hasard Ludique"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Le Hasard Ludique",
-            "genres_public": null,
-            "headliner": "HYD",
-            "identity_aliases": null,
-            "image_source": "Le Hasard Ludique",
-            "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/14776/HEADER_HYS.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.lehasardludique.paris/concert/2026-05-19/hyd#reservation",
-            "venue": "Le Hasard Ludique"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "2bb7b73dac01d294",
-          "state_identity": "2bb7b73dac01d2945cb312abaefe2f8c491c74705e674878536cee08fab44e40"
-        },
         {
           "event": {
             "announced_at": null,
@@ -57912,7 +58203,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -59918,7 +60209,7 @@
           "state_identity": "6bb00dcf476a1c7a1e65b6097449e40b0c9dcca57f15e384cdbd0d0faff10858"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -63333,7 +63624,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -68581,7 +68872,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -69338,7 +69629,7 @@
           "state_identity": "d2952fd95f700071908484d264c842b004610d145b165e7c65f5be6c5f9dd243"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72761,7 +73052,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-20",
@@ -72782,9 +73073,11 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Blue",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/m/o/e/ad6c5c8e-0730-45dc-a979-219677161057.png",
+            "identity_aliases": [
+              "Blue"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-03/vignettes_web_salle_1920x1080.jpg?itok=OMpWMYv1",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -72793,11 +73086,11 @@
             ],
             "raw_title": null,
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/blue-billet/idlist/5900/idtier/4827637",
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Blue-25Th-Anniversary-Tour-20-Novembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -73007,7 +73300,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-22",
@@ -73031,9 +73324,11 @@
               "R&B / Soul / Funk"
             ],
             "headliner": "Yamashita Tomohisa",
-            "identity_aliases": null,
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/g/r/o/56c4ad06-dd8b-4c93-8d59-8d74ff96b7b7.png",
+            "identity_aliases": [
+              "Yamashita Tomohisa"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-07/whatsapp-image-2026-07-23-at-14.05.07-1.jpeg?itok=IZod9Jc_",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -73043,10 +73338,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/yamashita-tomohisa-billet/idmanif/668930/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Yamashita-Tomohisa-A-Paris-22-Novembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -80528,7 +80823,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -80621,7 +80916,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-12-18",
@@ -80637,9 +80932,11 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Soweto Gospel Choir",
-            "identity_aliases": null,
-            "image_source": "Los Production",
-            "image_url": "https://www.losproduction.com/wp-content/uploads/1080x1080-soweto-paris-380x380.jpg",
+            "identity_aliases": [
+              "Soweto Gospel Choir"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-05/capture-d-ecran-2026-05-27-174122-1.png?itok=Z8hEEapk",
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -80649,10 +80946,10 @@
             "raw_title": "Soweto Gospel Choir",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://losproduction.trium.fr/fr/t/-/event/68091",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Soweto-Gospel-Choir-Pou-Zot-Du-18-Au-20-Decembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-09-03T11:32:28Z",
@@ -80984,7 +81281,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -85515,7 +85812,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -88195,7 +88492,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -88901,7 +89198,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -89090,7 +89387,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -90238,7 +90535,7 @@
             "department": "75",
             "event_title": null,
             "event_type": "concert",
-            "facebook_event_url": null,
+            "facebook_event_url": "https://www.facebook.com/events/2024241574907363",
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
@@ -90263,7 +90560,7 @@
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://dice.fm/event/6aba670b2dcaf80001667f29",
-            "venue": "Le B"
+            "venue": "Le Bal Chavaux"
           },
           "first_seen": "2026-09-30T19:34:11Z",
           "public_id": "eb7237f891807a26",
@@ -90787,57 +91084,11 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "Euros Childs"
-            ],
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": "https://www.facebook.com/events/1306968251494062/",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "Teenage Fanclub",
-            "identity_aliases": [
-              "Teenage Fanclub"
-            ],
-            "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/03/teenagefanclub-posterfeed-800x800.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Vedettes"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://petitbain.org/evenement/teenage-fanclub/",
-            "venue": "Petit Bain"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "523cb2db031e823d",
-          "state_identity": "523cb2db031e823d05db50fa851a7dc20b0e02de5d462a5d350d77b7e1587f7c"
-        },
         {
           "event": {
             "announced_at": null,
@@ -92808,7 +93059,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -93458,7 +93709,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -95020,7 +95271,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -95997,12 +96248,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -99572,7 +99823,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -100006,153 +100257,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "Ronald Baker"
-            ],
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": "Brad Leali Quintet ft. Ronald Baker",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz legend",
-            "genre_evidence": [
-              {
-                "raw": "Jazz legend",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Brad Leali Quintet",
-            "identity_aliases": [
-              "Brad Leali Quintet ft. Ronald Baker"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/7/28/6a68aa9d4c6bd-telechargement-e1785243563804-700x700-c-default.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "Brad Leali Quintet",
-              "Ronald Baker"
-            ],
-            "promoters": null,
-            "raw_title": "Brad Leali Quintet ft. Ronald Baker",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "21:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/821247-brad-leali-quintet-ft-ronald-baker",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "7226f225e72a659a",
-          "state_identity": "8ed54bde1356b661d4623c9fe9b4fb5b26039d30cd0c3f5717482b8a0e81bc25"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": "Charlotte Reinhardt",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz onirique",
-            "genre_evidence": [
-              {
-                "raw": "Jazz onirique",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Charlotte Reinhardt",
-            "identity_aliases": null,
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/7/27/6a678dd7947ea-lippe-psd-copie-2-e1785171199725-700x700-c-default.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/820792-charlotte-reinhardt",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "a82fb5b757efb464",
-          "state_identity": "a82fb5b757efb4646f0c7dccac8dbdc8b8d88b40d2d39706be238603b27a90a3"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-10-21",
-            "department": "75",
-            "event_title": "Jessica Bonamy - Ahmed Amine Ben Feguira - Festival Jazz sur Seine",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz world",
-            "genre_evidence": [
-              {
-                "raw": "Jazz world",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Jessica Bonamy - Ahmed Amine Ben Feguira - Festival Jazz sur Seine",
-            "identity_aliases": null,
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/7/29/6a6a169562465-capture-d-ecran-2026-07-29-170417.png_thumbs/340-340.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/822500-jessica-bonamy-ahmed-amine-ben-feguira-festival-jazz-sur-seine",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "8b7f0f2f90fbb38c",
-          "state_identity": "8b7f0f2f90fbb38cfad01ce21984ad0c814d1eeb053029ecbc17f6abf50bb6fa"
-        },
         {
           "event": {
             "announced_at": null,
@@ -107296,7 +107405,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -107873,7 +107982,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "paō"
+            ],
             "date": "2026-10-30",
             "department": "75",
             "event_title": null,
@@ -107882,27 +107993,32 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre_method": "bill_consensus",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Apple Music exact artist catalog",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
             "headliner": "Marcoca",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Marcoca + paō"
+            ],
             "image_source": null,
             "image_url": null,
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Marcoca",
+              "paō"
+            ],
             "promoters": [
               "Supersonic"
             ],
-            "raw_title": "Marcoca",
+            "raw_title": "Marcoca + paō",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://supersonic-club.fr/evenement/marcoca-30th-oct-supersonic-records-paris-tickets/",
+            "ticket_url": "https://supersonic-club.fr/evenement/marcoca-pa-30th-oct-supersonic-records-paris-tickets/",
             "venue": "Supersonic Records"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -110584,7 +110700,7 @@
           "state_identity": "d7aadbfc90ecc7a215a23b83fc1490ef3eedc14e87793fc173e6b0c7fe0d5a03"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -110774,7 +110890,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -110785,9 +110901,7 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": [
-              "Euros Childs"
-            ],
+            "co_headliners": null,
             "date": "2026-10-21",
             "department": "75",
             "event_title": null,
@@ -110796,16 +110910,14 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "mapped_bill_artists",
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
-            "headliner": "Teenage Fanclub",
-            "identity_aliases": [
-              "Teenage Fanclub"
-            ],
-            "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/03/teenagefanclub-posterfeed-800x800.jpg",
+            "headliner": "Teenage Fanclub + Euros Childs",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -110818,7 +110930,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://petitbain.org/evenement/teenage-fanclub/",
+            "ticket_url": "https://link.dice.fm/Zc43066d93bd",
             "venue": "Petit Bain"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -110851,7 +110963,7 @@
               "LIARS"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/LIARS_1800×1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/LIARS_1800×1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -110896,7 +111008,7 @@
               "Crenoka + mita"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -111908,7 +112020,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-03-29",
@@ -111924,9 +112036,11 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "PETER HOOK & THE LIGHT : A JOY DIVISION CELEBRATION",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "PETER HOOK & THE LIGHT"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-09/1920x1080px.jpg?itok=78svZ8HF",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -111936,10 +112050,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://link.dice.fm/z3a92511fc11",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Peter-Hook-The-Light-En-Concert-29-Mars-2027-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-09-04T11:34:41Z",
@@ -112119,7 +112233,7 @@
           "state_identity": "fd5e8756763e42b3d7b98017d2857fabfb8da5ab6baad909b989ac99ff4a627e"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -113724,12 +113838,12 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-12-16",
             "department": "75",
-            "event_title": null,
+            "event_title": "Chelsea Wolfe: THE DARK World Tour",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -113739,23 +113853,26 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
-            "headliner": "CHELSEA WOLFE",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "headliner": "Chelsea Wolfe",
+            "identity_aliases": [
+              "Chelsea Wolfe: THE DARK World Tour",
+              "CHELSEA WOLFE"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-06/chelsea-wolfe-1920x1080-sans-texte.jpg?itok=1Co6m_G6",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
               "VeryShow"
             ],
-            "raw_title": null,
+            "raw_title": "Chelsea Wolfe: THE DARK World Tour",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "http://bit.ly/ChelseaWolfe_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Chelsea-Wolfe-The-Dark-World-Tour-En-Concert-16-Decembre-2026-Billetterie-Paris",
             "venue": "Casino de Paris"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -115460,7 +115577,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -116371,7 +116488,7 @@
           "state_identity": "b8ce8258d26b0761338cda0577e6228a4f4c163b38271e35a126dfd8fc176a1a"
         }
       ],
-      "last_successful_at": "2026-10-21T17:20:36Z",
+      "last_successful_at": "2026-10-21T21:49:45Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -117588,6 +117705,6 @@
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-10-21T17:20:36Z",
+  "updated_at": "2026-10-21T21:49:45Z",
   "version": 1
 }
