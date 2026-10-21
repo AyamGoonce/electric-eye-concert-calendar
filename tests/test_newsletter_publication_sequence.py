@@ -25,12 +25,14 @@ MANIFEST = {
 
 class NewsletterPublicationSequenceTests(unittest.TestCase):
 
+    @patch("newsletter.run.publish_archive")
+    @patch("newsletter.run.publish_landing_pages")
     @patch("newsletter.run.update_latest_javascript")
     @patch("newsletter.run.update_latest_manifest")
     @patch("newsletter.run.publish_edition")
     @patch("newsletter.run.generate")
     def test_successful_publication_order(
-        self, generate, publish, update_manifest, update_javascript
+        self, generate, publish, update_manifest, update_javascript, landing_pages, archive
     ):
         from unittest.mock import Mock
 
@@ -48,6 +50,20 @@ class NewsletterPublicationSequenceTests(unittest.TestCase):
             calls.javascript()
             return {"action": "updated"}
 
+        def record_landing_pages(*args):
+            calls.landing_pages()
+            return {"weekly": {"action": "created"}, "monthly": {"action": "created"}}
+
+        def record_archive(*args):
+            calls.archive()
+            return {
+                "counts": {"weekly": 2, "monthly": 1},
+                "data": {"action": "updated"},
+                "page": {"action": "created"},
+            }
+
+        archive.side_effect = record_archive
+        landing_pages.side_effect = record_landing_pages
         publish.side_effect = record_publish
         update_manifest.side_effect = record_manifest
         update_javascript.side_effect = record_javascript
@@ -64,16 +80,20 @@ class NewsletterPublicationSequenceTests(unittest.TestCase):
                 unittest.mock.call.publish(),
                 unittest.mock.call.manifest(),
                 unittest.mock.call.javascript(),
+                unittest.mock.call.landing_pages(),
+                unittest.mock.call.archive(),
             ],
         )
         update_javascript.assert_called_once_with(MANIFEST)
 
+    @patch("newsletter.run.publish_archive")
+    @patch("newsletter.run.publish_landing_pages")
     @patch("newsletter.run.update_latest_javascript")
     @patch("newsletter.run.update_latest_manifest")
     @patch("newsletter.run.publish_edition")
     @patch("newsletter.run.generate")
     def test_failed_publication_stops_manifest_updates(
-        self, generate, publish, update_manifest, update_javascript
+        self, generate, publish, update_manifest, update_javascript, landing_pages, archive
     ):
         generate.return_value = (SNAPSHOT, "<html>OK</html>", {})
         publish.side_effect = RuntimeError("Upload failed")
@@ -87,13 +107,17 @@ class NewsletterPublicationSequenceTests(unittest.TestCase):
 
         update_manifest.assert_not_called()
         update_javascript.assert_not_called()
+        landing_pages.assert_not_called()
+        archive.assert_not_called()
 
+    @patch("newsletter.run.publish_archive")
+    @patch("newsletter.run.publish_landing_pages")
     @patch("newsletter.run.update_latest_javascript")
     @patch("newsletter.run.update_latest_manifest")
     @patch("newsletter.run.publish_edition")
     @patch("newsletter.run.generate")
     def test_existing_edition_repairs_javascript(
-        self, generate, publish, update_manifest, update_javascript
+        self, generate, publish, update_manifest, update_javascript, landing_pages, archive
     ):
         generate.return_value = (SNAPSHOT, "<html>OK</html>", {})
         publish.return_value = {"action": "skip"}
