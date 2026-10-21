@@ -48,10 +48,20 @@ jobs:
         if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || github.event.schedule == '0 6,7 * * 1'
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
-        run: python -m newsletter.run --frequency weekly --scheduled --publish
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python -m newsletter.run --frequency weekly --publish
+          else
+            python -m newsletter.run --frequency weekly --scheduled --publish
+          fi
 
       - name: Publish monthly edition
         if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || github.event.schedule == '0 6,7 1 * *'
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
-        run: python -m newsletter.run --frequency monthly --scheduled --publish
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python -m newsletter.run --frequency monthly --publish
+          else
+            python -m newsletter.run --frequency monthly --scheduled --publish
+          fi
