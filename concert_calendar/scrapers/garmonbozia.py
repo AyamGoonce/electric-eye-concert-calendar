@@ -328,8 +328,9 @@ def parse_card(card):
         else None
     )
 
-    # Reviewed exact event: correct the March 1 source-date regression.
-    # This never changes the parsing of other ampersand-delimited names.
+    # Verified co-headliner roles for the Triple Thrash Alliance.
+    # Never override the source date: the show was rescheduled from
+    # 2027-03-21 to 2027-03-01. The event-specific ticket page confirms it.
     triple_thrash = (
         "evil-invaders-exhorder-heathen" in (ticket_url or "").casefold()
         and re.fullmatch(
@@ -342,7 +343,6 @@ def parse_card(card):
         and event_date in {"2027-03-01", "2027-03-21"}
     )
     if triple_thrash:
-        event_date = "2027-03-21"
         headliner = "Evil Invaders"
         performers = ["Evil Invaders", "Exhorder", "Heathen"]
         openers = ["Warfield"]

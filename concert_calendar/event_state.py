@@ -296,8 +296,7 @@ def _normalized_public_time(value: str | None) -> str:
 
 
 def _published_continuity_score(event: ConcertEvent, published: dict) -> int | None:
-    if published.get("d", "")[:10] != event.date[:10]:
-        return None
+    changed_date = published.get("d", "")[:10] != event.date[:10]
 
     old_time = _normalized_public_time(published.get("st"))
     new_time = _normalized_public_time(event.start_time)
@@ -366,6 +365,19 @@ def _published_continuity_score(event: ConcertEvent, published: dict) -> int | N
         )
     )
 
+    # Rescheduled concerts are eligible only with the same event-specific
+    # ticket, venue and complete performer bill. The caller additionally
+    # requires a unique ticket on both sides of a date migration.
+    if changed_date:
+        if not (same_ticket and same_venue and exact_bill):
+            return None
+        try:
+            if abs((date.fromisoformat(published["d"][:10]) -
+                    date.fromisoformat(event.date[:10])).days) > 180:
+                return None
+        except (KeyError, ValueError, TypeError):
+            return None
+
     if not same_ticket and not (
         same_venue
         and (
@@ -409,9 +421,29 @@ def _published_continuity_keys(
     ):
         state_key_by_public_id.setdefault(record.get("public_id", key[:16]), key)
 
+    # A shared/general ticket is not proof of a date migration. Prevent
+    # either row of a multi-performance event from inheriting another date.
+    current_ticket_counts = defaultdict(int)
+    published_ticket_counts = defaultdict(int)
+    for event in events:
+        identity = _public_ticket_identity(event.ticket_url)
+        if identity:
+            current_ticket_counts[identity] += 1
+    for published in previous_public_events:
+        identity = _public_ticket_identity(published.get("t"))
+        if identity:
+            published_ticket_counts[identity] += 1
+
     edges = []
     for event in events:
         for published in previous_public_events:
+            if published.get("d", "")[:10] != event.date[:10]:
+                identity = _public_ticket_identity(event.ticket_url)
+                if not identity or identity != _public_ticket_identity(published.get("t")):
+                    continue
+                if (current_ticket_counts[identity] != 1 or
+                        published_ticket_counts[identity] != 1):
+                    continue
             public_id = published.get("i")
             if (
                 not isinstance(public_id, str)

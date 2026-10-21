@@ -36,7 +36,7 @@ class GarmonboziaBillingTests(unittest.TestCase):
             self.assertEqual(artists, event.performers)
 
 
-    def test_triple_thrash_restores_date_and_artist_roles(self):
+    def test_triple_thrash_keeps_updated_date_and_artist_roles(self):
         html = """
         <dl><dd><span class="evenementNom">Evil Invaders &amp; Exhorder &amp; Heathen</span></dd>
         <time itemprop="startDate" datetime="2027-03-01"></time>
@@ -47,7 +47,7 @@ class GarmonboziaBillingTests(unittest.TestCase):
         """
         event = parse_card(BeautifulSoup(html, "html.parser").select_one("dl"))
         self.assertIsNotNone(event)
-        self.assertEqual("2027-03-21", event.date)
+        self.assertEqual("2027-03-01", event.date)
         self.assertEqual("Evil Invaders", event.headliner)
         self.assertEqual(["Exhorder", "Heathen"], event.co_headliners)
         self.assertEqual(["Warfield"], event.openers)
