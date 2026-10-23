@@ -26,7 +26,7 @@
               "ARKAYLA"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -615,7 +615,7 @@
               "TIGERCUB – 16H"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -2192,6 +2192,50 @@
           "first_seen": "2026-09-08T10:51:47Z",
           "public_id": "37a2456ac8f55feb",
           "state_identity": "37a2456ac8f55feb2f1a9fdec7df50c4c65bb222e85061b95100a1aaa89478ba"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Skepta",
+            "identity_aliases": [
+              "SKEPTA"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/skepta-elysee-montmartre.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/skepta/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-10-23T11:48:53Z",
+          "public_id": "2e7e461fdad73957",
+          "state_identity": "2e7e461fdad73957d256be9dffc184a096482118f8c6788e1d4996f6fa293958"
         },
         {
           "event": {
@@ -5953,7 +5997,7 @@
           "state_identity": "44e224606b7dc4a5abbcd49c519d6f575cb9f68730af95077c961cf5d7b125c3"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -10858,7 +10902,7 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "Vianney",
+            "headliner": "VIANNEY",
             "identity_aliases": null,
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/7d82713f-5db6-47eb-b211-4e5d745ce4b1.jpg",
@@ -10903,7 +10947,7 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "Vianney",
+            "headliner": "VIANNEY",
             "identity_aliases": null,
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/7d82713f-5db6-47eb-b211-4e5d745ce4b1.jpg",
@@ -11161,7 +11205,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11915,7 +11959,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -13148,28 +13192,20 @@
               {
                 "raw": "Rap / Hip hop",
                 "source": "Alhambra"
-              },
-              {
-                "raw": "Electronic, Pop",
-                "source": "Live Nation"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
+            "genre_method": "source_mapping",
+            "genre_public": "Hip-hop / Rap",
             "genre_source": "Alhambra",
             "genres_public": null,
             "headliner": "MNEK",
-            "identity_aliases": [
-              "MNEK"
-            ],
+            "identity_aliases": null,
             "image_source": "Alhambra",
             "image_url": "https://www.alhambra-paris.com/files/125/v_2607061103450.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
+            "promoters": null,
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -14449,7 +14485,7 @@
           "state_identity": "5f1c421c2190cb4553cfcb36193b5fc584e65b9a5f9acc74d86957d68d5827fc"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -16650,7 +16686,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16966,7 +17002,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -18607,7 +18643,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -20022,7 +20058,7 @@
           "state_identity": "b958a0354f81b07c35bf32994860a447cdb5ffe09c790746131aefece6cd341b"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -20434,7 +20470,7 @@
               "ICE SEALED EYES"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Design-sans-titre-15.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Design-sans-titre-15.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -21583,7 +21619,7 @@
           "state_identity": "16eb447476548e4e2f4162b5691c1d56b000a0dbd8babb302fb4d4f2fb96859c"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -23405,7 +23441,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -24995,7 +25031,7 @@
           "state_identity": "fd5e8756763e42b3d7b98017d2857fabfb8da5ab6baad909b989ac99ff4a627e"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -26715,7 +26751,7 @@
           "state_identity": "7a0d2016f63e2908463b78a0b185ff7a1a3f451a93bfff1f8324f9324da599a9"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -28016,7 +28052,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -28795,7 +28831,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -29456,7 +29492,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -31940,7 +31976,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -32346,7 +32382,7 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -35745,7 +35781,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -36651,7 +36687,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -36680,7 +36716,7 @@
               "ARKAYLA"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/1800x1800.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36762,7 +36798,7 @@
             "headliner": "Gs",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-4.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800-4.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36802,7 +36838,7 @@
             "headliner": "GRANDMAS HOUSE",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-grandmas-house-1.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-grandmas-house-1.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36845,7 +36881,7 @@
               "Crenoka + mita"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36927,7 +36963,7 @@
             "headliner": "ZOH AMBA (LES FEMMES S’EN MÊLENT)",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800PX.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800PX.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36970,7 +37006,7 @@
               "TIGERCUB – 16H"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37012,7 +37048,7 @@
             "headliner": "TIGERCUB – 20H",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/b8bf7403_10-Tigercub-2025-Andreia-Lemos-andreiaartt-scaled.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37052,7 +37088,7 @@
             "headliner": "REALLY GOOD TIME",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/PRESS-SHOT-ALT-2048x2048.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/PRESS-SHOT-ALT-2048x2048.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37141,7 +37177,7 @@
             "headliner": "LMZG",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800-x-1800.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800-x-1800.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37181,7 +37217,7 @@
             "headliner": "PAOLO",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1080x1080.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1080x1080.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37221,7 +37257,7 @@
             "headliner": "BEL COBAIN",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-BEL-COBAIN.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-BEL-COBAIN.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37301,7 +37337,7 @@
             "headliner": "TONY & THE KIKI",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-toni.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-toni.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37341,7 +37377,7 @@
             "headliner": "GINGERELLA",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37425,7 +37461,7 @@
             "headliner": "ROBB",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-Barlow-1.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-Barlow-1.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37465,7 +37501,7 @@
             "headliner": "2120",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Photo-Boule-Noire-1800x1800-1.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Photo-Boule-Noire-1800x1800-1.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37505,7 +37541,7 @@
             "headliner": "KILIMANJARO (LIVE)",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-kilimanjaro.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-kilimanjaro.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37545,7 +37581,7 @@
             "headliner": "EZEK",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800X1800.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800X1800.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37589,7 +37625,7 @@
               "ICE SEALED EYES"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Design-sans-titre-15.png",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Design-sans-titre-15.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -39599,7 +39635,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -44475,7 +44511,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -45864,7 +45900,7 @@
           "state_identity": "62028dc7652e5252805a9bcbe779a88596b5b5e6c927cc11e0238a8022fd6bd0"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -47453,7 +47489,7 @@
           "state_identity": "0c1a312fe16e825181e51bb1b117e4a23b1dc3f4bc2116abe15428cbbe27a744"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -53220,7 +53256,7 @@
           "state_identity": "d5e9f2e00091edec3f1c3b6e75f19349ede05905962d9a4489be1085fac26e26"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -55025,7 +55061,7 @@
           "state_identity": "c65ae25ac4ba1629dbac18b322fdc8832da8e85d2405d7b64d6ea0a498d7801e"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -55839,7 +55875,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -56680,7 +56716,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -58049,7 +58085,7 @@
           "state_identity": "495521ea11ca3f6f5e409e10cb8f369e87501ade1658e90e8983eb21366687ae"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -58531,7 +58567,9 @@
             "identity_aliases": null,
             "image_source": null,
             "image_url": null,
-            "openers": null,
+            "openers": [
+              "OSCAR PALACE"
+            ],
             "performance_marker": null,
             "performers": null,
             "promoters": null,
@@ -59972,7 +60010,7 @@
           "state_identity": "6bb00dcf476a1c7a1e65b6097449e40b0c9dcca57f15e384cdbd0d0faff10858"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -63481,7 +63519,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -65023,7 +65061,7 @@
           "state_identity": "32448a07f947641716725f33786e7621a5003304b20e591029473890c34b15ce"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -65476,55 +65514,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "bdae956ec84836c1",
           "state_identity": "bdae956ec84836c19fce29b23cd517cae6523bf48d2e4d11a7f545e8a5fe3e9b"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-14",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "RnB / Soul",
-            "genre_evidence": [
-              {
-                "raw": "RnB / Soul",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "R&B / Soul / Funk",
-            "genre_source": "Live Nation",
-            "genres_public": null,
-            "headliner": "Zaho",
-            "identity_aliases": [
-              "Zaho"
-            ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/b/f/k/d0f43983-748c-42dd-9ec9-d50bbaaae06f.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Zaho-21798",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "92f066e8e76e8bd5",
-          "state_identity": "92f066e8e76e8bd5ca6d72d1b097176b43bf384a7622578a29936abffab2b3a5"
         },
         {
           "event": {
@@ -68540,50 +68529,6 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
-            "date": "2027-04-08",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Chanson Française / Variétés",
-            "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
-            "genres_public": null,
-            "headliner": "Vianney",
-            "identity_aliases": [
-              "VIANNEY"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a1054f47f3fe691453780.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Zouave"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Vianney-21435",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "1454797b6d7771f5",
-          "state_identity": "1454797b6d7771f5b5e681655c79afd8a7399e33a535cb228bbf0cc998619568"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
             "date": "2027-04-15",
             "department": "75",
             "event_title": null,
@@ -69714,7 +69659,7 @@
           "state_identity": "ec60c364dc0ae77182f921739653119cee1c51b425074f49286eab0537c4b8d7"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -70422,7 +70367,7 @@
           "state_identity": "d2952fd95f700071908484d264c842b004610d145b165e7c65f5be6c5f9dd243"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72894,9 +72839,7 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Zaho",
-            "identity_aliases": [
-              "Zaho"
-            ],
+            "identity_aliases": null,
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/b/f/k/d0f43983-748c-42dd-9ec9-d50bbaaae06f.png",
             "openers": null,
@@ -72911,7 +72854,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Zaho-21798",
+            "ticket_url": "https://www.ticketmaster.fr/fr/manifestation/zaho-billet/idmanif/644093",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -74251,59 +74194,6 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "98c54f52d6e0a06c",
           "state_identity": "98c54f52d6e0a06c6bc6af8f14a3aadc48d9dcfacec5c5bca9271e5156e55111"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "Rap / Hip hop",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-27",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rap / Hip hop",
-            "genre_evidence": [
-              {
-                "raw": "Rap / Hip hop",
-                "source": "Alhambra"
-              },
-              {
-                "raw": "Electronic, Pop",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Alhambra",
-            "genres_public": null,
-            "headliner": "MNEK",
-            "identity_aliases": [
-              "MNEK"
-            ],
-            "image_source": "Alhambra",
-            "image_url": "https://www.alhambra-paris.com/files/125/v_2607061103450.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.alhambra-paris.com/mnek-lo4618.html",
-            "venue": "L'Alhambra"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "8dabff006e4045db",
-          "state_identity": "8dabff006e4045db0120aa6ff720e658d495a48b6a4e67358bc1d6ebb87e0682"
         },
         {
           "event": {
@@ -79569,15 +79459,15 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Other",
+            "genre": "Pop",
             "genre_evidence": [
               {
-                "raw": "Other",
+                "raw": "Pop",
                 "source": "Live Nation"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Alfie Jukes",
@@ -81485,7 +81375,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -81943,7 +81833,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -86608,7 +86498,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -89248,7 +89138,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -89999,7 +89889,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -90188,7 +90078,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -92012,7 +91902,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -93985,7 +93875,7 @@
           "state_identity": "a2983a3ef9dcfe98f31527067fd1442fc97d86304b65bb59c6b3a78f344e987d"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -94635,7 +94525,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -96150,7 +96040,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -97112,12 +97002,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -100732,7 +100622,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -101206,7 +101096,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -107090,6 +106980,51 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-12-03",
+            "department": "75",
+            "event_title": "Olivier ker Ourio Quartet",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz actuel",
+            "genre_evidence": [
+              {
+                "raw": "Jazz actuel",
+                "source": "Sunset/Sunside"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Sunset/Sunside",
+            "genres_public": null,
+            "headliner": "Olivier ker Ourio Quartet",
+            "identity_aliases": null,
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/10/23/6adb43e443f61-image4.jpeg_thumbs/340-340.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/864153-olivier-ker-ourio-quartet",
+            "venue": "Sunset/Sunside — Sunset"
+          },
+          "first_seen": "2026-10-23T11:48:53Z",
+          "public_id": "01f43a1523ba6c5e",
+          "state_identity": "01f43a1523ba6c5e30b80f8f3a853c8e7b43aaa26ab2048c3b3e2e3fa6799985"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-12-04",
             "department": "75",
             "event_title": "Ludovic Ernault & Simon Martineau - Nouvel album \"Ida Lupino\"",
@@ -107870,6 +107805,53 @@
             "co_headliners": null,
             "date": "2026-12-18",
             "department": "75",
+            "event_title": "Deep Chuckles \"Hommage à Fletcher Henderson\"",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz swing",
+            "genre_evidence": [
+              {
+                "raw": "Jazz swing",
+                "source": "Sunset/Sunside"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Sunset/Sunside",
+            "genres_public": null,
+            "headliner": "Deep Chuckles",
+            "identity_aliases": [
+              "Deep Chuckles \"Hommage à Fletcher Henderson\""
+            ],
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/10/23/6adb39eeb7410-deep-chuckles-lg.jpeg_thumbs/340-340.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": "Deep Chuckles \"Hommage à Fletcher Henderson\"",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/864135-deep-chuckles-hommage-a-fletcher-henderson",
+            "venue": "Sunset/Sunside — Sunset"
+          },
+          "first_seen": "2026-10-23T11:48:53Z",
+          "public_id": "e406b89c246d891d",
+          "state_identity": "e406b89c246d891dc7a016748339b360e83fb688fd590bd43cebc11a91f8c3aa"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-18",
+            "department": "75",
             "event_title": "Michèle Hendricks Quintet \"Hommage à Ella Fitzgerald\"",
             "event_type": null,
             "facebook_event_url": null,
@@ -108419,6 +108401,51 @@
           "first_seen": "2026-10-22T17:18:36Z",
           "public_id": "4d87ffbee304cc53",
           "state_identity": "4d87ffbee304cc5348d8ba07dace31684e674974031a5c4ba890b0093f3af659"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-26",
+            "department": "75",
+            "event_title": "Hommage à Marylin Monroe Isabelle Seleskovitch ft Thomas Naim",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz vocal",
+            "genre_evidence": [
+              {
+                "raw": "Jazz vocal",
+                "source": "Sunset/Sunside"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Sunset/Sunside",
+            "genres_public": null,
+            "headliner": "Hommage à Marylin Monroe Isabelle Seleskovitch ft Thomas Naim",
+            "identity_aliases": null,
+            "image_source": "Sunset/Sunside",
+            "image_url": "https://img.mapado.net/2026/10/23/6adb469377754-visuel-isa-thomas.jpeg_thumbs/340-340.jpeg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://billetterie.sunset-sunside.com/event/864183-hommage-a-marylin-monroe-isabelle-seleskovitch-ft-thomas-naim",
+            "venue": "Sunset/Sunside — Sunside"
+          },
+          "first_seen": "2026-10-23T11:48:53Z",
+          "public_id": "af837a73c86b79ca",
+          "state_identity": "af837a73c86b79ca5b74d1e4e6abf14f60adb9c6a38a70aa6377512f47e25575"
         },
         {
           "event": {
@@ -109127,7 +109154,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -112365,7 +112392,7 @@
           "state_identity": "d7aadbfc90ecc7a215a23b83fc1490ef3eedc14e87793fc173e6b0c7fe0d5a03"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -112555,7 +112582,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -112585,7 +112612,7 @@
               "Crenoka + mita"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/1800x1800PX.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -113867,7 +113894,7 @@
           "state_identity": "fd5e8756763e42b3d7b98017d2857fabfb8da5ab6baad909b989ac99ff4a627e"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -117225,7 +117252,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -117811,12 +117838,10 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
             "genres_public": null,
-            "headliner": "Vianney",
-            "identity_aliases": [
-              "VIANNEY"
-            ],
-            "image_source": "Le Zénith Paris – La Villette",
-            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a1054f47f3fe691453780.png",
+            "headliner": "VIANNEY",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -117829,7 +117854,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://le-zenith.com/shows/Vianney-21435",
+            "ticket_url": "https://events.billyapp.live/efb8489d-5731-4700-b662-68b37b725f0b",
             "venue": "Le Zénith Paris – La Villette"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -117855,7 +117880,7 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
             "genres_public": null,
-            "headliner": "Vianney",
+            "headliner": "VIANNEY",
             "identity_aliases": null,
             "image_source": null,
             "image_url": null,
@@ -117897,7 +117922,7 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "Reviewed stable French singer-songwriter classification, 2026-08-23",
             "genres_public": null,
-            "headliner": "Vianney",
+            "headliner": "VIANNEY",
             "identity_aliases": null,
             "image_source": null,
             "image_url": null,
@@ -118054,7 +118079,7 @@
           "state_identity": "b8ce8258d26b0761338cda0577e6228a4f4c163b38271e35a126dfd8fc176a1a"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -119129,6 +119154,50 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "d3bc71cefc3c7510",
           "state_identity": "d3bc71cefc3c75108e339c2634ccdc5aefe3e73da6127380b380add840fd9f2f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Skepta",
+            "identity_aliases": [
+              "SKEPTA"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/skepta-elysee-montmartre.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/skepta/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-10-23T11:48:53Z",
+          "public_id": "2e7e461fdad73957",
+          "state_identity": "2e7e461fdad73957d256be9dffc184a096482118f8c6788e1d4996f6fa293958"
         },
         {
           "event": {
@@ -120776,10 +120845,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-10-23T10:31:02Z",
+      "last_successful_at": "2026-10-23T11:48:53Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-10-23T10:31:02Z",
+  "updated_at": "2026-10-23T11:48:53Z",
   "version": 1
 }
