@@ -10,6 +10,7 @@ on:
         options:
           - weekly
           - monthly
+          - templates
   schedule:
     - cron: "0 6,7 * * 1"
     - cron: "0 6,7 1 * *"
@@ -43,6 +44,19 @@ jobs:
 
       - name: Run newsletter regression tests
         run: python -m unittest discover -s tests -p 'test_newsletter_*.py'
+
+      - name: Publish email templates
+        if: github.event_name == 'workflow_dispatch' && inputs.frequency == 'templates'
+        env:
+          NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
+        run: |
+          python - <<'DEPLOY_TEMPLATES'
+          from newsletter.template_publish import publish_email_template
+
+          for frequency in ("weekly", "monthly"):
+              result = publish_email_template(frequency)
+              print(f"{frequency.title()} template: {result['action']}")
+          DEPLOY_TEMPLATES
 
       - name: Publish weekly edition
         if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || github.event.schedule == '0 6,7 * * 1'
