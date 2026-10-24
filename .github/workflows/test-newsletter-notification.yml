@@ -12,41 +12,34 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Send test notification
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Send approval notification test
         env:
           ZOHO_MAIL_APP_PASSWORD: ${{ secrets.ZOHO_MAIL_APP_PASSWORD }}
         run: |
-          python3 - <<'PY'
-          import os
-          import smtplib
-          import ssl
-          from email.message import EmailMessage
-
-          password = os.environ.get("ZOHO_MAIL_APP_PASSWORD")
-          if not password:
-              raise RuntimeError("ZOHO_MAIL_APP_PASSWORD is missing")
-
-          message = EmailMessage()
-          message["From"] = "Electric Eye Notifications <eric@electriceyerock.com>"
-          message["To"] = "eric@electriceyerock.com"
-          message["Subject"] = "Electric Eye — Notification System Test"
-
-          message.set_content(
-              "This is a test of the Electric Eye newsletter "
-              "approval notification system.\n\n"
-              "GitHub Actions successfully connected to Zoho Mail."
+          python3 - <<'PYTHON'
+          from newsletter.zoho_campaigns import (
+              campaign_name,
+              campaign_editor_url,
           )
+          from newsletter.zoho_notification import send_approval_notification
 
-          context = ssl.create_default_context()
+          campaign_id = "221575000000113002"
 
-          with smtplib.SMTP_SSL(
-              "smtppro.zoho.eu",
-              465,
-              context=context,
-              timeout=30,
-          ) as smtp:
-              smtp.login("eric@electriceyerock.com", password)
-              smtp.send_message(message)
+          campaign = {
+              "frequency": "weekly",
+              "identifier": "2026-W42",
+              "campaign_name": campaign_name("weekly", "2026-W42"),
+              "campaign_id": campaign_id,
+              "campaign_status": "Draft",
+              "editor_url": campaign_editor_url(campaign_id),
+          }
 
-          print("SUCCESS: Test notification accepted by Zoho SMTP.")
-          PY
+          result = send_approval_notification(campaign)
+
+          print("SUCCESS: Approval notification accepted by Zoho SMTP.")
+          print("Recipient:", result["recipient"])
+          print("Campaign ID:", result["campaign_id"])
+          PYTHON
