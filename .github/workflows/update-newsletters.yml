@@ -59,6 +59,7 @@ jobs:
           DEPLOY_TEMPLATES
 
       - name: Publish weekly edition
+        id: weekly_publication
         if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || github.event.schedule == '0 6,7 * * 1'
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
@@ -70,6 +71,7 @@ jobs:
           fi
 
       - name: Publish monthly edition
+        id: monthly_publication
         if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || github.event.schedule == '0 6,7 1 * *'
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
@@ -78,4 +80,28 @@ jobs:
             python -m newsletter.run --frequency monthly --publish
           else
             python -m newsletter.run --frequency monthly --scheduled --publish
+          fi
+
+      - name: Run Zoho approval automation
+        if: >-
+          steps.weekly_publication.outputs.identifier != '' ||
+          steps.monthly_publication.outputs.identifier != ''
+        env:
+          NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
+          ZOHO_MAIL_APP_PASSWORD: ${{ secrets.ZOHO_MAIL_APP_PASSWORD }}
+          ZOHO_CAMPAIGNS_CLIENT_ID: ${{ secrets.ZOHO_CAMPAIGNS_CLIENT_ID }}
+          ZOHO_CAMPAIGNS_CLIENT_SECRET: ${{ secrets.ZOHO_CAMPAIGNS_CLIENT_SECRET }}
+          ZOHO_CAMPAIGNS_READ_REFRESH_TOKEN: ${{ secrets.ZOHO_CAMPAIGNS_READ_REFRESH_TOKEN }}
+          ZOHO_CAMPAIGNS_CREATE_REFRESH_TOKEN: ${{ secrets.ZOHO_CAMPAIGNS_CREATE_REFRESH_TOKEN }}
+        run: |
+          if [ -n "${{ steps.weekly_publication.outputs.identifier }}" ]; then
+            python -m newsletter.run_approval \
+              --frequency weekly \
+              --identifier "${{ steps.weekly_publication.outputs.identifier }}"
+          fi
+
+          if [ -n "${{ steps.monthly_publication.outputs.identifier }}" ]; then
+            python -m newsletter.run_approval \
+              --frequency monthly \
+              --identifier "${{ steps.monthly_publication.outputs.identifier }}"
           fi

@@ -1,6 +1,7 @@
 """Generate and optionally publish an Electric Eye newsletter edition."""
 
 import argparse
+import os
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -116,6 +117,13 @@ def main():
         f"index {archive_result['data']['action']}, "
         f"page {archive_result['page']['action']}"
     )
+
+    # Expose an edition only after the complete publication succeeds.
+    output_path = os.environ.get("GITHUB_OUTPUT")
+    if output_path:
+        with open(output_path, "a", encoding="utf-8") as output:
+            output.write(f"frequency={snapshot['frequency']}\n")
+            output.write(f"identifier={snapshot['identifier']}\n")
 
 
 if __name__ == "__main__":
