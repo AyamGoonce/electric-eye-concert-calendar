@@ -12,8 +12,10 @@ on:
           - monthly
           - templates
   schedule:
-    - cron: "0 6,7 * * 1"
-    - cron: "0 6,7 1 * *"
+    - cron: "17 5 * * 1"
+    - cron: "37 6 * * 1"
+    - cron: "17 5 1 * *"
+    - cron: "37 6 1 * *"
 
 permissions:
   contents: read
@@ -60,7 +62,7 @@ jobs:
 
       - name: Publish weekly edition
         id: weekly_publication
-        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || github.event.schedule == '0 6,7 * * 1'
+        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || (github.event.schedule == '17 5 * * 1' || github.event.schedule == '37 6 * * 1')
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
         run: |
@@ -72,7 +74,7 @@ jobs:
 
       - name: Publish monthly edition
         id: monthly_publication
-        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || github.event.schedule == '0 6,7 1 * *'
+        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || (github.event.schedule == '17 5 1 * *' || github.event.schedule == '37 6 1 * *')
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
         run: |
