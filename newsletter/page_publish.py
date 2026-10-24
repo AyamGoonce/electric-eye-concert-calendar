@@ -15,6 +15,8 @@ ALLOWED_PATHS = frozenset({
     "monthly/index.html",
     "archives/index.html",
     "archives/index.json",
+    "templates/weekly.html",
+    "templates/monthly.html",
 })
 
 
