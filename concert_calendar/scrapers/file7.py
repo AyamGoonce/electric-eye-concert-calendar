@@ -131,6 +131,11 @@ def load_events():
         events_by_key.setdefault(event_key(event), event)
 
     events = list(events_by_key.values())
+    if not events:
+        raise RuntimeError(
+            "File7 returned no parsable concert listings; "
+            "treat as source failure and retain eligible previously published events"
+        )
 
     print(f"Created {len(events)} File7 ConcertEvent records")
 
