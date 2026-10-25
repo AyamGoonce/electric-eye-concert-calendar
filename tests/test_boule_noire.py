@@ -1,4 +1,5 @@
 import unittest
+from datetime import date
 from unittest.mock import patch
 
 from concert_calendar.scrapers import boule_noire
@@ -101,7 +102,10 @@ class BouleNoireCompletenessTests(unittest.TestCase):
 
         session.get.side_effect = fake_get
 
-        events = boule_noire.load_events()
+        # Freeze fixture time: dates in October 2026 should not expire.
+        with patch("concert_calendar.scrapers.boule_noire.date") as clock:
+            clock.today.return_value = date(2026, 10, 23)
+            events = boule_noire.load_events()
 
         by_name = {event.headliner: event for event in events}
 
