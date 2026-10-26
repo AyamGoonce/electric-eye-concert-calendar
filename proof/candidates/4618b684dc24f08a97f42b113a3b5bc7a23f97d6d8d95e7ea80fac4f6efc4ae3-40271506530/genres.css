@@ -1,0 +1,276 @@
+#ee-genres {
+  --ee-g-border: rgba(255,255,255,.13);
+  --ee-g-muted: rgba(255,255,255,.68);
+  --ee-g-panel: rgba(255,255,255,.045);
+  --ee-g-panel-hover: rgba(255,255,255,.075);
+  color: #fff;
+  font-family: "Instrument Sans", sans-serif;
+}
+
+#ee-genres * {
+  box-sizing: border-box;
+}
+
+.ee-g-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.ee-g-hero {
+  padding: 48px 0 34px;
+}
+
+.ee-g-kicker {
+  margin-bottom: 8px;
+  color: var(--ee-g-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.ee-g-title {
+  margin: 0;
+  font-size: clamp(38px, 7vw, 72px);
+  line-height: .95;
+}
+
+.ee-g-intro {
+  max-width: 720px;
+  margin: 18px 0 0;
+  color: var(--ee-g-muted);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.ee-g-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.ee-g-stat {
+  padding: 18px;
+  border: 1px solid var(--ee-g-border);
+  border-radius: 14px;
+  background: var(--ee-g-panel);
+}
+
+.ee-g-stat strong,
+.ee-g-stat span {
+  display: block;
+}
+
+.ee-g-stat strong {
+  font-size: 25px;
+}
+
+.ee-g-stat span {
+  margin-top: 3px;
+  color: var(--ee-g-muted);
+  font-size: 13px;
+}
+
+.ee-g-section {
+  padding: 16px 0 60px;
+}
+
+.ee-g-section-head h2 {
+  margin: 0;
+  font-size: 30px;
+}
+
+.ee-g-section-head p {
+  max-width: 720px;
+  margin: 8px 0 0;
+  color: var(--ee-g-muted);
+  line-height: 1.55;
+}
+
+.ee-g-tools {
+  display: grid;
+  grid-template-columns: minmax(220px,1fr) auto auto auto;
+  gap: 10px;
+  margin: 24px 0 14px;
+}
+
+.ee-g-search,
+.ee-g-filter,
+.ee-g-sort,
+.ee-g-reset,
+.ee-g-more {
+  min-height: 44px;
+  border: 1px solid var(--ee-g-border);
+  border-radius: 10px;
+  background: #111;
+  color: #fff;
+  font: inherit;
+}
+
+.ee-g-search,
+.ee-g-filter,
+.ee-g-sort {
+  padding: 0 13px;
+}
+
+.ee-g-reset,
+.ee-g-more {
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.ee-g-results {
+  margin: 10px 0 16px;
+  color: var(--ee-g-muted);
+  font-size: 14px;
+}
+
+.ee-g-results strong {
+  color: #fff;
+}
+
+.ee-g-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.ee-g-card {
+  border: 1px solid var(--ee-g-border);
+  border-radius: 13px;
+  background: var(--ee-g-panel);
+  overflow: hidden;
+}
+
+.ee-g-card-summary {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px 18px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ee-g-card-summary:hover {
+  background: var(--ee-g-panel-hover);
+}
+
+.ee-g-card-summary-main h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 18px;
+}
+
+.ee-g-parent {
+  margin: 4px 0 0;
+  color: var(--ee-g-muted);
+  font-size: 13px;
+}
+
+.ee-g-card-summary-side {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
+}
+
+.ee-g-count {
+  color: var(--ee-g-muted);
+  font-size: 13px;
+}
+
+.ee-g-card-chevron {
+  width: 20px;
+  color: #fff;
+  font-size: 22px;
+  text-align: center;
+}
+
+.ee-g-card-details {
+  padding: 0 18px 20px;
+  border-top: 1px solid var(--ee-g-border);
+}
+
+.ee-g-detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 15px 0 4px;
+  color: var(--ee-g-muted);
+  font-size: 13px;
+}
+
+.ee-g-block h4 {
+  margin: 15px 0 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.ee-g-artists {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.ee-g-artist {
+  padding: 7px 10px;
+  border: 1px solid var(--ee-g-border);
+  border-radius: 999px;
+  background: rgba(255,255,255,.04);
+  font-size: 13px;
+}
+
+.ee-g-more {
+  margin-top: 13px;
+}
+
+.ee-g-no-results,
+.ee-g-error {
+  padding: 24px;
+  border: 1px solid var(--ee-g-border);
+  border-radius: 12px;
+  color: var(--ee-g-muted);
+  text-align: center;
+}
+
+.ee-g-highlight {
+  outline: 2px solid rgba(255,255,255,.42);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .ee-g-shell {
+    width: min(100% - 20px, 1180px);
+  }
+
+  .ee-g-hero {
+    padding-top: 30px;
+  }
+
+  .ee-g-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .ee-g-tools {
+    grid-template-columns: 1fr;
+  }
+
+  .ee-g-card-summary {
+    align-items: flex-start;
+  }
+
+  .ee-g-card-summary-side {
+    gap: 10px;
+  }
+
+  .ee-g-count {
+    max-width: 80px;
+    text-align: right;
+  }
+}
