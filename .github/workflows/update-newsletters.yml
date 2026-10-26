@@ -11,6 +11,11 @@ on:
           - weekly
           - monthly
           - templates
+  workflow_run:
+    workflows:
+      - Update Electric Eye Concert Calendar
+    types:
+      - completed
   schedule:
     - cron: "17 5 * * 1"
     - cron: "37 6 * * 1"
@@ -35,16 +40,33 @@ jobs:
         with:
           ref: supersonic-scraper
 
+      - name: Check backup publication dates
+        id: backup_dates
+        if: github.event_name == 'workflow_run'
+        run: |
+          python3 - <<'CHECK_DATES'
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          today = datetime.now(ZoneInfo("Europe/Paris")).date()
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"weekly={str(today.weekday() == 0).lower()}\n")
+              output.write(f"monthly={str(today.day == 1).lower()}\n")
+          CHECK_DATES
+
       - name: Set up Python
+        if: github.event_name != 'workflow_run' || steps.backup_dates.outputs.weekly == 'true' || steps.backup_dates.outputs.monthly == 'true'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
 
       - name: Install dependencies
+        if: github.event_name != 'workflow_run' || steps.backup_dates.outputs.weekly == 'true' || steps.backup_dates.outputs.monthly == 'true'
         run: pip install -r requirements.txt
 
       - name: Run newsletter regression tests
+        if: github.event_name != 'workflow_run' || steps.backup_dates.outputs.weekly == 'true' || steps.backup_dates.outputs.monthly == 'true'
         run: python -m unittest discover -s tests -p 'test_newsletter_*.py'
 
       - name: Publish email templates
@@ -62,7 +84,7 @@ jobs:
 
       - name: Publish weekly edition
         id: weekly_publication
-        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || (github.event.schedule == '17 5 * * 1' || github.event.schedule == '37 6 * * 1')
+        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'weekly') || (github.event.schedule == '17 5 * * 1' || github.event.schedule == '37 6 * * 1') || (github.event_name == 'workflow_run' && steps.backup_dates.outputs.weekly == 'true')
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
         run: |
@@ -74,7 +96,7 @@ jobs:
 
       - name: Publish monthly edition
         id: monthly_publication
-        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || (github.event.schedule == '17 5 1 * *' || github.event.schedule == '37 6 1 * *')
+        if: (github.event_name == 'workflow_dispatch' && inputs.frequency == 'monthly') || (github.event.schedule == '17 5 1 * *' || github.event.schedule == '37 6 1 * *') || (github.event_name == 'workflow_run' && steps.backup_dates.outputs.monthly == 'true')
         env:
           NEWSLETTER_PUBLISH_TOKEN: ${{ secrets.NEWSLETTER_PUBLISH_TOKEN }}
         run: |
