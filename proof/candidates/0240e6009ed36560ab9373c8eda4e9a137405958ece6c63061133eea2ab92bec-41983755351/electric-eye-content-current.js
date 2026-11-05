@@ -1,0 +1,2 @@
+window.ElectricEyeContentManifest=Object.freeze({"data":"electric-eye-content.9dffbd6585c3d9fd.js","sha256":"9dffbd6585c3d9fd4f1061b155bd20fee0848646a442f7a49f11058180af5bb3","artists":879,"articles":1591});
+(function(){var s=document.createElement('script'),c=document.currentScript;s.src=new URL(window.ElectricEyeContentManifest.data,c&&c.src||location.href).href;document.head.appendChild(s);}());
