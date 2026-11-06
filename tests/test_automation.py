@@ -895,5 +895,23 @@ class PersistentEventStateTests(unittest.TestCase):
         )
 
 
+class PagesPublicationWorkflowTests(unittest.TestCase):
+    def test_workflow_explicitly_requests_pages_build_at_every_publication(self):
+        workflow = (
+            Path(__file__).resolve().parents[1]
+            / ".github/workflows/update-calendar.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn("  pages: write", workflow)
+        self.assertIn("Check Pages branch publishing configuration", workflow)
+        self.assertEqual(
+            3,
+            workflow.count('gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"'),
+        )
+        self.assertLess(
+            workflow.index("Stage immutable candidate publication"),
+            workflow.index("Verify candidate and stage live promotion"),
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
