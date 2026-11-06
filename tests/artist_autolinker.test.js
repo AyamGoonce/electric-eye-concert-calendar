@@ -63,6 +63,8 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
   const secondOccurrence = new TextNode("Sparks returned for an encore.", secondParagraph);
   const ordinaryProse = new TextNode("The lights went down before the show.", secondParagraph);
   const aliasProse = new TextNode("Sheepdogs closed the festival.", secondParagraph);
+  const curlyArtist = new TextNode("Keb’ Mo’ announced a new recording.", secondParagraph);
+  const straightArtist = new TextNode("Keb' Mo' played another show.", secondParagraph);
 
   const existingAnchor = new Element("a", {parent: postBody});
   const anchorText = new TextNode("Sparks existing link", existingAnchor);
@@ -73,7 +75,7 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
   const optOut = new Element("p", {attributes: {"data-ee-no-autolink": ""}, parent: postBody});
   const optOutText = new TextNode("Sparks opted out", optOut);
 
-  postBody.textNodes = [articleText, secondOccurrence, ordinaryProse, aliasProse, anchorText, adText, embedText, optOutText];
+  postBody.textNodes = [articleText, secondOccurrence, ordinaryProse, aliasProse, curlyArtist, straightArtist, anchorText, adText, embedText, optOutText];
 
   const sidebarWidget = new Element("aside", {classes: ["widget"]});
   const sidebarText = new TextNode("Sparks sidebar item", sidebarWidget);
@@ -105,7 +107,7 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
     ElectricEyeArtistLookup: {
       artistPage: "https://example.test/artist.html?artist=",
       proseAutolinkExclusions: ["down"],
-      terms: {Sparks: "sparks", Down: "down", Sheepdogs: "the-sheepdogs"},
+      terms: {Sparks: "sparks", Down: "down", Sheepdogs: "the-sheepdogs", "Keb\u0027 Mo\u0027": "keb-mo"},
     },
   };
   const source = fs.readFileSync("concert_calendar/static/artist-autolinker.js", "utf8");
@@ -119,6 +121,11 @@ test("Blogger Blog widget article is linked while sidebar and protected content 
   assert.equal(linkedText(secondOccurrence).length, 0, "only the first occurrence is linked by default");
   assert.equal(linkedText(ordinaryProse).length, 0, "ordinary down prose is not linked to Down");
   assert.equal(linkedText(aliasProse)[0].href, "https://example.test/artist.html?artist=the-sheepdogs/");
+  const curlyLinks = linkedText(curlyArtist);
+  assert.equal(curlyLinks.length, 1, "typographic apostrophes match the canonical artist");
+  assert.equal(curlyLinks[0].textContent, "Keb’ Mo’", "the article's original typography is preserved");
+  assert.equal(curlyLinks[0].href, "https://example.test/artist.html?artist=keb-mo/");
+  assert.equal(linkedText(straightArtist).length, 0, "straight and curly variants count as one artist");
   assert.equal(anchorText.replacement, null, "existing anchor is untouched");
   assert.equal(adText.replacement, null, "ad is untouched");
   assert.equal(embedText.replacement, null, "embed is untouched");
