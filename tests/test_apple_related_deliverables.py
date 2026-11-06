@@ -235,6 +235,44 @@ JSON.stringify({calls:calls,phases:[first.maintenance.phase,second.maintenance.p
             '"attempted":[0,0,0]}',
             result,
         )
+    def test_production_batches_four_new_articles_without_parallel_workers(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_PRODUCTION_GENERATION:"3",EE_APPLE_PRODUCTION_INDEX:"1",EE_APPLE_PRODUCTION_MAINTENANCE_PHASE:"0"},processed=[],maintenance=[],leases=[];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;}};}};
+eeAppleSettings_=function(){return {enabled:true};};
+eeAcquireWorkerLease_=function(name){leases.push("acquire:"+name);return true;};
+eeReleaseWorkerLease_=function(name){leases.push("release:"+name);};
+eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){};
+eeProductionPayloadState_=function(){return {};};
+eeFetchPosts_=function(start,size){return size===12?[{id:"one"},{id:"two"},{id:"three"},{id:"four"},{id:"five"}]:[];};
+eeProcessPost_=function(post){processed.push(post.id);return {categories:[{category:"LISTEN",items:[{stableId:post.id}]}]};};
+eeDiscoverArtistsMaintenanceWorker_=function(){maintenance.push("DISCOVERY");return {status:"OK"};};
+var result=eeDiscoverArtistsWorker();
+JSON.stringify({attempted:result.attempted,ready:result.ready,newest:result.newestAttempted,processed:processed,maintenance:maintenance,leases:leases});
+''')
+        self.assertEqual(
+            '{"attempted":4,"ready":4,"newest":4,'
+            '"processed":["one","two","three","four"],'
+            '"maintenance":["DISCOVERY"],'
+            '"leases":["acquire:PRODUCTION","release:PRODUCTION"]}',
+            result,
+        )
+
+    def test_production_batch_stops_when_headroom_is_insufficient(self):
+        result = self.run_apps_script(r'''
+var props={EE_APPLE_PRODUCTION_GENERATION:"3",EE_APPLE_PRODUCTION_INDEX:"1"},processed=[];
+PropertiesService={getScriptProperties:function(){return {getProperty:function(key){return props[key]||"";},setProperty:function(key,value){props[key]=value;}};}};
+eeAppleSettings_=function(){return {enabled:true};};
+eeAcquireWorkerLease_=function(){return true;};eeReleaseWorkerLease_=function(){};
+eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeClearExecutionDeadline_=function(){};
+eeProductionPayloadState_=function(){return {};};
+eeFetchPosts_=function(start,size){return size===12?[{id:"one"},{id:"two"}]:[];};
+eeProcessPost_=function(post){processed.push(post.id);EE_APPLE_PRODUCTION_POST_HEADROOM_MS=EE_APPLE_PRODUCTION_TIME_LIMIT_MS;return {categories:[{category:"LISTEN",items:[{stableId:post.id}]}]};};
+var result=eeDiscoverArtistsWorker();
+JSON.stringify({attempted:result.attempted,processed:processed,maintenance:result.maintenance});
+''')
+        self.assertEqual('{"attempted":1,"processed":["one"],"maintenance":null}', result)
+
     def test_maintenance_quota_exhaustion_preserves_phase_until_success(self):
         result = self.run_apps_script(r'''
 var props = {EE_APPLE_PRODUCTION_MAINTENANCE_PHASE:"1"};
