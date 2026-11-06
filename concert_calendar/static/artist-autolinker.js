@@ -3,14 +3,16 @@
   var config = Object.assign({allOccurrences:false, rootSelector:".post-body, .entry-content", optOutSelector:"[data-ee-no-autolink], .ee-no-autolink"}, window.ElectricEyeAutoLinkConfig || {});
   var skip = "a,script,style,noscript,code,pre,button,input,select,textarea,iframe,object,embed,nav,[role='navigation'],[role='button'],.ad,.adsbygoogle," + config.optOutSelector;
   function escapeRegExp(value) { return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function normalizedTerm(value) { return value.replace(/[’‘ʼ＇]/g, "'").toLocaleLowerCase(); }
+  function flexibleApostrophes(term) { return escapeRegExp(term).replace(/['’‘ʼ＇]/g, "['’‘ʼ＇]"); }
   function run() {
     var data = window.ElectricEyeArtistLookup;
     if (!data || document.documentElement.dataset.eeAutolinked) return;
     document.documentElement.dataset.eeAutolinked = "1";
     var terms = data.terms || {}, excluded = new Set(data.proseAutolinkExclusions || []), termSlugs = {}, aliases = Object.keys(terms).filter(function (term) { return !excluded.has(terms[term]); }).sort(function (a,b) { return b.length-a.length; });
-    aliases.forEach(function (term) { termSlugs[term.toLocaleLowerCase()] = terms[term]; });
+    aliases.forEach(function (term) { termSlugs[normalizedTerm(term)] = terms[term]; });
     if (!aliases.length) return;
-    var pattern = new RegExp("(^|[^\\p{L}\\p{N}])(" + aliases.map(escapeRegExp).join("|") + ")(?=$|[^\\p{L}\\p{N}])", "giu");
+    var pattern = new RegExp("(^|[^\\p{L}\\p{N}])(" + aliases.map(flexibleApostrophes).join("|") + ")(?=$|[^\\p{L}\\p{N}])", "giu");
     var linked = new Set();
     document.querySelectorAll(config.rootSelector).forEach(function (root) {
       var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), nodes = [], node;
@@ -18,7 +20,7 @@
       nodes.forEach(function (textNode) {
         pattern.lastIndex = 0; var source = textNode.nodeValue, fragment = document.createDocumentFragment(), last = 0, match, changed = false;
         while ((match = pattern.exec(source))) {
-          var slug = termSlugs[match[2].toLocaleLowerCase()];
+          var slug = termSlugs[normalizedTerm(match[2])];
           if (!slug || (!config.allOccurrences && linked.has(slug))) continue;
           var start = match.index + match[1].length;
           fragment.append(document.createTextNode(source.slice(last,start)));
