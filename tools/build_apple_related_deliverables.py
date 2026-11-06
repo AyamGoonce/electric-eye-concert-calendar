@@ -1042,9 +1042,12 @@ function eeAppleTvPush_(items, seen, raw, storefront, subject) {
 
 
 PRODUCTION_ORCHESTRATOR = r'''
-var EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN=1;
-var EE_APPLE_PRODUCTION_TIME_LIMIT_MS=150000;
+var EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN=4;
+var EE_APPLE_PRODUCTION_TIME_LIMIT_MS=180000;
+var EE_APPLE_PRODUCTION_POST_HEADROOM_MS=30000;
 var EE_APPLE_PRODUCTION_NEWEST_SCAN=12;
+
+function eeProductionCanStartPost_(deadline) {return Date.now()+EE_APPLE_PRODUCTION_POST_HEADROOM_MS<deadline;}
 
 function eeStoredPayloadGeneration_(stored) {try{return Number((eeDecodePayloadCell_(stored)||{}).generationVersion||0);}catch(error){return 0;}}
 
@@ -1098,7 +1101,7 @@ function eeAppleRecommendationsProductionWorker() {
   eeSetExecutionDeadline_(deadline);
   try{
     function processPost(post,source){
-      if(!post||totals.attempted>=EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN||Date.now()>=deadline)return false;var postId=String(post.id),prior=state[postId]||null;if(attemptedThisRun[postId])return false;
+      if(!post||totals.attempted>=EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN||!eeProductionCanStartPost_(deadline))return false;var postId=String(post.id),prior=state[postId]||null;if(attemptedThisRun[postId])return false;
       if(!eeProductionNeedsPost_(prior)){if(prior&&prior.status==="READY")totals.skippedReady+=1;return false;}
       attemptedThisRun[postId]=true;totals.attempted+=1;if(source==="NEWEST")totals.newestAttempted+=1;else totals.archiveAttempted+=1;
       try{var payload=eeProcessPost_(post,prior?prior.retryCount+1:0),ready=eePayloadHasRecommendations_(payload);if(ready)totals.ready+=1;else totals.empty+=1;state[postId]={status:ready?"READY":"EMPTY",generationVersion:EE_APPLE_CONFIG.generationVersion,hasRecommendations:ready,retryCount:prior?prior.retryCount+1:0};}
@@ -1106,9 +1109,9 @@ function eeAppleRecommendationsProductionWorker() {
       return true;
     }
     var newest=eeFetchPosts_(1,EE_APPLE_PRODUCTION_NEWEST_SCAN);
-    for(var index=0;index<newest.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline;index+=1)if(!attemptedThisRun[String(newest[index].id)]&&eeProductionNeedsPost_(state[String(newest[index].id)]||null)){processPost(newest[index],"NEWEST");break;}
+    for(var index=0;index<newest.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&eeProductionCanStartPost_(deadline);index+=1)if(!attemptedThisRun[String(newest[index].id)]&&eeProductionNeedsPost_(state[String(newest[index].id)]||null))processPost(newest[index],"NEWEST");
     var cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_PRODUCTION_INDEX")||1));
-    while(!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline){var posts=eeFetchPosts_(cursor,25);if(!posts.length){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}var found=false;for(var row=0;row<posts.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&Date.now()<deadline;row+=1){var post=posts[row];cursor+=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX",String(cursor));if(attemptedThisRun[String(post.id)]||!eeProductionNeedsPost_(state[String(post.id)]||null)){if((state[String(post.id)]||{}).status==="READY")totals.skippedReady+=1;continue;}found=true;processPost(post,"ARCHIVE");break;}if(found)continue;if(posts.length<25){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}}
+    while(!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&eeProductionCanStartPost_(deadline)){var posts=eeFetchPosts_(cursor,25);if(!posts.length){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}var found=false;for(var row=0;row<posts.length&&!stopRequested&&totals.attempted<EE_APPLE_PRODUCTION_MAX_ATTEMPTS_PER_RUN&&eeProductionCanStartPost_(deadline);row+=1){var post=posts[row];cursor+=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX",String(cursor));if(attemptedThisRun[String(post.id)]||!eeProductionNeedsPost_(state[String(post.id)]||null)){if((state[String(post.id)]||{}).status==="READY")totals.skippedReady+=1;continue;}found=true;processPost(post,"ARCHIVE");break;}if(found)continue;if(posts.length<25){cursor=1;properties.setProperty("EE_APPLE_PRODUCTION_INDEX","1");break;}}
     if(!stopRequested){
       totals.maintenance=eeProductionMaintenanceStep_(properties,deadline);
       var maintenanceResult=(totals.maintenance||{}).result||{};
