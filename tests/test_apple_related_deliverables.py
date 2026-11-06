@@ -268,10 +268,11 @@ eeSetExecutionDeadline_=function(value){EE_APPLE_EXECUTION_DEADLINE=value;};eeCl
 eeProductionPayloadState_=function(){return {};};
 eeFetchPosts_=function(start,size){return size===12?[{id:"one"},{id:"two"}]:[];};
 eeProcessPost_=function(post){processed.push(post.id);EE_APPLE_PRODUCTION_POST_HEADROOM_MS=EE_APPLE_PRODUCTION_TIME_LIMIT_MS;return {categories:[{category:"LISTEN",items:[{stableId:post.id}]}]};};
+eeDiscoverArtistsMaintenanceWorker_=function(){return {status:"OK"};};
 var result=eeDiscoverArtistsWorker();
-JSON.stringify({attempted:result.attempted,processed:processed,maintenance:result.maintenance});
+JSON.stringify({attempted:result.attempted,processed:processed,maintenance:result.maintenance.phase});
 ''')
-        self.assertEqual('{"attempted":1,"processed":["one"],"maintenance":null}', result)
+        self.assertEqual('{"attempted":1,"processed":["one"],"maintenance":"DISCOVERY"}', result)
 
     def test_maintenance_quota_exhaustion_preserves_phase_until_success(self):
         result = self.run_apps_script(r'''
