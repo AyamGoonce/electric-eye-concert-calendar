@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: Check out production branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: supersonic-scraper
           fetch-depth: 0
@@ -32,7 +32,7 @@ jobs:
         run: python scripts/export_apple_payloads.py
 
       - name: Check out archive branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: archive-site
