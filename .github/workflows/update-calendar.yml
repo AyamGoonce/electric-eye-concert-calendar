@@ -18,6 +18,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: electric-eye-gh-pages-publication
@@ -135,6 +136,14 @@ jobs:
       - name: Confirm publication baseline is unchanged
         run: test "$(git -C pages-write rev-parse HEAD)" = "${{ steps.baseline.outputs.commit }}"
 
+      - name: Check Pages branch publishing configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/pages" \
+            --jq '{build_type: .build_type, source: .source, cname: .cname}'
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.source.branch')" = "gh-pages"
+
       - name: Stage immutable candidate publication
         run: >-
           python -m concert_calendar.automation stage-candidate
@@ -150,6 +159,9 @@ jobs:
           git add -A "proof/candidates/${{ steps.build.outputs.sha256 }}-${{ github.run_id }}"
           git commit -m "Stage calendar candidate (${{ steps.build.outputs.event_count }} events)"
           git push origin HEAD:gh-pages
+          # GITHUB_TOKEN pushes do NOT automatically initiate GitHub Pages builds.
+          # Explicitly request a Pages build so candidate verification observes a deployment.
+          GH_TOKEN="${{ github.token }}" gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
 
       - name: Verify candidate and stage live promotion
         run: >-
@@ -166,6 +178,7 @@ jobs:
           git add -A proof artist genre concert index.html
           git commit -m "Promote verified calendar (${{ steps.build.outputs.event_count }} events)"
           git push origin HEAD:gh-pages
+          GH_TOKEN="${{ github.token }}" gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Verify final live publication
@@ -183,6 +196,7 @@ jobs:
           git restore --source="${{ steps.baseline.outputs.commit }}" --staged --worktree -- .
           git commit -m "Rollback failed calendar publication"
           git push origin HEAD:gh-pages
+          GH_TOKEN="${{ github.token }}" gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
 
       - name: Verify restored last-known-good release
         if: steps.final_verify.outcome == 'failure'
