@@ -506,7 +506,7 @@ def _title_artist_candidate(title, article_type):
         return infinitive.group(1).strip()
     action = re.match(
         r"^(.+?)\s+(?:announce|announces|release|releases|share|shares|"
-        r"unveil|unveils|return|returns|back|perform|performs)\b",
+        r"unveil|unveils|return|returns|revisit|revisits|back|perform|performs)\b",
         title,
         re.I,
     )
