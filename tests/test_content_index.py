@@ -25,6 +25,18 @@ def entry(title, labels, date="2026-01-01", image=None):
 
 
 class ContentIndexTests(unittest.TestCase):
+    def test_revisit_collaboration_seeds_both_labeled_artists(self):
+        article = entry(
+            "Keb' Mo' and Pynk Beard Revisit Bring It On Home",
+            ["News", "Keb' Mo'", "Pynk Beard"],
+        )
+        seeds = content_index.seed_artist_labels([article])
+        self.assertIn("Keb' Mo'", seeds)
+        self.assertIn("Pynk Beard", seeds)
+        index = build_index([article], generated_at="2026-11-06T00:00:00Z")
+        self.assertIn("keb-mo", index["artists"])
+        self.assertIn("pynk-beard", index["artists"])
+
     @staticmethod
     def reviewed_entry(title, labels, url, post_id, date="2026-01-01"):
         item = entry(title, labels, date)
