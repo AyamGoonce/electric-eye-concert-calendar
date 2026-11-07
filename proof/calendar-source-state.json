@@ -6157,7 +6157,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11119,7 +11119,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11818,7 +11818,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -14249,7 +14249,7 @@
           "state_identity": "0ad4b91c594b7b1fb8cc198c237129f4055a3c76288053ac0efa54a0a6c061dc"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -16308,7 +16308,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16668,7 +16668,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -18111,7 +18111,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -18157,6 +18157,55 @@
           "first_seen": "2026-10-01T18:27:32Z",
           "public_id": "9f39e8fb1864eaf0",
           "state_identity": "9f39e8fb1864eaf0cba3a79a4e6c38eed23beda14ceb5b52db36fe1587933c00"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Montreuil",
+            "co_headliners": [
+              "Ultra Sunn"
+            ],
+            "date": "2026-11-07",
+            "department": "93",
+            "event_title": null,
+            "event_type": "concert",
+            "facebook_event_url": "https://www.facebook.com/events/1822711442018893/",
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "ULTRA SUNN + SYDNEY VALETTE + SAD MADONA",
+            "identity_aliases": [
+              "Ultra Sunn"
+            ],
+            "image_source": "Bal Chavaux",
+            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/886-illustration_id-1775050971.png?h=183f038c&itok=XYgzMc8X",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "ULTRA SUNN + SYDNEY VALETTE + SAD MADONA",
+              "Ultra Sunn"
+            ],
+            "promoters": [
+              "La Marbrerie"
+            ],
+            "raw_title": "ULTRA SUNN + SYDNEY VALETTE + SAD MADONA",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://balchavaux.fr/agenda/ultra-sunn-sydney-valette-sad-madona",
+            "venue": "La Marbrerie"
+          },
+          "first_seen": "2026-09-30T12:01:31Z",
+          "public_id": "639c9dac35d415ad",
+          "state_identity": "639c9dac35d415ad785f817c6ecbdfbd666b79c3e6a3a1830cfa4a7840e4ad57"
         },
         {
           "event": {
@@ -19600,7 +19649,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -21038,7 +21087,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -22816,7 +22865,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -24284,7 +24333,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -26088,7 +26137,7 @@
           "state_identity": "9ec7d866deb691077025f2063240ce217760501d9a4d4faeb243617220eebe6d"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -27389,7 +27438,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -28175,7 +28224,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -28880,7 +28929,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -30893,7 +30942,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -31150,7 +31199,7 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -34511,7 +34560,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -35389,7 +35438,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -37228,6 +37277,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-01-14",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "TAPE 12",
+            "identity_aliases": null,
+            "image_source": "La Boule Noire",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/11/1800x1800-3.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/tape-12/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-11-07T19:30:33Z",
+          "public_id": "8909ad310e767f88",
+          "state_identity": "8909ad310e767f883113d7079860df698c975c61b61a0cb7ae83c72d167101ae"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-01-15",
             "department": "75",
             "event_title": null,
@@ -38254,7 +38343,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -42956,7 +43045,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -44240,68 +44329,11 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "concert",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-07",
-            "department": "75",
-            "event_title": "ISAIAH FALLS : SIDE B – LVRS PARADISE TOUR",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Hip Hop / Rap, RnB / Soul",
-            "genre_evidence": [
-              {
-                "raw": "Hip Hop / Rap, RnB / Soul",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Hip-hop / Rap",
-            "genre_source": "Live Nation",
-            "genres_public": [
-              "Hip-hop / Rap",
-              "R&B / Soul / Funk"
-            ],
-            "headliner": "Isaiah Falls",
-            "identity_aliases": [
-              "ISAIAH FALLS : SIDE B – LVRS PARADISE TOUR",
-              "Isaiah Falls"
-            ],
-            "image_source": "La Machine du Moulin Rouge",
-            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/07/isaiah-falls-header-1000x523.jpg",
-            "openers": [
-              "RAAHiiM",
-              "Icee Red",
-              "Luxury Lane"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": "ISAIAH FALLS : SIDE B – LVRS PARADISE TOUR",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/isaiah-falls-side-b-lvrs-paradise-tour/",
-            "venue": "La Machine du Moulin Rouge"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "c8d36fada92f9ce9",
-          "state_identity": "c8d36fada92f9ce9fdc0340cf1dd6cb5aa6da25dc3d68dac00183f6e02fa2fdb"
-        },
         {
           "event": {
             "announced_at": null,
@@ -45492,7 +45524,7 @@
           "state_identity": "0c1a312fe16e825181e51bb1b117e4a23b1dc3f4bc2116abe15428cbbe27a744"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -51125,7 +51157,7 @@
           "state_identity": "44ad8bbae83d6f35e0cfd0c643bf09d5fd5d0eff3c241dcc59d21bfbf1607dca"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -52784,7 +52816,7 @@
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -53474,7 +53506,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -54395,7 +54427,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -55589,7 +55621,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -57489,7 +57521,7 @@
           "state_identity": "6bb00dcf476a1c7a1e65b6097449e40b0c9dcca57f15e384cdbd0d0faff10858"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -60673,7 +60705,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -62196,7 +62228,7 @@
           "state_identity": "e054edca1d7947df0077919264cbbe080c4063458ad815e549fdb6c7cf7e10a4"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -66729,7 +66761,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -67813,7 +67845,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -67873,12 +67905,12 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "concert",
+            "category": null,
             "city": "Paris",
             "co_headliners": null,
             "date": "2026-11-07",
             "department": "75",
-            "event_title": "ISAIAH FALLS : SIDE B – LVRS PARADISE TOUR",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -67897,12 +67929,9 @@
               "R&B / Soul / Funk"
             ],
             "headliner": "Isaiah Falls",
-            "identity_aliases": [
-              "ISAIAH FALLS : SIDE B – LVRS PARADISE TOUR",
-              "Isaiah Falls"
-            ],
-            "image_source": "La Machine du Moulin Rouge",
-            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/07/isaiah-falls-header-1000x523.jpg",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/k/q/y/7d18acf4-5246-4da9-8858-18bfd8fc09c2.png",
             "openers": [
               "RAAHiiM",
               "Icee Red",
@@ -67913,13 +67942,13 @@
             "promoters": [
               "Live Nation"
             ],
-            "raw_title": "ISAIAH FALLS : SIDE B – LVRS PARADISE TOUR",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/isaiah-falls-side-b-lvrs-paradise-tour/",
+            "ticket_status": null,
+            "ticket_url": "https://www.livenation.fr/event/isaiah-falls-side-b-lvrs-paradise-tour-paris-tickets-edp1670536",
             "venue": "La Machine du Moulin Rouge"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -78047,7 +78076,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -78549,7 +78578,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -83155,7 +83184,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -85828,7 +85857,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -86342,7 +86371,7 @@
           "state_identity": "768ef765eb696336f2d280d64ac8facfd8c9fee1a5be6016e822e7cc3ef78d0e"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -86577,7 +86606,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -86665,6 +86694,55 @@
           "first_seen": "2026-09-30T12:01:31Z",
           "public_id": "daed81d29adf8cac",
           "state_identity": "daed81d29adf8cacbdd261e68a1f1afb4977386f3851a8fbdd17c7dc82bff573"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Montreuil",
+            "co_headliners": [
+              "Ultra Sunn"
+            ],
+            "date": "2026-11-07",
+            "department": "93",
+            "event_title": null,
+            "event_type": "concert",
+            "facebook_event_url": "https://www.facebook.com/events/1822711442018893/",
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "ULTRA SUNN + SYDNEY VALETTE + SAD MADONA",
+            "identity_aliases": [
+              "Ultra Sunn"
+            ],
+            "image_source": "Bal Chavaux",
+            "image_url": "https://balchavaux.fr/sites/balchavaux/files/styles/16x9_1920/public/import_billetterie/886-illustration_id-1775050971.png?h=183f038c&itok=XYgzMc8X",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "ULTRA SUNN + SYDNEY VALETTE + SAD MADONA",
+              "Ultra Sunn"
+            ],
+            "promoters": [
+              "La Marbrerie"
+            ],
+            "raw_title": "ULTRA SUNN + SYDNEY VALETTE + SAD MADONA",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://balchavaux.fr/agenda/ultra-sunn-sydney-valette-sad-madona",
+            "venue": "La Marbrerie"
+          },
+          "first_seen": "2026-09-30T12:01:31Z",
+          "public_id": "639c9dac35d415ad",
+          "state_identity": "639c9dac35d415ad785f817c6ecbdfbd666b79c3e6a3a1830cfa4a7840e4ad57"
         },
         {
           "event": {
@@ -88138,57 +88216,11 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-07",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "EIN L AQL",
-            "identity_aliases": null,
-            "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/10/petit-bain-socials-flyer-1-800x800.jpg",
-            "openers": [
-              "Nayoo",
-              "AndL",
-              "Cheikha",
-              "Weldmousa",
-              "ELAKH"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://petitbain.org/evenement/khawa/",
-            "venue": "Petit Bain"
-          },
-          "first_seen": "2026-10-16T15:52:33Z",
-          "public_id": "5025b6083912f675",
-          "state_identity": "5025b6083912f67546f118aa8e48c2934da700d9f423197594713d80fe76bbc5"
-        },
         {
           "event": {
             "announced_at": null,
@@ -90072,7 +90104,7 @@
           "state_identity": "7c4ebb62acf570558a3053d393ae5e06fde9567c73c0bb278501adc85e242b81"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -90722,7 +90754,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -92052,7 +92084,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -92967,12 +92999,12 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -96742,7 +96774,7 @@
           "state_identity": "42749663159f9839c744c5f5edfa8257586ef0ae8f06b1ecad3cf0fdf1cb4bb0"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -97369,143 +97401,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-07",
-            "department": "75",
-            "event_title": "Estelle Perrault Quintet - Festival Jazzycolors",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz vocal",
-            "genre_evidence": [
-              {
-                "raw": "Jazz vocal",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Estelle Perrault Quintet - Festival Jazzycolors",
-            "identity_aliases": null,
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/9/11/6aa3fa1e239b8-estelle-perrault.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/846795-estelle-perrault-quintet-festival-jazzycolors",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-10-06T10:04:19Z",
-          "public_id": "500dc7189f95666a",
-          "state_identity": "500dc7189f95666a320ef4c9b264189258785ddbe0abbbbf819524c8ff6a38f6"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-07",
-            "department": "75",
-            "event_title": "Hommage à Henri Salvador",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz legend",
-            "genre_evidence": [
-              {
-                "raw": "Jazz legend",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Hugh Coltman",
-            "identity_aliases": [
-              "Hommage à Henri Salvador avec Hugh Coltman"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/9/24/6ab51f5c3eef9--s6ovx1wvtmmfcwnbvakqrvjrq4dd-q-hqbb5rbg22zqydmo4r.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Hommage à Henri Salvador avec Hugh Coltman",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/853092-hommage-a-henri-salvador-avec-hugh-coltman",
-            "venue": "Studio Raspail"
-          },
-          "first_seen": "2026-09-27T01:20:20Z",
-          "public_id": "8497ad1680f19d6f",
-          "state_identity": "8497ad1680f19d6f5256a12a5a81170c914801b8161fbd3f3af1c1fb66b249cf"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-07",
-            "department": "75",
-            "event_title": "Les samedis salsa du Sunset avec Speranza Galez",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "event_context",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "venue",
-            "genres_public": null,
-            "headliner": "Les samedis salsa du Sunset avec Speranza Galez",
-            "identity_aliases": null,
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/9/25/6ab665a01e16a-ando-poleo-percussions-sebastian-betancur-timbales.png_thumbs/340-340.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/852385-les-samedis-salsa-du-sunset-avec-speranza-galez",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-09-27T01:20:20Z",
-          "public_id": "e63f5c60b641e2cd",
-          "state_identity": "e63f5c60b641e2cdc1857fbfecaace98514fd15ea61f1359b39f2d332f544b8d"
-        },
         {
           "event": {
             "announced_at": null,
@@ -98023,51 +97923,6 @@
           "first_seen": "2026-08-28T19:25:05Z",
           "public_id": "e1b4edbaab00d8fa",
           "state_identity": "e1b4edbaab00d8fa9605d5ef32bc0f3d83f27bc68c730abbd34a5375c81f598e"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-11",
-            "department": "75",
-            "event_title": "Estelle Perrault Quintet - Festival Jazzycolors",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz vocal",
-            "genre_evidence": [
-              {
-                "raw": "Jazz vocal",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Estelle Perrault Quintet - Festival Jazzycolors",
-            "identity_aliases": null,
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/9/11/6aa3fa1e239b8-estelle-perrault.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "cancelled",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/846795-estelle-perrault-quintet-festival-jazzycolors",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-09-11T16:36:56Z",
-          "public_id": "ae919fe69f28f6e3",
-          "state_identity": "ae919fe69f28f6e379cce9f5ff3506f460c509323153a7723e45876c704f8cce"
         },
         {
           "event": {
@@ -100552,7 +100407,7 @@
               "Giovanni Mirabassi - \"Live at Blue Note, Tokyo\" 16 ans après ! / Timeline au passé by Juliette Poitrenaud"
             ],
             "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/10/13/6ace53feebabe-studio-raspail-19h-6.png_thumbs/340-340.png",
+            "image_url": "https://img.mapado.net/2026/11/7/6aef30e09a06f-gm-bluenote.webp.jpeg_thumbs/340-340.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -100691,7 +100546,7 @@
               "Giovanni Mirabassi « Più Avanti\" / Timeline au présent by Juliette Poitrenaud"
             ],
             "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/10/9/6ac8fbed1e94f-img-9922-1023x1023.jpeg_thumbs/340-340.jpeg",
+            "image_url": "https://img.mapado.net/2026/11/7/6aef316fde92d-ni-mirabassi-jon-verleysen-3-e1779189105645-scaled.jpeg_thumbs/340-340.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -105506,7 +105361,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -108815,7 +108670,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -109005,7 +108860,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -110144,7 +109999,7 @@
           "state_identity": "032fac231ebf9297834fdd3172a71ee49ee522092b19af870dd61c3bb6fe8a7f"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -113675,7 +113530,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -114558,7 +114413,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -117210,10 +117065,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-07T13:15:29Z",
+      "last_successful_at": "2026-11-07T19:30:33Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-07T13:15:29Z",
+  "updated_at": "2026-11-07T19:30:33Z",
   "version": 1
 }
