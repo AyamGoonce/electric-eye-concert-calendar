@@ -545,13 +545,13 @@ def _public_browse_windows(today, *, horizon=PUBLIC_BROWSE_DAYS):
         start = stop + timedelta(days=1)
 
 
-def _load_public_browse_events():
+def _load_public_browse_events(*, today=None):
     """Recover DICE gig listings using bounded public date partitions.
 
     Pages can still omit concerts or have other hidden server limits. This
     method must ALWAYS report incomplete inventory to source retention.
     """
-    today = datetime.now(ZoneInfo("Europe/Paris")).date()
+    today = today or datetime.now(ZoneInfo("Europe/Paris")).date()
     session = requests.Session()
     session.headers.update({
         "User-Agent": HEADERS["User-Agent"],
