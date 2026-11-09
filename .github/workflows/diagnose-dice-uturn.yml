@@ -117,3 +117,62 @@ jobs:
           assert metadata['path'] == 'fallback', 'Expected public fallback while API remains 403'
           assert metadata.get('incomplete') is True, 'Partial source provenance was lost'
           PY
+
+      - name: Compare DICE public batch against published calendar
+        run: |
+          python3 - <<'PY'
+          import json, re, unicodedata
+          from collections import Counter
+          from difflib import SequenceMatcher
+          from datetime import datetime
+          import requests
+          from concert_calendar.scrapers.dice import EVENTS_URL, extract_public_browse_events
+          base='https://raw.githubusercontent.com/AyamGoonce/electric-eye-concert-calendar/gh-pages/proof/'
+          pointer=requests.get(base+'calendar-current.js',timeout=25)
+          pointer.raise_for_status()
+          manifest=json.loads(re.search(r'Object.freeze\\((\\{.*?\\})\\)',pointer.text).group(1))
+          data_response=requests.get(base+manifest['data'],timeout=40)
+          data_response.raise_for_status()
+          public=json.loads(re.search(r'ElectricEyeConcertData = Object.freeze\\((\\[.*?\\])\\);',data_response.text,re.S).group(1))
+          html=requests.get(EVENTS_URL,headers={'User-Agent':'Mozilla/5.0'},timeout=25)
+          html.raise_for_status()
+          dice,has_more=extract_public_browse_events(html.text)
+          def norm(x):
+              x=unicodedata.normalize('NFKD',x or '')
+              x=''.join(c for c in x if not unicodedata.combining(c)).lower()
+              return ' '.join(re.findall(r'[a-z0-9]+',x))
+          def title_sim(a,b):
+              a,b=norm(a),norm(b)
+              if not a or not b:return 0.
+              if a==b:return 1.
+              if a in b or b in a:return .87
+              a0=a.split(' + ')[0]
+              return SequenceMatcher(None,a,b).ratio()
+          outcomes=[]
+          for e in dice:
+              same_date=[x for x in public if x['d']==e.date]
+              candidates=[]
+              for x in same_date:
+                  v=norm(x['v'])
+                  ve=norm(e.venue)
+                  venue_score=1.0 if v==ve else (0.8 if (v in ve or ve in v) and min(len(v),len(ve))>=5 else SequenceMatcher(None,v,ve).ratio())
+                  score=title_sim(e.headliner,x['h'])
+                  if score>=.65 or venue_score>=.84:
+                      candidates.append((score,venue_score,x))
+              candidates.sort(key=lambda t:(t[0]>=.82 and t[1]>=.72,t[0]+t[1]),reverse=True)
+              matches=[(s,v,x) for s,v,x in candidates if s>=.82 and v>=.72]
+              if not matches:
+                  matches=[(s,v,x) for s,v,x in candidates if s>=.76 and v>=.80]
+              if matches:
+                  kind='MATCH'
+              elif candidates and any(v>=.83 for s,v,x in candidates):
+                  kind='REVIEW'
+              else:
+                  kind='NOT_FOUND'
+              row={'date':e.date,'dice_title':e.headliner,'dice_venue':e.venue,'kind':kind,
+                   'closest':[{'title':x['h'],'venue':x['v'],'title_similarity':round(s,2),'venue_similarity':round(v,2)} for s,v,x in candidates[:3]]}
+              outcomes.append(row)
+          print('DICE_OVERLAP_SUMMARY',json.dumps({'public_calendar_count':len(public),'sample_count':len(dice),'additional_dice_pages_exist':has_more,'results':dict(Counter(r['kind'] for r in outcomes))},ensure_ascii=False))
+          for r in outcomes:
+              print('DICE_OVERLAP_ROW',json.dumps(r,ensure_ascii=False))
+          PY
