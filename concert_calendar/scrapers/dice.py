@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 import re
 import unicodedata
 
@@ -22,6 +23,8 @@ MAX_PAGES = 100
 MAX_DIAGNOSTICS = 200
 ESSAIM_MAIN_ROOM_VENUE_ID = "15305"
 _DIAGNOSTICS = []
+_LAST_LOAD_METADATA = {"path": "primary", "fallback_source": None}
+
 
 
 def _diagnostic_priority(*, title, series_name, venue_data, co_headliners, openers):
@@ -430,8 +433,7 @@ def event_key(event):
     )
 
 
-def load_events():
-    _DIAGNOSTICS.clear()
+def _load_api_events():
     session = requests.Session()
     session.headers.update(HEADERS)
     events_by_key = {}
@@ -486,3 +488,75 @@ def load_events():
     print(f"Created {len(events)} DICE ConcertEvent records")
 
     return events
+
+def get_load_metadata():
+    """Expose limited public-page fallback without claiming full catalogue health."""
+    return dict(_LAST_LOAD_METADATA)
+
+
+def extract_public_browse_events(html):
+    """Read DICE's anonymous, server-rendered Next.js event inventory.
+
+    This response contains only the initial browse batch. Its cursor cannot
+    be used as proof that the full catalogue has been enumerated.
+    """
+    match = re.search(
+        r'<script\\b(?=[^>]*\\bid=["\\\']__NEXT_DATA__["\\\'])[^>]*>(.*?)</script>',
+        html, flags=re.IGNORECASE | re.DOTALL,
+    )
+    if not match:
+        raise ValueError("DICE public browse page has no __NEXT_DATA__ payload")
+    payload = json.loads(match.group(1))
+    page_props = (payload.get("props") or {}).get("pageProps") or {}
+    raw = page_props.get("events")
+    if not isinstance(raw, list) or not raw:
+        raise ValueError("DICE public browse page returned no usable event inventory")
+    events_by_key = {}
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        event = parse_event(item)
+        if event is not None:
+            events_by_key.setdefault(event_key(event), event)
+    if not events_by_key:
+        raise ValueError("DICE public browse page returned no parseable concerts")
+    return list(events_by_key.values()), bool(page_props.get("nextCursor"))
+
+
+def _load_public_browse_events():
+    response = requests.get(
+        EVENTS_URL,
+        headers={"User-Agent": HEADERS["User-Agent"], "Accept": "text/html"},
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
+    return extract_public_browse_events(response.text)
+
+
+def load_events():
+    """Prefer the complete API; on access failure use a clearly partial SSR batch."""
+    _DIAGNOSTICS.clear()
+    _LAST_LOAD_METADATA.clear()
+    _LAST_LOAD_METADATA.update({"path": "primary", "fallback_source": None})
+    try:
+        return _load_api_events()
+    except requests.RequestException as primary_error:
+        try:
+            events, has_more = _load_public_browse_events()
+        except (requests.RequestException, ValueError, KeyError, TypeError, json.JSONDecodeError) as fallback_error:
+            raise RuntimeError(
+                f"DICE API unavailable ({type(primary_error).__name__}: {primary_error}); "
+                f"public browse fallback unavailable ({type(fallback_error).__name__}: {fallback_error})"
+            ) from fallback_error
+        _LAST_LOAD_METADATA.update({
+            "path": "fallback",
+            "fallback_source": "DICE public Paris browse page (initial server-rendered batch)",
+            "incomplete": True,
+        })
+        print(
+            f"DICE API unavailable: {type(primary_error).__name__}: {primary_error}; "
+            f"using {len(events)} public browse records as an incomplete fallback"
+            + (" (additional pages exist)" if has_more else ""),
+            flush=True,
+        )
+        return events
