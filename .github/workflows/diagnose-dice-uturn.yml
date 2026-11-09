@@ -113,7 +113,7 @@ jobs:
           metadata = dice.get_load_metadata()
           print('DICE LIVE SMOKE',len(events),'source_path',metadata['path'],'incomplete',metadata.get('incomplete'))
           print('DICE EVENT SAMPLES',[(e.date,e.headliner,e.venue,e.city) for e in events[:3]])
-          assert events, 'No DICE event records could be retrieved'
+          assert len(events) > 20, 'Date-partition fallback failed to recover beyond the first batch'
           assert metadata['path'] == 'fallback', 'Expected public fallback while API remains 403'
           assert metadata.get('incomplete') is True, 'Partial source provenance was lost'
           PY
