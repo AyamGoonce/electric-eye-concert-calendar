@@ -176,3 +176,47 @@ jobs:
           for r in outcomes:
               print('DICE_OVERLAP_ROW',json.dumps(r,ensure_ascii=False))
           PY
+
+      - name: Probe DICE sitemap, categories and date-filter partitions
+        run: |
+          python3 - <<'PY'
+          import json,re,requests,urllib.parse
+          from collections import defaultdict
+          base='https://dice.fm'
+          paris='/browse/paris-5b23e8a0e63cc224a4c36a2d'
+          urls=[
+            '/robots.txt','/sitemap.xml','/sitemap_index.xml',
+            paris,paris+'/music/gig',paris+'/music/dj',
+            paris+'/music/gig/rock',paris+'/music/gig/jazz',
+            paris+'/music/gig?from=2026-12-01&until=2026-12-31',
+            paris+'/music/gig?from=2027-01-01&until=2027-01-31',
+            paris+'/music/gig?from=2027-02-01&until=2027-02-28',
+            paris+'/music/gig?from=2027-05-01&until=2027-05-31',
+          ]
+          fingerprints={}
+          for path in urls:
+            try:
+              r=requests.get(base+path,headers={'User-Agent':'Mozilla/5.0','Accept':'text/html,application/xml,text/plain'},timeout=20)
+              content=r.text
+              m=re.search(r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>',content,re.S)
+              if m:
+                p=json.loads(m.group(1))['props']['pageProps']
+                events=p.get('events',[])
+                ids={str(e.get('id')) for e in events}
+                fingerprints[path]=ids
+                dates=[(e.get('dates') or {}).get('event_start_date') for e in events]
+                print('DICE_PARTITION',path,'status',r.status_code,'total',len(events),'unique',len(ids),'min',min(dates) if dates else None,'max',max(dates) if dates else None,'first',next(iter(ids),None))
+              else:
+                links=re.findall(r'<loc>(.*?)</loc>',content)[:12]
+                print('DICE_DOCUMENT',path,'status',r.status_code,'bytes',len(content),'sitemap_links',links,'robots_sitemaps',[line for line in content.splitlines() if line.lower().startswith(('sitemap:','disallow:'))][:14])
+            except Exception as ex:
+              print('DICE_PROBE_ERROR',path,type(ex).__name__,str(ex)[:150])
+          names=list(fingerprints)
+          seen=set()
+          for name in names:
+            ids=fingerprints[name]
+            novel=ids-seen
+            print('DICE_DISTINCT',name,'novel',len(novel),'total_so_far',len(seen|ids))
+            seen|=ids
+          print('DICE_PROBE_FINAL_UNIQUE',len(seen))
+          PY
