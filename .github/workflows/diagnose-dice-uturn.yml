@@ -38,6 +38,19 @@ jobs:
                       p=Classes();p.feed(body)
                       print('CLASS COUNTS',sorted(p.classes.items(),key=lambda x:-x[1])[:45])
                       print('UTURN OLD SELECTOR',body.count('show-full-row'))
+                      if 'uturntouring' in url:
+                          print('UTURN HTML HEAD',re.sub(r'\\s+',' ',body[:1800]))
+                          print('UTURN BODY TEXT',re.sub(r'<[^>]+>',' ',body)[-1200:])
+                      else:
+                          import json
+                          m=re.search(r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>',body,re.S)
+                          if m:
+                              data=json.loads(m.group(1))
+                              print('DICE NEXT TOP KEYS',list(data))
+                              print('DICE PAGE PROPS KEYS',list(data.get('props',{}).get('pageProps',{})))
+                              for k,v in data.get('props',{}).get('pageProps',{}).items():
+                                  if isinstance(v,dict):print('DICE PROP DICT',k,list(v)[:25])
+                                  if isinstance(v,list):print('DICE PROP LIST',k,len(v))
                       print('DICE SERVER DATA',[(k,body.count(k)) for k in ['__NEXT_DATA__','__next_f','event_start_date','next_page_cursor','application/ld+json']])
               except urllib.error.HTTPError as e:
                   print('URL',url,'status',e.code,'content-type',e.headers.get('content-type'),'body',e.read(350).decode('utf-8','replace'))
