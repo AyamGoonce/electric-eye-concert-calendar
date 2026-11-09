@@ -45,7 +45,10 @@ def _load_metadata(scraper) -> dict:
         fallback_source = fallback_source.strip()
     elif fallback_source is not None:
         raise ValueError("primary load metadata cannot name fallback_source")
-    return {"path": path, "fallback_source": fallback_source}
+    incomplete = metadata.get("incomplete", False)
+    if type(incomplete) is not bool or (incomplete and path != "fallback"):
+        raise ValueError("incomplete inventory requires an explicitly labelled fallback")
+    return {"path": path, "fallback_source": fallback_source, "incomplete": incomplete}
 
 
 def enrich_official_venue_images(events):
@@ -391,6 +394,7 @@ def load_events_with_report(
             "fresh_event_count": len(scraper_events),
             "load_path": load_metadata["path"],
             "fallback_source": load_metadata["fallback_source"],
+            "incomplete_fallback": load_metadata.get("incomplete", False),
             "fallback_event_count": 0,
             "last_successful_at": None,
         })
