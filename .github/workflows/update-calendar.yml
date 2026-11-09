@@ -73,17 +73,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "reused=false" >> "$GITHUB_OUTPUT"
+          reused=false
           if validated_shas="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/test-calendar-on-push.yml/runs?head_sha=${GITHUB_SHA}&event=push&status=success&per_page=20" --jq '.workflow_runs[].head_sha' 2>/dev/null)"; then
             if grep -Fxq "${GITHUB_SHA}" <<< "$validated_shas"; then
               echo "Identical commit ${GITHUB_SHA} passed the independent full regression workflow."
-              echo "reused=true" >> "$GITHUB_OUTPUT"
+              reused=true
             else
               echo "No successful independent validation for this exact SHA; running tests."
             fi
           else
             echo "Independent validation could not be checked; running full tests."
           fi
+          echo "reused=$reused" >> "$GITHUB_OUTPUT"
 
       - name: Run calendar tests
         if: steps.regression_validation.outputs.reused != 'true'
