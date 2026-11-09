@@ -3801,10 +3801,11 @@
             "genres_public": null,
             "headliner": "Basht.",
             "identity_aliases": [
-              "Basht."
+              "Basht.",
+              "Basht"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-11-06/6547f0c5-fc31-4222-abfd-64dc45a3e0a5.jpg?rect=0%2C546%2C4362%2C4362",
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/11/square.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -3817,7 +3818,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://bit.ly/Basht-AEG27",
+            "ticket_url": "https://petitbain.org/evenement/basht/",
             "venue": "Petit Bain"
           },
           "first_seen": "2026-11-02T11:23:30Z",
@@ -6190,7 +6191,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -9819,6 +9820,62 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-06-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP ROCK FOLK",
+            "genre_evidence": [
+              {
+                "raw": "POP ROCK FOLK",
+                "source": "Accor Arena"
+              },
+              {
+                "raw": "Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Fall Out Boy",
+            "identity_aliases": [
+              "Fall Out Boy"
+            ],
+            "image_source": "Accor Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/originals/82fb1423-274b-4265-9b86-6f4cbb51cc2a.jpg",
+            "openers": [
+              "A DAY TO REMEMBER",
+              "NECK DEEP"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/fall-out-boy-twilight-of-the-punks-billet/idmanif/677966/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-11-09T19:53:33Z",
+          "public_id": "3bef9c626f1ea2c5",
+          "state_identity": "3bef9c626f1ea2c505e7c3a64cb9604ad96656e5143d2983d11457d3443cba7e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": true,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-06-12",
             "department": "75",
             "event_title": null,
@@ -11159,7 +11216,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11858,7 +11915,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -14354,7 +14411,7 @@
           "state_identity": "3af6c22b73b6bce34eff1833561ae75fe0618e08126e0abaffc838d6be0fb455"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -14463,12 +14520,12 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
-            "city": "Montreuil",
+            "city": "Vincennes",
             "co_headliners": [
               "Doux George"
             ],
             "date": "2026-11-13",
-            "department": "93",
+            "department": "94",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
@@ -14481,17 +14538,13 @@
             "genres_public": null,
             "headliner": "Alma Rechtman",
             "identity_aliases": [
-              "Alma Rechtman",
-              "Alma Rechtman + Doux George"
+              "Alma Rechtman"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-07-16/9f733aa4-b55a-4fcc-9f05-3a4f6257c64a.jpg?rect=0%2C154%2C4000%2C4000",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Alma Rechtman",
-              "Doux George"
-            ],
+            "performers": null,
             "promoters": [
               "Alias Production"
             ],
@@ -14501,7 +14554,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://bit.ly/dice-alma-rechtman",
+            "ticket_url": "https://dice.fm/event/6a58a9d78a5c0c000144f81a",
             "venue": "Maison Populaire"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -16341,7 +16394,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16701,7 +16754,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -16867,20 +16920,28 @@
               {
                 "raw": "Punk",
                 "source": "Backstage By The Mill"
+              },
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
               }
             ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
+            "genre_method": null,
+            "genre_public": null,
             "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "SPLIT DOGS",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "SPLIT DOGS"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4c3gjG1eCx_5mZZG8SkV6UnAILgcI2C86_gZg8EaoX5JFNU-UQElMxweAoR8cbjfQdbSNi6AmqjsQ_maZsePJa5bG1ki49wL8aXyb_Ilkw4js4eHSvI6OAgRRhnvfKeMwB7w8-v1MyhGmW3m4XKJDSn90fW7TgV1TrLfFXdqsp1lPla09sa3wbRLHnn4/s72-w400-h266-c-rw/Screenshot%202025-10-19%20at%2018.46.56.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -17244,8 +17305,12 @@
             "event_type": "Stoner Rock",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Stoner Rock",
+            "genre": "Pop Rock",
             "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              },
               {
                 "raw": "Stoner Rock",
                 "source": "Backstage By The Mill"
@@ -17253,16 +17318,20 @@
             ],
             "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Backstage By The Mill",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "GREENLEAF + GUEST",
-            "identity_aliases": null,
+            "headliner": "GREENLEAF",
+            "identity_aliases": [
+              "GREENLEAF + GUEST"
+            ],
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/Greenleaf-2024-square.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -17289,25 +17358,33 @@
             "event_type": "Deathcore",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Deathcore",
+            "genre": "Dark / Metal",
             "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
               {
                 "raw": "Deathcore",
                 "source": "Backstage By The Mill"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Backstage By The Mill",
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "INGESTED",
-            "identity_aliases": null,
+            "headliner": "INGESTED \"20th Anniversary Tour\"",
+            "identity_aliases": [
+              "INGESTED"
+            ],
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/11/ingested-photo-2026-e1793900572813.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -17432,25 +17509,33 @@
             "event_type": "prog rock",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "prog rock",
+            "genre": "Dark / Metal",
             "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
               {
                 "raw": "prog rock",
                 "source": "Backstage By The Mill"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Backstage By The Mill",
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "PURE REASON REVOLUTION + Guest",
-            "identity_aliases": null,
+            "headliner": "PURE REASON REVOLUTION",
+            "identity_aliases": [
+              "PURE REASON REVOLUTION + Guest"
+            ],
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/PRR-418-edited-credit-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -17580,20 +17665,28 @@
               {
                 "raw": "Industrial Metal",
                 "source": "Backstage By The Mill"
+              },
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
             "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "TURMION KÄTILÖT",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "TURMION KÄTILÖT"
+            ],
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/TK_europe_IGstory_empty.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -17776,20 +17869,28 @@
               {
                 "raw": "MELODIC DEATH METAL",
                 "source": "Backstage By The Mill"
+              },
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
             "genre_source": "Backstage By The Mill",
             "genres_public": null,
             "headliner": "THULCANDRA + YOTH IRIA + VORGA",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "THULCANDRA + YOTH IRIA + VORGA"
+            ],
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/10/Band3-e1790847172602.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -17948,32 +18049,42 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "HOSTILIA"
+            ],
             "date": "2027-04-28",
             "department": "75",
             "event_title": null,
             "event_type": "Thrash Metal",
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Thrash Metal",
+            "genre": "Dark / Metal",
             "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
               {
                 "raw": "Thrash Metal",
                 "source": "Backstage By The Mill"
               }
             ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Backstage By The Mill",
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "CARNIVORE A.D.",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "CARNIVORE A.D."
+            ],
             "image_source": "Backstage By The Mill",
             "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/11/458622160_377795102037545_5894060807088926492_n-e1793899485587.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -18086,7 +18197,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -19638,7 +19749,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -19647,12 +19758,9 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": "concert",
+            "category": null,
             "city": "Paris",
-            "co_headliners": [
-              "CARNIFEX",
-              "SUFFOCATION"
-            ],
+            "co_headliners": null,
             "date": "2026-11-09",
             "department": "75",
             "event_title": null,
@@ -19661,34 +19769,27 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "mapped_bill_artists",
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
-            "headliner": "DESPISED ICON",
-            "identity_aliases": [
-              "DESPISED ICON + CARNIFEX + SUFFOCATION",
-              "DESPISED ICON"
-            ],
-            "image_source": "La Machine du Moulin Rouge",
-            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/04/banniere-1000x523.jpg",
+            "headliner": "DESPISED ICON + CARNIFEX + SUFFOCATION",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "DESPISED ICON",
-              "CARNIFEX",
-              "SUFFOCATION"
-            ],
+            "performers": null,
             "promoters": [
               "Base Productions"
             ],
-            "raw_title": "DESPISED ICON + CARNIFEX + SUFFOCATION",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "18:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/despised-icon-carnifex-suffocation/",
+            "ticket_status": null,
+            "ticket_url": "https://www.base-productions.com/concerts/despised-icon-carnifex-suffocation/",
             "venue": "La Machine du Moulin Rouge"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -20705,11 +20806,16 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "Ministry",
             "identity_aliases": [
@@ -20725,7 +20831,8 @@
               "Die Krupps"
             ],
             "promoters": [
-              "Base Productions"
+              "Base Productions",
+              "Garmonbozia"
             ],
             "raw_title": "MINISTRY + DIE KRUPPS",
             "series_name": null,
@@ -21070,7 +21177,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -21654,11 +21761,16 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "ELUVEITIE",
             "identity_aliases": [
@@ -21672,7 +21784,9 @@
             ],
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": "ELUVEITIE + PAIN + WOLFHEART",
             "series_name": null,
             "sold_out": false,
@@ -22717,11 +22831,16 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "Ministry",
             "identity_aliases": [
@@ -22737,7 +22856,8 @@
               "Die Krupps"
             ],
             "promoters": [
-              "Base Productions"
+              "Base Productions",
+              "Garmonbozia"
             ],
             "raw_title": "MINISTRY + DIE KRUPPS",
             "series_name": null,
@@ -22841,7 +22961,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -23854,21 +23974,19 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Sylvan Esso",
-            "identity_aliases": [
-              "Sylvan Esso"
-            ],
+            "identity_aliases": null,
             "image_source": "Cabaret Sauvage",
             "image_url": "https://cdn.prod.website-files.com/5f2042d4b94d37519c34f8ae/6ad1e675f7f735a06f101aa9_SITE.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": "Sylvan Esso",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.cabaretsauvage.com/work/sylvan-esso",
             "venue": "Cabaret Sauvage"
           },
@@ -24289,7 +24407,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -26099,7 +26217,7 @@
           "state_identity": "90716293fd943618bb05e2d75d6f2a5a5333d07968b66300fd79fc954a2ae1d5"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -27401,7 +27519,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -27419,23 +27537,16 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Pop rock",
-            "genre_evidence": [
-              {
-                "raw": "Pop rock",
-                "source": "Salle Pleyel"
-              }
-            ],
-            "genre_method": "source_mapping",
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Salle Pleyel",
+            "genre_source": "Reviewed stable artist classification, 2026-08-23",
             "genres_public": null,
             "headliner": "Cat Power",
-            "identity_aliases": [
-              "CAT POWER"
-            ],
-            "image_source": "Salle Pleyel",
-            "image_url": "https://www.sallepleyel.com/app/uploads/2025/11/CAT-POWER-026-SITE-1-333x483.jpg",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -27448,7 +27559,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.sallepleyel.com/evenement/cat-power/",
+            "ticket_url": "https://tickets.sallepleyel.com/fr/product/1171/salle_pleyel/cat_power_",
             "venue": "Salle Pleyel"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -28173,7 +28284,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -28878,11 +28989,341 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
       "events": [
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": [
+              "FULCI",
+              "AROTTENBIT"
+            ],
+            "date": "2026-11-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "MASTER BOOT RECORD",
+            "identity_aliases": [
+              "MASTER BOOT RECORD",
+              "MASTER BOOT RECORD & FULCI + AROTTENBIT"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/04/masterbootrecord-paris-header-1000x523.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "MASTER BOOT RECORD",
+              "FULCI",
+              "AROTTENBIT"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "MASTER BOOT RECORD & FULCI + AROTTENBIT",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/master-boot-record-fulci-arottenbit/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "3daccac339bc5d75",
+          "state_identity": "3daccac339bc5d759e915549e3db3d8e23ffae04fce6e58f5595b9c268f0d203"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": [
+              "LESOIR"
+            ],
+            "date": "2026-11-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "Anneke van Giersbergen",
+            "identity_aliases": [
+              "ANNEKE VAN GIERSBERGEN & BAND + LESOIR",
+              "Anneke van Giersbergen",
+              "ANNEKE VAN GIERSBERGEN & BAND"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCoZucqN8IHEh9_7xAIqsRSp4qR_saLTF2sxrkrUvGVLqQjLkod1oxi1ppUs6hhmwQLri7IAAHOAnijf7doH4QgxpdbpzXuiNd2zxgDnOKinqe6Umr_4oiCIBzxX3q4gwxv4sfW9n6NOqg-FZ-uK4QFmCsClwGjZlOUEkF8dXSRCfGlgRQLVk9A-gVVg/s72-w640-h426-c-rw/Anneke%20Van%20Giersbergen210422Petit%20BainParis_55.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Anneke van Giersbergen",
+              "LESOIR"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "ANNEKE VAN GIERSBERGEN & BAND + LESOIR",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/anneke-van-giersbergen-band/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "49aa10676c58391a",
+          "state_identity": "49aa10676c58391a86f95d31ff37a4e595060d5a76f79b18163fb62a3cf38453"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "DAMANTRA"
+            ],
+            "date": "2026-11-14",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "THE VINTAGE CARAVAN",
+            "identity_aliases": [
+              "THE VINTAGE CARAVAN"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYiB3Cn13yRucGH7KGdL_4wp0_y9MVhxhst04Tb4j4eC_ABKFNfHmRD62GNYQzukdVmC_0jeAuiQaIWKqHjUqBjOaew_eOIG-X2niX3MZhfA8oZ29LKekIt6c2rc0K-a5frH6HDy8Y4CiSrt_55ZQQQTQjRwng1anAD-i_xMazk9AAyIUR8jzTHVLb3zQ/s72-w640-h426-c-rw/The%20Vintage%20Caravan20250927Petit%20BainParis_33.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.glazart.com/14-11-26-concert-the-vintage-caravan/",
+            "venue": "Glazart"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "44f849099295b6ae",
+          "state_identity": "44f849099295b6ae73be12d1b8586787e5cccde3638ddd01a1e37f494122f019"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": [
+              "MAJESTICA",
+              "ARION"
+            ],
+            "date": "2026-11-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "GLORYHAMMER",
+            "identity_aliases": [
+              "GLORYHAMMER + MAJESTICA + ARION",
+              "GLORYHAMMER"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2025/12/gloryhammer-paris-header-1-1000x523.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "GLORYHAMMER",
+              "MAJESTICA",
+              "ARION"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "GLORYHAMMER + MAJESTICA + ARION",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "18:30",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/gloryhammer-majestica-arion/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "c8c12d8c9be58e77",
+          "state_identity": "c8c12d8c9be58e77bb815859e521ca2bb7abd153ed3a4d38feccbcf017c41dfe"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Punk",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Punk",
+            "genre_evidence": [
+              {
+                "raw": "Punk",
+                "source": "Backstage By The Mill"
+              },
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "SPLIT DOGS",
+            "identity_aliases": [
+              "SPLIT DOGS"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh4c3gjG1eCx_5mZZG8SkV6UnAILgcI2C86_gZg8EaoX5JFNU-UQElMxweAoR8cbjfQdbSNi6AmqjsQ_maZsePJa5bG1ki49wL8aXyb_Ilkw4js4eHSvI6OAgRRhnvfKeMwB7w8-v1MyhGmW3m4XKJDSn90fW7TgV1TrLfFXdqsp1lPla09sa3wbRLHnn4/s72-w400-h266-c-rw/Screenshot%202025-10-19%20at%2018.46.56.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/split-dogs/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "ce4e45b2fcbe1956",
+          "state_identity": "ce4e45b2fcbe19562cb337efbb56d40626f4e919a8765c6564d710385357fbe6"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
+              {
+                "raw": "Metal / Hard Rock",
+                "source": "L’Olympia Bruno Coquatrix"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "ACCEPT 50th Anniversary Tour 2026",
+            "identity_aliases": [
+              "Accept"
+            ],
+            "image_source": "L’Olympia Bruno Coquatrix",
+            "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/02/accept-artiste-affiche-concert-olympia-paris-352x440.jpg.webp",
+            "openers": [
+              "DYNAZTY",
+              "ENFORCER"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.olympiahall.com/agenda/accept/",
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "e53913ad755a3f87",
+          "state_identity": "e53913ad755a3f873e9d9c190963579bdb1e11d5b2d446e571488b53fb468177"
+        },
         {
           "event": {
             "announced_at": null,
@@ -28937,6 +29378,110 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2026-12-04",
+            "department": "75",
+            "event_title": "ELUVEITIE + PAIN + WOLFHEART",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "ELUVEITIE",
+            "identity_aliases": [
+              "ELUVEITIE + PAIN + WOLFHEART"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgltHeBhwT_nqrfb_Wy3JCn1cnk2w1gg2-1ltsKVamZdz_xVuwnD2DSHFYdlkz1j1ZSwIwgBAA4L9UimTXdps_B6sC5w1aVDs3N8NMrCR7nUlGBSNSzuCecda0rRvoA3ObljOI_K0ow2PJH/s72-c-rw/Eluveitie1+December+2019Elyse%25CC%2581e+MontmartreParis_81.jpg",
+            "openers": [
+              "PAIN",
+              "WOLFHEART"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "ELUVEITIE + PAIN + WOLFHEART",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/663/eluveitie_pain_wolfheart",
+            "venue": "Bataclan"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "767455ff00392f79",
+          "state_identity": "767455ff00392f79c69d3436385429aad471b4871f5ad110a9f3334df05c5215"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-07",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "EVERGREY",
+            "identity_aliases": [
+              "EVERGREY + IGNEA + STELLAR CIRCUITS"
+            ],
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/09/evergrey-paris-web-800x800.jpg",
+            "openers": [
+              "IGNEA",
+              "STELLAR CIRCUITS"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://petitbain.org/evenement/evergrey-2/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "e7e8407680f875dc",
+          "state_identity": "e7e8407680f875dc3fa1cc4e061fd5403e8ba98c180b3e144433e9ba6e676389"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2026-12-10",
             "department": "75",
             "event_title": null,
@@ -28976,6 +29521,334 @@
           "first_seen": "2026-10-06T17:16:10Z",
           "public_id": "585548b4c5140e7e",
           "state_identity": "585548b4c5140e7eeaf803976403dc54d4327402d4ac8e46c72d08612c674f6c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": [
+              "ATHEIST",
+              "CANCER"
+            ],
+            "date": "2026-12-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": "MORBIDFEST",
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "I AM MORBID",
+            "identity_aliases": [
+              "MORBIDFEST"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/10/morbidfest-paris-header-1000x523.png",
+            "openers": [
+              "STELLVRIS"
+            ],
+            "performance_marker": null,
+            "performers": [
+              "I AM MORBID",
+              "ATHEIST",
+              "CANCER"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "17:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/morbidfest-3/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-09-21T12:59:38Z",
+          "public_id": "faf991cf7a3ecb12",
+          "state_identity": "faf991cf7a3ecb12f1ae8df8a58dcdd53ac29655d06faa3852fa90eb3674c54a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-14",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Stoner Rock",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              },
+              {
+                "raw": "Stoner Rock",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "GREENLEAF",
+            "identity_aliases": [
+              "GREENLEAF + GUEST"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/06/Greenleaf-2024-square.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/greenleaf-2/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "3f9b0c1dc2c74588",
+          "state_identity": "ae40205bfe2c5921dae42c411f3594ad6d2cf19f16e6f9d74f532fc5e865c12f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-20",
+            "department": "75",
+            "event_title": "ARKONA + SETH + THE GREAT OLD ONES",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "ARKONA",
+            "identity_aliases": [
+              "ARKONA + SETH + THE GREAT OLD ONES",
+              "ARKONA",
+              "ARKONA + SETH + THE GREAT OLD ONES + GUEST"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/09/arkona-paris-header-1000x523.png",
+            "openers": [
+              "SETH",
+              "THE GREAT OLD ONES"
+            ],
+            "performance_marker": null,
+            "performers": [
+              "ARKONA",
+              "SETH",
+              "THE GREAT OLD ONES"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "ARKONA + SETH + THE GREAT OLD ONES",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/arkona-seth-the-great-old-ones-guest/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-09-14T11:57:51Z",
+          "public_id": "b330cc513cbf4d82",
+          "state_identity": "b330cc513cbf4d828ec5bbfbeb2f18964e070eaaadd40d37bc09784902570591"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-26",
+            "department": "75",
+            "event_title": "ORDEN OGAN + ENSIFERUM + ANGUS McSIX",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "ORDEN OGAN",
+            "identity_aliases": [
+              "ORDEN OGAN + ENSIFERUM + ANGUS McSIX",
+              "Orden Ogan"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2025/12/ordenogan-paris-header-2-1000x523.png",
+            "openers": [
+              "Ensiferum",
+              "ANGUS McSIX"
+            ],
+            "performance_marker": null,
+            "performers": [
+              "ORDEN OGAN",
+              "Ensiferum",
+              "Angus McSIX"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "ORDEN OGAN + ENSIFERUM + ANGUS McSIX",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/orden-ogan/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "98acba9051d02d31",
+          "state_identity": "98acba9051d02d315ecca23b768e990c7818d6cf7977c79aa88163f7c64fdb6b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "THE OCEAN",
+            "identity_aliases": [
+              "THE OCEAN"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/10/theocean-paris-header-1000x523.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/the-ocean/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-10-07T20:41:26Z",
+          "public_id": "edc04525cbff6c60",
+          "state_identity": "edc04525cbff6c601757eeccedfb558d65bf1db8717500aa0006cab7b646c16b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Deathcore",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
+              {
+                "raw": "Deathcore",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "INGESTED \"20th Anniversary Tour\"",
+            "identity_aliases": [
+              "INGESTED"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/11/ingested-photo-2026-e1793900572813.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/ingested/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-10-28T13:07:46Z",
+          "public_id": "2b701095fb81fb4d",
+          "state_identity": "2b701095fb81fb4df5db91d7e3931edfb7b6e1c072c15bb6fbc4cd41f0add916"
         },
         {
           "event": {
@@ -29090,6 +29963,110 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
+            "co_headliners": [
+              "GAAHLS WYRD"
+            ],
+            "date": "2027-02-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "ENSLAVED & SÓLSTAFIR",
+            "identity_aliases": [
+              "ENSLAVED & SÓLSTAFIR"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/enslaved-solstafir-gaahls-elysee-montmartre.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/enslaved-solstafir-gaahls-wyrd/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-09-23T21:39:05Z",
+          "public_id": "33dbea7c39afb83a",
+          "state_identity": "33dbea7c39afb83a643b3c40852fcb5f116c7f2863b7adc5dd05d4dfcd8b0a06"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": "prog rock",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
+              {
+                "raw": "prog rock",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "PURE REASON REVOLUTION",
+            "identity_aliases": [
+              "PURE REASON REVOLUTION + Guest"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/PRR-418-edited-credit-scaled.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/pure-reason-revolution/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-23T11:45:49Z",
+          "public_id": "f086341e091c3962",
+          "state_identity": "f086341e091c396274d7afaf348380bee7228180d300bacab8b974db4ce9ec17"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
             "co_headliners": null,
             "date": "2027-02-23",
             "department": "75",
@@ -29137,6 +30114,108 @@
           "first_seen": "2026-09-08T10:51:47Z",
           "public_id": "7da93432549df767",
           "state_identity": "7da93432549df767df364ee7ef9f9f092b11f4079ab91a5fe381e4f370fcaa1e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-26",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Industrial Metal",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Industrial Metal",
+            "genre_evidence": [
+              {
+                "raw": "Industrial Metal",
+                "source": "Backstage By The Mill"
+              },
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "TURMION KÄTILÖT",
+            "identity_aliases": [
+              "TURMION KÄTILÖT"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/09/TK_europe_IGstory_empty.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/turmion-katilot/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-24T10:30:58Z",
+          "public_id": "ed276020d659f937",
+          "state_identity": "ed276020d659f93725ae94498c146cea5029405a5b412206ca2dadbd5769293d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "THE HALO EFFECT + LACUNA COIL + OMNIUM GATHERUM",
+            "identity_aliases": [
+              "THE HALO EFFECT"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-halo-effect-lacuna-coil-omnium-gatherium-elysee-montmartre.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/the-halo-effect-lacuna-coil-omnium-gatherum/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "fe0ff75cce47bd97",
+          "state_identity": "fe0ff75cce47bd97228012fec83528985834b5d81377349884eaf151af3143ec"
         },
         {
           "event": {
@@ -29193,6 +30272,110 @@
           "first_seen": "2026-09-07T16:24:12Z",
           "public_id": "7bd7c107f37ed43b",
           "state_identity": "7bd7c107f37ed43b1500b2bc26ce61c76d7e42e278e2ed5b41765e731d463848"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-06",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "DRACONIAN + SATURNUS + ANN MY GUARD",
+            "identity_aliases": [
+              "Draconian"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/03/draconian-paris-header-1000x523.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/draconian/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "67933be7a8f722c9",
+          "state_identity": "67933be7a8f722c994cade231104cc2044e2c3ff5772de32beec5da1ddc4f1ce"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Blues Pills"
+            ],
+            "date": "2027-03-09",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "Graveyard",
+            "identity_aliases": [
+              "GRAVEYARD & BLUES PILLS",
+              "Graveyard"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/graveyard-blues-pills-v2.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Graveyard",
+              "Blues Pills"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "GRAVEYARD & BLUES PILLS",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/graveyard-blues-pills/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-09-07T09:15:26Z",
+          "public_id": "1bc36d8cbfc1e77b",
+          "state_identity": "668b2e93282975c872f5adb4a919529d67b75df952873b0fd8d7fa148285a5fa"
         },
         {
           "event": {
@@ -29412,6 +30595,114 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-03-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": "MELODIC DEATH METAL",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "MELODIC DEATH METAL",
+            "genre_evidence": [
+              {
+                "raw": "MELODIC DEATH METAL",
+                "source": "Backstage By The Mill"
+              },
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "THULCANDRA + YOTH IRIA + VORGA",
+            "identity_aliases": [
+              "THULCANDRA + YOTH IRIA + VORGA"
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/10/Band3-e1790847172602.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/thulcandra-yoth-iria-vorga/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "35e7b75be9131a54",
+          "state_identity": "35e7b75be9131a54ea499bdc255297e4a3067d0ae4ecad0b9b13406333c2c5da"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": [
+              "FINNEGAN TUI"
+            ],
+            "date": "2027-03-26",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "KALANDRA",
+            "identity_aliases": [
+              "KALANDRA + FINNEGAN TUI",
+              "KALANDRA"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/08/kalandra-paris-header-1000x523.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "KALANDRA",
+              "FINNEGAN TUI"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "KALANDRA + FINNEGAN TUI",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/kalandra-finnegan-tui/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-08-28T09:31:34Z",
+          "public_id": "f212e7a929296392",
+          "state_identity": "f212e7a9292963929ece9cd40b75810c18c250b1acbccb50f8a48dba7feb81d2"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-04-05",
             "department": "75",
             "event_title": null,
@@ -29451,9 +30742,267 @@
           "first_seen": "2026-11-06T16:57:47Z",
           "public_id": "f5b94252ec4f98b8",
           "state_identity": "f5b94252ec4f98b81f455feecf2b5ed1fdf7133a8e0523f8c8aba5086ea4b3b1"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-09",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "HOULE + CÂN BARDD + GALIBOT",
+            "identity_aliases": [
+              "HOULE + CÂN BARDD + GALIBOT"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/10/houle-paris-header-1000x523.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/houle-can-bardd-galibot/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-10-14T12:03:31Z",
+          "public_id": "0c1a312fe16e8251",
+          "state_identity": "0c1a312fe16e825181e51bb1b117e4a23b1dc3f4bc2116abe15428cbbe27a744"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Die Krupps"
+            ],
+            "date": "2027-04-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "Ministry",
+            "identity_aliases": [
+              "Ministry",
+              "MINISTRY + DIE KRUPPS"
+            ],
+            "image_source": "Bataclan",
+            "image_url": "https://bataclan-medias.s3.eu-west-3.amazonaws.com/list_ministry_1080x1080_47a9d65132.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Ministry",
+              "Die Krupps"
+            ],
+            "promoters": [
+              "Base Productions",
+              "Garmonbozia"
+            ],
+            "raw_title": "MINISTRY + DIE KRUPPS",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/784/ministry_die_krupps",
+            "venue": "Bataclan"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "f4e61a62d4a72808",
+          "state_identity": "f4e61a62d4a72808c4514158109f3cdfd8f12cbf73e38d5159eb56911165de28"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "HOSTILIA"
+            ],
+            "date": "2027-04-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": "Thrash Metal",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
+              {
+                "raw": "Thrash Metal",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "CARNIVORE A.D.",
+            "identity_aliases": [
+              "CARNIVORE A.D."
+            ],
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/11/458622160_377795102037545_5894060807088926492_n-e1793899485587.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/carnivore-ad/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-10-22T17:18:36Z",
+          "public_id": "7ff10db061e82706",
+          "state_identity": "7ff10db061e82706f9184ca2655a6669ef2483778a33646d9d08d7bf56823c8b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-05-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "NEVERMORE + RIVERS OF NIHIL + URNE",
+            "identity_aliases": [
+              "NEVERMORE"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/nevermore-square.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/nevermore_rivers_of_nihil_urne/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-09-21T10:13:27Z",
+          "public_id": "5c7d59a0c6c78279",
+          "state_identity": "5c7d59a0c6c7827900df81d3361b9bf5eff72c81749dcdaa5366a13ce256f5a5"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-09-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "EISBRECHER",
+            "identity_aliases": [
+              "EISBRECHER"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/eisbrecher-elysee-montmartre.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/eisbrecher/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-10-05T14:53:22Z",
+          "public_id": "fc1542a38b577193",
+          "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-11-09T16:04:27Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -29464,27 +31013,38 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "DAMANTRA"
+            ],
             "date": "2026-11-14",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "MusicBrainz artist tags",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "THE VINTAGE CARAVAN",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "THE VINTAGE CARAVAN"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgYiB3Cn13yRucGH7KGdL_4wp0_y9MVhxhst04Tb4j4eC_ABKFNfHmRD62GNYQzukdVmC_0jeAuiQaIWKqHjUqBjOaew_eOIG-X2niX3MZhfA8oZ29LKekIt6c2rc0K-a5frH6HDy8Y4CiSrt_55ZQQQTQjRwng1anAD-i_xMazk9AAyIUR8jzTHVLb3zQ/s72-w640-h426-c-rw/The%20Vintage%20Caravan20250927Petit%20BainParis_33.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -29705,7 +31265,7 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -33014,7 +34574,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -33826,7 +35386,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -35885,6 +37445,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "SAMSON",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://laboule-noire.fr/samson/",
+            "venue": "La Boule Noire"
+          },
+          "first_seen": "2026-11-09T19:53:33Z",
+          "public_id": "eaa00232948c9ca8",
+          "state_identity": "eaa00232948c9ca8b1b57fe937ec79e2b51ca88be695715b085a1985a7803b38"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-11",
             "department": "75",
             "event_title": null,
@@ -36675,7 +38275,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -41352,7 +42952,7 @@
           "state_identity": "60be57a052894f420d586c1358f11ffc5dfbfa817902c2d2de65ec6d57f118c9"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -42543,21 +44143,19 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "H-Burns",
-            "identity_aliases": [
-              "H-Burns"
-            ],
+            "identity_aliases": null,
             "image_source": "La Gaîté Lyrique",
             "image_url": "https://osuny-1b4da.kxcdn.com/m8d4nafirfrrpbzrosat9ikpdt7h?width=1280&height=720&fit=inside&quality=80",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": "H-Burns",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.gaite-lyrique.net/agenda/2027/h-burns/",
             "venue": "La Gaîté Lyrique"
           },
@@ -42566,63 +44164,11 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "concert",
-            "city": "Paris",
-            "co_headliners": [
-              "CARNIFEX",
-              "SUFFOCATION"
-            ],
-            "date": "2026-11-09",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "DESPISED ICON",
-            "identity_aliases": [
-              "DESPISED ICON + CARNIFEX + SUFFOCATION",
-              "DESPISED ICON"
-            ],
-            "image_source": "La Machine du Moulin Rouge",
-            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/04/banniere-1000x523.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "DESPISED ICON",
-              "CARNIFEX",
-              "SUFFOCATION"
-            ],
-            "promoters": [
-              "Base Productions"
-            ],
-            "raw_title": "DESPISED ICON + CARNIFEX + SUFFOCATION",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "18:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/despised-icon-carnifex-suffocation/",
-            "venue": "La Machine du Moulin Rouge"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "076f6b4add14b013",
-          "state_identity": "41f3caa7e567745ca7bcfa3f5c03f70745411bd13677b1cbf3b18923aabaf15e"
-        },
         {
           "event": {
             "announced_at": null,
@@ -42639,14 +44185,20 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "MASTER BOOT RECORD",
             "identity_aliases": [
+              "MASTER BOOT RECORD",
               "MASTER BOOT RECORD & FULCI + AROTTENBIT"
             ],
             "image_source": "La Machine du Moulin Rouge",
@@ -42658,7 +44210,9 @@
               "FULCI",
               "AROTTENBIT"
             ],
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": "MASTER BOOT RECORD & FULCI + AROTTENBIT",
             "series_name": null,
             "sold_out": false,
@@ -42736,14 +44290,21 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "Anneke van Giersbergen",
             "identity_aliases": [
+              "ANNEKE VAN GIERSBERGEN & BAND + LESOIR",
+              "Anneke van Giersbergen",
               "ANNEKE VAN GIERSBERGEN & BAND"
             ],
             "image_source": "Electric Eye concert review",
@@ -42754,8 +44315,10 @@
               "Anneke van Giersbergen",
               "LESOIR"
             ],
-            "promoters": null,
-            "raw_title": "ANNEKE VAN GIERSBERGEN & BAND",
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "ANNEKE VAN GIERSBERGEN & BAND + LESOIR",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:00",
@@ -42826,15 +44389,21 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "GLORYHAMMER",
             "identity_aliases": [
-              "GLORYHAMMER + MAJESTICA + ARION"
+              "GLORYHAMMER + MAJESTICA + ARION",
+              "GLORYHAMMER"
             ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2025/12/gloryhammer-paris-header-1-1000x523.png",
@@ -42845,7 +44414,9 @@
               "MAJESTICA",
               "ARION"
             ],
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": "GLORYHAMMER + MAJESTICA + ARION",
             "series_name": null,
             "sold_out": true,
@@ -43055,27 +44626,45 @@
             "authoritative_billing": false,
             "category": "concert",
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "ATHEIST",
+              "CANCER"
+            ],
             "date": "2026-12-13",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
+            "festival_name": "MORBIDFEST",
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
             "genre_method": null,
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "MORBIDFEST",
-            "identity_aliases": null,
+            "headliner": "I AM MORBID",
+            "identity_aliases": [
+              "MORBIDFEST"
+            ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/10/morbidfest-paris-header-1000x523.png",
-            "openers": null,
+            "openers": [
+              "STELLVRIS"
+            ],
             "performance_marker": null,
-            "performers": null,
-            "promoters": null,
+            "performers": [
+              "I AM MORBID",
+              "ATHEIST",
+              "CANCER"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -43135,37 +44724,46 @@
             "authoritative_billing": false,
             "category": "concert",
             "city": "Paris",
-            "co_headliners": [
-              "SETH",
-              "THE GREAT OLD ONES"
-            ],
+            "co_headliners": null,
             "date": "2026-12-20",
             "department": "75",
-            "event_title": null,
+            "event_title": "ARKONA + SETH + THE GREAT OLD ONES",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "ARKONA",
             "identity_aliases": [
+              "ARKONA + SETH + THE GREAT OLD ONES",
+              "ARKONA",
               "ARKONA + SETH + THE GREAT OLD ONES + GUEST"
             ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/09/arkona-paris-header-1000x523.png",
-            "openers": null,
+            "openers": [
+              "SETH",
+              "THE GREAT OLD ONES"
+            ],
             "performance_marker": null,
             "performers": [
               "ARKONA",
               "SETH",
               "THE GREAT OLD ONES"
             ],
-            "promoters": null,
-            "raw_title": "ARKONA + SETH + THE GREAT OLD ONES + GUEST",
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "ARKONA + SETH + THE GREAT OLD ONES",
             "series_name": null,
             "sold_out": false,
             "start_time": "18:00",
@@ -43238,36 +44836,44 @@
             "authoritative_billing": false,
             "category": "concert",
             "city": "Paris",
-            "co_headliners": [
-              "Ensiferum",
-              "Angus McSIX"
-            ],
+            "co_headliners": null,
             "date": "2027-01-26",
             "department": "75",
-            "event_title": null,
+            "event_title": "ORDEN OGAN + ENSIFERUM + ANGUS McSIX",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "Orden Ogan",
+            "headliner": "ORDEN OGAN",
             "identity_aliases": [
-              "ORDEN OGAN + ENSIFERUM + ANGUS McSIX"
+              "ORDEN OGAN + ENSIFERUM + ANGUS McSIX",
+              "Orden Ogan"
             ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2025/12/ordenogan-paris-header-2-1000x523.png",
-            "openers": null,
+            "openers": [
+              "Ensiferum",
+              "ANGUS McSIX"
+            ],
             "performance_marker": null,
             "performers": [
-              "Orden Ogan",
+              "ORDEN OGAN",
               "Ensiferum",
               "Angus McSIX"
             ],
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": "ORDEN OGAN + ENSIFERUM + ANGUS McSIX",
             "series_name": null,
             "sold_out": false,
@@ -43294,20 +44900,29 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "THE OCEAN",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "THE OCEAN"
+            ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/10/theocean-paris-header-1000x523.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -43466,20 +45081,29 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "Draconian",
-            "identity_aliases": null,
+            "headliner": "DRACONIAN + SATURNUS + ANN MY GUARD",
+            "identity_aliases": [
+              "Draconian"
+            ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/03/draconian-paris-header-1000x523.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -43552,15 +45176,21 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Pop Rock",
+            "genre_evidence": [
+              {
+                "raw": "Pop Rock",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "KALANDRA",
             "identity_aliases": [
-              "KALANDRA + FINNEGAN TUI"
+              "KALANDRA + FINNEGAN TUI",
+              "KALANDRA"
             ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/08/kalandra-paris-header-1000x523.png",
@@ -43570,7 +45200,9 @@
               "KALANDRA",
               "FINNEGAN TUI"
             ],
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": "KALANDRA + FINNEGAN TUI",
             "series_name": null,
             "sold_out": false,
@@ -43590,7 +45222,9 @@
             "authoritative_billing": false,
             "category": "concert",
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "YMNK"
+            ],
             "date": "2027-04-01",
             "department": "75",
             "event_title": null,
@@ -43599,19 +45233,24 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre_method": "bill_consensus",
+            "genre_public": "Electronic",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "Il Est Vilaine + YMNK",
-            "identity_aliases": null,
+            "headliner": "Il Est Vilaine",
+            "identity_aliases": [
+              "Il Est Vilaine + YMNK"
+            ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/06/iev-machine-ymnk-1440x1080-1-1000x523.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Il Est Vilaine",
+              "YMNK"
+            ],
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Il Est Vilaine + YMNK",
             "series_name": null,
             "sold_out": false,
             "start_time": "18:30",
@@ -43637,20 +45276,29 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "HOULE + CÂN BARDD + GALIBOT",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "HOULE + CÂN BARDD + GALIBOT"
+            ],
             "image_source": "La Machine du Moulin Rouge",
             "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/10/houle-paris-header-1000x523.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -43665,7 +45313,7 @@
           "state_identity": "0c1a312fe16e825181e51bb1b117e4a23b1dc3f4bc2116abe15428cbbe27a744"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -49330,7 +50978,7 @@
           "state_identity": "44ad8bbae83d6f35e0cfd0c643bf09d5fd5d0eff3c241dcc59d21bfbf1607dca"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -50989,7 +52637,7 @@
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -51599,7 +53247,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -52520,7 +54168,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -53681,7 +55329,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -55672,7 +57320,7 @@
           "state_identity": "6bb00dcf476a1c7a1e65b6097449e40b0c9dcca57f15e384cdbd0d0faff10858"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -58841,7 +60489,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -60368,7 +62016,7 @@
           "state_identity": "a8a46784cdd00eea555f70ff6c98afe06e8a839cc6998043d6f1591f3c762459"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -64889,7 +66537,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -65964,7 +67612,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72102,6 +73750,53 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop",
+            "genre_evidence": [
+              {
+                "raw": "Pop",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Will Linley",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/h/o/c/431cf8f1-5d2b-4379-b274-c4b99fce5b84.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.livenation.fr/event/will-linley-paris-tickets-edp1710872",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-11-09T19:53:33Z",
+          "public_id": "127c2e0206d352e0",
+          "state_identity": "127c2e0206d352e0a046ebdc4522293d90abda61b5747fceb1b4487bf0c023cf"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "POP",
             "city": "Paris",
             "co_headliners": null,
@@ -74174,6 +75869,62 @@
         {
           "event": {
             "announced_at": null,
+            "authoritative_billing": true,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-06-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP ROCK FOLK",
+            "genre_evidence": [
+              {
+                "raw": "POP ROCK FOLK",
+                "source": "Accor Arena"
+              },
+              {
+                "raw": "Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Fall Out Boy",
+            "identity_aliases": [
+              "Fall Out Boy"
+            ],
+            "image_source": "Accor Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/originals/82fb1423-274b-4265-9b86-6f4cbb51cc2a.jpg",
+            "openers": [
+              "A DAY TO REMEMBER",
+              "NECK DEEP"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/fall-out-boy-twilight-of-the-punks-billet/idmanif/677966/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-11-09T19:53:33Z",
+          "public_id": "3bef9c626f1ea2c5",
+          "state_identity": "3bef9c626f1ea2c505e7c3a64cb9604ad96656e5143d2983d11457d3443cba7e"
+        },
+        {
+          "event": {
+            "announced_at": null,
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
@@ -75890,7 +77641,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -76392,7 +78143,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -76946,8 +78697,12 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Metal / Hard Rock",
+            "genre": "Dark / Metal",
             "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              },
               {
                 "raw": "Metal / Hard Rock",
                 "source": "L’Olympia Bruno Coquatrix"
@@ -76955,19 +78710,23 @@
             ],
             "genre_method": "source_explicit",
             "genre_public": "Metal / Hard Rock",
-            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "Accept",
-            "identity_aliases": null,
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiKhRvt02LRHcixHsr1zZSG3BxaK-azcA5PepdrKG5Hle2J9_MEIqitDAAa5-XMMMBLBUNKFr_f6lx6Smg3tLCdLrR0SqJW9hQp612syKYssnZrA-_jE_XPFZWLG5HfO3-N0xzAsJ8JATnrQ9yapZugN2oTD6QfOdKm8j-7yF_Fbu13jBzkJzs_AjggE-s/s72-w640-h426-c-rw/Accept20260620HellfestClisson_17.JPG",
+            "headliner": "ACCEPT 50th Anniversary Tour 2026",
+            "identity_aliases": [
+              "Accept"
+            ],
+            "image_source": "L’Olympia Bruno Coquatrix",
+            "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/02/accept-artiste-affiche-concert-olympia-paris-352x440.jpg.webp",
             "openers": [
               "DYNAZTY",
               "ENFORCER"
             ],
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -80860,7 +82619,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -83667,7 +85426,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -84183,7 +85942,7 @@
           "state_identity": "aca808ec020beb2983b627845ed0ea2aaaf9a3b1753543879119c096416f7428"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -84418,7 +86177,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -85915,56 +87674,11 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-09",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "MusicBrainz artist tags",
-            "genres_public": null,
-            "headliner": "Shearwater",
-            "identity_aliases": [
-              "SHEARWATER + LOMA + ANY KIND"
-            ],
-            "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/05/shearwater-square.png",
-            "openers": [
-              "Loma",
-              "Any Kind"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "SHEARWATER + LOMA + ANY KIND",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://petitbain.org/evenement/shearwater/",
-            "venue": "Petit Bain"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "1e9863ac97a407be",
-          "state_identity": "1e9863ac97a407bed02ff1c9045c40bb3eb46f91387fda04f0a2688bfce938d3"
-        },
         {
           "event": {
             "announced_at": null,
@@ -86884,14 +88598,21 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "EVERGREY",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "EVERGREY + IGNEA + STELLAR CIRCUITS"
+            ],
             "image_source": "Petit Bain",
             "image_url": "https://petitbain.org/wp-content/uploads/2026/09/evergrey-paris-web-800x800.jpg",
             "openers": [
@@ -86900,7 +88621,9 @@
             ],
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -87546,6 +89269,51 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-03-06",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Basht.",
+            "identity_aliases": [
+              "Basht.",
+              "Basht"
+            ],
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/11/square.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": "Basht.",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://petitbain.org/evenement/basht/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-11-02T11:23:30Z",
+          "public_id": "5b8fc634e4392151",
+          "state_identity": "5b8fc634e43921517ff5ff7f1a1fe1b93e8660b64990dac363e9db32345d0121"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-03-09",
             "department": "75",
             "event_title": null,
@@ -87792,7 +89560,7 @@
           "state_identity": "7c4ebb62acf570558a3053d393ae5e06fde9567c73c0bb278501adc85e242b81"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -88442,7 +90210,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -88472,19 +90240,21 @@
             "genre_source": "Point Éphémère",
             "genres_public": null,
             "headliner": "@ + Elisa Flores",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "@ + Elisa Flores"
+            ],
             "image_source": "Point Éphémère",
             "image_url": "https://images.prismic.io/pointf/TDYcQPi4Y7Ql9X0d_%40-BANcopie.jpg?auto=format,compress",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "@ + Elisa Flores",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://link.dice.fm/i905233eae79",
             "venue": "Point Éphémère"
           },
@@ -89752,7 +91522,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -90668,65 +92438,16 @@
           "state_identity": "4e2feff64952d3a6aa108d2ce54323e9a0ac5617cb6ea290653a9cab15df2663"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-09",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Pop rock",
-            "genre_evidence": [
-              {
-                "raw": "Pop rock",
-                "source": "Salle Pleyel"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Salle Pleyel",
-            "genres_public": null,
-            "headliner": "Cat Power",
-            "identity_aliases": [
-              "CAT POWER"
-            ],
-            "image_source": "Salle Pleyel",
-            "image_url": "https://www.sallepleyel.com/app/uploads/2025/11/CAT-POWER-026-SITE-1-333x483.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Corida"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.sallepleyel.com/evenement/cat-power/",
-            "venue": "Salle Pleyel"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "64d9c51f9e9bf440",
-          "state_identity": "64d9c51f9e9bf440d90ae92ffaf6957bcb7cc5a19f1f625726964d9ff2dfe093"
-        },
         {
           "event": {
             "announced_at": null,
@@ -94401,7 +96122,7 @@
           "state_identity": "7e260f7c556b95634f0d9f7453af4cc82256f950ca35bae57bd913024400e3b3"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -95028,58 +96749,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-09",
-            "department": "75",
-            "event_title": "Hommage à Chet Baker",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Entrée libre⎥jam session",
-            "genre_evidence": [
-              {
-                "raw": "Entrée libre⎥jam session",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Apple Music + Bandcamp",
-            "genres_public": null,
-            "headliner": "Fabien Mary",
-            "identity_aliases": [
-              "Hommage à Chet Baker avec Fabien Mary"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/9/23/6ab3d28793420-images.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Hommage à Chet Baker avec Fabien Mary",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "free",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/852448-hommage-a-chet-baker-avec-fabien-mary",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-09-27T01:20:20Z",
-          "public_id": "ced09bbc83e87c9c",
-          "state_identity": "ced09bbc83e87c9c4dbc68d4effa274f9eea4441ef280b4f833ce40777cf6bdc"
-        },
         {
           "event": {
             "announced_at": null,
@@ -95124,8 +96798,8 @@
             "venue": "Sunset/Sunside — Sunside"
           },
           "first_seen": "2026-09-27T01:20:20Z",
-          "public_id": "31c5ec28092cbae4",
-          "state_identity": "31c5ec28092cbae4fbb0c492baed552ce92cf0d11850aaf3de07c73b03f48631"
+          "public_id": "ced09bbc83e87c9c",
+          "state_identity": "ced09bbc83e87c9c4dbc68d4effa274f9eea4441ef280b4f833ce40777cf6bdc"
         },
         {
           "event": {
@@ -102802,7 +104476,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -102831,11 +104505,10 @@
             "genres_public": null,
             "headliner": "K*** Your Boyfriend",
             "identity_aliases": [
-              "K*** Your Boyfriend + Empty Shed + DEMAIN DEMIAN",
-              "K*** Your Boyfriend"
+              "K*** Your Boyfriend + Empty Shed + DEMAIN DEMIAN"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-27/00acbac0-77af-418e-81fa-2de24324a9e5.jpg?rect=720%2C0%2C2848%2C2848",
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -102849,9 +104522,9 @@
             "raw_title": "K*** Your Boyfriend + Empty Shed + DEMAIN DEMIAN",
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://supersonic-club.fr/evenement/k-your-boyfriend-empty-shed-demain-demian-9th-nov-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
@@ -103384,7 +105057,8 @@
             "headliner": "Carsick",
             "identity_aliases": [
               "Carsick + Carne + Bye Bye Baïne",
-              "CARSICK"
+              "CARSICK",
+              "Carsick + Carne + Final Girl"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-09-18/b9f92373-a0a5-4178-99ed-fcbc210ccae8.jpg?rect=0%2C938%2C2496%2C2496",
@@ -106067,7 +107741,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -106140,23 +107814,21 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "@ + Bergiès",
-            "identity_aliases": [
-              "@ + Bergiès"
-            ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-06-17/8e94617c-f31a-4b27-96d0-a37f9ce37bec.jpg?rect=167%2C0%2C968%2C968",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
               "Vedettes"
             ],
-            "raw_title": "@ + Bergiès",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://link.dice.fm/e4a1a328b33c",
             "venue": "Point Éphémère"
           },
@@ -107305,7 +108977,7 @@
           "state_identity": "032fac231ebf9297834fdd3172a71ee49ee522092b19af870dd61c3bb6fe8a7f"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -107575,7 +109247,8 @@
             "headliner": "Carsick",
             "identity_aliases": [
               "Carsick + Carne + Bye Bye Baïne",
-              "CARSICK"
+              "CARSICK",
+              "Carsick + Carne + Final Girl"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-09-18/b9f92373-a0a5-4178-99ed-fcbc210ccae8.jpg?rect=0%2C938%2C2496%2C2496",
@@ -110840,7 +112513,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -110999,19 +112672,15 @@
             "genre_public": "Pop",
             "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "Blowsom",
+            "headliner": "BLOWSOM",
             "identity_aliases": [
-              "Blowsom",
-              "Blowsom + DO not DO"
+              "BLOWSOM"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/add6e785-ed0f-47a9-bd30-ec6a92d0da87.jpg?rect=0%2C0%2C1182%2C1182",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Blowsom",
-              "DO not DO"
-            ],
+            "performers": null,
             "promoters": [
               "Zouave"
             ],
@@ -111021,7 +112690,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.laclef.asso.fr/agenda/297-BLOWSOM-DO-NOT-DO",
+            "ticket_url": "https://dice.fm/event/6a91ae7c9562bc00010ed89d",
             "venue": "La CLEF"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -111733,7 +113402,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -113203,27 +114872,38 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "GAAHLS WYRD"
+            ],
             "date": "2027-02-16",
             "department": "75",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "ENSLAVED & SÓLSTAFIR",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "ENSLAVED & SÓLSTAFIR"
+            ],
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/enslaved-solstafir-gaahls-elysee-montmartre.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -113330,20 +115010,29 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "THE HALO EFFECT",
-            "identity_aliases": null,
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh0-N8rKEy-dKb6j-LR0VOB4hQejiOLf35gkXhGlA3cbSlu2LiQpIgthi4DhqPpXFajoqzxC-GZsQKBIeTMF9FbiZN5vdik8PqxLwMrmRvpr6E7pSpqSE6kPaPgFh1_5WSrYMxojT3fT7IC9MzsWf7bUTEkj070GSIA52iPynaqzGLrk9IGgyVVc5nvnVM/s72-w640-h426-c-rw/The%20Halo%20Effect290125BataclanParis%2011_38.jpg",
+            "headliner": "THE HALO EFFECT + LACUNA COIL + OMNIUM GATHERUM",
+            "identity_aliases": [
+              "THE HALO EFFECT"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/the-halo-effect-lacuna-coil-omnium-gatherium-elysee-montmartre.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -113421,15 +115110,21 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "Graveyard",
             "identity_aliases": [
-              "GRAVEYARD & BLUES PILLS"
+              "GRAVEYARD & BLUES PILLS",
+              "Graveyard"
             ],
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/graveyard-blues-pills-v2.jpg",
@@ -113439,7 +115134,9 @@
               "Graveyard",
               "Blues Pills"
             ],
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": "GRAVEYARD & BLUES PILLS",
             "series_name": null,
             "sold_out": false,
@@ -114157,20 +115854,29 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
-            "headliner": "NEVERMORE",
-            "identity_aliases": null,
+            "headliner": "NEVERMORE + RIVERS OF NIHIL + URNE",
+            "identity_aliases": [
+              "NEVERMORE"
+            ],
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/nevermore-square.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -114291,20 +115997,29 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "EISBRECHER",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "EISBRECHER"
+            ],
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/eisbrecher-elysee-montmartre.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -114363,10 +116078,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-09T16:38:44Z",
+      "last_successful_at": "2026-11-09T19:53:33Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-09T16:38:44Z",
+  "updated_at": "2026-11-09T19:53:33Z",
   "version": 1
 }
