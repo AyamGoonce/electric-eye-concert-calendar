@@ -380,7 +380,7 @@ class SourceRetentionTests(unittest.TestCase):
         # snapshots are deliberately not counted as freshly scraped rows.
         rows, report = run([
             scraper("DICE", []),
-            scraper("Healthy source", [event("Fresh Act")]),
+            scraper("Healthy source", [event("Fresh Act", date="2027-01-21", venue="Le Trabendo", ticket_url="https://tickets.example/fresh-act")]),
         ], prior)
         self.assertEqual({"Meryl Streek", "Fresh Act"}, {row.headliner for row in rows})
         self.assertEqual(1, report.raw_count)
