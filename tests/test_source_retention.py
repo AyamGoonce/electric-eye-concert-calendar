@@ -390,7 +390,8 @@ class SourceRetentionTests(unittest.TestCase):
         self.assertEqual("failed", report.source_health[0]["status"])
         self.assertTrue(report.source_health[0]["fallback_unavailable"])
         with patch("concert_calendar.automation.CORE_SOURCES", set()):
-            validate_source_report(report)
+            with self.assertRaisesRegex(ProductionValidationError, "zero event count"):
+                validate_source_report(report)
 
     def test_expired_source_snapshot_still_blocks_publication(self):
         prior, _ = source_state()
