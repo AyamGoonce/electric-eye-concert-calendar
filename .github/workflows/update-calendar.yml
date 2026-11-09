@@ -17,6 +17,7 @@ on:
         default: false
 
 permissions:
+  actions: read
   contents: write
   pages: write
 
@@ -62,7 +63,30 @@ jobs:
           restore-keys: |
             genre-resolution-${{ runner.os }}-${{ github.ref_name }}-
 
+      # An identical push runs the same Python and Node regression suites.
+      # Reuse its successful verdict only for the exact source revision.
+      # If the API is unavailable, the result is missing, or the SHA differs,
+      # retain the complete in-workflow tests (fail-safe).
+      - name: Reuse successful regression validation for exact revision
+        id: regression_validation
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "reused=false" >> "$GITHUB_OUTPUT"
+          if validated_shas="$(gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/test-calendar-on-push.yml/runs?head_sha=${GITHUB_SHA}&event=push&status=success&per_page=20" --jq '.workflow_runs[].head_sha' 2>/dev/null)"; then
+            if grep -Fxq "${GITHUB_SHA}" <<< "$validated_shas"; then
+              echo "Identical commit ${GITHUB_SHA} passed the independent full regression workflow."
+              echo "reused=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "No successful independent validation for this exact SHA; running tests."
+            fi
+          else
+            echo "Independent validation could not be checked; running full tests."
+          fi
+
       - name: Run calendar tests
+        if: steps.regression_validation.outputs.reused != 'true'
         shell: bash
         run: |
           tests=()
@@ -77,6 +101,7 @@ jobs:
           python -m unittest "${tests[@]}"
 
       - name: Run artist auto-linker regression
+        if: steps.regression_validation.outputs.reused != 'true'
         run: node --test tests/artist_autolinker.test.js
 
       - name: Check out current Pages branch
