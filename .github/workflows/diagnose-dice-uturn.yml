@@ -130,10 +130,10 @@ jobs:
           base='https://raw.githubusercontent.com/AyamGoonce/electric-eye-concert-calendar/gh-pages/proof/'
           pointer=requests.get(base+'calendar-current.js',timeout=25)
           pointer.raise_for_status()
-          manifest=json.loads(re.search(r'Object.freeze\\((\\{.*?\\})\\)',pointer.text).group(1))
+          manifest=json.loads(re.search(r'Object.freeze\((\{.*?\})\)',pointer.text).group(1))
           data_response=requests.get(base+manifest['data'],timeout=40)
           data_response.raise_for_status()
-          public=json.loads(re.search(r'ElectricEyeConcertData = Object.freeze\\((\\[.*?\\])\\);',data_response.text,re.S).group(1))
+          public=json.loads(re.search(r'ElectricEyeConcertData = Object.freeze\((\[.*?\])\);',data_response.text,re.S).group(1))
           html=requests.get(EVENTS_URL,headers={'User-Agent':'Mozilla/5.0'},timeout=25)
           html.raise_for_status()
           dice,has_more=extract_public_browse_events(html.text)
