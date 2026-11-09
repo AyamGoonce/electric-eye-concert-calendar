@@ -218,6 +218,19 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Notify administrator of degraded or failed calendar runs
+        if: always()
+        continue-on-error: true
+        env:
+          ZOHO_MAIL_APP_PASSWORD: ${{ secrets.ZOHO_MAIL_APP_PASSWORD }}
+          CALENDAR_RUN_STATUS: ${{ job.status }}
+          CALENDAR_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python -m concert_calendar.degradation_notice \
+            --report output/automation/automation-report.json \
+            --run-url "$CALENDAR_RUN_URL" \
+            --status "$CALENDAR_RUN_STATUS"
+
       - name: Write run summary
         if: success()
         run: |
