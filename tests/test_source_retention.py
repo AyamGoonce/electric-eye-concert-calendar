@@ -376,10 +376,20 @@ class SourceRetentionTests(unittest.TestCase):
 
     def test_unexpected_empty_replays_last_good_inventory(self):
         prior, _ = source_state()
-        rows, report = run([scraper("DICE", [])], prior)
-        self.assertEqual(["Meryl Streek"], [row.headliner for row in rows])
-        self.assertEqual("failed", report.source_health[0]["status"])
-        self.assertEqual(1, report.source_health[0]["fallback_event_count"])
+        # Production always requires at least one fresh raw event; replayed
+        # snapshots are deliberately not counted as freshly scraped rows.
+        rows, report = run([
+            scraper("DICE", []),
+            scraper("Healthy source", [event("Fresh Act")]),
+        ], prior)
+        self.assertEqual({"Meryl Streek", "Fresh Act"}, {row.headliner for row in rows})
+        self.assertEqual(1, report.raw_count)
+        self.assertEqual(2, report.final_count)
+        dice_health = next(
+            item for item in report.source_health if item["source_name"] == "DICE"
+        )
+        self.assertEqual("failed", dice_health["status"])
+        self.assertEqual(1, dice_health["fallback_event_count"])
         self.assertIn("Unexpected empty inventory", report.source_failures["DICE"])
         with patch("concert_calendar.automation.CORE_SOURCES", set()):
             validate_source_report(report)
