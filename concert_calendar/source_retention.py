@@ -25,7 +25,7 @@ from concert_calendar.venues import normalize_event_venue
 
 SOURCE_STATE_FILENAME = "calendar-source-state.json"
 SOURCE_STATE_VERSION = 1
-RETENTION_WINDOW = timedelta(hours=72)
+RETENTION_WINDOW = timedelta(days=7)
 MIN_PARTIAL_FALLBACK_MISSING_EVENTS = 20
 MIN_PARTIAL_FALLBACK_INVENTORY_RATIO = 0.50
 PARIS = ZoneInfo("Europe/Paris")
