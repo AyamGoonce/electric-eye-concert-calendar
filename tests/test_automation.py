@@ -355,7 +355,8 @@ class AutomationValidationTests(unittest.TestCase):
         self.assertEqual("failed", report.source_health[0]["status"])
         self.assertIn("Unexpected empty inventory", report.source_failures["Transient source"])
         with patch("concert_calendar.automation.CORE_SOURCES", set()):
-            validate_source_report(report)
+            with self.assertRaisesRegex(ProductionValidationError, "zero event count"):
+                validate_source_report(report)
 
     def test_source_health_allows_explicitly_legitimate_empty_source(self):
         scraper = type(
