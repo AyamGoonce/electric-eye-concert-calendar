@@ -219,6 +219,10 @@ def hydrate_failed_sources(
             current_fresh_count / prior_future_count
             if prior_future_count else None
         )
+        if health["status"] == "ok" and health.get("incomplete_fallback"):
+            # A public browse page is only a first batch, not an exhaustive
+            # successful scrape. Do not replace the last complete snapshot.
+            health["status"] = "partial"
         if (
             health["status"] == "ok"
             and health.get("load_path") == "fallback"
