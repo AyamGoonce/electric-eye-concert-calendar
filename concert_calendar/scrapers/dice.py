@@ -263,7 +263,7 @@ def fetch_dice_detail_description(event_id):
     response.raise_for_status()
 
     match = re.search(
-        r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
+        r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>',
         response.text,
         flags=re.IGNORECASE | re.DOTALL,
     )
