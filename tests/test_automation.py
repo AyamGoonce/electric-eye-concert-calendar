@@ -352,10 +352,9 @@ class AutomationValidationTests(unittest.TestCase):
         self.assertEqual(events, [])
         self.assertEqual(report.source_counts, {"Transient source": 0})
         self.assertEqual(scraper.load_events.call_count, 3)
-        self.assertEqual("empty", report.source_health[0]["status"])
-        with self.assertRaisesRegex(
-            ProductionValidationError, "unexpectedly returned zero"
-        ):
+        self.assertEqual("failed", report.source_health[0]["status"])
+        self.assertIn("Unexpected empty inventory", report.source_failures["Transient source"])
+        with patch("concert_calendar.automation.CORE_SOURCES", set()):
             validate_source_report(report)
 
     def test_source_health_allows_explicitly_legitimate_empty_source(self):
