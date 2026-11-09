@@ -471,13 +471,15 @@ def load_events_with_report(
     )
     for health in source_health:
         if health["status"] == "partial":
+            ratio = health["fallback_inventory_ratio"]
+            ratio_text = f"{ratio:.0%}" if ratio is not None else "n/a (no prior inventory)"
             print(
                 f"SOURCE RETENTION | {health['source_name']} | status=partial | "
                 f"load_path={health['load_path']} | "
                 f"fresh={health['fallback_current_event_count']} | "
                 f"prior={health['fallback_prior_event_count']} | "
                 f"retained={health['fallback_event_count']} | "
-                f"ratio={health['fallback_inventory_ratio']:.0%}",
+                f"ratio={ratio_text}",
                 flush=True,
             )
     normalized_events.extend(retained_events)
