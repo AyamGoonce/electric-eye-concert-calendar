@@ -1,10 +1,10 @@
 """Safe, explicitly incomplete DICE recovery when the catalogue API refuses access."""
 
 from copy import deepcopy
-from datetime import datetime, timezone
+from datetime import datetime, date, timezone
 import json
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 import requests
 
@@ -126,6 +126,70 @@ class DicePublicBrowseRecoveryTests(unittest.TestCase):
             retained_snapshots=report.retained_snapshots,
         )
         self.assertEqual(prior["sources"]["DICE"], new_state["sources"]["DICE"])
+
+
+    def test_date_partitions_recover_events_beyond_initial_city_batch(self):
+        city_event = raw_event("Popular", event_id="popular", start="2026-11-09T20:00:00+01:00")
+        november_event = raw_event("November Band", event_id="nov", start="2026-11-10T20:00:00+01:00")
+        december_event = raw_event("December Band", event_id="dec", start="2026-12-08T20:00:00+01:00")
+        seen_urls = []
+
+        def page_for_url(url, timeout):
+            seen_urls.append(url)
+            if "from=2026-11-09" in url:
+                body = html_page([city_event, november_event], cursor=None)
+            elif "from=2026-12-08" in url:
+                body = html_page([december_event], cursor=None)
+            else:
+                body = html_page([city_event], cursor=None)
+            return Mock(text=body, raise_for_status=Mock())
+
+        with (
+            patch.object(dice.requests, "Session") as session,
+            patch.object(dice, "_public_browse_windows", return_value=[
+                (date(2026, 11, 9), date(2026, 11, 10)),
+                (date(2026, 12, 8), date(2026, 12, 9)),
+            ]),
+            patch.object(dice, "PUBLIC_REQUEST_PAUSE_SECONDS", 0),
+        ):
+            session.return_value.get.side_effect = page_for_url
+            rows, incomplete = dice._load_public_browse_events(today=date(2026, 11, 9))
+        self.assertEqual({"Popular", "November Band", "December Band"}, {e.headliner for e in rows})
+        self.assertEqual(3, len(seen_urls))
+        self.assertFalse(incomplete)
+
+    def test_capped_date_window_is_split_to_recover_more_listings(self):
+        seen = []
+        events = [
+            raw_event("First", event_id="one", start="2026-11-09T20:00:00+01:00"),
+            raw_event("Second", event_id="two", start="2026-11-10T20:00:00+01:00"),
+        ]
+
+        def page_for_url(url, timeout):
+            seen.append(url)
+            if "from=2026-11-09&until=2026-11-10" in url:
+                body = html_page(events, cursor="more")
+            elif "from=2026-11-09&until=2026-11-09" in url:
+                body = html_page([events[0]], cursor=None)
+            elif "from=2026-11-10&until=2026-11-10" in url:
+                body = html_page([events[1]], cursor=None)
+            else:
+                body = html_page([], cursor=None)
+            return Mock(text=body, raise_for_status=Mock())
+
+        with (
+            patch.object(dice.requests, "Session") as session,
+            patch.object(dice, "_public_browse_windows", return_value=[
+                (date(2026, 11, 9), date(2026, 11, 10)),
+            ]),
+            patch.object(dice, "PUBLIC_REQUEST_PAUSE_SECONDS", 0),
+        ):
+            session.return_value.get.side_effect = page_for_url
+            rows, incomplete = dice._load_public_browse_events(today=date(2026, 11, 9))
+        self.assertEqual({"First", "Second"}, {e.headliner for e in rows})
+        self.assertEqual(4, len(seen))
+        self.assertFalse(incomplete)
+
 
 
 if __name__ == "__main__":
