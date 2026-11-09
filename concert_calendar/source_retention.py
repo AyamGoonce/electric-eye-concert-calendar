@@ -252,7 +252,7 @@ def hydrate_failed_sources(
             continue
         age = now - _timestamp(last_success)
         if age < timedelta(0) or age > RETENTION_WINDOW:
-            health["fallback_expired_count"] = len(prior["events"])
+            health["fallback_expired_count"] = prior_future_count
             continue
         for snapshot in prior["events"]:
             old = snapshot["event"]
