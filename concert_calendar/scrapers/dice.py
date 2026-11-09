@@ -1,5 +1,8 @@
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import json
+import time
+from urllib.parse import urlencode
+from zoneinfo import ZoneInfo
 import re
 import unicodedata
 
@@ -523,14 +526,128 @@ def extract_public_browse_events(html):
     return list(events_by_key.values()), bool(page_props.get("nextCursor"))
 
 
+# The public browse page serves a capped first batch. Partitioning by event
+# date retrieves more concerts without relying on the blocked unified_search API.
+# Keep requests bounded and serial to avoid placing unnecessary load on DICE.
+PUBLIC_BROWSE_DAYS = 385
+PUBLIC_WINDOW_DAYS = 7
+PUBLIC_MAX_REQUESTS = 95
+PUBLIC_REQUEST_PAUSE_SECONDS = 0.15
+PUBLIC_GIG_PAGE = EVENTS_URL
+
+
+def _public_browse_windows(today, *, horizon=PUBLIC_BROWSE_DAYS):
+    end = today + timedelta(days=horizon - 1)
+    start = today
+    while start <= end:
+        stop = min(end, start + timedelta(days=PUBLIC_WINDOW_DAYS - 1))
+        yield start, stop
+        start = stop + timedelta(days=1)
+
+
 def _load_public_browse_events():
-    response = requests.get(
-        EVENTS_URL,
-        headers={"User-Agent": HEADERS["User-Agent"], "Accept": "text/html"},
-        timeout=REQUEST_TIMEOUT,
+    """Recover DICE gig listings using bounded public date partitions.
+
+    Pages can still omit concerts or have other hidden server limits. This
+    method must ALWAYS report incomplete inventory to source retention.
+    """
+    today = datetime.now(ZoneInfo("Europe/Paris")).date()
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": HEADERS["User-Agent"],
+        "Accept": "text/html",
+    })
+    by_key = {}
+    visits = 0
+    saturated = 0
+    unavailable = 0
+    additional_pages = False
+
+    def visit(url):
+        nonlocal visits
+        if visits >= PUBLIC_MAX_REQUESTS:
+            return None
+        if visits:
+            time.sleep(PUBLIC_REQUEST_PAUSE_SECONDS)
+        visits += 1
+        response = session.get(url, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+        return extract_public_browse_events(response.text)
+
+    def merge(events):
+        for event in events:
+            if date.fromisoformat(event.date) >= today:
+                by_key.setdefault(event_key(event), event)
+
+    # The popular city page contains additional concerts not present in the
+    # gig listing. It is curated and does not establish complete coverage.
+    city_page = EVENTS_URL.split("/music/gig")[0]
+    try:
+        result = visit(city_page)
+        if result:
+            merge(result[0])
+            additional_pages |= result[1]
+    except (requests.RequestException, ValueError, KeyError, json.JSONDecodeError) as error:
+        print(f"DICE public city page unavailable: {type(error).__name__}: {error}", flush=True)
+
+    def load_window(start, end):
+        nonlocal unavailable, saturated, additional_pages
+        if visits >= PUBLIC_MAX_REQUESTS:
+            saturated += 1
+            return
+        url = PUBLIC_GIG_PAGE + "?" + urlencode({
+            "from": start.isoformat(), "until": end.isoformat(),
+        })
+        try:
+            result = visit(url)
+            if result is None:
+                saturated += 1
+                return
+            events, has_more = result
+        except (requests.RequestException, ValueError, KeyError, json.JSONDecodeError) as error:
+            unavailable += 1
+            print(
+                f"DICE public partition unavailable {start}..{end}: "
+                f"{type(error).__name__}: {error}", flush=True,
+            )
+            return
+        # Only admit records dated within the requested partition: this
+        # detects pages that ignore query parameters rather than silently
+        # counting the first browse batch repeatedly.
+        relevant = [
+            event for event in events
+            if start <= date.fromisoformat(event.date) <= end
+        ]
+        if len(relevant) != len(events):
+            print(
+                f"DICE partition {start}..{end}: "
+                f"{len(events) - len(relevant)} events outside requested dates",
+                flush=True,
+            )
+        merge(relevant)
+        if has_more and start < end:
+            middle = start + timedelta(days=(end - start).days // 2)
+            load_window(start, middle)
+            load_window(middle + timedelta(days=1), end)
+        elif has_more:
+            # Even one day may contain more listings than a single browse
+            # page returns. A saturated day must not be considered complete.
+            saturated += 1
+            additional_pages = True
+
+    for start, end in _public_browse_windows(today):
+        load_window(start, end)
+
+    if not by_key:
+        raise ValueError("DICE public browse discovery returned no concerts")
+    print(
+        f"DICE public browse discovery | records={len(by_key)} | requests={visits} "
+        f"| unavailable_partitions={unavailable} | saturated_partitions={saturated}"
+        + (" | partial_public_inventory=true" if additional_pages or saturated or unavailable else
+           " | partial_public_inventory=true"),
+        flush=True,
     )
-    response.raise_for_status()
-    return extract_public_browse_events(response.text)
+    return list(by_key.values()), bool(additional_pages or saturated or unavailable)
 
 
 def load_events():
