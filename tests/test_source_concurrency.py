@@ -102,4 +102,4 @@ class SourceConcurrencyTests(unittest.TestCase):
         self.assertEqual(prepare_upcoming_events(left, date(2026, 1, 1)),
                          prepare_upcoming_events(right, date(2026, 1, 1)))
         self.assertEqual([2, 1, 3, 3], [m.load_events.call_count for m in parallel])
-        self.assertEqual(["ok", "ok", "failed", "empty"], [h["status"] for h in b.source_health])
+        self.assertEqual(["ok", "ok", "failed", "failed"], [h["status"] for h in b.source_health])
