@@ -89,6 +89,39 @@ class DicePublicBrowseRecoveryTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "public browse fallback unavailable"):
                 dice.load_events()
 
+    def test_partial_dice_without_prior_snapshot_does_not_crash_logging(self):
+        """Production regression: incomplete DICE with no historical DICE inventory."""
+        from contextlib import redirect_stdout
+        from io import StringIO
+        from types import SimpleNamespace
+
+        current, _ = dice.extract_public_browse_events(html_page([raw_event()]))
+        module = SimpleNamespace(
+            SOURCE_NAME="DICE", __name__="DICE",
+            load_events=Mock(return_value=deepcopy(current)),
+            get_load_metadata=Mock(return_value={
+                "path": "fallback",
+                "fallback_source": "DICE public Paris browse page",
+                "incomplete": True,
+            }),
+        )
+        output = StringIO()
+        with (
+            patch("concert_calendar.sources.discover_scrapers_with_issues",
+                  return_value=([module], {})),
+            redirect_stdout(output),
+        ):
+            rows, report = load_events_with_report(
+                scraper_attempts=1, retry_delay_seconds=0,
+                prior_source_state=None, now=NOW,
+            )
+        health = report.source_health[0]
+        self.assertEqual("partial", health["status"])
+        self.assertIsNone(health["fallback_inventory_ratio"])
+        self.assertTrue(health["fallback_unavailable"])
+        self.assertEqual(1, len(rows))
+        self.assertIn("ratio=n/a (no prior inventory)", output.getvalue())
+
     def test_partial_page_does_not_overwrite_last_complete_snapshot(self):
         from types import SimpleNamespace
         from unittest.mock import Mock
