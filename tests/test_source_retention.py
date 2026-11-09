@@ -255,9 +255,9 @@ class SourceRetentionTests(unittest.TestCase):
         self.assertNotIn("Past 0", {row.headliner for row in rows})
         self.assertEqual(1, report.source_health[0]["fallback_excluded_past_count"])
 
-    def test_partial_fallback_retention_expires_after_72_hours(self):
+    def test_partial_fallback_retention_expires_after_seven_days(self):
         prior, _ = source_state("Venue", inventory(40), now=NOW)
-        after_expiry = NOW + timedelta(hours=72, microseconds=1)
+        after_expiry = NOW + timedelta(days=7, microseconds=1)
 
         rows, report = run([
             scraper(
@@ -374,12 +374,30 @@ class SourceRetentionTests(unittest.TestCase):
         self.assertEqual([], candidate["sources"]["DICE"]["events"])
         self.assertEqual("2026-09-22T10:00:00Z", candidate["sources"]["DICE"]["last_successful_at"])
 
-    def test_unexpected_empty_still_fails_without_fallback(self):
+    def test_unexpected_empty_replays_last_good_inventory(self):
         prior, _ = source_state()
         rows, report = run([scraper("DICE", [])], prior)
+        self.assertEqual(["Meryl Streek"], [row.headliner for row in rows])
+        self.assertEqual("failed", report.source_health[0]["status"])
+        self.assertEqual(1, report.source_health[0]["fallback_event_count"])
+        self.assertIn("Unexpected empty inventory", report.source_failures["DICE"])
+        validate_source_report(report)
+
+    def test_unexpected_empty_without_snapshot_is_reported_degraded(self):
+        rows, report = run([scraper("New source", [])])
         self.assertEqual([], rows)
-        self.assertEqual(0, report.source_health[0]["fallback_event_count"])
-        with self.assertRaisesRegex(ProductionValidationError, "unexpectedly returned zero"):
+        self.assertEqual("failed", report.source_health[0]["status"])
+        self.assertTrue(report.source_health[0]["fallback_unavailable"])
+        validate_source_report(report)
+
+    def test_expired_source_snapshot_still_blocks_publication(self):
+        prior, _ = source_state()
+        rows, report = run(
+            [scraper("DICE", [])], prior,
+            now=NOW + timedelta(days=7, hours=1),
+        )
+        self.assertEqual([], rows)
+        with self.assertRaisesRegex(ProductionValidationError, "snapshots have expired"):
             validate_source_report(report)
 
     def test_recovered_valid_empty_after_exception_is_not_a_failed_source(self):
@@ -422,12 +440,12 @@ class SourceRetentionTests(unittest.TestCase):
         rows, _ = run([scraper("DICE", RuntimeError("offline"))], prior, now=at_boundary)
         self.assertEqual(["Paris today"], [row.headliner for row in rows])
 
-    def test_exactly_72_hours_is_retained_then_expires(self):
+    def test_exactly_seven_days_is_retained_then_expires(self):
         prior, _ = source_state(now=NOW)
-        rows, _ = run([scraper("DICE", RuntimeError("offline"))], prior, now=NOW+timedelta(hours=72))
+        rows, _ = run([scraper("DICE", RuntimeError("offline"))], prior, now=NOW+timedelta(days=7))
         self.assertEqual(1, len(rows))
         expired, report = run([scraper("DICE", RuntimeError("offline"))], prior,
-                              now=NOW+timedelta(hours=72, microseconds=1))
+                              now=NOW+timedelta(days=7, microseconds=1))
         self.assertEqual([], expired)
         self.assertEqual(1, report.source_health[0]["fallback_expired_count"])
 
@@ -439,7 +457,7 @@ class SourceRetentionTests(unittest.TestCase):
         self.assertEqual(prior["sources"]["DICE"]["last_successful_at"],
                          candidate["sources"]["DICE"]["last_successful_at"])
         rows2, report2 = run([scraper("DICE", RuntimeError("offline"))], candidate,
-                             now=NOW+timedelta(hours=73))
+                             now=NOW+timedelta(days=7, hours=1))
         self.assertEqual([], rows2)
         self.assertEqual(1, report2.source_health[0]["fallback_expired_count"])
 
@@ -488,9 +506,9 @@ class SourceRetentionTests(unittest.TestCase):
     def test_expired_snapshot_is_pruned_but_clock_is_not_refreshed(self):
         prior, _ = source_state(now=NOW)
         rows, report = run([scraper("DICE", RuntimeError("403"))], prior,
-                           now=NOW+timedelta(hours=73))
+                           now=NOW+timedelta(days=7, hours=1))
         candidate = build_source_state(rows, report.source_health, prior,
-                                      now=NOW+timedelta(hours=73),
+                                      now=NOW+timedelta(days=7, hours=1),
                                       retained_snapshots=report.retained_snapshots)
         self.assertEqual([], candidate["sources"]["DICE"]["events"])
         self.assertEqual(prior["sources"]["DICE"]["last_successful_at"],
