@@ -575,6 +575,16 @@ def validate_source_report(report) -> None:
         raise ProductionValidationError(
             "Registered scrapers were not exercised: " + ", ".join(unexercised)
         )
+    expired = sorted(
+        item["source_name"]
+        for item in report.source_health
+        if item.get("fallback_expired_count", 0) > 0
+    )
+    if expired:
+        raise ProductionValidationError(
+            "Last-known-good source snapshots have expired; refusing "
+            "unexplained event loss: " + ", ".join(expired)
+        )
     unexpected_empty = sorted(
         item["source_name"]
         for item in report.source_health
