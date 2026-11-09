@@ -497,7 +497,7 @@ def get_load_metadata():
     return dict(_LAST_LOAD_METADATA)
 
 
-def extract_public_browse_events(html):
+def extract_public_browse_events(html, *, allow_empty=False):
     """Read DICE's anonymous, server-rendered Next.js event inventory.
 
     This response contains only the initial browse batch. Its cursor cannot
@@ -512,7 +512,7 @@ def extract_public_browse_events(html):
     payload = json.loads(match.group(1))
     page_props = (payload.get("props") or {}).get("pageProps") or {}
     raw = page_props.get("events")
-    if not isinstance(raw, list) or not raw:
+    if not isinstance(raw, list) or (not raw and not allow_empty):
         raise ValueError("DICE public browse page returned no usable event inventory")
     events_by_key = {}
     for item in raw:
@@ -521,7 +521,7 @@ def extract_public_browse_events(html):
         event = parse_event(item)
         if event is not None:
             events_by_key.setdefault(event_key(event), event)
-    if not events_by_key:
+    if not events_by_key and raw and not allow_empty:
         raise ValueError("DICE public browse page returned no parseable concerts")
     return list(events_by_key.values()), bool(page_props.get("nextCursor"))
 
@@ -572,7 +572,7 @@ def _load_public_browse_events():
         visits += 1
         response = session.get(url, timeout=REQUEST_TIMEOUT)
         response.raise_for_status()
-        return extract_public_browse_events(response.text)
+        return extract_public_browse_events(response.text, allow_empty=True)
 
     def merge(events):
         for event in events:
@@ -643,8 +643,7 @@ def _load_public_browse_events():
     print(
         f"DICE public browse discovery | records={len(by_key)} | requests={visits} "
         f"| unavailable_partitions={unavailable} | saturated_partitions={saturated}"
-        + (" | partial_public_inventory=true" if additional_pages or saturated or unavailable else
-           " | partial_public_inventory=true"),
+        + " | partial_public_inventory=true",
         flush=True,
     )
     return list(by_key.values()), bool(additional_pages or saturated or unavailable)
