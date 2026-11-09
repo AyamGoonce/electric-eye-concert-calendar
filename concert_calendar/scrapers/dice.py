@@ -263,7 +263,7 @@ def fetch_dice_detail_description(event_id):
     response.raise_for_status()
 
     match = re.search(
-        r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>',
+        r'<script[^>]*type="application/ld\+json"[^>]*>(.*?)</script>',
         response.text,
         flags=re.IGNORECASE | re.DOTALL,
     )
@@ -501,7 +501,7 @@ def extract_public_browse_events(html):
     be used as proof that the full catalogue has been enumerated.
     """
     match = re.search(
-        r'<script\\b(?=[^>]*\\bid=["\\\']__NEXT_DATA__["\\\'])[^>]*>(.*?)</script>',
+        r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>',
         html, flags=re.IGNORECASE | re.DOTALL,
     )
     if not match:
