@@ -327,6 +327,13 @@ def load_events_with_report(
             source_failures[scraper.SOURCE_NAME] = (
                 f"{type(last_error).__name__}: {last_error}"
             )
+        elif not scraper_events and not getattr(scraper, "ALLOW_EMPTY", False):
+            # A successful HTTP response is not evidence of a genuinely empty
+            # programme. Preserve last-known-good source state after retries,
+            # rather than aborting publication of every healthy source.
+            source_failures[scraper.SOURCE_NAME] = (
+                f"Unexpected empty inventory after {attempts_made} attempts"
+            )
         if scraper_events is None:
             scraper_events = []
 
