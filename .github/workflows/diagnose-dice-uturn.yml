@@ -96,3 +96,24 @@ jobs:
               except Exception as e:
                   print('PAGINATION',mode,'ERROR',type(e).__name__,str(e)[:200])
           PY
+
+      - name: Check out live DICE scraper
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare Python for DICE live smoke test
+        run: python3 -m pip install --requirement requirements.txt
+
+      - name: Verify DICE public fallback in production scraper
+        run: |
+          python3 - <<'PY'
+          from concert_calendar.scrapers import dice
+          events = dice.load_events()
+          metadata = dice.get_load_metadata()
+          print('DICE LIVE SMOKE',len(events),'source_path',metadata['path'],'incomplete',metadata.get('incomplete'))
+          print('DICE EVENT SAMPLES',[(e.date,e.headliner,e.venue,e.city) for e in events[:3]])
+          assert events, 'No DICE event records could be retrieved'
+          assert metadata['path'] == 'fallback', 'Expected public fallback while API remains 403'
+          assert metadata.get('incomplete') is True, 'Partial source provenance was lost'
+          PY
