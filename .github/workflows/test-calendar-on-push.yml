@@ -1,0 +1,56 @@
+name: Validate Electric Eye Calendar Changes
+
+on:
+  push:
+    branches:
+      - supersonic-scraper
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: electric-eye-calendar-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  regression-tests:
+    name: Calendar regression tests (no publication)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install --requirement requirements.txt
+
+      - name: Seed genre resolution cache
+        run: |
+          mkdir -p output
+          cp concert_calendar/data/genre_cache_seed/*.json output/
+
+      - name: Run calendar regression suite
+        shell: bash
+        run: |
+          tests=()
+          for file in tests/test_*.py; do
+            if [[ "$file" == "tests/test_apple_related_deliverables.py" ]]; then
+              continue
+            fi
+            module="${file%.py}"
+            module="${module//\//.}"
+            tests+=("$module")
+          done
+          python -m unittest "${tests[@]}"
+
+      - name: Run artist auto-linker regression
+        run: node --test tests/artist_autolinker.test.js
