@@ -236,6 +236,14 @@ def _explicit_nonconcert_activity(event):
             return "non_music_activity"
         if re.match(r"^hors\s+antenne\s*:\s*arret\s+sur\s+images\b", value):
             return "non_music_discussion"
+        # The venue's 17 January entry is an explicitly described stand-up
+        # comedy performance despite its generic Pop/Rock calendar category.
+        if (
+            event.date[:10] == "2027-01-17"
+            and normalize_venue_key(event.venue) == "cafe de la danse"
+            and re.search(r"\bpierluca\s+mariti\b", value)
+        ):
+            return "non_music_comedy"
         if re.search(r"\becoute\s+immersive\s+de\s+disque\b", value):
             return "non_music_listening_session"
     return None
