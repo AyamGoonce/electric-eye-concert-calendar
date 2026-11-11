@@ -28,6 +28,12 @@ def is_non_artist_event_title(value):
     if not normalized:
         return False
 
+    # Participatory quizzes are not live music performances. This must run
+    # before the featured-artist connector guard: "with Dr Wax" names a host,
+    # not a booked musical act.
+    if re.match(r"^(?:blind[\\s-]?test|quiz\\s+(?:musical|musique)|music\\s+quiz|music\\s+trivia)(?:\\b|$)", normalized):
+        return True
+
     # Dating/social matchmaking listings have no music billing even when
     # surfaced in DICE's public music:gig category.
     if re.search(r"\bspeed[\s-]?dating\b", normalized):
