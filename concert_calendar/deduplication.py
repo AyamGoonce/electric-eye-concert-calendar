@@ -3104,7 +3104,7 @@ def deduplicate_events(
             event.date == "2027-01-17"
             and normalize_venue_key(event.venue) == "bal chavaux"
             and normalize_artist_component(event.headliner)
-            == "afterhours tour 2027 - quello che non c'è"
+            == normalize_artist_component("Afterhours tour 2027 - quello che non c'è")
         ):
             original = event.headliner
             event.identity_aliases = _stable_unique([
