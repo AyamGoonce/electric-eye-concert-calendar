@@ -164,6 +164,27 @@ def _split_spaced_plus(value: str) -> list[str]:
     return parts
 
 
+def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> list[str]:
+    """Split only if every complete component is an existing artist identity.
+
+    Spaced '&', 'et' and dash are comparison candidates, never independent
+    evidence. The entire name is protected first (e.g. Simon & Garfunkel).
+    """
+    title = _clean(value)
+    if not title or _key(title) in identities:
+        return []
+    parts = [
+        _clean(part) for part in re.split(r"\s+(?:\+|&|et|[–—-])\s+", title, flags=re.I)
+    ]
+    if not _valid_parts(parts):
+        return []
+    if len({_key(part) for part in parts}) != len(parts):
+        return []
+    return [identities[_key(part)] for part in parts] if all(
+        _key(part) in identities for part in parts
+    ) else []
+
+
 def _valid_parts(parts: list[str]) -> bool:
     if len(parts) < 2:
         return False
@@ -498,11 +519,12 @@ def resolve_artist_billings(
             continue
 
         parts = _split_spaced_plus(billing)
-        if _valid_parts(parts) and all(_key(part) in identities for part in parts):
+        catalog_bill = _exact_catalog_bill_candidates(billing, identities)
+        if catalog_bill:
             _set_resolution(
-                event, [identities[_key(part)] for part in parts],
+                event, catalog_bill,
                 method="canonical_identity", confidence=90,
-                evidence=["every constituent is an exact Electric Eye identity or alias"],
+                evidence=["every delimited constituent independently matches an established artist identity"],
                 presenter=presenter, description=description,
             )
             _record(audit, event)
