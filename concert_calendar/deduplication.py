@@ -941,6 +941,24 @@ def _cross_source_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
 
 
 def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
+    # Two sources independently supplied complete, *different* musician arrays.
+    # Do not silently discard one current lineup during event reconciliation.
+    # Review those conflicting identities rather than treating a shared
+    # headliner, date and venue as sufficient proof for a merge.
+    left_artists = {
+        normalize_artist_component(a) for a in (left.performers or [])
+        if a
+    }
+    right_artists = {
+        normalize_artist_component(a) for a in (right.performers or [])
+        if a
+    }
+    if (
+        len(left_artists) >= 3 and len(right_artists) >= 3
+        and left_artists != right_artists
+        and not _same_event_specific_ticket(left, right)
+    ):
+        return True
     if _performance_conflict(left, right):
         return True
     if left.festival_name or right.festival_name:
