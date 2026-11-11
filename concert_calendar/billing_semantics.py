@@ -108,8 +108,26 @@ def _retain_original(event, original):
 # not the performing artist. Other quoted album titles/project names stay opaque.
 QUOTED_TOUR_SUFFIX_RE = re.compile(
     r'^(?P<artist>.+?)\s+'
-    r'(?:\"(?P<straight>[^\"]+)\"|“(?P<curly>[^”]+)”|«\s*(?P<french>[^»]+?)\s*»)'
-    r'\s*    """Resolve explicit source semantics before dedup, content and state."""
+    r'(?:"(?P<straight>[^"]+)"|“(?P<curly>[^”]+)”|«\s*(?P<french>[^»]+?)\s*»)'
+    r'\s*$'
+)
+
+
+def quoted_tour_title_parts(value: str) -> tuple[str, str] | None:
+    match = QUOTED_TOUR_SUFFIX_RE.fullmatch(_clean(value))
+    if not match:
+        return None
+    artist = _clean(match.group("artist"))
+    title = _clean(match.group("straight") or match.group("curly") or match.group("french"))
+    if not artist or not re.search(
+        r"\b(?:tour|tournée|tournee)\b", title, re.IGNORECASE
+    ):
+        return None
+    return artist, title
+
+
+def normalize_event_semantics(event):
+    """Resolve explicit source semantics before dedup, content and state."""
     # A reviewed event-scoped title may explicitly preserve wording that
     # resembles one of the strong wrapper grammars added below.  This lock
     # applies only to those wrappers; existing tour, time and metadata
