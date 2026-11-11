@@ -494,15 +494,22 @@ def _load_api_events():
         # or repeated cursor ends enumeration, not an empty *new* count.
         next_cursor = payload.get("next_page_cursor")
 
-        if (
-            not source_events
-            or not next_cursor
-            or next_cursor in seen_cursors
-        ):
+        if not next_cursor:
             break
+        if next_cursor in seen_cursors:
+            raise requests.RequestException(
+                "DICE API pagination cursor repeated before inventory exhaustion"
+            )
 
         seen_cursors.add(next_cursor)
         cursor = next_cursor
+    else:
+        # A capped catalogue is not a complete primary inventory. Fail into
+        # the explicitly incomplete browse fallback rather than publishing a
+        # truncated snapshot as a healthy successful API scrape.
+        raise requests.RequestException(
+            f"DICE API pagination exceeded {MAX_PAGES} pages with more records"
+        )
 
     events = list(events_by_key.values())
 
