@@ -6096,7 +6096,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -11211,7 +11211,7 @@
           "state_identity": "d11318ed922609c1c69c26d4321ff9d9c45b907573e07d73fe0b522e555f120d"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11861,7 +11861,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -14306,7 +14306,7 @@
           "state_identity": "3af6c22b73b6bce34eff1833561ae75fe0618e08126e0abaffc838d6be0fb455"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -14370,12 +14370,12 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
-            "city": "Montreuil",
+            "city": "Vincennes",
             "co_headliners": [
               "Doux George"
             ],
             "date": "2026-11-13",
-            "department": "93",
+            "department": "94",
             "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
@@ -14388,17 +14388,13 @@
             "genres_public": null,
             "headliner": "Alma Rechtman",
             "identity_aliases": [
-              "Alma Rechtman",
-              "Alma Rechtman + Doux George"
+              "Alma Rechtman"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-07-16/9f733aa4-b55a-4fcc-9f05-3a4f6257c64a.jpg?rect=0%2C154%2C4000%2C4000",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Alma Rechtman",
-              "Doux George"
-            ],
+            "performers": null,
             "promoters": [
               "Alias Production"
             ],
@@ -14408,7 +14404,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://bit.ly/dice-alma-rechtman",
+            "ticket_url": "https://dice.fm/event/6a58a9d78a5c0c000144f81a",
             "venue": "Maison Populaire"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -16248,7 +16244,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16608,7 +16604,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -17964,6 +17960,51 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-11-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": "metalcore",
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "metalcore",
+            "genre_evidence": [
+              {
+                "raw": "metalcore",
+                "source": "Backstage By The Mill"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Backstage By The Mill",
+            "genres_public": null,
+            "headliner": "AVRALIZE",
+            "identity_aliases": null,
+            "image_source": "Backstage By The Mill",
+            "image_url": "https://www.backstage-btm.com/wp-content/uploads/2026/11/fading-faster-promo-7-no-grain_c_Jacob-Hilsenbeck-e1794331994502.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.backstage-btm.com/agenda/avralize/",
+            "venue": "Backstage By The Mill"
+          },
+          "first_seen": "2026-11-11T11:04:45Z",
+          "public_id": "210e826d94fe3490",
+          "state_identity": "210e826d94fe34907ef16c428ea63cf2b7581ca5d71d0384f3995be2e9d1e515"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2028-01-25",
             "department": "75",
             "event_title": null,
@@ -18007,7 +18048,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -19559,7 +19600,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -20988,7 +21029,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -22754,7 +22795,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -24160,7 +24201,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -25804,14 +25845,16 @@
             "genre_source": "Bandcamp",
             "genres_public": null,
             "headliner": "2120",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "2120"
+            ],
             "image_source": "Café de la Danse",
             "image_url": "https://www.cafedeladanse.com/app/uploads/2026/11/2120-by-Studio-Olympia-photo-2-952x579.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "2120",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:00",
@@ -25922,7 +25965,7 @@
           "state_identity": "90716293fd943618bb05e2d75d6f2a5a5333d07968b66300fd79fc954a2ae1d5"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -27180,7 +27223,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -27923,7 +27966,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -28628,7 +28671,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -30583,7 +30626,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -30846,7 +30889,7 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -34155,7 +34198,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -34963,7 +35006,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -37768,7 +37811,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -37980,19 +38023,21 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "Bilal Hassani",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Bilal Hassani"
+            ],
             "image_source": "La Cigale",
             "image_url": "https://lacigale.fr/wp-content/uploads/2026/03/650x650.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Bilal Hassani",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:45",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/bilal-hassani/",
             "venue": "La Cigale"
           },
@@ -38996,19 +39041,21 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "Renan Luce - Joue Repenti",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Renan Luce - Joue Repenti"
+            ],
             "image_source": "La Cigale",
             "image_url": "https://lacigale.fr/wp-content/uploads/2026/01/renan-luce_2026_bd©laurent_seroussi_650x650.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Renan Luce - Joue Repenti",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://lacigale.fr/evenements/renan-luce-3/",
             "venue": "La Cigale"
           },
@@ -40594,19 +40641,21 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "Blanco White",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Blanco White"
+            ],
             "image_source": "La Cigale",
             "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/blanco-white-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Blanco White",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/blanco-white/",
             "venue": "La Cigale"
           },
@@ -41560,19 +41609,21 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "Nouvelle Vague",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Nouvelle Vague"
+            ],
             "image_source": "La Cigale",
             "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/nouvelle-vague.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Nouvelle Vague",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/nouvelle-vague-2/",
             "venue": "La Cigale"
           },
@@ -42109,19 +42160,21 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "STANISLAS",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "STANISLAS"
+            ],
             "image_source": "La Cigale",
             "image_url": "https://lacigale.fr/wp-content/uploads/2026/07/1080-x-1440.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "STANISLAS",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:30",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/stanislas-2/",
             "venue": "La Cigale"
           },
@@ -42366,7 +42419,7 @@
           "state_identity": "78038585cae60e039bd57c6975a2fcb1b06a92b68aa5c374c8f7e45b1c73ddce"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -43580,7 +43633,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -44672,7 +44725,7 @@
           "state_identity": "da9d969dd7f6243dcf31b1b96d8937a29d69a42c9a287833b65c4a543148c6f7"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -50290,7 +50343,7 @@
           "state_identity": "44ad8bbae83d6f35e0cfd0c643bf09d5fd5d0eff3c241dcc59d21bfbf1607dca"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -51901,7 +51954,7 @@
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -52511,7 +52564,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -53432,7 +53485,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -54593,7 +54646,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -56870,7 +56923,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -59992,7 +60045,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -61519,7 +61572,7 @@
           "state_identity": "e054edca1d7947df0077919264cbbe080c4063458ad815e549fdb6c7cf7e10a4"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -66040,7 +66093,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -67075,7 +67128,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -72512,6 +72565,10 @@
               {
                 "raw": "Other",
                 "source": "Live Nation"
+              },
+              {
+                "raw": "Acoustique",
+                "source": "Salle Pleyel"
               }
             ],
             "genre_method": null,
@@ -72519,7 +72576,9 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Marcin",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "MARCIN"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/p/x/r/fc5f17f9-209b-4173-a8ae-c79cd0c9ad5b.png",
             "openers": null,
@@ -72534,7 +72593,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.livenation.fr/event/marcin-paris-tickets-edp1707908",
+            "ticket_url": "https://www.sallepleyel.com/evenement/marcin/",
             "venue": "Salle Pleyel"
           },
           "first_seen": "2026-11-11T10:18:13Z",
@@ -77149,7 +77208,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -77700,7 +77759,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -82181,7 +82240,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -84908,7 +84967,7 @@
           "state_identity": "341a99a2e2e999721dcf44ade4afc6cc8f0c1000ec5092c09927595dc32b7034"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -85411,7 +85470,9 @@
             "genre_source": "Nouveau Casino",
             "genres_public": null,
             "headliner": "Antimatter + Sleeping Pulse",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Antimatter + Sleeping Pulse"
+            ],
             "image_source": "Nouveau Casino",
             "image_url": "https://nouveaucasino.fr/media/pages/events/antimatter-sleeping-pulse/d18645441d-1789664275/header_antimatter_paris-2-1800x.jpg",
             "openers": null,
@@ -85477,7 +85538,7 @@
           "state_identity": "aca808ec020beb2983b627845ed0ea2aaaf9a3b1753543879119c096416f7428"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -85712,7 +85773,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -87208,7 +87269,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -89054,7 +89115,7 @@
           "state_identity": "7c4ebb62acf570558a3053d393ae5e06fde9567c73c0bb278501adc85e242b81"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -89704,7 +89765,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -90877,7 +90938,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -90918,10 +90979,10 @@
             ],
             "raw_title": "Bloc Party + Interpol",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "19:00",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://radical-production.trium.fr/fr/t/-/event/63901",
             "venue": "Le Zénith Paris – La Villette"
           },
@@ -91835,12 +91896,12 @@
           "state_identity": "166e1538856e800efc7958682fea9bcc1290304692b2a95d387311e71e99a573"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -93643,6 +93704,59 @@
           "first_seen": "2026-09-01T13:15:20Z",
           "public_id": "8694f16b3cea31f9",
           "state_identity": "8694f16b3cea31f98d39bb21bf51075c937cc47808266e45182eb88c8a641625"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Other",
+            "genre_evidence": [
+              {
+                "raw": "Other",
+                "source": "Live Nation"
+              },
+              {
+                "raw": "Acoustique",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Marcin",
+            "identity_aliases": [
+              "MARCIN"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/p/x/r/fc5f17f9-209b-4173-a8ae-c79cd0c9ad5b.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.sallepleyel.com/evenement/marcin/",
+            "venue": "Salle Pleyel"
+          },
+          "first_seen": "2026-11-11T10:18:13Z",
+          "public_id": "788d22ad57f92325",
+          "state_identity": "788d22ad57f9232519dc23a760bb57d45ab8345cfd27e195ae03b09a4c733c8f"
         },
         {
           "event": {
@@ -95568,7 +95682,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -96195,7 +96309,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -103688,7 +103802,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -107335,7 +107449,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -107522,7 +107636,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -108712,7 +108826,7 @@
           "state_identity": "032fac231ebf9297834fdd3172a71ee49ee522092b19af870dd61c3bb6fe8a7f"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -112097,7 +112211,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -112256,19 +112370,15 @@
             "genre_public": "Pop",
             "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "Blowsom",
+            "headliner": "BLOWSOM",
             "identity_aliases": [
-              "Blowsom",
-              "Blowsom + DO not DO"
+              "BLOWSOM"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/add6e785-ed0f-47a9-bd30-ec6a92d0da87.jpg?rect=0%2C0%2C1182%2C1182",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Blowsom",
-              "DO not DO"
-            ],
+            "performers": null,
             "promoters": [
               "Zouave"
             ],
@@ -112278,7 +112388,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.laclef.asso.fr/agenda/297-BLOWSOM-DO-NOT-DO",
+            "ticket_url": "https://dice.fm/event/6a91ae7c9562bc00010ed89d",
             "venue": "La CLEF"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -112990,7 +113100,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -115623,10 +115733,10 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-11T10:18:13Z",
+      "last_successful_at": "2026-11-11T11:04:45Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-11T10:18:13Z",
+  "updated_at": "2026-11-11T11:04:45Z",
   "version": 1
 }
