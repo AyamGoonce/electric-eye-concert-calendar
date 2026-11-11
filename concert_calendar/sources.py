@@ -13,7 +13,7 @@ from concert_calendar.geography import (
     normalize_event_geography,
 )
 from concert_calendar.genres import enrich_event_genres
-from concert_calendar.event_titles import is_non_artist_event_title
+from concert_calendar.event_titles import is_non_artist_event_title, is_non_music_quiz_title
 from concert_calendar.promoters import normalize_event_promoters
 from concert_calendar.scraper_loader import discover_scrapers_with_issues
 from concert_calendar.source_retention import SourceStateError, hydrate_failed_sources
@@ -230,10 +230,7 @@ def classify_event_eligibility(event):
         normalize_text_for_matching(event.headliner),
     ):
         return False, "non_music_social_event"
-    if is_non_artist_event_title(event.headliner) and re.match(
-        r"^(?:blind[\\s-]?test|quiz\\s+(?:musical|musique)|music\\s+quiz|music\\s+trivia)\\b",
-        normalize_text_for_matching(event.headliner),
-    ):
+    if is_non_music_quiz_title(event.headliner):
         return False, "non_music_quiz_event"
     values = [event.category, *(event.tags or [])]
     normalized = {normalize_text_for_matching(value) for value in values if value}
