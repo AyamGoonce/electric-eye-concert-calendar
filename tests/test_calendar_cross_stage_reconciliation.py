@@ -127,6 +127,101 @@ class BillSemanticsIntegrationTests(unittest.TestCase):
         )
         self.assertEqual(4, len(record.performers))
 
+    def test_bal_chavaux_presenter_prefix_and_partial_source_names(self):
+        from concert_calendar.scrapers.bal_chavaux import (
+            corroborated_official_lineup, parse_detail_page,
+        )
+        from datetime import date
+        title = (
+            "Les Femmes s’en Mêlent, Persona Grata et Le Bal Chavaux présentent "
+            "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES"
+        )
+        expected = [
+            "BABY BERSERK", "NO SEX LAST NIGHT", "EXCHPOPTRUE",
+            "NEVROSES NOCTURNES",
+        ]
+        self.assertEqual(
+            expected,
+            corroborated_official_lineup(
+                title, ["Baby Berserk", "No Sex Last Night"]
+            ),
+        )
+        listing = {
+            "date": "2026-11-13", "headliner": title,
+            "start_time": "19:30", "category": "Concert",
+            "detail_url": (
+                "https://balchavaux.fr/agenda/"
+                "baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes"
+            ),
+        }
+        html = (
+            '<script type="application/ld+json">'
+            '{"@type":"Event","name":"No Sex Last Night",'
+            '"startDate":"2026-11-13T19:30:00+01:00",'
+            '"performer":[{"name":"Baby Berserk"},{"name":"No Sex Last Night"}]}'
+            "</script>"
+        )
+        parsed = parse_detail_page(html, listing, today=date(2026, 11, 11))
+        self.assertEqual("BABY BERSERK", parsed.headliner)
+        self.assertEqual(expected, parsed.performers)
+        self.assertEqual(expected[1:], parsed.co_headliners)
+        self.assertEqual(title, parsed.raw_title)
+        published = deduplicate_events([parsed])
+        self.assertEqual("Baby Berserk", published[0].headliner)
+        self.assertEqual(4, len(published[0].performers))
+
+    def test_baby_berserk_recovered_from_partial_current_source(self):
+        url = (
+            "https://balchavaux.fr/agenda/"
+            "baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes"
+        )
+        complete = (
+            "BABY BERSERK + NO SEX LAST NIGHT + "
+            "EXCHPOPTRUE + NEVROSES NOCTURNES"
+        )
+        from concert_calendar.models import ConcertEvent
+        partial = ConcertEvent(
+            date="2026-11-13", headliner="No Sex Last Night",
+            venue="Bal Chavaux", city="Montreuil", department="93",
+            ticket_url=url, source_names=["Bal Chavaux"],
+            performers=["Baby Berserk", "No Sex Last Night"],
+            event_title=complete, raw_title=complete, start_time="19:30",
+        )
+        result = deduplicate_events([partial])
+        self.assertEqual(1, len(result))
+        self.assertEqual("Baby Berserk", result[0].headliner)
+        self.assertEqual(
+            ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"],
+            result[0].co_headliners,
+        )
+        self.assertEqual(4, len(result[0].performers))
+        self.assertIsNone(result[0].event_title)
+        # Event-scoped evidence must never rewrite a different ticket.
+        other = ConcertEvent(
+            date="2026-11-13", headliner="No Sex Last Night",
+            venue="Bal Chavaux", city="Montreuil", department="93",
+            ticket_url="https://balchavaux.fr/agenda/a-different-event",
+            raw_title=complete,
+        )
+        self.assertEqual("No Sex Last Night", deduplicate_events([other])[0].headliner)
+
+    def test_actual_osees_avec_billing_converges_to_official_headliner(self):
+        records = [
+            e("Osees Avec Brigid Dawson + Dmbq", source="DICE",
+              venue="Cabaret Sauvage", when="2027-06-12"),
+            e("OSEES with Brigid Dawson", source="Cabaret Sauvage",
+              venue="Cabaret Sauvage", when="2027-06-12", time="19:30"),
+        ]
+        records[1].openers = ["DMBQ"]
+        combined = deduplicate_events(records)
+        self.assertEqual(
+            1, len(combined),
+            [(v.headliner, v.event_title, v.start_time) for v in combined],
+        )
+        self.assertEqual("Osees with Brigid Dawson", combined[0].headliner)
+        self.assertEqual(["DMBQ"], combined[0].openers)
+        self.assertEqual("19:30", combined[0].start_time)
+
     def test_nonmusic_immersive_listening_concept_excluded(self):
         from concert_calendar.event_titles import is_non_artist_event_title
         self.assertTrue(is_non_artist_event_title(
