@@ -2052,6 +2052,64 @@ def _has_consensus_performance_discriminator(event: ConcertEvent) -> bool:
     ))
 
 
+def _reconcile_unique_official_dice_clock_variants(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Collapse a unique official-venue/DICE clock discrepancy of <=30 minutes.
+
+    Distinct sets and separately ticketed performances remain independent.
+    Unlike three-source consensus, this handles a single venue listing with
+    one DICE copy where doors/show times differ slightly. More than two
+    records for the same artist/date/venue are deliberately left untouched.
+    """
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(
+            event.date,
+            normalize_artist_component(event.headliner),
+            normalize_venue_key(event.venue),
+        )].append(event)
+
+    removed = set()
+    merged = 0
+    for group in grouped.values():
+        if len(group) != 2:
+            continue
+        officials = [event for event in group if _has_official_venue_source(event)]
+        if len(officials) != 1:
+            continue
+        official = officials[0]
+        other = group[0] if group[1] is official else group[1]
+        if set(other.source_names or []) != {"DICE"}:
+            continue
+        if set(official.source_names or []) & {"DICE"}:
+            continue
+        if (
+            official.festival_name or other.festival_name
+            or _has_consensus_performance_discriminator(official)
+            or _has_consensus_performance_discriminator(other)
+            or _primary_billing_set(official) != _primary_billing_set(other)
+            or not _tour_normalization_allows_merge(official, other)
+        ):
+            continue
+        venue_time = _time_minutes(official.start_time)
+        dice_time = _time_minutes(other.start_time)
+        if (
+            venue_time is None or dice_time is None
+            or venue_time == dice_time
+            or abs(venue_time - dice_time) > 30
+        ):
+            continue
+        merge_events(official, other)
+        removed.add(id(other))
+        merged += 1
+
+    if diagnostics is not None:
+        diagnostics["unique_official_dice_clock_variants_merged"] = merged
+    return [event for event in events if id(event) not in removed]
+
+
 def _reconcile_authoritative_time_consensus(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
@@ -2792,6 +2850,10 @@ def deduplicate_events(
     display_candidates = _display_candidates(events)
     reconciled = _reconcile_transitive_time_bridges(events, diagnostics)
     reconciled = _reconcile_authoritative_time_consensus(
+        reconciled,
+        diagnostics,
+    )
+    reconciled = _reconcile_unique_official_dice_clock_variants(
         reconciled,
         diagnostics,
     )
