@@ -1,6 +1,6 @@
 (function(){
   "use strict";
-  var manifest = Object.freeze({"data":"calendar-data.227af94cd148d561.js","sha256":"227af94cd148d561da90f8483f9b1b460f7bca33f90a78e1b99335458a71acc7","count":2161,"publishedAt":"2026-11-11T18:17:02Z","state":"calendar-state.json","stateSha256":"22f40d43f6a8ebf08ab19678457b0897d025aebcdeda60622deb3c8e776fd83e","sourceState":"calendar-source-state.json","sourceStateSha256":"ba341e49555ca87e143a6136eafbad2d862624787b1d66cfdafe780cbd6bec71"});
+  var manifest = Object.freeze({"data":"calendar-data.e306030cd7fdc5f8.js","sha256":"e306030cd7fdc5f8863f6f86aae4823ca4994c0cdcad4cb5953cf25101e8fb1b","count":2158,"publishedAt":"2026-11-11T18:41:56Z","state":"calendar-state.json","stateSha256":"eff81d60d6617edc06ef9f929d737bc7fa5cadd829af2a2313d2014d62e69677","sourceState":"calendar-source-state.json","sourceStateSha256":"0b32db2b37602f24d1ca44c9d274b0b1f1f549fe4a6c544384a6cadf3729c8f9"});
   var currentSource = document.currentScript && document.currentScript.src;
   window.ElectricEyeConcertManifest = manifest;
   document.dispatchEvent(new CustomEvent("ee:concert-manifest-ready", {detail:manifest}));
