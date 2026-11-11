@@ -167,22 +167,25 @@ def _split_spaced_plus(value: str) -> list[str]:
 def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> list[str]:
     """Split only if every complete component is an existing artist identity.
 
-    Spaced '&', 'et' and dash are comparison candidates, never independent
-    evidence. The entire name is protected first (e.g. Simon & Garfunkel).
+    Prioritize the spaced '+' billing separator; names may themselves
+    contain ampersands, dashes or 'et'. Never recursively split a component.
     """
     title = _clean(value)
     if not title or _key(title) in identities:
         return []
-    parts = [
-        _clean(part) for part in re.split(r"\s+(?:\+|&|et|[–—-])\s+", title, flags=re.I)
-    ]
-    if not _valid_parts(parts):
-        return []
-    if len({_key(part) for part in parts}) != len(parts):
-        return []
-    return [identities[_key(part)] for part in parts] if all(
-        _key(part) in identities for part in parts
-    ) else []
+
+    for pattern in (r"\s+\+\s+", r"\s+&\s+", r"\s+et\s+", r"\s+[–—-]\s+"):
+        parts = [_clean(part) for part in re.split(pattern, title, flags=re.I)]
+        if len(parts) < 2:
+            continue
+        # A more strongly delimited complete bill contains project names
+        # such as "Earth, Wind & Fire"; do not reinterpret their internals.
+        if not _valid_parts(parts) or len({_key(part) for part in parts}) != len(parts):
+            return []
+        return [identities[_key(part)] for part in parts] if all(
+            _key(part) in identities for part in parts
+        ) else []
+    return []
 
 
 def _valid_parts(parts: list[str]) -> bool:
