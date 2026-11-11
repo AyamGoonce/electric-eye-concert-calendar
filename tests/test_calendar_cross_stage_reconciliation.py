@@ -205,6 +205,89 @@ class BillSemanticsIntegrationTests(unittest.TestCase):
         )
         self.assertEqual("No Sex Last Night", deduplicate_events([other])[0].headliner)
 
+    def test_published_baby_berserk_row_is_corrected_at_final_boundary(self):
+        """Use the November 11 live renderer's values, not idealized JSON-LD."""
+        from concert_calendar.production_export import event_to_data
+        url = (
+            "https://balchavaux.fr/agenda/"
+            "baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes"
+        )
+        title = (
+            "BABY BERSERK + NO SEX LAST NIGHT + "
+            "EXCHPOPTRUE + NEVROSES NOCTURNES"
+        )
+        original = ConcertEvent(
+            date="2026-11-13", headliner="No Sex Last Night",
+            venue="Bal Chavaux", city="Paris", department="75",
+            ticket_url=url, event_title=title, raw_title="No Sex Last Night",
+            source_names=["Bal Chavaux"], start_time="19:30",
+            performers=["Baby Berserk", "No Sex Last Night"],
+        )
+        result = deduplicate_events([original])
+        self.assertEqual(1, len(result))
+        public = event_to_data(result[0])
+        self.assertEqual("Baby Berserk", public["h"])
+        self.assertEqual(
+            ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"],
+            public["ch"],
+        )
+        self.assertNotIn("et", public)
+        self.assertEqual(4, len(result[0].performers))
+        self.assertNotIn("Baby Berserk", result[0].co_headliners or [])
+        another = ConcertEvent(
+            date="2026-11-13", headliner="No Sex Last Night",
+            venue="Bal Chavaux", city="Paris", department="75",
+            ticket_url="https://balchavaux.fr/agenda/unrelated-show",
+            event_title=title, raw_title=title,
+        )
+        self.assertEqual(
+            "No Sex Last Night", deduplicate_events([another])[0].headliner
+        )
+
+    def test_actual_published_john_bush_two_sources_collapse(self):
+        """Match the final published August 20 record pair, including URLs."""
+        from concert_calendar.production_export import event_to_data
+        venue = ConcertEvent(
+            date="2027-08-20", headliner="John Bush",
+            venue="Bal Chavaux", city="Paris", department="75",
+            ticket_url="https://balchavaux.fr/agenda/john-bush",
+            source_names=["Bal Chavaux"], start_time="19:00",
+        )
+        dice = ConcertEvent(
+            date="2027-08-20",
+            headliner="John Bush “Celebrating The Songs Of Anthrax 1993-2003”",
+            venue="Bal Chavaux", city="Paris", department="75",
+            ticket_url="https://dice.fm/event/6ad8c5103691bc0001d7a2b8",
+            source_names=["DICE"], start_time="19:00",
+        )
+        output = deduplicate_events([dice, venue])
+        self.assertEqual(1, len(output))
+        public = event_to_data(output[0])
+        self.assertEqual("John Bush", public["h"])
+        self.assertEqual("19:00", public["st"])
+        self.assertEqual("https://balchavaux.fr/agenda/john-bush", public["t"])
+        self.assertIn("Celebrating The Songs Of Anthrax", public.get("et", ""))
+        self.assertEqual(
+            {"DICE", "Bal Chavaux"}, set(output[0].source_names or [])
+        )
+
+    def test_john_bush_other_performance_and_wrong_ticket_remain_distinct(self):
+        venue = e(
+            "John Bush", source="Bal Chavaux", venue="Bal Chavaux",
+            when="2027-08-20", time="19:00",
+        )
+        venue.ticket_url = "https://balchavaux.fr/agenda/john-bush"
+        other = e(
+            "John Bush “Celebrating The Songs Of Anthrax 1993-2003”",
+            source="DICE", venue="Bal Chavaux",
+            when="2027-08-20", time="22:30",
+        )
+        other.ticket_url = "https://dice.fm/event/6ad8c5103691bc0001d7a2b8"
+        self.assertEqual(2, len(deduplicate_events([venue, other])))
+        other.start_time = "19:00"
+        other.ticket_url = "https://dice.fm/event/different-ticket"
+        self.assertEqual(2, len(deduplicate_events([venue, other])))
+
     def test_actual_osees_avec_billing_converges_to_official_headliner(self):
         records = [
             e("Osees Avec Brigid Dawson + Dmbq", source="DICE",
