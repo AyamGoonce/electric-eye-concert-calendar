@@ -226,7 +226,7 @@ def classify_event_eligibility(event):
     if is_placeholder_title(event.headliner):
         return False, "placeholder_title"
     if is_non_artist_event_title(event.headliner) and re.search(
-        r"\\bspeed[\\s-]?dating\\b",
+        r"\bspeed[\s-]?dating\b",
         normalize_text_for_matching(event.headliner),
     ):
         return False, "non_music_social_event"
