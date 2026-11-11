@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - fix/post-normalization-eligibility-20261111
   workflow_dispatch:
 
 permissions:
