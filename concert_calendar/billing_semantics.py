@@ -153,7 +153,7 @@ def explicit_title_role_context(event: ConcertEvent) -> bool:
     venue = _clean(event.venue)
     match = re.fullmatch(r"(?P<artist>.+?)\s+[àa]\s+(?P<location>.+)", title, re.I)
     if match and venue:
-        from concert_calendar.venue_names import normalize_venue_key
+        from concert_calendar.venues import normalize_venue_key
         # Venue keys accept official aliases, not merely substring matches.
         if normalize_venue_key(match.group("location")) == normalize_venue_key(venue):
             artist = _clean(match.group("artist"))
