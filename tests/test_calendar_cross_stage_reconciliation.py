@@ -85,6 +85,48 @@ class BillSemanticsIntegrationTests(unittest.TestCase):
             {"performer": {"name": "Baby Berserk + No Sex Last Night"}},
         ))
 
+    def test_bal_chavaux_full_official_lineup_overrides_partial_jsonld(self):
+        from concert_calendar.scrapers.bal_chavaux import (
+            corroborated_official_lineup, parse_detail_page,
+        )
+        complete = (
+            "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES"
+        )
+        partial = ["Baby Berserk", "No Sex Last Night"]
+        self.assertEqual(
+            ["BABY BERSERK", "NO SEX LAST NIGHT", "EXCHPOPTRUE",
+             "NEVROSES NOCTURNES"],
+            corroborated_official_lineup(complete, partial),
+        )
+        # No splitting from an unsupported opaque artist title.
+        self.assertEqual(
+            ["Singer", "Band"], corroborated_official_lineup(
+                "Florence + The Machine + Other", ["Singer", "Band"]
+            ),
+        )
+        listing = {
+            "date": "2026-11-13",
+            "headliner": complete,
+            "start_time": "19:30",
+            "category": "Concert",
+            "detail_url": "https://balchavaux.fr/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes",
+        }
+        html = (
+            '<script type="application/ld+json">'
+            '{"@type":"Event","name":"No Sex Last Night",'
+            '"startDate":"2026-11-13T19:30:00+01:00",'
+            '"performer":[{"name":"Baby Berserk"},{"name":"No Sex Last Night"}]}'
+            "</script>"
+        )
+        from datetime import date
+        record = parse_detail_page(html, listing, today=date(2026, 11, 11))
+        self.assertEqual("BABY BERSERK", record.headliner)
+        self.assertEqual(
+            ["NO SEX LAST NIGHT", "EXCHPOPTRUE", "NEVROSES NOCTURNES"],
+            record.co_headliners,
+        )
+        self.assertEqual(4, len(record.performers))
+
     def test_nonmusic_immersive_listening_concept_excluded(self):
         from concert_calendar.event_titles import is_non_artist_event_title
         self.assertTrue(is_non_artist_event_title(
