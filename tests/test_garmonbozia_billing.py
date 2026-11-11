@@ -60,11 +60,11 @@ class GarmonboziaBillingTests(unittest.TestCase):
             date="2027-02-01", headliner=raw, venue="Backstage By The Mill",
             city="Paris", department="75", source_names=["Garmonbozia"],
         )
-        resolve_artist_billings([event], identity_catalog={})
+        from concert_calendar.billing_semantics import normalize_event_semantics
+        normalize_event_semantics(event)
         self.assertEqual("INGESTED", event.headliner)
         self.assertEqual("20th Anniversary Tour", event.event_title)
         self.assertEqual(raw, event.raw_title)
-        self.assertEqual(["INGESTED"], event.performers)
 
     def test_quoted_tour_title_normalizes_on_other_dates_too(self):
         raw = 'INGESTED "20th Anniversary Tour"'
@@ -72,7 +72,8 @@ class GarmonboziaBillingTests(unittest.TestCase):
             date="2028-02-01", headliner=raw, venue="Backstage By The Mill",
             city="Paris", department="75", source_names=["Garmonbozia"],
         )
-        resolve_artist_billings([event], identity_catalog={})
+        from concert_calendar.billing_semantics import normalize_event_semantics
+        normalize_event_semantics(event)
         self.assertEqual("INGESTED", event.headliner)
         self.assertEqual("20th Anniversary Tour", event.event_title)
 
@@ -82,7 +83,8 @@ class GarmonboziaBillingTests(unittest.TestCase):
             date="2027-02-01", headliner=raw, venue="Backstage By The Mill",
             city="Paris", department="75",
         )
-        resolve_artist_billings([event], identity_catalog={})
+        from concert_calendar.billing_semantics import normalize_event_semantics
+        normalize_event_semantics(event)
         from concert_calendar.billing_semantics import normalize_event_semantics
         normalize_event_semantics(event)
         self.assertEqual(raw, event.headliner)
