@@ -236,10 +236,10 @@ def normalize_event_semantics(event):
 MUSIC_CREDIT_RE = re.compile(
     r"^(?:piano|chant|voix|vocals?|guitare|guitar|basse|bass|"
     r"batterie|drums?|violon|violin|saxophone|trompette|trumpet)"
-    r"\\s*[:–—-]?\\s+"
-    r"(?P<name>[A-ZÀ-ÖØ-Ý][\\wÀ-ÖØ-öø-ÿ'’.-]+"
-    r"(?:\\s+[A-ZÀ-ÖØ-Ý][\\wÀ-ÖØ-öø-ÿ'’.-]+){1,4})"
-    r"\\s*$",
+    r"\s*[:–—-]?\s+"
+    r"(?P<name>[A-ZÀ-ÖØ-Ý][\wÀ-ÖØ-öø-ÿ'’.-]+"
+    r"(?:\s+[A-ZÀ-ÖØ-Ý][\wÀ-ÖØ-öø-ÿ'’.-]+){1,4})"
+    r"\s*$",
     re.IGNORECASE,
 )
 
