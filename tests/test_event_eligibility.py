@@ -74,6 +74,23 @@ class EventEligibilityTests(unittest.TestCase):
                     (False, reason), classify_event_eligibility(record),
                 )
 
+    def test_reviewed_comedy_show_not_published_as_pop_rock(self):
+        comedian = ConcertEvent(
+            "2027-01-17", "Pierluca Mariti",
+            "Café de la Danse", "Paris", "75",
+            raw_title="Pierluca Mariti a Parigi con 'Abbi Pazienza'",
+            category="Pop / Rock", performers=["Pierluca Mariti"],
+        )
+        self.assertEqual(
+            (False, "non_music_comedy"),
+            classify_event_eligibility(comedian),
+        )
+        other_date = ConcertEvent(
+            "2027-01-18", "Pierluca Mariti",
+            "Café de la Danse", "Paris", "75",
+        )
+        self.assertTrue(classify_event_eligibility(other_date)[0])
+
     def test_legitimate_concerts_remain_eligible_with_activity_words(self):
         for original in (
             "Pink Floyd Tribute Live",
