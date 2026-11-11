@@ -13,7 +13,7 @@ def is_non_music_quiz_title(value):
     normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
     normalized = " ".join(normalized.casefold().split())
     return bool(re.match(
-        r"^(?:blind[\\s-]?test|quiz\\s+(?:musical|musique)|music\\s+quiz|music\\s+trivia)(?:\\b|$)",
+        r"^(?:blind[\s-]?test|quiz\s+(?:musical|musique)|music\s+quiz|music\s+trivia)(?:\b|$)",
         normalized,
     ))
 
