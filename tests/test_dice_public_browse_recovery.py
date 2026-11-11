@@ -123,6 +123,54 @@ class DicePublicBrowseRecoveryTests(unittest.TestCase):
         )
         self.assertEqual(3, session.return_value.post.call_count)
 
+    def test_dice_empty_api_page_can_have_later_cursor_events(self):
+        first = raw_event("After Empty", event_id="after")
+        pages = [
+            {"sections": [], "next_page_cursor": "next"},
+            {"sections": [{"events": [first]}], "next_page_cursor": None},
+        ]
+        with patch.object(dice.requests, "Session") as session:
+            session.return_value.post.side_effect = [
+                Mock(json=Mock(return_value=page), raise_for_status=Mock())
+                for page in pages
+            ]
+            events = dice._load_api_events()
+        self.assertEqual(["After Empty"], [event.headliner for event in events])
+
+    def test_dice_repeated_cursor_rejects_false_complete_inventory(self):
+        first = raw_event("First", event_id="one")
+        page = {
+            "sections": [{"events": [first]}], "next_page_cursor": "same",
+        }
+        with patch.object(dice.requests, "Session") as session:
+            session.return_value.post.return_value = Mock(
+                json=Mock(return_value=page), raise_for_status=Mock(),
+            )
+            with self.assertRaisesRegex(
+                requests.RequestException, "cursor repeated"
+            ):
+                dice._load_api_events()
+        self.assertEqual(2, session.return_value.post.call_count)
+
+    def test_dice_page_limit_rejects_false_complete_inventory(self):
+        first = raw_event("First", event_id="one")
+        pages = [
+            {"sections": [{"events": [first]}], "next_page_cursor": "next-1"},
+            {"sections": [{"events": [first]}], "next_page_cursor": "next-2"},
+        ]
+        with (
+            patch.object(dice.requests, "Session") as session,
+            patch.object(dice, "MAX_PAGES", 2),
+        ):
+            session.return_value.post.side_effect = [
+                Mock(json=Mock(return_value=page), raise_for_status=Mock())
+                for page in pages
+            ]
+            with self.assertRaisesRegex(
+                requests.RequestException, "exceeded 2 pages"
+            ):
+                dice._load_api_events()
+
     def test_dice_same_day_distinct_performances_survive_source_dedup(self):
         same = raw_event("Two Show Artist", event_id="first")
         later = raw_event(
