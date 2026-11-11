@@ -26,6 +26,36 @@ class CurrentOfficialArtistEvidenceTests(unittest.TestCase):
         self.assertEqual(["Solitaris", "TRVMA"], combined.co_headliners)
         self.assertEqual(["REVNOIR", "Solitaris", "TRVMA"], combined.performers)
 
+    def test_ampersand_and_et_require_independent_exact_artist_names(self):
+        first = event("Nosaj Thing & Daito Manabe", "DICE", "2027-02-10")
+        second = event("Nosaj Thing et Daito Manabe", "DICE", "2027-02-11")
+        solo = [
+            event("Nosaj Thing", "File7", "2027-01-01"),
+            event("Daito Manabe", "File7", "2027-01-02"),
+        ]
+        resolve_artist_billings([first, second, *solo], identity_catalog={})
+        for combined in (first, second):
+            self.assertEqual("Nosaj Thing", combined.headliner)
+            self.assertEqual(["Daito Manabe"], combined.co_headliners)
+
+    def test_dash_separated_three_artist_bill_only_with_verified_identities(self):
+        combined = event("Sameer Ahmad - Nakk Mendosa - Toma!", "DICE", "2027-02-10")
+        solo = [
+            event("Sameer Ahmad", "File7", "2027-01-01"),
+            event("Nakk Mendosa", "File7", "2027-01-02"),
+            event("Toma!", "File7", "2027-01-03"),
+        ]
+        resolve_artist_billings([combined, *solo], identity_catalog={})
+        self.assertEqual("Sameer Ahmad", combined.headliner)
+        self.assertEqual(["Nakk Mendosa", "Toma!"], combined.co_headliners)
+
+    def test_opaque_ampersand_and_dashes_without_evidence_are_unchanged(self):
+        for title in ("Simon & Garfunkel", "Nosaj Thing et Daito Manabe",
+                      "Sameer Ahmad - Nakk Mendosa - Toma!"):
+            combined = event(title, "DICE", "2027-02-10")
+            resolve_artist_billings([combined], identity_catalog={})
+            self.assertEqual(title, combined.headliner)
+
     def test_dice_only_single_artist_listings_are_not_standalone_confirmation(self):
         combined = event("REVNOIR + Solitaris", "DICE", "2027-02-10")
         records = [
