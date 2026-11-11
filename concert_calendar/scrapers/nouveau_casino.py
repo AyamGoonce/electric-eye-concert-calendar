@@ -31,8 +31,10 @@ def parse_items(soup, *, today=None):
                 lines = [clean(BeautifulSoup(part, "html.parser").get_text(" ", strip=True))
                          for part in re.split(r"<br\s*/?>", title_node.decode_contents(), flags=re.I)]
                 performers = [line for line in lines if line] or None
-            sold=bool(re.search(r"\[(?:sold out|complet)\]",title,re.I))
-            title=clean(re.sub(r"\s*\[(?:sold out|complet)\]\s*","",title,flags=re.I))
+            sold=bool(re.search(r"\\[(?:sold out|complet)\\]",title,re.I))
+            postponed=bool(re.search(r"\\[(?:reporté|reportée|reporte|reportee|postponed)\\]",title,re.I))
+            cancelled=bool(re.search(r"\\[(?:annulé|annulée|annule|annulee|cancelled|canceled)\\]",title,re.I))
+            title=clean(re.sub(r"\\s*\\[(?:sold out|complet|reporté|reportée|reporte|reportee|postponed|annulé|annulée|annule|annulee|cancelled|canceled)\\]\\s*"," ",title,flags=re.I))
             if not title or event_date < cutoff: continue
             if is_non_artist_event_title(title): continue
             start=card.select_one(".event_header p span:not(.timeend)")
@@ -43,7 +45,7 @@ def parse_items(soup, *, today=None):
                 city="Paris",department="75",genre=", ".join(genres) or None,
                 raw_title=title, performers=performers,
                 ticket_url=ticket.get("href") if ticket else PROGRAMME_URL,
-                ticket_status="sold_out" if sold else "tickets",sold_out=sold,
+                ticket_status="cancelled" if cancelled else "postponed" if postponed else "sold_out" if sold else "tickets",sold_out=sold and not (postponed or cancelled),
                 start_time=clean(start.get_text()) if start else None,image_url=image,
                 image_source=SOURCE_NAME if image else None))
     return result
