@@ -119,6 +119,16 @@ REVIEWED_EVENT_TITLES = {
     # Deliberately event-scoped: numbers remain valid parts of artist names.
     # Reviewed single-concert title variations, corroborated against venue
     # or promoter programmes. Scope every alias to its date and venue.
+    # Individually corroborated physical shows; unlike global artist aliases,
+    # these cannot collapse unrelated tour dates or future performances.
+    ("2027-02-22", "l alhambra", "yendry"): "YENDRY",
+    ("2027-02-22", "l alhambra", "yeиdry"): "YENDRY",
+    ("2027-01-24", "le grand rex", "metaphor: re fantazio"): "Metaphor: ReFantazio Orchestra Concert",
+    ("2027-01-24", "le grand rex", "metaphor: refantazio orchestra concert"): "Metaphor: ReFantazio Orchestra Concert",
+    ("2027-08-20", "bal chavaux", "john bush"): "John Bush",
+    ("2027-08-20", "bal chavaux", "john bush “celebrating the songs of anthrax 1993-2003"): "John Bush",
+    ("2027-01-17", "bal chavaux", "afterhours"): "Afterhours",
+    ("2027-01-17", "bal chavaux", "afterhours tour 2027 - quello che non c'è"): "Afterhours",
     ("2027-02-05", "la machine du moulin rouge", "lewis ofman"): "Lewis Ofman",
     ("2027-02-05", "la machine du moulin rouge", "lewis ofman tour"): "Lewis Ofman",
     ("2027-03-06", "bal chavaux", "daniele silvestri"): "Daniele Silvestri",
@@ -580,6 +590,19 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
                     == original_identity
                 ):
                     event.performers = [reviewed_title]
+
+        # DICE lists the doors for the same Afterhours show at 19:00;
+        # Bal Chavaux's current programme explicitly specifies 19:30.
+        # Reconcile this reviewed single source clock, not other artists'
+        # sets or the venue's timetable generally.
+        if (
+            event.date[:10] == "2027-01-17"
+            and normalize_venue_key(event.venue) == "bal chavaux"
+            and normalize_artist_component(event.headliner) == "afterhours"
+            and set(event.source_names or []) == {"DICE"}
+            and event.start_time == "19:00"
+        ):
+            event.start_time = "19:30"
 
         move_artist = normalize_artist_component(event.headliner)
         for date, artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
