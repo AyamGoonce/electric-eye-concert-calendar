@@ -338,6 +338,26 @@ def resolve_artist_billings(
         structured = _stable_unique(event.performers or [])
         structured_is_flat = len(structured) == 1 and _key(structured[0]) == identity
 
+        # Explicitly verified programme bills may correct a ticketing source
+        # whose artist array contains a series name or is incomplete.
+        # Scope these exceptions by the physical event, never title alone.
+        scoped_review = billings.get(identity)
+        if scoped_review and scoped_review.get("eventDate"):
+            if (
+                event.date[:10] == scoped_review["eventDate"]
+                and _key(event.venue) == _key(scoped_review.get("venue"))
+            ):
+                scoped_artists = _stable_unique(scoped_review.get("artists") or [])
+                if len(scoped_artists) >= 2:
+                    _set_resolution(
+                        event, scoped_artists, method="reviewed_event",
+                        confidence=100,
+                        evidence=[scoped_review.get("evidence") or "verified current-event lineup"],
+                        description=_clean(scoped_review.get("eventTitle")) or None,
+                    )
+                    _record(audit, event)
+                    continue
+
         if len(structured) >= 2:
             event._billing_resolution = {
                 "original": event.raw_title or original,
@@ -351,6 +371,9 @@ def resolve_artist_billings(
 
         description_review = descriptions.get(identity)
         billing_review = billings.get(identity)
+        if billing_review and billing_review.get("eventDate"):
+            # A scoped lineup is not a reusable project identity.
+            billing_review = None
         canonical_name = canonical.get(identity)
         if description_review:
             artist = _clean(description_review.get("artist"))
