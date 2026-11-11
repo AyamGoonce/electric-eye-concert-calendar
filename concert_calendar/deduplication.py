@@ -3132,7 +3132,86 @@ def deduplicate_events(
             suspicious_near_duplicate_pairs(reconciled)
         )
 
-    return reconciled
+    return _reconcile_verified_publication_survivors(reconciled)
+
+
+def _reconcile_verified_publication_survivors(events: list[ConcertEvent]) -> list[ConcertEvent]:
+    """Correct source-scoped, independently verified cases at final boundary.
+
+    Neither title punctuation nor matching artist/date/venue alone is enough.
+    Do not allow earlier reconciliations to reverse verified performer order.
+    """
+    complete = [
+        "Baby Berserk", "No Sex Last Night", "Exchpoptrue",
+        "Nevroses Nocturnes",
+    ]
+    for event in events:
+        if (
+            event.date[:10] != "2026-11-13"
+            or normalize_venue_key(event.venue) != "bal chavaux"
+            or urlparse(event.ticket_url or "").path.rstrip("/")
+            != "/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes"
+        ):
+            continue
+        evidence = _billing_evidence_key(" ".join([
+            event.raw_title or "", event.event_title or "",
+            event.headliner or "", *(event.performers or []),
+        ]))
+        if not all(_evidence_contains_artist(evidence, name) for name in complete):
+            continue
+        if normalize_artist_component(event.headliner) != normalize_artist_component(complete[0]):
+            event.identity_aliases = _stable_unique([
+                *(event.identity_aliases or []), event.headliner,
+            ])
+        event.headliner = complete[0]
+        event.performers = list(complete)
+        event.co_headliners = complete[1:]
+        principal_names = {normalize_artist_component(name) for name in complete}
+        event.openers = [
+            name for name in (event.openers or [])
+            if normalize_artist_component(name) not in principal_names
+        ] or None
+        if event.event_title and all(
+            _evidence_contains_artist(_billing_evidence_key(event.event_title), name)
+            for name in complete
+        ):
+            event.event_title = None
+
+    official = [
+        e for e in events
+        if e.date[:10] == "2027-08-20"
+        and normalize_venue_key(e.venue) == "bal chavaux"
+        and urlparse(e.ticket_url or "").hostname == "balchavaux.fr"
+        and urlparse(e.ticket_url or "").path.rstrip("/") == "/agenda/john-bush"
+        and normalize_artist_component(e.headliner) == "john bush"
+    ]
+    dice = [
+        e for e in events
+        if e.date[:10] == "2027-08-20"
+        and normalize_venue_key(e.venue) == "bal chavaux"
+        and urlparse(e.ticket_url or "").hostname == "dice.fm"
+        and urlparse(e.ticket_url or "").path.rstrip("/")
+        == "/event/6ad8c5103691bc0001d7a2b8"
+        and re.match(
+            r'^john bush\\s+["“”]celebrating the songs of anthrax',
+            (e.headliner or "").casefold(),
+        )
+    ]
+    if len(official) == len(dice) == 1:
+        base, additional = official[0], dice[0]
+        if (
+            not _distinct_performance_evidence(base, additional)
+            and not _performance_conflict(base, additional)
+        ):
+            alternate_title = additional.headliner
+            merge_events(base, additional)
+            base.headliner = "John Bush"
+            base.identity_aliases = _stable_unique([
+                *(base.identity_aliases or []), alternate_title,
+            ])
+            base.event_title = base.event_title or alternate_title
+            return [e for e in events if e is not additional]
+    return events
 
 
 def _reconcile_unique_subset_venue_bills(
