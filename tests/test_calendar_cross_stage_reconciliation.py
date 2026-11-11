@@ -123,6 +123,43 @@ class SourceReconciliationTests(unittest.TestCase):
         out = deduplicate_events(events)
         self.assertEqual(1, len(out))
 
+    def test_official_lineup_wins_one_conflicting_support_name(self):
+        official = e(
+            "Darvaza + Merrimack + Helleruin + Detresse",
+            source="Backstage By The Mill", venue="Backstage By The Mill",
+            when="2026-12-10",
+        )
+        old_tour = e(
+            "Darvaza + Merrimack + Wrang + Detresse",
+            source="Garmonbozia", venue="Backstage By The Mill",
+            when="2026-12-10",
+        )
+        merged = deduplicate_events([official, old_tour])
+        self.assertEqual(1, len(merged))
+        self.assertEqual("Darvaza", merged[0].headliner)
+        self.assertEqual(
+            ["Merrimack", "Helleruin", "Detresse"],
+            merged[0].co_headliners,
+        )
+        self.assertNotIn("Wrang", merged[0].performers)
+
+    def test_competing_structured_lineups_require_review(self):
+        official = e(
+            "Darvaza + Merrimack + Helleruin + Detresse",
+            source="Backstage By The Mill", venue="Backstage By The Mill",
+            when="2026-12-10",
+            performers=["Darvaza", "Merrimack", "Helleruin", "Detresse"],
+        )
+        conflicting = e(
+            "Darvaza + Merrimack + Wrang + Detresse",
+            source="Garmonbozia", venue="Backstage By The Mill",
+            when="2026-12-10",
+            performers=["Darvaza", "Merrimack", "Wrang", "Detresse"],
+        )
+        # Do not discard independently structured conflicting artist evidence.
+        merged = deduplicate_events([official, conflicting])
+        self.assertEqual(2, len(merged))
+
     def test_cross_source_plural_with_support_is_one_concert(self):
         events = [
             e("Westside Cowboys", source="Petit Bain", venue="Petit Bain"),

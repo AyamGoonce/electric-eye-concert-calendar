@@ -33,8 +33,15 @@ class SubsetVenueBillTests(unittest.TestCase):
         audit = {}
         results = deduplicate_events(events, diagnostics=audit)
         self.assertEqual(1, len(results))
-        self.assertEqual(VENUE_BILL, results[0].headliner)
-        self.assertFalse(results[0].co_headliners)
+        self.assertEqual("Baby Berserk", results[0].headliner)
+        self.assertEqual(
+            ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"],
+            results[0].co_headliners,
+        )
+        self.assertEqual(
+            ["Baby Berserk", "No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"],
+            results[0].performers,
+        )
         self.assertEqual("19:30", results[0].start_time)
         self.assertEqual(["Bal Chavaux", "DICE"], results[0].source_names)
         self.assertEqual(1, audit["unique_subset_venue_bills_merged"])

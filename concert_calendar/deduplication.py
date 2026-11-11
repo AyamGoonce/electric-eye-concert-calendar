@@ -2997,11 +2997,12 @@ def deduplicate_events(
 def _reconcile_unique_subset_venue_bills(
     events: list[ConcertEvent], diagnostics: dict | None = None,
 ) -> list[ConcertEvent]:
-    """Corroborate opaque, partially overlapping bills without splitting artists.
+    """Resolve overlapping venue/DICE lineups with independent corroboration.
 
     Only one venue listing and one DICE record for an identical dated, timed
-    performance qualify. Explicit spaced-plus sections are comparison tokens,
-    not inferred artist identities. A richer authoritative venue bill wins.
+    performance qualify. Three or more overlapping, complete artist names
+    support the official venue's individual artist billing; no general split
+    of one source's punctuation is permitted.
     """
     grouped = defaultdict(list)
     for event in events:
@@ -3050,14 +3051,26 @@ def _reconcile_unique_subset_venue_bills(
         ):
             continue
 
-        # Retain the official full title (including any additional billed
-        # performers) and its ticketing/visual provenance.
+        # The independent DICE bill confirms three of the four artist
+        # sections. Prefer the fuller official venue bill, retaining the
+        # original complete title as a searchable alias and stable state cue.
+        venue_title = official.headliner
+        venue_artist_names = [
+            name.strip() for name in re.split(r"\s+\+\s+", venue_title)
+        ]
         merge_events(official, other)
+        official.raw_title = official.raw_title or venue_title
+        official.identity_aliases = _stable_unique([
+            *(official.identity_aliases or []), venue_title,
+        ])
+        official.headliner = venue_artist_names[0]
+        official.co_headliners = venue_artist_names[1:]
+        official.performers = venue_artist_names
+        if _normalized_billing_component(official.event_title or "") == (
+            _normalized_billing_component(venue_title)
+        ):
+            official.event_title = None
         full_bill_names = set(venue_parts)
-        official.co_headliners = [
-            artist for artist in (official.co_headliners or [])
-            if _normalized_billing_component(artist) not in full_bill_names
-        ] or None
         official.openers = [
             artist for artist in (official.openers or [])
             if _normalized_billing_component(artist) not in full_bill_names
@@ -3109,6 +3122,36 @@ def _reconcile_unique_cross_source_name_variants(
             return False
         return venue_key == source_key + "s" or source_key == venue_key + "s"
 
+    def authoritative_shared_lineup(official, external):
+        """Use the official bill when two sources agree on all but one act."""
+        if (
+            official.openers or external.openers
+            or len(official.performers or []) >= 2
+            or len(external.performers or []) >= 2
+        ):
+            return []
+        artist_names = [
+            name.strip() for name in re.split(r"\s+\+\s+", official.headliner)
+        ]
+        other_names = [
+            name.strip() for name in re.split(r"\s+\+\s+", external.headliner)
+        ]
+        if not (4 <= len(artist_names) <= 8 and len(other_names) == len(artist_names)):
+            return []
+        known = [_normalized_billing_component(name) for name in artist_names]
+        external_keys = [
+            _normalized_billing_component(name) for name in other_names
+        ]
+        if (
+            not all(known + external_keys)
+            or len(set(known)) != len(known)
+            or len(set(external_keys)) != len(external_keys)
+            or known[0] != external_keys[0]
+            or len(set(known) & set(external_keys)) != len(known) - 1
+        ):
+            return []
+        return artist_names
+
     for group in grouped.values():
         if len(group) != 2:
             continue
@@ -3148,10 +3191,24 @@ def _reconcile_unique_cross_source_name_variants(
             set(other.source_names or []) == {"DICE"}
             and singular_headliner_match(official.headliner, other.headliner)
         )
-        if not (same_connectors or one_support_variant):
+        verified_lineup = authoritative_shared_lineup(official, other)
+        if not (same_connectors or one_support_variant or verified_lineup):
             continue
 
+        original_venue_title = official.headliner
         merge_events(official, other)
+        if verified_lineup:
+            official.raw_title = official.raw_title or original_venue_title
+            official.identity_aliases = _stable_unique([
+                *(official.identity_aliases or []), original_venue_title,
+            ])
+            official.headliner = verified_lineup[0]
+            official.co_headliners = verified_lineup[1:]
+            official.performers = verified_lineup
+            if _normalized_billing_component(official.event_title or "") == (
+                _normalized_billing_component(original_venue_title)
+            ):
+                official.event_title = None
         _remove_billed_artists_from_support(official)
         removed.add(id(other))
         merged_count += 1
