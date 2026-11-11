@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - fix/published-baby-berserk-john-bush-20261111
   workflow_dispatch:
 
 permissions:
