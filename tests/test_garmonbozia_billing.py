@@ -54,6 +54,27 @@ class GarmonboziaBillingTests(unittest.TestCase):
         self.assertEqual(["Evil Invaders", "Exhorder", "Heathen"], event.performers)
 
 
+    def test_ingested_tour_label_is_not_artist_identity(self):
+        raw = 'INGESTED "20th Anniversary Tour"'
+        event = ConcertEvent(
+            date="2027-02-01", headliner=raw, venue="Backstage By The Mill",
+            city="Paris", department="75", source_names=["Garmonbozia"],
+        )
+        resolve_artist_billings([event], identity_catalog={})
+        self.assertEqual("INGESTED", event.headliner)
+        self.assertEqual("20th Anniversary Tour", event.event_title)
+        self.assertEqual(raw, event.raw_title)
+        self.assertEqual(["INGESTED"], event.performers)
+
+    def test_ingested_scoped_title_does_not_rewrite_unrelated_date(self):
+        raw = 'INGESTED "20th Anniversary Tour"'
+        event = ConcertEvent(
+            date="2028-02-01", headliner=raw, venue="Backstage By The Mill",
+            city="Paris", department="75", source_names=["Garmonbozia"],
+        )
+        resolve_artist_billings([event], identity_catalog={})
+        self.assertEqual(raw, event.headliner)
+
     def test_plus_inside_single_artist_name_is_not_split(self):
         result = parse_structured_billing(
             "FLORENCE + THE MACHINE",
