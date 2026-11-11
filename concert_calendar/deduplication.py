@@ -132,6 +132,8 @@ REVIEWED_EVENT_TITLES = {
     ("2027-06-15", "cafe de la danse", "dirty projectors (solo)"): "Dirty Projectors (solo)",
     ("2027-06-12", "cabaret sauvage", "osees with brigid dawson"): "Osees with Brigid Dawson",
     ("2027-06-12", "cabaret sauvage", "osees with brigid dawson + dmbq"): "Osees with Brigid Dawson",
+    ("2027-06-12", "cabaret sauvage", "osees avec brigid dawson + dmbq"): "Osees with Brigid Dawson",
+    ("2027-06-12", "cabaret sauvage", "osees avec brigid dawson"): "Osees with Brigid Dawson",
     ("2026-09-10", "stade de france", "jay-z"): "JAŸ-Z",
     ("2026-09-10", "stade de france", "jay-z 30"): "JAŸ-Z",
     (
@@ -245,6 +247,20 @@ REVIEWED_EVENT_BILLS = (
         "co_headliners": ["ATHEIST", "CANCER"],
         "openers": ["STELLVRIS"],
         "festival_name": "MORBIDFEST",
+    },
+    {
+        # The venue's own 13 November programme explicitly identifies four
+        # musicians. Its partial JSON-LD and historical merged title must not
+        # replace this verified lineup with "No Sex Last Night".
+        "date": "2026-11-13",
+        "venue": "Bal Chavaux",
+        "artists": ("baby berserk", "no sex last night"),
+        "headliner": "Baby Berserk",
+        "co_headliners": ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"],
+        "verified_performers": [
+            "Baby Berserk", "No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes",
+        ],
+        "ticket_path": "/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes",
     },
     {
         "date": "2027-03-09",
@@ -531,7 +547,7 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
                 event.date == "2027-06-12"
                 and normalize_venue_key(event.venue) == "cabaret sauvage"
                 and normalize_artist_component(original_headliner)
-                == "osees with brigid dawson + dmbq"
+                in {"osees with brigid dawson + dmbq", "osees avec brigid dawson + dmbq"}
             ):
                 event.openers = _stable_unique([*(event.openers or []), "DMBQ"])
             reviewed_matches_raw = bool(
@@ -1736,6 +1752,24 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
             and event.date == rule["date"]
             and normalize_venue_key(event.venue) == venue
             and normalize_artist_component(event.headliner) in expected
+            and (
+                not rule.get("ticket_path")
+                or (
+                    urlparse(event.ticket_url or "").path.rstrip("/")
+                    == rule["ticket_path"]
+                    and all(
+                        _evidence_contains_artist(
+                            " ".join([
+                                event.raw_title or "", event.event_title or "",
+                                event.headliner or "",
+                                *(event.performers or []),
+                            ]),
+                            artist,
+                        )
+                        for artist in rule.get("verified_performers", [])
+                    )
+                )
+            )
         ]
         if {normalize_artist_component(event.headliner) for event in matches} != expected:
             continue
@@ -1756,6 +1790,15 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
         base.co_headliners = _stable_unique([
             *(base.co_headliners or []), *(rule.get("co_headliners", [])),
         ]) or None
+        if rule.get("verified_performers"):
+            base.performers = list(rule["verified_performers"])
+            # A duplicated complete lineup is not an event subtitle.
+            if base.event_title and all(
+                _evidence_contains_artist(base.event_title, name)
+                for name in rule["verified_performers"]
+            ):
+                base.event_title = None
+            _remove_billed_artists_from_support(base)
         if rule.get("festival_name"):
             base.festival_name = rule["festival_name"]
 
