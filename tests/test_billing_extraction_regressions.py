@@ -95,7 +95,7 @@ class BillingExtractionRegressionTests(unittest.TestCase):
 
 class MusicalProgrammeBillingRegressions(unittest.TestCase):
     def test_explicit_musical_role_credits_are_performer_evidence(self):
-        description = "Piano André Manoukian\\nChant Élodie Frégé"
+        description = "Piano André Manoukian\nChant Élodie Frégé"
         self.assertEqual(
             ["André Manoukian", "Élodie Frégé"],
             performers_from_explicit_music_credits(description),
