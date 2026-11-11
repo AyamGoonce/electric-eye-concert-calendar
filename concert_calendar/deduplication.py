@@ -1759,11 +1759,11 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
                     == rule["ticket_path"]
                     and all(
                         _evidence_contains_artist(
-                            " ".join([
+                            _billing_evidence_key(" ".join([
                                 event.raw_title or "", event.event_title or "",
                                 event.headliner or "",
                                 *(event.performers or []),
-                            ]),
+                            ])),
                             artist,
                         )
                         for artist in rule.get("verified_performers", [])
@@ -1798,7 +1798,7 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
             base.performers = list(rule["verified_performers"])
             # A duplicated complete lineup is not an event subtitle.
             if base.event_title and all(
-                _evidence_contains_artist(base.event_title, name)
+                _evidence_contains_artist(_billing_evidence_key(base.event_title), name)
                 for name in rule["verified_performers"]
             ):
                 base.event_title = None
