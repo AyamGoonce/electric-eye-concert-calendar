@@ -230,6 +230,11 @@ def classify_event_eligibility(event):
         normalize_text_for_matching(event.headliner),
     ):
         return False, "non_music_social_event"
+    if is_non_artist_event_title(event.headliner) and re.match(
+        r"^(?:blind[\\s-]?test|quiz\\s+(?:musical|musique)|music\\s+quiz|music\\s+trivia)\\b",
+        normalize_text_for_matching(event.headliner),
+    ):
+        return False, "non_music_quiz_event"
     values = [event.category, *(event.tags or [])]
     normalized = {normalize_text_for_matching(value) for value in values if value}
     for value in normalized:
@@ -488,7 +493,20 @@ def load_events_with_report(
                 f"ratio={ratio_text}",
                 flush=True,
             )
-    normalized_events.extend(retained_events)
+    # Retention is hydrated after initial eligibility filtering. Re-check
+    # retained rows so a new exclusion also removes previously published junk.
+    eligible_retained_events = []
+    for retained in retained_events:
+        eligible, reason = classify_event_eligibility(retained)
+        if eligible:
+            eligible_retained_events.append(retained)
+        else:
+            print(
+                f"Excluded retained unsupported event: {retained.headliner} "
+                f"(reason={reason})",
+                flush=True,
+            )
+    normalized_events.extend(eligible_retained_events)
 
     enrich_official_venue_images(normalized_events)
 
