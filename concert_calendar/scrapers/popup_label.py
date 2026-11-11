@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from concert_calendar.event_images import discard_repeated_generic_images
 from concert_calendar.models import ConcertEvent
-from concert_calendar.event_titles import is_non_artist_event_title
+from concert_calendar.event_titles import is_non_music_quiz_title
 
 
 SOURCE_NAME = "Le Pop-Up du Label"
@@ -99,7 +99,7 @@ def parse_events(soup, *, today=None):
 
         title_node = card.select_one(".titre")
         headliner = _clean(title_node.get_text(" ", strip=True) if title_node else "")
-        if not headliner or is_non_artist_event_title(headliner):
+        if not headliner or is_non_music_quiz_title(headliner):
             continue
 
         links = card.select(".liens a[href]")
