@@ -966,6 +966,11 @@ def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> b
 
 
 def _tour_base_identity(value: str) -> str | None:
+    # Honour the same explicit tour-marker semantics as billing normalization.
+    from concert_calendar.billing_semantics import quoted_tour_title_parts
+    quoted = quoted_tour_title_parts(value)
+    if quoted:
+        return _normalized_billing_component(quoted[0])
     match = re.match(r"^(.+?)\s+[–—:|\-]\s+(.+)$", unescape(value or ""))
     if not match or not re.search(
         r"\b(?:tour|tourn[ée]e|anniversary|headline)\b",
