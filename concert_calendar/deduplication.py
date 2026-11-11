@@ -2819,6 +2819,55 @@ def _apply_reviewed_calendar_identity_fixes(
         ])
 
 
+def _suppress_officially_postponed_dates(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Exclude unrescheduled dates confirmed postponed by their own venue.
+
+    A source may continue publishing an obsolete on-sale listing after the
+    official venue marks its concert as postponed. Match the whole normalized
+    artist identity, date, and venue; do not discard unrelated performances.
+    A new rescheduled date remains independent and eligible.
+    """
+    official = [
+        event for event in events
+        if event.ticket_status == "postponed" and _has_official_venue_source(event)
+    ]
+    removed = set()
+    for cancelled_date in official:
+        venue_key = normalize_venue_key(cancelled_date.venue)
+        title_key = normalize_artist_component(cancelled_date.headliner)
+        for candidate in events:
+            if candidate.date != cancelled_date.date:
+                continue
+            if normalize_venue_key(candidate.venue) != venue_key:
+                continue
+            if normalize_artist_component(candidate.headliner) != title_key:
+                continue
+            if (
+                candidate is not cancelled_date
+                and (
+                    _has_explicit_performance_discriminator(candidate)
+                    or _has_explicit_performance_discriminator(cancelled_date)
+                )
+            ):
+                continue
+            # Same day's distinct performances must not be removed because a
+            # different show with the same artist was postponed.
+            if (
+                candidate is not cancelled_date
+                and cancelled_date.start_time and candidate.start_time
+                and abs((_time_minutes(cancelled_date.start_time) or 0) -
+                        (_time_minutes(candidate.start_time) or 0)) > 90
+            ):
+                continue
+            removed.add(id(candidate))
+    if diagnostics is not None:
+        diagnostics["officially_postponed_date_rows_excluded"] = len(removed)
+    return [event for event in events if id(event) not in removed]
+
+
 def deduplicate_events(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
@@ -2839,6 +2888,7 @@ def deduplicate_events(
         external_evidence=billing_external_evidence,
     )
     _apply_reviewed_calendar_identity_fixes(events)
+    events = _suppress_officially_postponed_dates(events, diagnostics)
 
     initial_opener_state = defaultdict(list)
 
