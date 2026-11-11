@@ -97,6 +97,102 @@ class DicePublicBrowseRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no parseable"):
             dice.extract_public_browse_events(html_page([{"id": "missing-date"}]))
 
+    def test_api_cursor_continues_after_duplicate_only_page(self):
+        first = raw_event("First Band", event_id="first")
+        second = raw_event(
+            "Later Band", event_id="later",
+            start="2027-01-24T20:00:00+01:00",
+        )
+        pages = [
+            {"sections": [{"events": [first]}], "next_page_cursor": "cursor-2"},
+            {"sections": [{"events": [first]}], "next_page_cursor": "cursor-3"},
+            {"sections": [{"events": [second]}], "next_page_cursor": None},
+        ]
+
+        def response(payload):
+            return Mock(json=Mock(return_value=payload), raise_for_status=Mock())
+
+        with patch.object(dice.requests, "Session") as session:
+            session.return_value.post.side_effect = [
+                response(page) for page in pages
+            ]
+            events = dice._load_api_events()
+
+        self.assertEqual(
+            {"First Band", "Later Band"}, {event.headliner for event in events}
+        )
+        self.assertEqual(3, session.return_value.post.call_count)
+
+    def test_dice_empty_api_page_can_have_later_cursor_events(self):
+        first = raw_event("After Empty", event_id="after")
+        pages = [
+            {"sections": [], "next_page_cursor": "next"},
+            {"sections": [{"events": [first]}], "next_page_cursor": None},
+        ]
+        with patch.object(dice.requests, "Session") as session:
+            session.return_value.post.side_effect = [
+                Mock(json=Mock(return_value=page), raise_for_status=Mock())
+                for page in pages
+            ]
+            events = dice._load_api_events()
+        self.assertEqual(["After Empty"], [event.headliner for event in events])
+
+    def test_dice_repeated_cursor_rejects_false_complete_inventory(self):
+        first = raw_event("First", event_id="one")
+        page = {
+            "sections": [{"events": [first]}], "next_page_cursor": "same",
+        }
+        with patch.object(dice.requests, "Session") as session:
+            session.return_value.post.return_value = Mock(
+                json=Mock(return_value=page), raise_for_status=Mock(),
+            )
+            with self.assertRaisesRegex(
+                requests.RequestException, "cursor repeated"
+            ):
+                dice._load_api_events()
+        self.assertEqual(2, session.return_value.post.call_count)
+
+    def test_dice_page_limit_rejects_false_complete_inventory(self):
+        first = raw_event("First", event_id="one")
+        pages = [
+            {"sections": [{"events": [first]}], "next_page_cursor": "next-1"},
+            {"sections": [{"events": [first]}], "next_page_cursor": "next-2"},
+        ]
+        with (
+            patch.object(dice.requests, "Session") as session,
+            patch.object(dice, "MAX_PAGES", 2),
+        ):
+            session.return_value.post.side_effect = [
+                Mock(json=Mock(return_value=page), raise_for_status=Mock())
+                for page in pages
+            ]
+            with self.assertRaisesRegex(
+                requests.RequestException, "exceeded 2 pages"
+            ):
+                dice._load_api_events()
+
+    def test_dice_same_day_distinct_performances_survive_source_dedup(self):
+        same = raw_event("Two Show Artist", event_id="first")
+        later = raw_event(
+            "Two Show Artist", event_id="second",
+            start="2027-01-23T22:30:00+01:00",
+        )
+        first = dice.parse_event(same)
+        second = dice.parse_event(later)
+        self.assertNotEqual(dice.event_key(first), dice.event_key(second))
+        with patch.object(dice.requests, "Session") as session:
+            session.return_value.post.return_value = Mock(
+                json=Mock(return_value={
+                    "sections": [{"events": [same, later]}],
+                    "next_page_cursor": None,
+                }),
+                raise_for_status=Mock(),
+            )
+            records = dice._load_api_events()
+        self.assertEqual(2, len(records))
+        from concert_calendar.deduplication import deduplicate_events
+        self.assertEqual(2, len(deduplicate_events(records)))
+
     def test_falls_back_on_api_403_and_discloses_partial_status(self):
         page_events, _ = dice.extract_public_browse_events(html_page([raw_event()]))
         with (

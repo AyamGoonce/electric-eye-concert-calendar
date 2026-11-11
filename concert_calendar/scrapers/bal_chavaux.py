@@ -124,7 +124,18 @@ def corroborated_official_lineup(title, structured):
     """
     if not structured or len(structured) < 2:
         return structured
-    names = [clean_text(piece) for piece in re.split(r"\s+\+\s+", title or "")]
+    # The event-card heading can begin with a festival/presenter credit.
+    # Recognize an explicit 'présentent' wrapper before checking the artists;
+    # otherwise the first musician becomes 'Presenter ... Baby Berserk',
+    # defeating independently supplied performer corroboration.
+    heading = clean_text(title)
+    presenter = re.search(
+        r"\b(?:pr[eé]sentent|pr[eé]sente|presents?)\s*[:\-]?\s+",
+        heading, flags=re.IGNORECASE,
+    )
+    if presenter:
+        heading = heading[presenter.end():].strip()
+    names = [clean_text(piece) for piece in re.split(r"\s+\+\s+", heading)]
     if not (len(names) >= 3 and len(names) > len(structured)):
         return structured
     normalized = [name.casefold() for name in names]
@@ -198,7 +209,9 @@ def parse_detail_page(html, listing, *, today=None):
         ticket_status="tickets" if payload.get("offers") else None,
         image_url=image_url or None,
         image_source=SOURCE_NAME if image_url else None,
-        raw_title=headliner,
+        # Keep the original listing identity for audit and future source
+        # comparison when JSON-LD underbills the performers.
+        raw_title=listing["headliner"] or headliner,
     )
 
 

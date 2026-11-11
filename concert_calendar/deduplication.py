@@ -119,6 +119,16 @@ REVIEWED_EVENT_TITLES = {
     # Deliberately event-scoped: numbers remain valid parts of artist names.
     # Reviewed single-concert title variations, corroborated against venue
     # or promoter programmes. Scope every alias to its date and venue.
+    # Individually corroborated physical shows; unlike global artist aliases,
+    # these cannot collapse unrelated tour dates or future performances.
+    ("2027-02-22", "l alhambra", "yendry"): "YENDRY",
+    ("2027-02-22", "l alhambra", "yeиdry"): "YENDRY",
+    ("2027-01-24", "le grand rex", "metaphor: re fantazio"): "Metaphor: ReFantazio Orchestra Concert",
+    ("2027-01-24", "le grand rex", "metaphor: refantazio orchestra concert"): "Metaphor: ReFantazio Orchestra Concert",
+    ("2027-08-20", "bal chavaux", "john bush"): "John Bush",
+    ("2027-08-20", "bal chavaux", "john bush “celebrating the songs of anthrax 1993-2003"): "John Bush",
+    ("2027-01-17", "bal chavaux", "afterhours"): "Afterhours",
+    ("2027-01-17", "bal chavaux", "afterhours tour 2027 - quello che non c'è"): "Afterhours",
     ("2027-02-05", "la machine du moulin rouge", "lewis ofman"): "Lewis Ofman",
     ("2027-02-05", "la machine du moulin rouge", "lewis ofman tour"): "Lewis Ofman",
     ("2027-03-06", "bal chavaux", "daniele silvestri"): "Daniele Silvestri",
@@ -132,6 +142,8 @@ REVIEWED_EVENT_TITLES = {
     ("2027-06-15", "cafe de la danse", "dirty projectors (solo)"): "Dirty Projectors (solo)",
     ("2027-06-12", "cabaret sauvage", "osees with brigid dawson"): "Osees with Brigid Dawson",
     ("2027-06-12", "cabaret sauvage", "osees with brigid dawson + dmbq"): "Osees with Brigid Dawson",
+    ("2027-06-12", "cabaret sauvage", "osees avec brigid dawson + dmbq"): "Osees with Brigid Dawson",
+    ("2027-06-12", "cabaret sauvage", "osees avec brigid dawson"): "Osees with Brigid Dawson",
     ("2026-09-10", "stade de france", "jay-z"): "JAŸ-Z",
     ("2026-09-10", "stade de france", "jay-z 30"): "JAŸ-Z",
     (
@@ -245,6 +257,20 @@ REVIEWED_EVENT_BILLS = (
         "co_headliners": ["ATHEIST", "CANCER"],
         "openers": ["STELLVRIS"],
         "festival_name": "MORBIDFEST",
+    },
+    {
+        # The venue's own 13 November programme explicitly identifies four
+        # musicians. Its partial JSON-LD and historical merged title must not
+        # replace this verified lineup with "No Sex Last Night".
+        "date": "2026-11-13",
+        "venue": "Bal Chavaux",
+        "artists": ("baby berserk", "no sex last night"),
+        "headliner": "Baby Berserk",
+        "co_headliners": ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"],
+        "verified_performers": [
+            "Baby Berserk", "No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes",
+        ],
+        "ticket_path": "/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes",
     },
     {
         "date": "2027-03-09",
@@ -531,7 +557,7 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
                 event.date == "2027-06-12"
                 and normalize_venue_key(event.venue) == "cabaret sauvage"
                 and normalize_artist_component(original_headliner)
-                == "osees with brigid dawson + dmbq"
+                in {"osees with brigid dawson + dmbq", "osees avec brigid dawson + dmbq"}
             ):
                 event.openers = _stable_unique([*(event.openers or []), "DMBQ"])
             reviewed_matches_raw = bool(
@@ -564,6 +590,19 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
                     == original_identity
                 ):
                     event.performers = [reviewed_title]
+
+        # DICE lists the doors for the same Afterhours show at 19:00;
+        # Bal Chavaux's current programme explicitly specifies 19:30.
+        # Reconcile this reviewed single source clock, not other artists'
+        # sets or the venue's timetable generally.
+        if (
+            event.date[:10] == "2027-01-17"
+            and normalize_venue_key(event.venue) == "bal chavaux"
+            and normalize_artist_component(event.headliner) == "afterhours"
+            and set(event.source_names or []) == {"DICE"}
+            and event.start_time == "19:00"
+        ):
+            event.start_time = "19:30"
 
         move_artist = normalize_artist_component(event.headliner)
         for date, artist, old_venue, new_venue in REVIEWED_EVENT_MOVES:
@@ -1736,8 +1775,30 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
             and event.date == rule["date"]
             and normalize_venue_key(event.venue) == venue
             and normalize_artist_component(event.headliner) in expected
+            and (
+                not rule.get("ticket_path")
+                or (
+                    urlparse(event.ticket_url or "").path.rstrip("/")
+                    == rule["ticket_path"]
+                    and all(
+                        _evidence_contains_artist(
+                            _billing_evidence_key(" ".join([
+                                event.raw_title or "", event.event_title or "",
+                                event.headliner or "",
+                                *(event.performers or []),
+                            ])),
+                            artist,
+                        )
+                        for artist in rule.get("verified_performers", [])
+                    )
+                )
+            )
         ]
-        if {normalize_artist_component(event.headliner) for event in matches} != expected:
+        if not rule.get("verified_performers") and (
+            {normalize_artist_component(event.headliner) for event in matches} != expected
+        ):
+            continue
+        if rule.get("verified_performers") and not matches:
             continue
 
         preferred = normalize_artist_component(rule["headliner"])
@@ -1756,6 +1817,19 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
         base.co_headliners = _stable_unique([
             *(base.co_headliners or []), *(rule.get("co_headliners", [])),
         ]) or None
+        if rule.get("verified_performers"):
+            base.performers = list(rule["verified_performers"])
+            # A previous partial source may have promoted the true headliner
+            # into support. Verified complete bill order replaces that stale
+            # role set; a principal must never support itself.
+            base.co_headliners = list(rule["verified_performers"][1:])
+            # A duplicated complete lineup is not an event subtitle.
+            if base.event_title and all(
+                _evidence_contains_artist(_billing_evidence_key(base.event_title), name)
+                for name in rule["verified_performers"]
+            ):
+                base.event_title = None
+            _remove_billed_artists_from_support(base)
         if rule.get("festival_name"):
             base.festival_name = rule["festival_name"]
 
@@ -3021,6 +3095,24 @@ def deduplicate_events(
             diagnostics.get("physical_event_title_variants_merged", 0)
             + late_constituents_merged
         )
+
+    # A reviewed official programme may be selected as the final display
+    # title during richer-source reconciliation. Preserve its context while
+    # keeping the performing artist as the canonical headliner.
+    for event in reconciled:
+        if (
+            event.date == "2027-01-17"
+            and normalize_venue_key(event.venue) == "bal chavaux"
+            and normalize_artist_component(event.headliner)
+            == normalize_artist_component("Afterhours tour 2027 - quello che non c'è")
+        ):
+            original = event.headliner
+            event.identity_aliases = _stable_unique([
+                *(event.identity_aliases or []), original,
+            ])
+            event.raw_title = event.raw_title or original
+            event.headliner = "Afterhours"
+            event.event_title = event.event_title or original
 
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(
