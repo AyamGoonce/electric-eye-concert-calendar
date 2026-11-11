@@ -126,6 +126,55 @@ def quoted_tour_title_parts(value: str) -> tuple[str, str] | None:
     return artist, title
 
 
+def explicit_title_role_context(event: ConcertEvent) -> bool:
+    """Normalize marked support, release and exact-venue prose only.
+
+    No inference from '+' or '&' characters; a source must explicitly label
+    the support role, an artist-specific release, or its own venue suffix.
+    """
+    title = _clean(event.headliner)
+    support = re.fullmatch(
+        r"(?P<artist>.+?)\s*\(\s*(?:premi[èe]re\s+partie|"
+        r"1(?:[èe]re|re|ere)\s+partie|opening\s+act|support\s+act)"
+        r"\s*:\s*(?P<support>[^()]+)\s*\)",
+        title, re.IGNORECASE,
+    )
+    if support:
+        artist = _clean(support.group("artist"))
+        guest = _clean(support.group("support"))
+        if artist and guest:
+            _retain_original(event, title)
+            event.headliner = artist
+            event.openers = _stable_unique([*(event.openers or []), guest])
+            return True
+
+    # "Artist à Venue": compare against this record's independently supplied
+    # venue identity. Never strip a location from an arbitrary artist title.
+    venue = _clean(event.venue)
+    match = re.fullmatch(r"(?P<artist>.+?)\s+[àa]\s+(?P<location>.+)", title, re.I)
+    if match and venue:
+        from concert_calendar.venue_names import normalize_venue_key
+        # Venue keys accept official aliases, not merely substring matches.
+        if normalize_venue_key(match.group("location")) == normalize_venue_key(venue):
+            artist = _clean(match.group("artist"))
+            if artist:
+                _retain_original(event, title)
+                event.headliner = artist
+                return True
+
+    release = re.fullmatch(
+        r"(?P<artist>.+?)\s+[–—-]\s+"
+        r"(?P<context>(?:album\s+)?release\s+party\b.+)",
+        title, re.IGNORECASE,
+    )
+    if release and _clean(release.group("artist")):
+        _retain_original(event, title)
+        event.headliner = _clean(release.group("artist"))
+        event.event_title = event.event_title or _clean(release.group("context"))
+        return True
+    return False
+
+
 def normalize_event_semantics(event):
     """Resolve explicit source semantics before dedup, content and state."""
     # A reviewed event-scoped title may explicitly preserve wording that
@@ -138,6 +187,7 @@ def normalize_event_semantics(event):
         False,
     )
 
+    explicit_title_role_context(event)
     original = event.headliner
     primary = _evidenced_headliner(event)
     if primary != original:
