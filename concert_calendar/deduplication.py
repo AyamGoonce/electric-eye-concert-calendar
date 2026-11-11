@@ -3193,7 +3193,7 @@ def _reconcile_verified_publication_survivors(events: list[ConcertEvent]) -> lis
         and urlparse(e.ticket_url or "").path.rstrip("/")
         == "/event/6ad8c5103691bc0001d7a2b8"
         and re.match(
-            r'^john bush\\s+["“”]celebrating the songs of anthrax',
+            r'^john bush\s+["“”]celebrating the songs of anthrax',
             (e.headliner or "").casefold(),
         )
     ]
