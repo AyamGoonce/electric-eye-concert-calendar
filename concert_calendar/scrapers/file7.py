@@ -1,4 +1,5 @@
 import re
+import unicodedata
 
 import requests
 from bs4 import BeautifulSoup
@@ -25,6 +26,73 @@ def clean_text(value):
 
     value = value.replace("\u200b", "")
     return re.sub(r"\s+", " ", value).strip()
+
+
+def explicit_detail_artist_sections(html, billing):
+    """Confirm artists using separately titled official venue programme sections.
+
+    An opaque '+' bill is not enough: every component must have its own H2/H3
+    heading on the independently downloaded official event detail page.
+    Genre labels may follow each artist in the same heading.
+    """
+    values = [
+        clean_text(value)
+        for value in re.split(r"\s+\+\s+", clean_text(billing))
+    ]
+    is_open_stage = bool(
+        values and re.fullmatch(r"sc[èe]ne\s+ouverte", values[0], re.I)
+    )
+    if is_open_stage:
+        values = values[1:]
+    if len(values) < 2 or len(values) > 9 or any(not value for value in values):
+        return []
+
+    def key(value):
+        text = unicodedata.normalize("NFKD", value or "")
+        return "".join(c for c in text if not unicodedata.combining(c)).casefold()
+
+    heading_names = [
+        key(clean_text(node.get_text(" ", strip=True)))
+        for node in BeautifulSoup(html or "", "html.parser").select("h2,h3")
+    ]
+    genre = re.compile(
+        r"(?:metalcore|metal|rock|pop|jazz|folk|rap|hip.hop|"
+        r"hardcore|punk|reggae|electro|indie|soul|blues|"
+        r"chanson|alternative|post.hardcore|grunge|psychedelic)"
+        r"(?:\s+(?:rock|metal|pop|punk))?$",
+        re.I,
+    )
+    for artist in values:
+        normalized = key(artist)
+        if not any(
+            heading == normalized
+            or (
+                heading.startswith(normalized + " ")
+                and genre.fullmatch(heading[len(normalized):].strip())
+            )
+            for heading in heading_names
+        ):
+            return []
+    return values
+
+
+def enrich_official_detail_billing(event, html):
+    """Update roles only after independent programme-section corroboration."""
+    original = event.raw_title or event.headliner
+    artist_parts = explicit_detail_artist_sections(html, event.headliner)
+    if not artist_parts:
+        return False
+    event.headliner = artist_parts[0]
+    event.co_headliners = artist_parts[1:]
+    event.performers = artist_parts
+    event.raw_title = original
+    if original and original not in (event.identity_aliases or []):
+        event.identity_aliases = [*(event.identity_aliases or []), original]
+    if re.match(r"^sc[èe]ne\s+ouverte\s*\+", event.raw_title or "", re.I):
+        event.event_title = "Scène Ouverte"
+    elif event.series_name:
+        event.event_title = event.series_name
+    return True
 
 
 def split_bill(value):
@@ -131,6 +199,22 @@ def load_events():
         events_by_key.setdefault(event_key(event), event)
 
     events = list(events_by_key.values())
+    # Only seven File7 published events currently have spaced-plus billings;
+    # additional detail requests are bounded and never turn source failure into
+    # zero inventory. Official event sections are independent artist evidence.
+    for event in events:
+        if not re.search(r"\s+\+\s+", event.headliner):
+            continue
+        try:
+            detail = session.get(
+                event.ticket_url, headers=HEADERS, timeout=8,
+            )
+            detail.raise_for_status()
+        except requests.RequestException as exc:
+            print(f"File7 detail artist evidence unavailable: {event.date}: {exc}")
+            continue
+        enrich_official_detail_billing(event, detail.text)
+
     if not events:
         raise RuntimeError(
             "File7 returned no parsable concert listings; "

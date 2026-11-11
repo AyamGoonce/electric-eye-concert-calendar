@@ -241,8 +241,9 @@ def normalize_event_semantics(event):
     # "Series/Promoter presents Artist"
     presentation = None if reviewed_wrapper_lock else re.fullmatch(
         r"(?P<context>.+?)\s+"
-        r"(?:présente|présentent|presente|presentent|presents?)"
-        r"\s*:?\s+(?P<artist>.+)",
+        r"(?:(?:présente|présentent|presente|presentent)\s*:?\s+|"
+        r"presents?\s+)"
+        r"(?P<artist>.+)",
         value,
         re.IGNORECASE,
     )

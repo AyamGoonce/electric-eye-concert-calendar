@@ -88,7 +88,11 @@ class SourceReconciliationTests(unittest.TestCase):
               time="19:00"),
         ]
         out = deduplicate_events(events)
-        self.assertEqual(1, len(out))
+        self.assertEqual(
+            1, len(out),
+            [(x.headliner, x.co_headliners, x.performers, x.source_names)
+             for x in out],
+        )
         self.assertEqual("Westside Cowboys", out[0].headliner)
 
     def test_conflicting_times_are_distinct(self):
@@ -99,6 +103,34 @@ class SourceReconciliationTests(unittest.TestCase):
               time="22:30"),
         ]
         self.assertEqual(2, len(deduplicate_events(events)))
+
+    def test_official_programme_artist_headings_supply_independent_roles(self):
+        from concert_calendar.scrapers.file7 import (
+            enrich_official_detail_billing, explicit_detail_artist_sections,
+        )
+        html = (
+            "<h2>REVNOIR <span>Metalcore</span></h2>"
+            "<h2>Solitaris <span>Metalcore</span></h2>"
+            "<h2>TRVMA <span>Metalcore</span></h2>"
+        )
+        parts = explicit_detail_artist_sections(
+            html, "REVNOIR + Solitaris + TRVMA",
+        )
+        self.assertEqual(["REVNOIR", "Solitaris", "TRVMA"], parts)
+        event = e("REVNOIR + Solitaris + TRVMA", source="File7", venue="File7")
+        self.assertTrue(enrich_official_detail_billing(event, html))
+        self.assertEqual("REVNOIR", event.headliner)
+        self.assertEqual(["Solitaris", "TRVMA"], event.co_headliners)
+        self.assertEqual("REVNOIR + Solitaris + TRVMA", event.raw_title)
+
+    def test_opaque_project_not_split_without_distinct_official_sections(self):
+        from concert_calendar.scrapers.file7 import explicit_detail_artist_sections
+        self.assertEqual([], explicit_detail_artist_sections(
+            "<h2>Florence + The Machine</h2>", "Florence + The Machine",
+        ))
+        self.assertEqual([], explicit_detail_artist_sections(
+            "<h2>REVNOIR Metalcore</h2>", "REVNOIR + Solitaris + TRVMA",
+        ))
 
     def test_no_cross_source_plural_guess_without_explicit_support(self):
         events = [
