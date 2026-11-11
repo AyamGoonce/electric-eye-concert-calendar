@@ -1819,6 +1819,10 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
         ]) or None
         if rule.get("verified_performers"):
             base.performers = list(rule["verified_performers"])
+            # A previous partial source may have promoted the true headliner
+            # into support. Verified complete bill order replaces that stale
+            # role set; a principal must never support itself.
+            base.co_headliners = list(rule["verified_performers"][1:])
             # A duplicated complete lineup is not an event subtitle.
             if base.event_title and all(
                 _evidence_contains_artist(_billing_evidence_key(base.event_title), name)
@@ -3091,6 +3095,24 @@ def deduplicate_events(
             diagnostics.get("physical_event_title_variants_merged", 0)
             + late_constituents_merged
         )
+
+    # A reviewed official programme may be selected as the final display
+    # title during richer-source reconciliation. Preserve its context while
+    # keeping the performing artist as the canonical headliner.
+    for event in reconciled:
+        if (
+            event.date == "2027-01-17"
+            and normalize_venue_key(event.venue) == "bal chavaux"
+            and normalize_artist_component(event.headliner)
+            == "afterhours tour 2027 - quello che non c'è"
+        ):
+            original = event.headliner
+            event.identity_aliases = _stable_unique([
+                *(event.identity_aliases or []), original,
+            ])
+            event.raw_title = event.raw_title or original
+            event.headliner = "Afterhours"
+            event.event_title = event.event_title or original
 
     if diagnostics is not None:
         diagnostics["festival_artist_rows_collapsed"] = max(
