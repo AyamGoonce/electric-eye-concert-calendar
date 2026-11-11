@@ -52,6 +52,13 @@ class DicePublicBrowseRecoveryTests(unittest.TestCase):
         self.assertEqual("https://dice.fm/event/abc", events[0].ticket_url)
         self.assertTrue(has_more)
 
+    def test_dice_speed_dating_is_excluded_without_dropping_music_events(self):
+        rows, _ = dice.extract_public_browse_events(html_page([
+            raw_event("Le plus grand speed-dating de Paris #3", event_id="social"),
+            raw_event("Legitimate Artist", event_id="concert"),
+        ]))
+        self.assertEqual(["Legitimate Artist"], [row.headliner for row in rows])
+
     def test_rejects_missing_or_empty_json_inventory(self):
         with self.assertRaisesRegex(ValueError, "__NEXT_DATA__"):
             dice.extract_public_browse_events("<html></html>")
