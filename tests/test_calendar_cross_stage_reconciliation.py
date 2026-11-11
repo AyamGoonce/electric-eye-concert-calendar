@@ -222,6 +222,45 @@ class BillSemanticsIntegrationTests(unittest.TestCase):
         self.assertEqual(["DMBQ"], combined[0].openers)
         self.assertEqual("19:30", combined[0].start_time)
 
+    def test_additional_corroborated_real_world_duplicate_variants(self):
+        candidates = [
+            ("2027-02-22", "L'Alhambra", "Yendry", "Yeиdry", "YENDRY"),
+            ("2027-01-24", "Le Grand Rex", "Metaphor: Re Fantazio",
+             "Metaphor: ReFantazio Orchestra Concert",
+             "Metaphor: ReFantazio Orchestra Concert"),
+            ("2027-08-20", "Bal Chavaux", "John Bush",
+             "John Bush “Celebrating The Songs Of Anthrax 1993-2003",
+             "John Bush"),
+        ]
+        for when, venue, first, second, expected in candidates:
+            with self.subTest(when=when, venue=venue):
+                a = e(first, source=venue, venue=venue, when=when)
+                b = e(second, source="DICE", venue=venue, when=when)
+                if when == "2027-08-20":
+                    a.start_time = b.start_time = "19:00"
+                result = deduplicate_events([a, b])
+                self.assertEqual(
+                    1, len(result),
+                    [(record.headliner, record.event_title) for record in result],
+                )
+                self.assertEqual(expected, result[0].headliner)
+
+    def test_afterhours_agreed_performance_clock_and_artist_survive(self):
+        records = [
+            e("Afterhours", source="DICE",
+              venue="Bal Chavaux", when="2027-01-17", time="19:00"),
+            e("Afterhours tour 2027 - quello che non c'è",
+              source="Bal Chavaux",
+              venue="Bal Chavaux", when="2027-01-17", time="19:30"),
+        ]
+        reconciled = deduplicate_events(records)
+        self.assertEqual(
+            1, len(reconciled),
+            [(row.headliner, row.start_time) for row in reconciled],
+        )
+        self.assertEqual("Afterhours", reconciled[0].headliner)
+        self.assertEqual("19:30", reconciled[0].start_time)
+
     def test_nonmusic_immersive_listening_concept_excluded(self):
         from concert_calendar.event_titles import is_non_artist_event_title
         self.assertTrue(is_non_artist_event_title(
