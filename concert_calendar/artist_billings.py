@@ -102,6 +102,34 @@ def identity_catalog_from_content_index(index: dict) -> dict[str, str]:
     return catalog
 
 
+def current_official_standalone_artist_evidence(events: list[ConcertEvent]) -> dict[str, str]:
+    """Use standalone artists explicitly billed by official venues this run.
+
+    This is an additional identity catalog, not a punctuation parser.
+    It never promotes titles with bill separators, series/event descriptions,
+    or headliners that disagree with structured source performer identities.
+    """
+    from concert_calendar.venues import normalize_venue_key
+    trusted = {}
+    for event in events:
+        name = _clean(event.headliner)
+        if (
+            not name
+            or re.search(r"\s+(?:\+|&|x|×|with|avec|feat\.?|featuring)\s+", name, re.I)
+            or re.search(r"\b(?:release\s+party|premi[èe]re\s+partie|festival)\b", name, re.I)
+            or event.event_title and _key(event.event_title) == _key(name)
+            or event.performers and any(_key(artist) != _key(name) for artist in event.performers)
+        ):
+            continue
+        venue = normalize_venue_key(event.venue)
+        if not venue or not any(
+            normalize_venue_key(source) == venue for source in (event.source_names or [])
+        ):
+            continue
+        trusted.setdefault(_key(name), name)
+    return trusted
+
+
 def _review_lookups(reviews: dict) -> tuple[dict, dict, dict]:
     canonical = {}
     for name, item in (reviews.get("canonicalIdentities") or {}).items():
@@ -321,6 +349,11 @@ def resolve_artist_billings(
         else identity_catalog
     )
     identities.update(canonical)
+    # Official venue listings of standalone artists provide current, scoped
+    # identity evidence for corroborating a longer source's separated bill.
+    # Reviewed identities and aliases always take precedence.
+    for key, value in current_official_standalone_artist_evidence(events).items():
+        identities.setdefault(key, value)
     profiles = reviews.get("sourceProfiles") or {}
     external = {
         _key(name): item
