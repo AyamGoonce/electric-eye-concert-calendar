@@ -940,7 +940,7 @@ def _cross_source_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
     )
 
 
-def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
+def _conflicting_structured_lineups(left: ConcertEvent, right: ConcertEvent) -> bool:
     # Two sources independently supplied complete, *different* musician arrays.
     # Do not silently discard one current lineup during event reconciliation.
     # Review those conflicting identities rather than treating a shared
@@ -958,6 +958,12 @@ def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> b
         and left_artists != right_artists
         and not _same_event_specific_ticket(left, right)
     ):
+        return True
+    return False
+
+
+def _distinct_performance_evidence(left: ConcertEvent, right: ConcertEvent) -> bool:
+    if _conflicting_structured_lineups(left, right):
         return True
     if _performance_conflict(left, right):
         return True
@@ -1688,7 +1694,8 @@ def _performance_conflict(left: ConcertEvent, right: ConcertEvent) -> bool:
 
 
 def _same_exact_performance(left: ConcertEvent, right: ConcertEvent) -> bool:
-    return (not _performance_conflict(left, right)
+    return (not _conflicting_structured_lineups(left, right)
+            and not _performance_conflict(left, right)
             and _tour_normalization_allows_merge(left, right))
 
 
