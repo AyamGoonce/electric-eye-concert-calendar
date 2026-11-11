@@ -88,7 +88,7 @@ def is_non_concert_listing(title):
     # actually feature live music, and their titles alone are inconclusive.
     non_concert_patterns = (
         r"\bviewing(?:s)? parties\b",
-        r"\bblind[\s-]?test\b",
+        r"^blind[\s-]?test(?:\s+with\b|$)",
         r"\bspeed[\s-]?dating\b",
         r"\bgenerated nightmares\b.*\bexhibition\b",
         r"^la rentree de cheries-cheris$",
