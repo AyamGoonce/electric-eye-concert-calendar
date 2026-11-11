@@ -253,6 +253,26 @@ def classify_event_eligibility(event):
     return True, None
 
 
+def filter_eligible_retained_events(retained_events):
+    """Apply current eligibility rules to prior-source retention snapshots.
+
+    The first eligibility pass precedes source-state hydration, so newly
+    excluded categories must not be reintroduced by older saved records.
+    """
+    eligible_events = []
+    for retained in retained_events:
+        eligible, reason = classify_event_eligibility(retained)
+        if eligible:
+            eligible_events.append(retained)
+        else:
+            print(
+                f"Excluded retained unsupported event: {retained.headliner} "
+                f"(reason={reason})",
+                flush=True,
+            )
+    return eligible_events
+
+
 def load_events_with_report(
     *,
     scraper_attempts: int = 3,
@@ -493,20 +513,7 @@ def load_events_with_report(
                 f"ratio={ratio_text}",
                 flush=True,
             )
-    # Retention is hydrated after initial eligibility filtering. Re-check
-    # retained rows so a new exclusion also removes previously published junk.
-    eligible_retained_events = []
-    for retained in retained_events:
-        eligible, reason = classify_event_eligibility(retained)
-        if eligible:
-            eligible_retained_events.append(retained)
-        else:
-            print(
-                f"Excluded retained unsupported event: {retained.headliner} "
-                f"(reason={reason})",
-                flush=True,
-            )
-    normalized_events.extend(eligible_retained_events)
+    normalized_events.extend(filter_eligible_retained_events(retained_events))
 
     enrich_official_venue_images(normalized_events)
 
