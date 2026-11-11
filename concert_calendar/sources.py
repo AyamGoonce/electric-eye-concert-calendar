@@ -217,12 +217,39 @@ NON_CONCERT_TYPES = {
 }
 
 
+def _explicit_nonconcert_activity(event):
+    """Recognize narrowly defined activities across preserved source titles.
+
+    Normalization may replace a programme title with a person or band name;
+    the original raw title and event title must still veto non-concert entries.
+    Avoid searching descriptions: an actual concert may merely mention these
+    activities in its publicity.
+    """
+    titles = (
+        event.headliner, event.raw_title, event.event_title,
+    )
+    for title in titles:
+        value = " ".join(normalize_text_for_matching(title).split())
+        if not value:
+            continue
+        if re.search(r"\\b(?:sophro[\\s-]?danse|bingo\\s+et\\s+gouter)\\b", value):
+            return "non_music_activity"
+        if re.match(r"^hors\\s+antenne\\s*:\\s*arret\\s+sur\\s+images\\b", value):
+            return "non_music_discussion"
+        if re.search(r"\\becoute\\s+immersive\\s+de\\s+disque\\b", value):
+            return "non_music_listening_session"
+    return None
+
+
 def classify_event_eligibility(event):
     """Return ``(eligible, reason)`` using structured evidence first.
 
     This deliberately does not treat words such as DJ, party, vinyl, night,
     session, release, or festival as exclusions by themselves.
     """
+    activity_reason = _explicit_nonconcert_activity(event)
+    if activity_reason:
+        return False, activity_reason
     if is_placeholder_title(event.headliner):
         return False, "placeholder_title"
     if is_non_artist_event_title(event.headliner) and re.search(
@@ -541,6 +568,22 @@ def load_events_with_report(
         diagnostics=deduplication_diagnostics,
         billing_identity_catalog=billing_identity_catalog,
     )
+    # A second gate is essential: billing reconciliation can turn an activity
+    # title into an apparent performer and can inherit misleading source roles.
+    # Keep eligibility independent of artist identification.
+    publishable_events = []
+    for event in deduplicated_events:
+        eligible, reason = classify_event_eligibility(event)
+        if eligible:
+            publishable_events.append(event)
+        else:
+            print(
+                f"Excluded post-normalization unsupported event: {event.headliner} "
+                f"(reason={reason})",
+                flush=True,
+            )
+    deduplicated_events = publishable_events
+
     failed_names = {item["source_name"] for item in source_health if item["status"] == "failed"}
     healthy_names = {item["source_name"] for item in source_health if item["status"] != "failed"}
     for event in deduplicated_events:
