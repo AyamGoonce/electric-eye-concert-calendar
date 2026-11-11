@@ -59,6 +59,36 @@ class DicePublicBrowseRecoveryTests(unittest.TestCase):
         ]))
         self.assertEqual(["Legitimate Artist"], [row.headliner for row in rows])
 
+    def test_nonmusical_browse_entries_and_festival_passes_are_excluded(self):
+        rejected = (
+            "Blindtest with Dr Wax",
+            "Marius Gonzalez, Generated Nightmares｜Exhibition",
+            "La Rentrée de Chéries-Chéris",
+            "Novemberfest by Paname Brewing Company",
+            "Ici Demain Festival #7 - Pass MERCREDI",
+            "Ici Demain Festival #7 - Pass JEUDI",
+            "Ici Demain Festival #7 - Pass VENDREDI",
+        )
+        for index, title in enumerate(rejected):
+            with self.subTest(title=title):
+                self.assertIsNone(dice.parse_event(raw_event(title, event_id=str(index))))
+
+    def test_similar_genuine_concert_titles_are_preserved(self):
+        preserved = (
+            "Balm - Afterwork",
+            "Diggers Xth anniversary",
+            "La Vie secrète des chansons",
+            "Candlelight : Mozart & Chopin",
+            "Cabaret les dessous lesbiens",
+            "Indie Rock Night W/ Violet Noise, Spreaders & Veys",
+            "Ici Demain Festival #7 - La soirée avec Tarmac",
+            "The Blind Test",
+            "Exhibition",
+        )
+        for index, title in enumerate(preserved):
+            with self.subTest(title=title):
+                self.assertIsNotNone(dice.parse_event(raw_event(title, event_id=str(index))))
+
     def test_rejects_missing_or_empty_json_inventory(self):
         with self.assertRaisesRegex(ValueError, "__NEXT_DATA__"):
             dice.extract_public_browse_events("<html></html>")
