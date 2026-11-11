@@ -142,6 +142,54 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
             result[0].source_names,
         )
 
+    def test_publication_rejects_the_actual_baby_berserk_regression(self):
+        from concert_calendar.automation import (
+            ProductionValidationError, validate_reviewed_publication_survivors,
+        )
+        row = {
+            "d": "2026-11-13", "v": "Bal Chavaux",
+            "t": (
+                "https://balchavaux.fr/agenda/"
+                "baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes"
+            ),
+            "h": "No Sex Last Night",
+            "et": (
+                "BABY BERSERK + NO SEX LAST NIGHT + "
+                "EXCHPOPTRUE + NEVROSES NOCTURNES"
+            ),
+        }
+        with self.assertRaisesRegex(ProductionValidationError, "Baby Berserk"):
+            validate_reviewed_publication_survivors([row])
+        row["h"] = "Baby Berserk"
+        row["ch"] = ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"]
+        validate_reviewed_publication_survivors([row])
+        row["ch"] = ["Baby Berserk", *row["ch"]]
+        with self.assertRaisesRegex(ProductionValidationError, "Baby Berserk"):
+            validate_reviewed_publication_survivors([row])
+
+    def test_publication_rejects_john_bush_dup_but_allows_separate_sets(self):
+        from concert_calendar.automation import (
+            ProductionValidationError, validate_reviewed_publication_survivors,
+        )
+        official = {
+            "d": "2027-08-20", "v": "Bal Chavaux", "h": "John Bush",
+            "t": "https://balchavaux.fr/agenda/john-bush",
+            "st": "19:00",
+        }
+        dice = {
+            "d": "2027-08-20", "v": "Bal Chavaux",
+            "h": "John Bush “Celebrating The Songs Of Anthrax 1993-2003”",
+            "t": "https://dice.fm/event/6ad8c5103691bc0001d7a2b8",
+            "st": "19:00",
+        }
+        with self.assertRaisesRegex(ProductionValidationError, "John Bush"):
+            validate_reviewed_publication_survivors([official, dice])
+        dice["st"] = "22:30"
+        validate_reviewed_publication_survivors([official, dice])
+        dice["st"] = "19:00"
+        dice["t"] = "https://dice.fm/event/unrelated-show"
+        validate_reviewed_publication_survivors([official, dice])
+
     def test_distinct_performance_times_remain_separate(self):
         early = ConcertEvent(
             "2026-11-24",

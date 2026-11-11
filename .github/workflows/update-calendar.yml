@@ -1,6 +1,7 @@
 name: Update Electric Eye Concert Calendar
 
 on:
+  # Verified final output repair: Baby Berserk credits and John Bush single show.
   # Reliability release 2026-11-11: audited source/billing normalization, DICE inventory guards.
   # Run publication once when this workflow definition is introduced/changed.
   # Normal code pushes continue to use the separate regression workflow;
