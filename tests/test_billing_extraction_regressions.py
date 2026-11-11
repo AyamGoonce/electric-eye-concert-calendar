@@ -3,6 +3,7 @@ import unittest
 from bs4 import BeautifulSoup
 
 from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.billing_semantics import performers_from_explicit_music_credits
 from concert_calendar.models import ConcertEvent
 from concert_calendar.scrapers.supersonic import parse_event_row
 
@@ -90,6 +91,43 @@ class BillingExtractionRegressionTests(unittest.TestCase):
         self.assertEqual(1, len(result))
         self.assertEqual("Emilie Calmé", result[0].headliner)
         self.assertEqual(original, result[0].event_title)
+
+
+class MusicalProgrammeBillingRegressions(unittest.TestCase):
+    def test_explicit_musical_role_credits_are_performer_evidence(self):
+        description = "Piano André Manoukian\\nChant Élodie Frégé"
+        self.assertEqual(
+            ["André Manoukian", "Élodie Frégé"],
+            performers_from_explicit_music_credits(description),
+        )
+        item = ConcertEvent(
+            "2026-11-20", "La Vie secrète des chansons",
+            "Théâtre de Suresnes Jean Vilar", "Suresnes", "92",
+            description=description,
+        )
+        result = deduplicate_events([item])[0]
+        self.assertEqual("André Manoukian", result.headliner)
+        self.assertEqual(["Élodie Frégé"], result.co_headliners)
+        self.assertEqual("La Vie secrète des chansons", result.event_title)
+
+    def test_reviewed_show_title_resolves_without_source_description(self):
+        item = ConcertEvent(
+            "2026-11-20", "La Vie secrète des chansons",
+            "Théâtre de Suresnes Jean Vilar", "Suresnes", "92",
+            source_names=["DICE"],
+        )
+        result = deduplicate_events([item])[0]
+        self.assertEqual("André Manoukian", result.headliner)
+        self.assertEqual(["Élodie Frégé"], result.co_headliners)
+        self.assertEqual("La Vie secrète des chansons", result.event_title)
+
+    def test_unlabelled_biographical_prose_does_not_create_performers(self):
+        description = (
+            "Songs by Serge Gainsbourg and Barbara. "
+            "André Manoukian talks about Élodie Frégé."
+        )
+        self.assertEqual([], performers_from_explicit_music_credits(description))
+        self.assertEqual([], performers_from_explicit_music_credits("Piano André Manoukian"))
 
 
 class BillingExtractionSafetyTests(unittest.TestCase):
