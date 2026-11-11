@@ -65,13 +65,15 @@ def structured_bill(name, text_blocks):
         value = clean_text(block.get("text"))
         if not value or block.get("type") != "paragraph":
             continue
-        if any(
-            span.get("type") == "strong"
-            and span.get("start") == 0
-            and span.get("end", 0) >= len(value)
-            for span in block.get("spans") or []
-        ):
-            section_names.add(value.casefold())
+        # An individually bold-labelled musician followed by biography is
+        # still an independent artist section even when the entire paragraph
+        # is not bold. Require every billed component separately marked.
+        for span in block.get("spans") or []:
+            if span.get("type") != "strong" or span.get("start") != 0:
+                continue
+            strong_name = clean_text(value[:int(span.get("end", 0))])
+            if strong_name:
+                section_names.add(strong_name.casefold())
     return parts if all(part.casefold() in section_names for part in parts) else None
 
 

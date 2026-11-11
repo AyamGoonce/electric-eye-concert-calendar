@@ -45,6 +45,12 @@ def is_non_artist_event_title(value):
     if is_non_music_quiz_title(value):
         return True
 
+    # An album-listening/immersive playback session is not a live concert.
+    # Narrow to this explicit activity; do not exclude bands whose names
+    # happen to contain words such as "listening" or "Pink Floyd".
+    if re.match(r"^(?:ecoute|écoute)\s+immersive\s+de\s+disque\b", normalized):
+        return True
+
     # Dating/social matchmaking listings have no music billing even when
     # surfaced in DICE's public music:gig category.
     if re.search(r"\bspeed[\s-]?dating\b", normalized):

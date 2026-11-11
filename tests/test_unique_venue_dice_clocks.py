@@ -36,6 +36,25 @@ class UniqueVenueDiceClockTests(unittest.TestCase):
         self.assertEqual(1, len(merged))
         self.assertEqual("19:45", merged[0].start_time)
 
+    def test_unique_venue_and_dice_door_time_discrepancy_90_minutes(self):
+        for venue_time, dice_time in (
+            ("18:30", "20:00"), ("20:00", "18:30"),
+            ("19:00", "20:00"),
+        ):
+            with self.subTest(venue=venue_time, dice=dice_time):
+                merged = deduplicate_events([
+                    event(venue_time, "La Cigale"),
+                    event(dice_time, "DICE"),
+                ])
+                self.assertEqual(1, len(merged))
+                self.assertEqual(venue_time, merged[0].start_time)
+
+    def test_single_official_missing_clock_and_lone_dice_copy_merge(self):
+        merged = deduplicate_events([
+            event(None, "La Cigale"), event("20:00", "DICE"),
+        ])
+        self.assertEqual(1, len(merged))
+
     def test_distant_clocks_stay_separate(self):
         merged = deduplicate_events([event("19:00", "La Cigale"), event("21:00", "DICE")])
         self.assertEqual(2, len(merged))

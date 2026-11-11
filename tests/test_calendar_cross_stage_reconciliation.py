@@ -50,6 +50,48 @@ class BillSemanticsIntegrationTests(unittest.TestCase):
         self.assertEqual("Strangelove", item.headliner)
         self.assertEqual("The Depeche Mode Experience", item.event_title)
 
+    def test_source_date_stamp_is_removed_only_when_exact_date_matches(self):
+        item = e("Thiefs + Papatef I 13.11.26")
+        apply_structured_performer_semantics([item])
+        self.assertEqual("Thiefs + Papatef", item.headliner)
+        incorrect = e("Thiefs + Papatef I 14.11.26")
+        apply_structured_performer_semantics([incorrect])
+        self.assertEqual("Thiefs + Papatef I 14.11.26", incorrect.headliner)
+
+    def test_bold_labeled_artist_sections_in_venue_prose_are_supported(self):
+        from concert_calendar.scrapers.point_ephemere import structured_bill
+        text = [
+            {"type": "paragraph", "text": "KOJEY RADICAL writes music...",
+             "spans": [{"type": "strong", "start": 0, "end": 13}]},
+            {"type": "paragraph", "text": "Claudia Isaki joins the tour...",
+             "spans": [{"type": "strong", "start": 0, "end": 13}]},
+        ]
+        self.assertEqual(
+            ["KOJEY RADICAL", "Claudia Isaki"],
+            structured_bill("KOJEY RADICAL + Claudia Isaki", text),
+        )
+
+    def test_bal_chavaux_jsonld_billing_is_independently_structured(self):
+        from concert_calendar.scrapers.bal_chavaux import independent_performer_names
+        payload = {"performer": [
+            {"@type": "MusicGroup", "name": "Baby Berserk"},
+            {"@type": "MusicGroup", "name": "No Sex Last Night"},
+        ]}
+        self.assertEqual(
+            ["Baby Berserk", "No Sex Last Night"],
+            independent_performer_names(payload),
+        )
+        self.assertIsNone(independent_performer_names(
+            {"performer": {"name": "Baby Berserk + No Sex Last Night"}},
+        ))
+
+    def test_nonmusic_immersive_listening_concept_excluded(self):
+        from concert_calendar.event_titles import is_non_artist_event_title
+        self.assertTrue(is_non_artist_event_title(
+            "Écoute immersive de disque - THE DARK SIDE OF THE MOON DE PINK FLOYD",
+        ))
+        self.assertFalse(is_non_artist_event_title("Dark Side of the Moon Band"))
+
     def test_no_split_of_legitimate_band_project(self):
         item = e("Florence + The Machine")
         apply_structured_performer_semantics([item])

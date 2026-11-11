@@ -188,6 +188,25 @@ def normalize_event_semantics(event):
     )
 
     explicit_title_role_context(event)
+    # Source listing stamps such as "Artist I 14.11.26" identify the
+    # already-known event date. Require equality with that event's date.
+    listing_date = re.fullmatch(
+        r"(?P<artist>.+?)\s+(?:I|\|)\s+"
+        r"(?P<day>\d{1,2})\.(?P<month>\d{1,2})\.(?P<year>\d{2}|\d{4})",
+        _clean(event.headliner),
+    )
+    if listing_date:
+        year = listing_date.group("year")
+        if len(year) == 2:
+            year = "20" + year
+        candidate_date = (
+            f"{int(year):04d}-{int(listing_date.group('month')):02d}-"
+            f"{int(listing_date.group('day')):02d}"
+        )
+        if candidate_date == event.date[:10]:
+            _retain_original(event, event.headliner)
+            event.headliner = listing_date.group("artist").strip()
+
     original = event.headliner
     primary = _evidenced_headliner(event)
     if primary != original:

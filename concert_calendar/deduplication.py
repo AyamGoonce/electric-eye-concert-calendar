@@ -2056,7 +2056,7 @@ def _reconcile_unique_official_dice_clock_variants(
     events: list[ConcertEvent],
     diagnostics: dict | None = None,
 ) -> list[ConcertEvent]:
-    """Collapse a unique official-venue/DICE clock discrepancy of <=30 minutes.
+    """Collapse a unique venue/DICE listing with compatible show/door clocks.
 
     Distinct sets and separately ticketed performances remain independent.
     Unlike three-source consensus, this handles a single venue listing with
@@ -2095,11 +2095,13 @@ def _reconcile_unique_official_dice_clock_variants(
             continue
         venue_time = _time_minutes(official.start_time)
         dice_time = _time_minutes(other.start_time)
-        if (
-            venue_time is None or dice_time is None
-            or venue_time == dice_time
-            or abs(venue_time - dice_time) > 30
-        ):
+        # DICE may publish doors while the venue publishes show time.
+        # A unique official event and its lone DICE copy may differ by up to
+        # 90 minutes. Never merge explicitly timed sets or larger conflicts.
+        if venue_time is not None and dice_time is not None:
+            if venue_time == dice_time or abs(venue_time - dice_time) > 90:
+                continue
+        elif not (official.ticket_url and other.ticket_url):
             continue
         merge_events(official, other)
         removed.add(id(other))

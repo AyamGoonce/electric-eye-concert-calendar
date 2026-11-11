@@ -94,6 +94,27 @@ def organizer_names(payload):
     ] or None
 
 
+def independent_performer_names(payload):
+    """Read individually identified performers from structured Event JSON-LD.
+
+    A lone string that repeats the full title is not artist evidence.
+    """
+    entries = payload.get("performer") or []
+    if not isinstance(entries, list):
+        entries = [entries]
+    names = []
+    seen = set()
+    for entry in entries:
+        value = clean_text(entry.get("name")) if isinstance(entry, dict) else (
+            clean_text(entry) if isinstance(entry, str) else ""
+        )
+        key = value.casefold()
+        if value and key not in seen:
+            seen.add(key)
+            names.append(value)
+    return names if len(names) >= 2 else None
+
+
 def offer_url(payload, detail_url):
     offers = payload.get("offers") or []
     if isinstance(offers, dict):
@@ -139,7 +160,7 @@ def parse_detail_page(html, listing, *, today=None):
         promoters=organizer_names(payload),
         category=category or None,
         event_type="concert",
-        performers=[headliner],
+        performers=independent_performer_names(payload),
         start_time=start_time,
         ticket_url=offer_url(payload, detail_url),
         ticket_status="tickets" if payload.get("offers") else None,
