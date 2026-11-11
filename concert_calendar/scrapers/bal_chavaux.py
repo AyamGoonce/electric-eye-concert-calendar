@@ -124,7 +124,7 @@ def corroborated_official_lineup(title, structured):
     """
     if not structured or len(structured) < 2:
         return structured
-    names = [clean_text(piece) for piece in re.split(r"\\s+\\+\\s+", title or "")]
+    names = [clean_text(piece) for piece in re.split(r"\s+\+\s+", title or "")]
     if not (len(names) >= 3 and len(names) > len(structured)):
         return structured
     normalized = [name.casefold() for name in names]
