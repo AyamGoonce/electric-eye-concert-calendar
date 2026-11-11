@@ -115,6 +115,29 @@ def independent_performer_names(payload):
     return names if len(names) >= 2 else None
 
 
+def corroborated_official_lineup(title, structured):
+    """Fill a partial JSON-LD lineup only from the venue's own explicit bill.
+
+    Require individually named JSON-LD performers to match whole, separately
+    printed names in the official heading. A '+' character alone is not enough
+    to split a band identity, and no inference is made without the JSON-LD.
+    """
+    if not structured or len(structured) < 2:
+        return structured
+    names = [clean_text(piece) for piece in re.split(r"\\s+\\+\\s+", title or "")]
+    if not (len(names) >= 3 and len(names) > len(structured)):
+        return structured
+    normalized = [name.casefold() for name in names]
+    evidence = {name.casefold() for name in structured}
+    if (
+        len(set(normalized)) != len(normalized)
+        or not evidence.issubset(set(normalized))
+        or normalized[0] not in evidence
+    ):
+        return structured
+    return names
+
+
 def offer_url(payload, detail_url):
     offers = payload.get("offers") or []
     if isinstance(offers, dict):
@@ -148,6 +171,14 @@ def parse_detail_page(html, listing, *, today=None):
     postcode = clean_text(address.get("postalCode")) if isinstance(address, dict) else ""
     department = postcode[:2] if re.match(r"^(?:75|7[78]|9[1-5])\d{3}$", postcode) else ""
     category = clean_text(payload.get("keywords")) or listing["category"]
+    structured_performers = independent_performer_names(payload)
+    # The visible official programme heading may contain additional named acts
+    # omitted from JSON-LD. Prefer that complete, corroborated programme.
+    full_bill = corroborated_official_lineup(
+        listing["headliner"], structured_performers,
+    )
+    if full_bill and len(full_bill) > len(structured_performers or []):
+        headliner = full_bill[0]
     image = payload.get("image") or {}
     image_url = clean_text(image.get("url")) if isinstance(image, dict) else ""
     detail_url = listing["detail_url"]
@@ -160,7 +191,8 @@ def parse_detail_page(html, listing, *, today=None):
         promoters=organizer_names(payload),
         category=category or None,
         event_type="concert",
-        performers=independent_performer_names(payload),
+        performers=full_bill,
+        co_headliners=full_bill[1:] if full_bill and len(full_bill) > len(structured_performers or []) else None,
         start_time=start_time,
         ticket_url=offer_url(payload, detail_url),
         ticket_status="tickets" if payload.get("offers") else None,
