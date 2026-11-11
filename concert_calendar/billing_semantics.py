@@ -227,11 +227,22 @@ def normalize_event_semantics(event):
         event.event_title = event.event_title or original
         value = event.headliner
 
+    # A labelled open-stage programme is not the first musician.
+    open_stage = None if reviewed_wrapper_lock else re.fullmatch(
+        r"(?P<series>sc[èe]ne\s+ouverte)\s*\+\s*(?P<billing>.+)",
+        value, re.IGNORECASE,
+    )
+    if open_stage:
+        _retain_original(event, value)
+        event.event_title = event.event_title or open_stage.group("series")
+        event.headliner = open_stage.group("billing").strip()
+        value = event.headliner
+
     # "Series/Promoter presents Artist"
     presentation = None if reviewed_wrapper_lock else re.fullmatch(
         r"(?P<context>.+?)\s+"
         r"(?:présente|présentent|presente|presentent|presents?)"
-        r"\s+(?P<artist>.+)",
+        r"\s*:?\s+(?P<artist>.+)",
         value,
         re.IGNORECASE,
     )
@@ -242,6 +253,34 @@ def normalize_event_semantics(event):
             event.event_title or presentation.group("context").strip()
         )
         value = event.headliner
+
+    # Branded promoters explicitly inviting named acts are presenting a
+    # programme, not performing under the entire ticketing headline.
+    # No unlabelled generic 'Artist invites Artist' construction is touched.
+    invitation = None if reviewed_wrapper_lock else re.fullmatch(
+        r"(?P<brand>.+?)\s+invites?\s*:?[ \t]+(?P<guests>.+)",
+        value, re.IGNORECASE,
+    )
+    if invitation and re.search(
+        r"\b(?:music|records?|concerts?|clubs?|collectif|festival|label|soir[ée]e)\b",
+        invitation.group("brand"), re.IGNORECASE,
+    ):
+        branded_guests = [
+            _clean(name) for name in re.split(
+                r"\s*,\s*|\s+b2b\s+", invitation.group("guests"),
+                flags=re.IGNORECASE,
+            )
+        ]
+        if 2 <= len(branded_guests) <= 8 and all(
+            name and 2 <= len(name) <= 75
+            and not re.search(r"\b(?:guest|tba|surprise)\b", name, re.I)
+            for name in branded_guests
+        ):
+            _retain_original(event, value)
+            event.event_title = event.event_title or invitation.group("brand").strip()
+            event.headliner = branded_guests[0]
+            event.performers = _stable_unique(branded_guests)
+            value = event.headliner
 
     # "Release Party [theme] - Artist"
     release_party = None if reviewed_wrapper_lock else re.fullmatch(
@@ -272,6 +311,19 @@ def normalize_event_semantics(event):
         event.event_title = (
             event.event_title or album_context.group("context").strip()
         )
+        value = event.headliner
+
+    # A tribute descriptor such as "Strangelove - The Depeche Mode
+    # Experience" is programme context, not part of the act's identity.
+    experience = None if reviewed_wrapper_lock else re.fullmatch(
+        r"(?P<artist>.+?)\s+[–—-]\s+"
+        r"(?P<context>The\s+.+\s+(?:Experience|Tribute|Show))",
+        value, re.IGNORECASE,
+    )
+    if experience and _clean(experience.group("artist")):
+        _retain_original(event, value)
+        event.headliner = experience.group("artist").strip()
+        event.event_title = event.event_title or experience.group("context").strip()
         value = event.headliner
 
     # A terminal release label explicitly assigns the release to the artist
@@ -349,6 +401,16 @@ def apply_structured_performer_semantics(
     for event in events:
         normalize_event_semantics(event)
         performers = _stable_unique(event.performers or [])
+        # Some upstream records repeat their complete raw *event title* as a
+        # single 'performer'. That is not independent artist metadata. Do not
+        # allow it to reverse a verified title-wrapper correction above.
+        if (
+            len(performers) == 1
+            and event.raw_title
+            and _key(performers[0]) == _key(event.raw_title)
+            and _key(event.headliner) != _key(event.raw_title)
+        ):
+            performers = [event.headliner]
         if not performers and event.description:
             performers = performers_from_explicit_music_credits(event.description)
             if performers and not event.event_title:

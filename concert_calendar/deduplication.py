@@ -2950,6 +2950,9 @@ def deduplicate_events(
     reconciled = _reconcile_unique_subset_venue_bills(
         reconciled, diagnostics,
     )
+    reconciled = _reconcile_unique_cross_source_name_variants(
+        reconciled, diagnostics,
+    )
     reconciled = _reconcile_final_identity_collisions(reconciled)
 
     # The final identity merge can make an event-specific ticket and complete
@@ -3061,6 +3064,89 @@ def _reconcile_unique_subset_venue_bills(
         count += 1
     if diagnostics is not None:
         diagnostics["unique_subset_venue_bills_merged"] = count
+    return [event for event in events if id(event) not in removed]
+
+
+def _reconcile_unique_cross_source_name_variants(
+    events: list[ConcertEvent],
+    diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Merge uniquely corroborated venue/ticketing naming variants.
+
+    This stage compares whole artist-bill representations and does not split
+    artists or infer new support roles. It protects alternate dates, separate
+    sessions and unrelated performances, including shared venue/day bills.
+    """
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+    removed = set()
+    merged_count = 0
+
+    def connector_signature(value):
+        text = unicodedata.normalize("NFKD", unescape(value or ""))
+        text = "".join(c for c in text if not unicodedata.combining(c)).casefold()
+        text = re.sub(r"\s+(?:&|et|and)\s+", " & ", text)
+        return re.sub(r"\s+", " ", text).strip()
+
+    def singular_headliner_match(venue_title, external_title):
+        title = re.split(r"\s+\+\s+", external_title, maxsplit=1)
+        if len(title) != 2 or not title[1].strip():
+            return False
+        venue_key = normalize_artist_component(venue_title)
+        source_key = normalize_artist_component(title[0])
+        if not venue_key or not source_key or len(source_key.split()) < 2:
+            return False
+        return venue_key == source_key + "s" or source_key == venue_key + "s"
+
+    for group in grouped.values():
+        if len(group) != 2:
+            continue
+        official = next(
+            (event for event in group if _has_official_venue_source(event)), None,
+        )
+        if official is None:
+            continue
+        other = group[0] if group[1] is official else group[1]
+        if (
+            set(official.source_names or []) == set(other.source_names or [])
+            or _distinct_performance_evidence(official, other)
+            or _has_consensus_performance_discriminator(official)
+            or _has_consensus_performance_discriminator(other)
+            or official.festival_name or other.festival_name
+            or not _tour_normalization_allows_merge(official, other)
+        ):
+            continue
+        if official.start_time and other.start_time:
+            first = _time_minutes(official.start_time)
+            second = _time_minutes(other.start_time)
+            if first is None or second is None or abs(first-second) > 30:
+                continue
+        if (
+            official.event_title and other.event_title
+            and _normalized_billing_component(official.event_title)
+            != _normalized_billing_component(other.event_title)
+        ):
+            continue
+
+        same_connectors = (
+            connector_signature(official.headliner) ==
+            connector_signature(other.headliner)
+            and re.search(r"\s(?:&|et|and)\s", official.headliner, re.I)
+        )
+        one_support_variant = (
+            set(other.source_names or []) == {"DICE"}
+            and singular_headliner_match(official.headliner, other.headliner)
+        )
+        if not (same_connectors or one_support_variant):
+            continue
+
+        merge_events(official, other)
+        _remove_billed_artists_from_support(official)
+        removed.add(id(other))
+        merged_count += 1
+    if diagnostics is not None:
+        diagnostics["unique_cross_source_name_variants_merged"] = merged_count
     return [event for event in events if id(event) not in removed]
 
 

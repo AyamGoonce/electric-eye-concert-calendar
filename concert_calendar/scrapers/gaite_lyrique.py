@@ -158,6 +158,31 @@ def detail_performers(html, event_title):
     if structured:
         return structured
 
+    # A two-person collaboration may have no comma-separated heading.
+    # Require the venue's own prose to call the *two named participants*
+    # separate artists; the '&' in a title is never sufficient by itself.
+    title_pair = re.fullmatch(
+        r"(?P<first>[^&+]{2,70}?)\s+&\s+(?P<second>[^&+]{2,70})",
+        clean(event_title),
+    )
+    if title_pair:
+        first, second = (clean(title_pair.group(k)) for k in ("first", "second"))
+        mention = re.compile(
+            re.escape(first) + r"\s+(?:et|and|&)\s+" + re.escape(second),
+            re.IGNORECASE,
+        )
+        for paragraph in soup.find_all(["p", "div"]):
+            prose = clean(paragraph.get_text(" ", strip=True))
+            if (
+                len(prose) < 1100
+                and mention.search(prose)
+                and re.search(
+                    r"\b(?:les\s+deux\s+artistes|two\s+artists|both\s+artists)\b",
+                    prose, re.IGNORECASE,
+                )
+            ):
+                return [first, second]
+
     heading = soup.find("h1")
     value = clean(
         heading.get_text(" ", strip=True)
