@@ -75,20 +75,32 @@ def clean_text(value):
 
 
 def is_non_concert_listing(title):
-    normalized = unicodedata.normalize("NFKD", title)
+    """Reject clearly non-musical DICE browse entries, not vaguely named acts."""
+    normalized = unicodedata.normalize("NFKD", title or "")
     normalized = "".join(
-        character
-        for character in normalized
+        character for character in normalized
         if not unicodedata.combining(character)
     ).casefold()
+    normalized = " ".join(normalized.split())
 
-    return bool(
-        re.search(r"\bviewing(?:s)? parties\b", normalized)
-        or is_non_artist_event_title(title)
+    # Reviewed false positives in DICE's nominal music:gig browse inventory.
+    # Avoid broad rules against cabarets, screenings or afterworks: some
+    # actually feature live music, and their titles alone are inconclusive.
+    non_concert_patterns = (
+        r"\bviewing(?:s)? parties\b",
+        r"\bblind[\s-]?test\b",
+        r"\bspeed[\s-]?dating\b",
+        r"\bgenerated nightmares\b.*\bexhibition\b",
+        r"^la rentree de cheries-cheris$",
+        r"^novemberfest by paname brewing company$",
+        # Festival admission products are not individually billed concerts.
+        r"^ici demain festival\s*#?\d+\s*-\s*pass\s+",
     )
 
-
-    return bool(re.search(r"\bviewing(?:s)? parties\b", normalized))
+    return (
+        is_non_artist_event_title(title)
+        or any(re.search(pattern, normalized) for pattern in non_concert_patterns)
+    )
 
 
 SERIES_PREFIXES = {
