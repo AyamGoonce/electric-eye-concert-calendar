@@ -31,10 +31,10 @@ def parse_items(soup, *, today=None):
                 lines = [clean(BeautifulSoup(part, "html.parser").get_text(" ", strip=True))
                          for part in re.split(r"<br\s*/?>", title_node.decode_contents(), flags=re.I)]
                 performers = [line for line in lines if line] or None
-            sold=bool(re.search(r"\\[(?:sold out|complet)\\]",title,re.I))
-            postponed=bool(re.search(r"\\[(?:reporté|reportée|reporte|reportee|postponed)\\]",title,re.I))
-            cancelled=bool(re.search(r"\\[(?:annulé|annulée|annule|annulee|cancelled|canceled)\\]",title,re.I))
-            title=clean(re.sub(r"\\s*\\[(?:sold out|complet|reporté|reportée|reporte|reportee|postponed|annulé|annulée|annule|annulee|cancelled|canceled)\\]\\s*"," ",title,flags=re.I))
+            sold=bool(re.search(r"\[(?:sold out|complet)\]",title,re.I))
+            postponed=bool(re.search(r"\[(?:reporté|reportée|reporte|reportee|postponed)\]",title,re.I))
+            cancelled=bool(re.search(r"\[(?:annulé|annulée|annule|annulee|cancelled|canceled)\]",title,re.I))
+            title=clean(re.sub(r"\s*\[(?:sold out|complet|reporté|reportée|reporte|reportee|postponed|annulé|annulée|annule|annulee|cancelled|canceled)\]\s*"," ",title,flags=re.I))
             if not title or event_date < cutoff: continue
             if is_non_artist_event_title(title): continue
             start=card.select_one(".event_header p span:not(.timeend)")
