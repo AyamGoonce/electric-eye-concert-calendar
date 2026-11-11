@@ -7,6 +7,17 @@ from html import unescape
 
 
 
+def is_non_music_quiz_title(value):
+    """Recognize participatory music quizzes, not performances by musicians."""
+    normalized = unicodedata.normalize("NFKD", unescape(value or ""))
+    normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+    normalized = " ".join(normalized.casefold().split())
+    return bool(re.match(
+        r"^(?:blind[\\s-]?test|quiz\\s+(?:musical|musique)|music\\s+quiz|music\\s+trivia)(?:\\b|$)",
+        normalized,
+    ))
+
+
 def is_non_artist_event_title(value):
     """
     Identify event concepts that contain no performer billing.
@@ -31,7 +42,7 @@ def is_non_artist_event_title(value):
     # Participatory quizzes are not live music performances. This must run
     # before the featured-artist connector guard: "with Dr Wax" names a host,
     # not a booked musical act.
-    if re.match(r"^(?:blind[\\s-]?test|quiz\\s+(?:musical|musique)|music\\s+quiz|music\\s+trivia)(?:\\b|$)", normalized):
+    if is_non_music_quiz_title(value):
         return True
 
     # Dating/social matchmaking listings have no music billing even when
