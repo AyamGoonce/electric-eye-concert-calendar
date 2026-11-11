@@ -1,6 +1,14 @@
 name: Update Electric Eye Concert Calendar
 
 on:
+  # Run publication once when this workflow definition is introduced/changed.
+  # Normal code pushes continue to use the separate regression workflow;
+  # scheduled runs and manual dispatch remain available.
+  push:
+    branches:
+      - supersonic-scraper
+    paths:
+      - ".github/workflows/update-calendar.yml"
   schedule:
     - cron: "17 */3 * * *"
   workflow_dispatch:
