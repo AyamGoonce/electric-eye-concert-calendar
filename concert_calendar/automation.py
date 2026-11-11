@@ -436,6 +436,51 @@ def print_pointer_digest(args) -> int:
     return 0
 
 
+def validate_reviewed_publication_survivors(events: list[dict]) -> None:
+    """Reject demonstrated post-reconciliation regressions in public rows.
+
+    These source-specific assertions require an exact URL and date, and leave
+    every other artist, venue and distinct performance outside their scope.
+    """
+    from urllib.parse import urlparse
+
+    relevant_baby = [
+        event for event in events
+        if event["d"] == "2026-11-13"
+        and event["v"] == "Bal Chavaux"
+        and urlparse(event.get("t") or "").path.rstrip("/")
+        == "/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes"
+    ]
+    expected = ["No Sex Last Night", "Exchpoptrue", "Nevroses Nocturnes"]
+    for event in relevant_baby:
+        if event["h"] != "Baby Berserk" or event.get("ch") != expected:
+            raise ProductionValidationError(
+                "Verified Baby Berserk four-artist billing regressed at publication boundary"
+            )
+
+    john = [
+        event for event in events
+        if event["d"] == "2027-08-20"
+        and event["v"] == "Bal Chavaux"
+        and (
+            urlparse(event.get("t") or "").path.rstrip("/") in {
+                "/agenda/john-bush",
+                "/event/6ad8c5103691bc0001d7a2b8",
+            }
+        )
+    ]
+    if len(john) > 1:
+        for left_index, left in enumerate(john):
+            for right in john[left_index + 1:]:
+                if (
+                    not left.get("st") or not right.get("st")
+                    or left["st"] == right["st"]
+                ):
+                    raise ProductionValidationError(
+                        "Verified John Bush physical concert still duplicated"
+                    )
+
+
 def validate_events(events: list[dict]) -> None:
     if len(events) < MINIMUM_EVENT_COUNT:
         raise ProductionValidationError(
@@ -541,6 +586,8 @@ def validate_events(events: list[dict]) -> None:
                 f"Duplicate renderer record at event {index}: {event['h']}"
             )
         fingerprints.add(fingerprint)
+
+    validate_reviewed_publication_survivors(events)
 
 
 def validate_source_report(report) -> None:
