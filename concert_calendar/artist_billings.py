@@ -377,6 +377,14 @@ def resolve_artist_billings(
             # A scoped lineup is not a reusable project identity.
             billing_review = None
         canonical_name = canonical.get(identity)
+        if description_review and description_review.get("eventDate"):
+            # An event-specific title correction must never leak into a
+            # different appearance of the same artist or tour.
+            if not (
+                event.date[:10] == description_review["eventDate"]
+                and _key(event.venue) == _key(description_review.get("venue"))
+            ):
+                description_review = None
         if description_review:
             artist = _clean(description_review.get("artist"))
             if artist:
