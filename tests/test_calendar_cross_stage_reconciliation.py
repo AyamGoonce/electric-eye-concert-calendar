@@ -85,6 +85,48 @@ class BillSemanticsIntegrationTests(unittest.TestCase):
             {"performer": {"name": "Baby Berserk + No Sex Last Night"}},
         ))
 
+    def test_bal_chavaux_full_official_lineup_overrides_partial_jsonld(self):
+        from concert_calendar.scrapers.bal_chavaux import (
+            corroborated_official_lineup, parse_detail_page,
+        )
+        complete = (
+            "BABY BERSERK + NO SEX LAST NIGHT + EXCHPOPTRUE + NEVROSES NOCTURNES"
+        )
+        partial = ["Baby Berserk", "No Sex Last Night"]
+        self.assertEqual(
+            ["BABY BERSERK", "NO SEX LAST NIGHT", "EXCHPOPTRUE",
+             "NEVROSES NOCTURNES"],
+            corroborated_official_lineup(complete, partial),
+        )
+        # No splitting from an unsupported opaque artist title.
+        self.assertEqual(
+            ["Singer", "Band"], corroborated_official_lineup(
+                "Florence + The Machine + Other", ["Singer", "Band"]
+            ),
+        )
+        listing = {
+            "date": "2026-11-13",
+            "headliner": complete,
+            "start_time": "19:30",
+            "category": "Concert",
+            "detail_url": "https://balchavaux.fr/agenda/baby-berserk-no-sex-last-night-exchpoptrue-nevroses-nocturnes",
+        }
+        html = (
+            '<script type="application/ld+json">'
+            '{"@type":"Event","name":"No Sex Last Night",'
+            '"startDate":"2026-11-13T19:30:00+01:00",'
+            '"performer":[{"name":"Baby Berserk"},{"name":"No Sex Last Night"}]}'
+            "</script>"
+        )
+        from datetime import date
+        record = parse_detail_page(html, listing, today=date(2026, 11, 11))
+        self.assertEqual("BABY BERSERK", record.headliner)
+        self.assertEqual(
+            ["NO SEX LAST NIGHT", "EXCHPOPTRUE", "NEVROSES NOCTURNES"],
+            record.co_headliners,
+        )
+        self.assertEqual(4, len(record.performers))
+
     def test_nonmusic_immersive_listening_concept_excluded(self):
         from concert_calendar.event_titles import is_non_artist_event_title
         self.assertTrue(is_non_artist_event_title(
@@ -113,6 +155,56 @@ class SourceReconciliationTests(unittest.TestCase):
             "<main><p>Simon & Garfunkel en concert</p></main>",
             "Simon & Garfunkel",
         ))
+
+    def test_verified_same_concert_title_variations_collapse(self):
+        pairs = [
+            ("2027-02-05", "La Machine du Moulin Rouge",
+             "Lewis Ofman", "Lewis OfMan Tour", "Lewis Ofman"),
+            ("2027-03-06", "Bal Chavaux",
+             "Daniele Silvestri", "Silvestri", "Daniele Silvestri"),
+            ("2027-03-13", "Élysée Montmartre",
+             "The Dead Daisies", "The Dead Daisies ft. Kelly Hansen",
+             "The Dead Daisies"),
+            ("2027-04-11", "La Maroquinerie",
+             "Jack Kays", "Jack Kays And His Band", "Jack Kays"),
+            ("2027-06-15", "Café de la Danse",
+             "Dirty Projectors", "Dirty Projectors (solo)",
+             "Dirty Projectors (solo)"),
+        ]
+        for when, venue, plain, decorated, expected in pairs:
+            with self.subTest(when=when, decorated=decorated):
+                records = [
+                    e(plain, source=venue, venue=venue, when=when),
+                    e(decorated, source="DICE", venue=venue, when=when),
+                ]
+                outcome = deduplicate_events(records)
+                self.assertEqual(1, len(outcome),
+                                 [(r.headliner, r.event_title) for r in outcome])
+                self.assertEqual(expected, outcome[0].headliner)
+
+    def test_osees_dmbq_opener_preserved_during_title_merge(self):
+        records = [
+            e("Osees with Brigid Dawson",
+              source="Cabaret Sauvage", venue="Cabaret Sauvage",
+              when="2027-06-12"),
+            e("Osees with Brigid Dawson + DMBQ",
+              source="DICE", venue="Cabaret Sauvage",
+              when="2027-06-12"),
+        ]
+        outcome = deduplicate_events(records)
+        self.assertEqual(1, len(outcome))
+        self.assertEqual("Osees with Brigid Dawson", outcome[0].headliner)
+        self.assertIn("DMBQ", outcome[0].openers or [])
+
+    def test_venue_scoped_aliases_do_not_merge_unrelated_day(self):
+        records = [
+            e("Dirty Projectors", source="Cabaret Sauvage",
+              venue="Café de la Danse", when="2027-06-16"),
+            e("Dirty Projectors (solo)", source="DICE",
+              venue="Café de la Danse", when="2027-06-16"),
+        ]
+        outcome = deduplicate_events(records)
+        self.assertEqual(2, len(outcome))
 
     def test_cross_source_et_ampersand_variant_is_one_concert(self):
         events = [

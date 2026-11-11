@@ -117,6 +117,21 @@ REVIEWED_EVENT_TITLES = {
     # JAŸ-Z 30 as branding. Reviewed 2026-09-07 against the official listing:
     # https://www.stadefrance.com/fr/billetterie/jay-z-30
     # Deliberately event-scoped: numbers remain valid parts of artist names.
+    # Reviewed single-concert title variations, corroborated against venue
+    # or promoter programmes. Scope every alias to its date and venue.
+    ("2027-02-05", "la machine du moulin rouge", "lewis ofman"): "Lewis Ofman",
+    ("2027-02-05", "la machine du moulin rouge", "lewis ofman tour"): "Lewis Ofman",
+    ("2027-03-06", "bal chavaux", "daniele silvestri"): "Daniele Silvestri",
+    ("2027-03-06", "bal chavaux", "silvestri"): "Daniele Silvestri",
+    ("2027-03-13", "elysee montmartre", "the dead daisies"): "The Dead Daisies",
+    ("2027-03-13", "elysee montmartre", "the dead daisies ft. kelly hansen"): "The Dead Daisies",
+    ("2027-03-13", "elysee montmartre", "the dead daisies feat. kelly hansen"): "The Dead Daisies",
+    ("2027-04-11", "la maroquinerie", "jack kays"): "Jack Kays",
+    ("2027-04-11", "la maroquinerie", "jack kays and his band"): "Jack Kays",
+    ("2027-06-15", "cafe de la danse", "dirty projectors"): "Dirty Projectors (solo)",
+    ("2027-06-15", "cafe de la danse", "dirty projectors (solo)"): "Dirty Projectors (solo)",
+    ("2027-06-12", "cabaret sauvage", "osees with brigid dawson"): "Osees with Brigid Dawson",
+    ("2027-06-12", "cabaret sauvage", "osees with brigid dawson + dmbq"): "Osees with Brigid Dawson",
     ("2026-09-10", "stade de france", "jay-z"): "JAŸ-Z",
     ("2026-09-10", "stade de france", "jay-z 30"): "JAŸ-Z",
     (
@@ -510,6 +525,15 @@ def _apply_reviewed_event_rules(events: list[ConcertEvent]) -> None:
             event.series_name = unescape(event.series_name)
         reviewed_title = _reviewed_event_title_for(event)
         if reviewed_title:
+            # Cabaret Sauvage confirms DMBQ as the opening act for this
+            # particular Osees show. Keep the extra bill after title merging.
+            if (
+                event.date == "2027-06-12"
+                and normalize_venue_key(event.venue) == "cabaret sauvage"
+                and normalize_artist_component(original_headliner)
+                == "osees with brigid dawson + dmbq"
+            ):
+                event.openers = _stable_unique([*(event.openers or []), "DMBQ"])
             reviewed_matches_raw = bool(
                 event.raw_title
                 and normalize_headliner(reviewed_title)
