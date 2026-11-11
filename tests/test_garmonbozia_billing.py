@@ -66,13 +66,25 @@ class GarmonboziaBillingTests(unittest.TestCase):
         self.assertEqual(raw, event.raw_title)
         self.assertEqual(["INGESTED"], event.performers)
 
-    def test_ingested_scoped_title_does_not_rewrite_unrelated_date(self):
+    def test_quoted_tour_title_normalizes_on_other_dates_too(self):
         raw = 'INGESTED "20th Anniversary Tour"'
         event = ConcertEvent(
             date="2028-02-01", headliner=raw, venue="Backstage By The Mill",
             city="Paris", department="75", source_names=["Garmonbozia"],
         )
         resolve_artist_billings([event], identity_catalog={})
+        self.assertEqual("INGESTED", event.headliner)
+        self.assertEqual("20th Anniversary Tour", event.event_title)
+
+    def test_unmarked_quoted_album_is_not_auto_reclassified(self):
+        raw = 'Artist "An Album Name"'
+        event = ConcertEvent(
+            date="2027-02-01", headliner=raw, venue="Backstage By The Mill",
+            city="Paris", department="75",
+        )
+        resolve_artist_billings([event], identity_catalog={})
+        from concert_calendar.billing_semantics import normalize_event_semantics
+        normalize_event_semantics(event)
         self.assertEqual(raw, event.headliner)
 
     def test_plus_inside_single_artist_name_is_not_split(self):
