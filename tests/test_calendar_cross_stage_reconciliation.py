@@ -156,6 +156,56 @@ class SourceReconciliationTests(unittest.TestCase):
             "Simon & Garfunkel",
         ))
 
+    def test_verified_same_concert_title_variations_collapse(self):
+        pairs = [
+            ("2027-02-05", "La Machine du Moulin Rouge",
+             "Lewis Ofman", "Lewis OfMan Tour", "Lewis Ofman"),
+            ("2027-03-06", "Bal Chavaux",
+             "Daniele Silvestri", "Silvestri", "Daniele Silvestri"),
+            ("2027-03-13", "Élysée Montmartre",
+             "The Dead Daisies", "The Dead Daisies ft. Kelly Hansen",
+             "The Dead Daisies"),
+            ("2027-04-11", "La Maroquinerie",
+             "Jack Kays", "Jack Kays And His Band", "Jack Kays"),
+            ("2027-06-15", "Café de la Danse",
+             "Dirty Projectors", "Dirty Projectors (solo)",
+             "Dirty Projectors (solo)"),
+        ]
+        for when, venue, plain, decorated, expected in pairs:
+            with self.subTest(when=when, decorated=decorated):
+                records = [
+                    e(plain, source=venue, venue=venue, when=when),
+                    e(decorated, source="DICE", venue=venue, when=when),
+                ]
+                outcome = deduplicate_events(records)
+                self.assertEqual(1, len(outcome),
+                                 [(r.headliner, r.event_title) for r in outcome])
+                self.assertEqual(expected, outcome[0].headliner)
+
+    def test_osees_dmbq_opener_preserved_during_title_merge(self):
+        records = [
+            e("Osees with Brigid Dawson",
+              source="Cabaret Sauvage", venue="Cabaret Sauvage",
+              when="2027-06-12"),
+            e("Osees with Brigid Dawson + DMBQ",
+              source="DICE", venue="Cabaret Sauvage",
+              when="2027-06-12"),
+        ]
+        outcome = deduplicate_events(records)
+        self.assertEqual(1, len(outcome))
+        self.assertEqual("Osees with Brigid Dawson", outcome[0].headliner)
+        self.assertIn("DMBQ", outcome[0].openers or [])
+
+    def test_venue_scoped_aliases_do_not_merge_unrelated_day(self):
+        records = [
+            e("Dirty Projectors", source="Cabaret Sauvage",
+              venue="Café de la Danse", when="2027-06-16"),
+            e("Dirty Projectors (solo)", source="DICE",
+              venue="Café de la Danse", when="2027-06-16"),
+        ]
+        outcome = deduplicate_events(records)
+        self.assertEqual(2, len(outcome))
+
     def test_cross_source_et_ampersand_variant_is_one_concert(self):
         events = [
             e("Nosaj Thing & Daito Manabe", source="La Gaîté Lyrique",
