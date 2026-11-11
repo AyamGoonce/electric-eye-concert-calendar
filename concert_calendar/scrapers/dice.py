@@ -445,6 +445,10 @@ def event_key(event):
         event.headliner.casefold(),
         event.venue.casefold(),
         event.city.casefold(),
+        # Multiple sets on the same date at the same venue must survive DICE
+        # source deduplication so the later performance-aware reconciler can
+        # assess them. A shared artist/venue/day is not a complete event key.
+        event.start_time or "",
     )
 
 
@@ -485,13 +489,15 @@ def _load_api_events():
                 events_by_key[key] = event
                 new_events += 1
 
+        # A page can consist entirely of duplicates or non-concert records
+        # while a later cursor still contains new concerts. Only an exhausted
+        # or repeated cursor ends enumeration, not an empty *new* count.
         next_cursor = payload.get("next_page_cursor")
 
         if (
             not source_events
             or not next_cursor
             or next_cursor in seen_cursors
-            or new_events == 0
         ):
             break
 
