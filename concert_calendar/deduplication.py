@@ -2897,6 +2897,9 @@ def deduplicate_events(
     # sourced representations identical only after the earlier reconciliation
     # stages have run. Collapse those residual duplicates before state IDs are
     # allocated, while preserving explicit performances/programmes.
+    reconciled = _reconcile_unique_subset_venue_bills(
+        reconciled, diagnostics,
+    )
     reconciled = _reconcile_final_identity_collisions(reconciled)
 
     # The final identity merge can make an event-specific ticket and complete
@@ -2934,6 +2937,81 @@ def deduplicate_events(
         )
 
     return reconciled
+
+
+def _reconcile_unique_subset_venue_bills(
+    events: list[ConcertEvent], diagnostics: dict | None = None,
+) -> list[ConcertEvent]:
+    """Corroborate opaque, partially overlapping bills without splitting artists.
+
+    Only one venue listing and one DICE record for an identical dated, timed
+    performance qualify. Explicit spaced-plus sections are comparison tokens,
+    not inferred artist identities. A richer authoritative venue bill wins.
+    """
+    grouped = defaultdict(list)
+    for event in events:
+        grouped[(event.date, normalize_venue_key(event.venue))].append(event)
+
+    removed = set()
+    count = 0
+    for group in grouped.values():
+        if len(group) != 2:
+            continue
+        official = next(
+            (event for event in group if _has_official_venue_source(event)), None
+        )
+        if official is None:
+            continue
+        other = next(event for event in group if event is not official)
+        if (
+            set(other.source_names or []) != {"DICE"}
+            or "DICE" in set(official.source_names or [])
+            or not official.start_time
+            or official.start_time != other.start_time
+            or _distinct_performance_evidence(official, other)
+            or _has_consensus_performance_discriminator(official)
+            or _has_consensus_performance_discriminator(other)
+            or official.festival_name or other.festival_name
+            or not _tour_normalization_allows_merge(official, other)
+        ):
+            continue
+
+        # Compare only distinct, whole, explicitly separated sections, never
+        # individual punctuation-delimited fragments of a single artist.
+        def parts(event):
+            values = [
+                _normalized_billing_component(part)
+                for part in re.split(r"\s+\+\s+", event.headliner or "")
+            ]
+            return values if len(values) >= 3 and all(values) and len(set(values)) == len(values) else []
+
+        venue_parts, dice_parts = parts(official), parts(other)
+        if (
+            not venue_parts or not dice_parts
+            or venue_parts[0] != dice_parts[0]
+            or len(venue_parts) <= len(dice_parts)
+            or not set(dice_parts).issubset(set(venue_parts))
+            or len(venue_parts) - len(dice_parts) > 2
+        ):
+            continue
+
+        # Retain the official full title (including any additional billed
+        # performers) and its ticketing/visual provenance.
+        merge_events(official, other)
+        full_bill_names = set(venue_parts)
+        official.co_headliners = [
+            artist for artist in (official.co_headliners or [])
+            if _normalized_billing_component(artist) not in full_bill_names
+        ] or None
+        official.openers = [
+            artist for artist in (official.openers or [])
+            if _normalized_billing_component(artist) not in full_bill_names
+        ] or None
+        removed.add(id(other))
+        count += 1
+    if diagnostics is not None:
+        diagnostics["unique_subset_venue_bills_merged"] = count
+    return [event for event in events if id(event) not in removed]
 
 
 def _reconcile_final_identity_collisions(
