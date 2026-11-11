@@ -53,6 +53,41 @@ class EventEligibilityTests(unittest.TestCase):
             record.performers = [title]
             self.assertTrue(classify_event_eligibility(record)[0])
 
+    def test_original_activity_title_survives_artist_rewriting(self):
+        cases = (
+            ("Sophro-Danse : Floriane Cornard / Magali Serres",
+             "non_music_activity"),
+            ("Hors Antenne : Arrêt sur images", "non_music_discussion"),
+            ("Bingo et Goûter de Noël", "non_music_activity"),
+            ("Écoute immersive de disque - THE DARK SIDE OF THE MOON DE PINK FLOYD",
+             "non_music_listening_session"),
+        )
+        for original, reason in cases:
+            with self.subTest(original=original):
+                record = event(
+                    raw_title=original,
+                    performers=["Invented Performer"],
+                    event_type="live performance",
+                )
+                record.headliner = "Invented Performer"
+                self.assertEqual(
+                    (False, reason), classify_event_eligibility(record),
+                )
+
+    def test_legitimate_concerts_remain_eligible_with_activity_words(self):
+        for original in (
+            "Pink Floyd Tribute Live",
+            "Bingo Players",
+            "Danse Macabre",
+            "The Immersive Experience Band",
+        ):
+            record = event(
+                raw_title=original, performers=[original],
+                event_type="live performance",
+            )
+            record.headliner = original
+            self.assertEqual((True, None), classify_event_eligibility(record))
+
     def test_structured_workshop_without_performer_is_rejected(self):
         eligible, reason = classify_event_eligibility(event(event_type="workshop"))
         self.assertFalse(eligible)
