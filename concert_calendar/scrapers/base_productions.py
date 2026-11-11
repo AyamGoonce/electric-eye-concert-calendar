@@ -89,6 +89,34 @@ def detail_performers(html, title):
     return []
 
 
+RESIDENCY_TITLE_RE = re.compile(
+    r"^(?P<artist>.+?)\s+[–—-]\s+"
+    r"(?P<description>\d{1,3}\s+[\wÀ-ÿ'’ -]+)$",
+    re.IGNORECASE,
+)
+
+
+def detail_residency_title(html, listing_title):
+    """Use the promoter's independently labelled h1 as artist evidence.
+
+    A counted run of performances is programme copy, not part of the artist
+    name. This does not expand dates: the venue's individual listings are the
+    authoritative schedule.
+    """
+    match = RESIDENCY_TITLE_RE.fullmatch(clean_text(listing_title))
+    if not match:
+        return None
+    soup = BeautifulSoup(html or "", "html.parser")
+    heading = soup.select_one("h1")
+    source_artist = clean_text(heading.get_text(" ", strip=True)) if heading else ""
+    if (
+        not source_artist
+        or normalized_artist(source_artist) != normalized_artist(match["artist"])
+    ):
+        return None
+    return source_artist, clean_text(match["description"])
+
+
 def split_venue_city(value):
     value = clean_text(value)
 
@@ -203,6 +231,27 @@ def load_events():
 
         if event is None:
             continue
+
+        # A residency's promotional label must not become an artist. Only
+        # fetch details for a clearly delimited counted-run candidate, and
+        # require an independently labelled artist heading from the promoter.
+        if event.ticket_url and RESIDENCY_TITLE_RE.fullmatch(event.headliner):
+            try:
+                detail_response = session.get(
+                    event.ticket_url, headers=HEADERS, timeout=REQUEST_TIMEOUT,
+                )
+                detail_response.raise_for_status()
+            except requests.RequestException:
+                pass
+            else:
+                residency = detail_residency_title(
+                    detail_response.text, event.headliner,
+                )
+                if residency:
+                    original_title = event.headliner
+                    event.headliner, event.event_title = residency
+                    event.raw_title = original_title
+                    event.identity_aliases = [original_title]
 
         if (
             event.ticket_url
