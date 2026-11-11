@@ -232,11 +232,11 @@ def _explicit_nonconcert_activity(event):
         value = " ".join(normalize_text_for_matching(title).split())
         if not value:
             continue
-        if re.search(r"\\b(?:sophro[\\s-]?danse|bingo\\s+et\\s+gouter)\\b", value):
+        if re.search(r"\b(?:sophro[\s-]?danse|bingo\s+et\s+gouter)\b", value):
             return "non_music_activity"
-        if re.match(r"^hors\\s+antenne\\s*:\\s*arret\\s+sur\\s+images\\b", value):
+        if re.match(r"^hors\s+antenne\s*:\s*arret\s+sur\s+images\b", value):
             return "non_music_discussion"
-        if re.search(r"\\becoute\\s+immersive\\s+de\\s+disque\\b", value):
+        if re.search(r"\becoute\s+immersive\s+de\s+disque\b", value):
             return "non_music_listening_session"
     return None
 
