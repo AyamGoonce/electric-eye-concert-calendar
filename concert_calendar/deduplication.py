@@ -3093,8 +3093,16 @@ def _reconcile_unique_cross_source_name_variants(
         title = re.split(r"\s+\+\s+", external_title, maxsplit=1)
         if len(title) != 2 or not title[1].strip():
             return False
-        venue_key = normalize_artist_component(venue_title)
-        source_key = normalize_artist_component(title[0])
+        # Compare literal source spellings: the canonical artist-alias table
+        # already maps plural Westside Cowboys to Westside Cowboy, so applying
+        # it before this evidence check would erase the distinguishing suffix.
+        def spelling_key(value):
+            value = unicodedata.normalize("NFKD", unescape(value or ""))
+            value = "".join(c for c in value if not unicodedata.combining(c))
+            return re.sub(r"\s+", " ", value).strip().casefold()
+
+        venue_key = spelling_key(venue_title)
+        source_key = spelling_key(title[0])
         if not venue_key or not source_key or len(source_key.split()) < 2:
             return False
         return venue_key == source_key + "s" or source_key == venue_key + "s"

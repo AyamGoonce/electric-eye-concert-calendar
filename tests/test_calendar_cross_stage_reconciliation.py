@@ -137,7 +137,14 @@ class SourceReconciliationTests(unittest.TestCase):
             e("The Doors", source="Petit Bain", venue="Petit Bain"),
             e("The Door", source="DICE", venue="Petit Bain"),
         ]
-        self.assertEqual(2, len(deduplicate_events(events)))
+        # Validate the new source-variant stage itself. Older canonical
+        # identity reconciliation has its own artist alias handling.
+        from concert_calendar.deduplication import (
+            _reconcile_unique_cross_source_name_variants,
+        )
+        self.assertEqual(
+            2, len(_reconcile_unique_cross_source_name_variants(events)),
+        )
 
 
 if __name__ == "__main__":
