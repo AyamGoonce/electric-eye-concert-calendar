@@ -231,6 +231,31 @@ def normalize_event_semantics(event):
             event.event_title = metadata['label'].title()
 
 
+# Only explicitly labelled CURRENT musical credits are performer evidence.
+# Unlabelled prose, influences and songs mentioned in a programme are not.
+MUSIC_CREDIT_RE = re.compile(
+    r"^(?:piano|chant|voix|vocals?|guitare|guitar|basse|bass|"
+    r"batterie|drums?|violon|violin|saxophone|trompette|trumpet)"
+    r"\\s*[:–—-]?\\s+"
+    r"(?P<name>[A-ZÀ-ÖØ-Ý][\\wÀ-ÖØ-öø-ÿ'’.-]+"
+    r"(?:\\s+[A-ZÀ-ÖØ-Ý][\\wÀ-ÖØ-öø-ÿ'’.-]+){1,4})"
+    r"\\s*$",
+    re.IGNORECASE,
+)
+
+
+def performers_from_explicit_music_credits(description: str | None) -> list[str]:
+    """Recognize independently labelled musician credits, not descriptive prose."""
+    artists = []
+    for raw_line in (description or "").splitlines():
+        line = _clean(raw_line).strip("•*- ")
+        match = MUSIC_CREDIT_RE.fullmatch(line)
+        if match:
+            artists.append(match.group("name"))
+    # One isolated name is insufficient to reinterpret an opaque show title.
+    return _stable_unique(artists) if len(_stable_unique(artists)) >= 2 else []
+
+
 def apply_structured_performer_semantics(
     events: list[ConcertEvent],
 ) -> None:
@@ -243,6 +268,10 @@ def apply_structured_performer_semantics(
     for event in events:
         normalize_event_semantics(event)
         performers = _stable_unique(event.performers or [])
+        if not performers and event.description:
+            performers = performers_from_explicit_music_credits(event.description)
+            if performers and not event.event_title:
+                event.event_title = event.raw_title or event.headliner
 
         if not performers:
             continue
