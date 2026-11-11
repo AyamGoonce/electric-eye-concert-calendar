@@ -30,7 +30,7 @@ def is_non_artist_event_title(value):
 
     # Dating/social matchmaking listings have no music billing even when
     # surfaced in DICE's public music:gig category.
-    if re.search(r"\bspeed[\\s-]?dating\b", normalized):
+    if re.search(r"\bspeed[\s-]?dating\b", normalized):
         return True
 
     # Explicit performer connectors make this unsuitable for concept-only
