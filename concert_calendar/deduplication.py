@@ -1771,7 +1771,11 @@ def _reconcile_reviewed_event_bills(events: list[ConcertEvent]) -> list[ConcertE
                 )
             )
         ]
-        if {normalize_artist_component(event.headliner) for event in matches} != expected:
+        if not rule.get("verified_performers") and (
+            {normalize_artist_component(event.headliner) for event in matches} != expected
+        ):
+            continue
+        if rule.get("verified_performers") and not matches:
             continue
 
         preferred = normalize_artist_component(rule["headliner"])
