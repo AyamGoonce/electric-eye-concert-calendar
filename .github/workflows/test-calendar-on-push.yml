@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - supersonic-scraper
-      - fix/monotonic-billing-and-source-quality-20261111
   workflow_dispatch:
 
 permissions:
