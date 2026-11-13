@@ -1,6 +1,7 @@
 name: Update Electric Eye Concert Calendar
 
 on:
+  # Public-label safety release: guard formatting-only text and log field-specific failures.
   # Verified final output repair: Baby Berserk credits and John Bush single show.
   # Reliability release 2026-11-11: audited source/billing normalization, DICE inventory guards.
   # Run publication once when this workflow definition is introduced/changed.
