@@ -11,6 +11,54 @@ from concert_calendar.scrapers.popup_label import parse_events
 
 class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
 
+    def test_export_cleans_scraped_label_formatting_but_preserves_identity(self):
+        from concert_calendar.production_export import event_to_data
+        from concert_calendar.automation import validate_events
+        record = ConcertEvent(
+            "2027-03-26", "First <strong>Artist</strong>\nwith Band",
+            "Le <span>Venue</span>\nParis", "Paris\r\nCentre", "75",
+            openers=["Second<br>Artist", "Third &amp; Fourth"],
+        )
+        public = event_to_data(record)
+        self.assertEqual("First Artist with Band", public["h"])
+        self.assertEqual("Le Venue Paris", public["v"])
+        self.assertEqual("Paris Centre", public["c"])
+        self.assertEqual(["Second Artist", "Third & Fourth"], public["o"])
+        self.assertEqual("First <strong>Artist</strong>\nwith Band", record.headliner)
+        self.assertEqual("Second<br>Artist", record.openers[0])
+        # These values must not fail the public text gate.
+        from concert_calendar.automation import RAW_MARKUP_OR_URL_RE
+        for label in (public["h"], public["v"], public["c"], *public["o"]):
+            self.assertIsNone(RAW_MARKUP_OR_URL_RE.search(label))
+
+    def test_publication_error_identifies_offending_field_and_event(self):
+        from concert_calendar.automation import (
+            validate_events, ProductionValidationError,
+        )
+        from concert_calendar.production_export import event_to_data
+        row = event_to_data(ConcertEvent(
+            "2027-03-26", "Test Artist", "Test Venue", "Paris", "75",
+        ))
+        rows = []
+        for index in range(100):
+            item = dict(row, i=f"{index:016x}", h=f"Artist {index}")
+            rows.append(item)
+        rows[32] = dict(rows[32], o=["https://example.com/artist"])
+        with self.assertRaisesRegex(
+            ProductionValidationError,
+            r"Event 32 .*opener\[0\].*https://example",
+        ):
+            validate_events(rows)
+
+    def test_url_lookalikes_not_silently_edited_during_export(self):
+        from concert_calendar.production_export import event_to_data
+        from concert_calendar.automation import RAW_MARKUP_OR_URL_RE
+        record = ConcertEvent(
+            "2027-03-26", "Artist https://example.com", "Venue",
+            "Paris", "75",
+        )
+        self.assertIsNotNone(RAW_MARKUP_OR_URL_RE.search(event_to_data(record)["h"]))
+
     def test_explicit_tour_suffix_changes_display_not_identity(self):
         original = "KATSEYE - THE WILDWORLD TOUR"
 

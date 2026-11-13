@@ -104,6 +104,24 @@ def genre_categories(value: str | None) -> list[str]:
     return map_raw_genres(value)
 
 
+_PUBLIC_FORMAT_TAG_RE = re.compile(
+    r"</?(?:a|div|span|p|br|strong|em)\b[^>]*>", re.IGNORECASE,
+)
+
+
+def _public_display_label(value: str) -> str:
+    """Remove presentation-only markup without altering source identities.
+
+    Scraped artist/venue labels sometimes retain HTML formatting or embedded
+    line breaks. These characters are not part of an artist's identity. Keep
+    the original values in source/event state; clean only renderer text.
+    Unknown markup and embedded URLs still fail strict publication validation.
+    """
+    clean = html.unescape(value or "")
+    clean = _PUBLIC_FORMAT_TAG_RE.sub(" ", clean)
+    return re.sub(r"\s+", " ", clean).strip()
+
+
 def _artist_display_case(name: str) -> str:
     """
     Return canonical public casing for a performer/bill.
@@ -150,10 +168,10 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
         else safe_image_url(event.image_url)
     )
     display_headliner, display_event_title = _display_title_parts(event)
-    display_headliner = _artist_display_case(display_headliner)
+    display_headliner = _public_display_label(_artist_display_case(display_headliner))
 
     display_openers = [
-        _artist_display_case(artist)
+        _public_display_label(_artist_display_case(artist))
         for artist in (event.openers or [])
     ]
 
@@ -162,7 +180,7 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
     display_bill_components = {" ".join(display_headliner.casefold().split())}
 
     display_co_headliners = [
-        _artist_display_case(artist)
+        _public_display_label(_artist_display_case(artist))
         for artist in (event.co_headliners or [])
         if " ".join(artist.casefold().split())
         not in display_bill_components
@@ -173,8 +191,8 @@ def event_to_data(event: ConcertEvent, rejected_images: set[str] | None = None, 
         "h": display_headliner,
         "o": display_openers,
         **({"ch": display_co_headliners} if display_co_headliners else {}),
-        "v": event.venue,
-        "c": event.city,
+        "v": _public_display_label(event.venue),
+        "c": _public_display_label(event.city),
         "x": (
             event.genres_public if event.genres_public else
             [event.genre_public] if event.genre_public else
