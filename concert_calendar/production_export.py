@@ -105,7 +105,7 @@ def genre_categories(value: str | None) -> list[str]:
 
 
 _PUBLIC_FORMAT_TAG_RE = re.compile(
-    r"</?(?:a|div|span|p|br|strong|em)\\b[^>]*>", re.IGNORECASE,
+    r"</?(?:a|div|span|p|br|strong|em)\b[^>]*>", re.IGNORECASE,
 )
 
 
@@ -119,7 +119,7 @@ def _public_display_label(value: str) -> str:
     """
     clean = html.unescape(value or "")
     clean = _PUBLIC_FORMAT_TAG_RE.sub(" ", clean)
-    return re.sub(r"\\s+", " ", clean).strip()
+    return re.sub(r"\s+", " ", clean).strip()
 
 
 def _artist_display_case(name: str) -> str:
