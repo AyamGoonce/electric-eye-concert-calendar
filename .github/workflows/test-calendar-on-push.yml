@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - supersonic-scraper
-      - fix/public-label-validation-20261113
   workflow_dispatch:
 
 permissions:
