@@ -15,8 +15,8 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
         from concert_calendar.production_export import event_to_data
         from concert_calendar.automation import validate_events
         record = ConcertEvent(
-            "2027-03-26", "First <strong>Artist</strong>\\nwith Band",
-            "Le <span>Venue</span>\\nParis", "Paris\\r\\nCentre", "75",
+            "2027-03-26", "First <strong>Artist</strong>\nwith Band",
+            "Le <span>Venue</span>\nParis", "Paris\r\nCentre", "75",
             openers=["Second<br>Artist", "Third &amp; Fourth"],
         )
         public = event_to_data(record)
@@ -24,7 +24,7 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
         self.assertEqual("Le Venue Paris", public["v"])
         self.assertEqual("Paris Centre", public["c"])
         self.assertEqual(["Second Artist", "Third & Fourth"], public["o"])
-        self.assertEqual("First <strong>Artist</strong>\\nwith Band", record.headliner)
+        self.assertEqual("First <strong>Artist</strong>\nwith Band", record.headliner)
         self.assertEqual("Second<br>Artist", record.openers[0])
         # These values must not fail the public text gate.
         from concert_calendar.automation import RAW_MARKUP_OR_URL_RE
@@ -46,7 +46,7 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
         rows[32] = dict(rows[32], o=["https://example.com/artist"])
         with self.assertRaisesRegex(
             ProductionValidationError,
-            r"Event 32 .*opener\\[0\\].*https://example",
+            r"Event 32 .*opener\[0\].*https://example",
         ):
             validate_events(rows)
 
