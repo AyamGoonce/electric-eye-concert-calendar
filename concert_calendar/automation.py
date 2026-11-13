@@ -517,11 +517,22 @@ def validate_events(events: list[dict]) -> None:
             raise ProductionValidationError(
                 f"Event {index} is missing headliner, venue, or city"
             )
-        public_text = [event["h"], event["v"], event["c"], *event["o"]]
-        if any(RAW_MARKUP_OR_URL_RE.search(value) for value in public_text):
-            raise ProductionValidationError(
-                f"Event {index} contains markup, a URL, or a newline in a public field"
-            )
+        public_fields = {
+            "headliner": event["h"],
+            "venue": event["v"],
+            "city": event["c"],
+            **{f"opener[{position}]": name for position, name in enumerate(event["o"])},
+        }
+        for field_name, value in public_fields.items():
+            match = RAW_MARKUP_OR_URL_RE.search(value)
+            if match:
+                # Exact field and a bounded Python-escaped preview allow a
+                # source-level repair without leaking or printing entire rows.
+                raise ProductionValidationError(
+                    f"Event {index} ({event['d']} | {event['h'][:90]!r} | "
+                    f"{event['v'][:70]!r}) contains prohibited public text "
+                    f"in {field_name}: {value[:180]!r}; token={match.group(0)!r}"
+                )
         if RELOCATION_HEADLINER_RE.search(event["h"]):
             raise ProductionValidationError(
                 f"Event {index} exposes a venue-change notice as its headliner"
