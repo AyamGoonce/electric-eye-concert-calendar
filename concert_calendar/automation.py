@@ -1027,7 +1027,19 @@ def build(args) -> int:
 
     report_fields = asdict(pipeline_report)
     report_fields.pop("retained_snapshots")
+    from concert_calendar.quality_diagnostics import reconciliation_quality_report
+    quality_report = reconciliation_quality_report(events)
+    print(
+        "RECONCILIATION QUALITY | missing_genre={0} flat_bill_candidates={1} "
+        "programme_title_candidates={2}".format(
+            quality_report["missing_genre"]["count"],
+            quality_report["possible_flat_bill"]["count"],
+            quality_report["possible_programme_as_artist"]["count"],
+        ),
+        flush=True,
+    )
     report = {
+        "reconciliation_quality": quality_report,
         **report_fields,
         "published_baseline_count": published_count,
         "data_filename": pointer["data"],
