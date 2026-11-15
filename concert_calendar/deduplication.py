@@ -3141,6 +3141,35 @@ def _reconcile_verified_publication_survivors(events: list[ConcertEvent]) -> lis
     Neither title punctuation nor matching artist/date/venue alone is enough.
     Do not allow earlier reconciliations to reverse verified performer order.
     """
+    # The Olympia's official event page identifies ACCEPT as the artist,
+    # the anniversary wording as tour context, and Dynazty / Enforcer as
+    # opening acts. Reassert those sourced roles after the final merge so
+    # imported ticketing titles cannot repromote the whole string to artist.
+    for event in events:
+        if (
+            event.date[:10] == "2026-11-22"
+            and normalize_venue_key(event.venue)
+            == normalize_venue_key("L’Olympia Bruno Coquatrix")
+            and urlparse(event.ticket_url or "").hostname in {
+                "olympiahall.com", "www.olympiahall.com",
+            }
+            and urlparse(event.ticket_url or "").path.rstrip("/")
+            == "/agenda/accept"
+        ):
+            original_title = event.headliner
+            if normalize_artist_component(original_title) != "accept":
+                event.identity_aliases = _stable_unique([
+                    *(event.identity_aliases or []), original_title,
+                ])
+            event.raw_title = (
+                event.raw_title or "ACCEPT 50th Anniversary Tour 2026"
+            )
+            event.headliner = "ACCEPT"
+            event.event_title = "50th Anniversary Tour 2026"
+            event.performers = ["ACCEPT"]
+            event.co_headliners = None
+            event.openers = ["DYNAZTY", "ENFORCER"]
+
     complete = [
         "Baby Berserk", "No Sex Last Night", "Exchpoptrue",
         "Nevroses Nocturnes",
