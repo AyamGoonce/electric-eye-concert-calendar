@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - feature/reconciliation-evidence-2026-11-15
   workflow_dispatch:
 
 permissions:
