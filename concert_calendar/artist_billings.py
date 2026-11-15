@@ -331,31 +331,32 @@ def _same_event_groups(events: list[ConcertEvent]):
     return groups
 
 
+def _billing_matches_roster(billing: str, artists: list[str]) -> bool:
+    """Verify that the complete displayed bill matches every roster member."""
+    if len(artists) < 2:
+        return False
+    separator = r"\\s+(?:\\+|/|•|&|et|[–—-])\\s+"
+    pattern = "^" + separator.join(
+        re.escape(name).replace(r"\\ ", r"\\s+") for name in artists
+    ) + "$"
+    return re.fullmatch(pattern, _clean(billing), re.IGNORECASE) is not None
+
+
 def _cross_source_artists(
     event: ConcertEvent,
     group: list[ConcertEvent],
     billing: str,
 ) -> list[str]:
-    """Accept independent roster evidence only for the *entire* billing.
-
-    Substring containment is insufficient: a title may mention two artists
-    while also naming a third act, a tribute or a series. Preserve the
-    independently supplied order rather than guessing a role assignment.
-    """
+    """Accept independent roster evidence only for the *entire* billing."""
     event_sources = set(event.source_names or [])
-    separator = r"\\s+(?:\\+|/|•|&|et|[–—-])\\s+"
     for candidate in group:
         artists = _stable_unique(candidate.performers or [])
         if candidate is event or len(artists) < 2:
             continue
         if event_sources and set(candidate.source_names or []) == event_sources:
             continue
-        # Keep artist punctuation literal, but permit normalized whitespace.
-        # An anchored match prevents partial rosters from swallowing extra acts.
-        pattern = "^" + separator.join(
-            re.escape(name).replace(r"\\ ", r"\\s+") for name in artists
-        ) + "$"
-        if re.fullmatch(pattern, _clean(billing), re.IGNORECASE):
+        # An anchored match prevents a partial roster swallowing extra acts.
+        if _billing_matches_roster(billing, artists):
             return artists
     return []
 
@@ -364,7 +365,16 @@ def _same_source_evidence(event: ConcertEvent, billing: str) -> tuple[list[str],
     """Return a bill supported by per-record source structure, never punctuation alone."""
     supplied = getattr(event, "_billing_evidence", None) or {}
     supplied_artists = _stable_unique(supplied.get("artists") or [])
-    if len(supplied_artists) >= 2 and int(supplied.get("confidence") or 0) >= 95:
+    if (
+        len(supplied_artists) >= 2
+        and int(supplied.get("confidence") or 0) >= 95
+        # A flat bill with recognized separators must account for *every*
+        # listed act, even when the provider also sends a separate roster.
+        and (
+            not re.search(r"\\s+(?:\\+|/|•|&|et|[–—-])\\s+", billing, re.I)
+            or _billing_matches_roster(billing, supplied_artists)
+        )
+    ):
         return supplied_artists, list(
             supplied.get("evidence") or ["source supplied per-record billing evidence"]
         )
