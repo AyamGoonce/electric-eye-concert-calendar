@@ -66,6 +66,18 @@ def _reviewed_predecessor_identities(event: ConcertEvent) -> list[str]:
 
     artist = normalize_artist_component(event.headliner)
     result = []
+    # A ticketing feed may call a performance by its work title, while an
+    # independently corroborated venue programme names the musician.
+    # Preserve the old event-state identity without pretending the work title
+    # is an artist alias in the content index.
+    if (
+        event.performance_marker == "official_venue_programme"
+        and event.raw_title
+        and normalize_headliner(event.raw_title) != normalize_headliner(event.headliner)
+    ):
+        result.append(canonical_event_identity({
+            "d": event.date, "h": event.raw_title, "v": event.venue,
+        }))
     for alias in event.identity_aliases or []:
         value = "\x1f".join((
             event.date[:10],
