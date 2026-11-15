@@ -476,7 +476,10 @@ def validate_reviewed_publication_survivors(events: list[dict]) -> None:
             != {"dynazty", "enforcer"}
         ):
             raise ProductionValidationError(
-                "Official Accept tour title, artist, or opener billing regressed"
+                "Official Accept tour title, artist, or opener billing regressed: "
+                f"headliner={item['h'][:100]!r}; "
+                f"title={item.get('et', '')[:100]!r}; "
+                f"openers={item.get('o', [])!r}"
             )
 
     # This reviewed theatrical production was shown in DICE's music inventory.
