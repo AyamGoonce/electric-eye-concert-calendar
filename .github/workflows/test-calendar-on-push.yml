@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - fix/accept-final-billing-20261115
   workflow_dispatch:
 
 permissions:
