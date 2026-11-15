@@ -1,6 +1,7 @@
 name: Update Electric Eye Concert Calendar
 
 on:
+  # Phase 1 follow-up: reject collaboration headlines from identity harvest after audit.
   # Phase 1 release: source-provenanced exact artist identity catalogue; no inferred aliases.
   # Release: provenance-backed programme credits, artist billing and genre consensus, with safeguarded publication.
   # Release 2026-11-15: verify structural DICE eligibility, credited-stage billing and Sunset quoted titles.
