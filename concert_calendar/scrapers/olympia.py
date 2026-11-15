@@ -1,5 +1,7 @@
 import re
+import unicodedata
 from datetime import date, datetime, timedelta
+from urllib.parse import urlparse
 
 import requests
 
@@ -83,6 +85,40 @@ def parse_explicit_support_title(value):
     return (clean_text(match[1]), split_support(match[2])) if match else (title, None)
 
 
+ANNIVERSARY_TOUR_SUFFIX_RE = re.compile(
+    r"^(?P<artist>.+?)\s+(?P<context>\d{1,3}(?:st|nd|rd|th|e|ème|eme)\s+"
+    r"(?:Anniversary|Anniversaire)\s+Tour\s+20\d{2})$",
+    flags=re.IGNORECASE,
+)
+
+
+def _artist_slug(value):
+    normalized = unicodedata.normalize("NFKD", value or "")
+    normalized = "".join(
+        char for char in normalized if not unicodedata.combining(char)
+    )
+    return re.sub(r"[^a-z0-9]+", "-", normalized.casefold()).strip("-")
+
+
+def separate_official_tour_suffix(title, permalink):
+    """Separate a labelled tour when the venue independently names the artist.
+
+    Require the official page's terminal slug to identify precisely the
+    apparent artist; without that evidence an opaque band name is preserved.
+    """
+    match = ANNIVERSARY_TOUR_SUFFIX_RE.fullmatch(clean_text(title))
+    if not match:
+        return title, None
+    artist = clean_text(match.group("artist"))
+    path_parts = [part for part in urlparse(permalink or "").path.split("/") if part]
+    if (
+        not artist or not path_parts or
+        _artist_slug(path_parts[-1]) != _artist_slug(artist)
+    ):
+        return title, None
+    return artist, clean_text(match.group("context"))
+
+
 def item_genres(item):
     return {
         clean_text(term.get("name"))
@@ -126,8 +162,12 @@ def parse_item(item):
     meta = item.get("meta") or {}
     genres = item_genres(item)
     status = clean_text(meta.get("infos_text_status")).casefold()
-    headliner, title_openers = parse_explicit_support_title(item.get("post_title"))
+    raw_title = clean_text(item.get("post_title"))
+    headliner, title_openers = parse_explicit_support_title(raw_title)
     headliner = headliner.strip(" -")
+    headliner, tour_title = separate_official_tour_suffix(
+        headliner, clean_text(item.get("permalink")),
+    )
 
     if not genres.intersection(MUSIC_GENRES):
         return []
@@ -160,6 +200,9 @@ def parse_item(item):
             city="Paris",
             department="75",
             openers=openers,
+            raw_title=raw_title if tour_title else None,
+            event_title=tour_title,
+            identity_aliases=[raw_title] if tour_title else None,
             promoters=None,
             genre=genre,
             facebook_event_url=None,

@@ -458,6 +458,47 @@ def validate_reviewed_publication_survivors(events: list[dict]) -> None:
                 "Verified Baby Berserk four-artist billing regressed at publication boundary"
             )
 
+    # Independently checked against the venue programme: the performing
+    # artist is Accept, not the anniversary-tour ticket title.
+    accept = [
+        item for item in events
+        if item["d"] == "2026-11-22"
+        and urlparse(item.get("t") or "").hostname in {
+            "www.olympiahall.com", "olympiahall.com",
+        }
+        and urlparse(item.get("t") or "").path.rstrip("/") == "/agenda/accept"
+    ]
+    for item in accept:
+        if (
+            item["h"].casefold() != "accept"
+            or item.get("et", "").casefold() != "50th anniversary tour 2026"
+            or {name.casefold() for name in item.get("o", [])}
+            != {"dynazty", "enforcer"}
+        ):
+            raise ProductionValidationError(
+                "Official Accept tour title, artist, or opener billing regressed"
+            )
+
+    # This reviewed theatrical production was shown in DICE's music inventory.
+    # It must not be reinstated by retention or later title normalization.
+    for item in events:
+        if (
+            item["d"] == "2026-11-21"
+            and item["v"] == "Les Trois Baudets"
+            and (
+                urlparse(item.get("t") or "").path.rstrip("/")
+                == "/event/6ace08ea4bb69200019f0926"
+                or re.fullmatch(
+                    r"(?:cabaret\s+)?bad\s+biches\s*[:\-]\s*"
+                    r"qui\s+a\s+tu[ée]\s+constance\s+palmer\s*\??",
+                    item["h"].casefold(),
+                )
+            )
+        ):
+            raise ProductionValidationError(
+                "Reviewed non-concert Bad Biches theatrical cabaret reached publication"
+            )
+
     john = [
         event for event in events
         if event["d"] == "2027-08-20"
