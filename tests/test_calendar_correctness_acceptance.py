@@ -59,6 +59,48 @@ class CalendarCorrectnessAcceptanceTests(unittest.TestCase):
         )
         self.assertIsNotNone(RAW_MARKUP_OR_URL_RE.search(event_to_data(record)["h"]))
 
+    def test_accept_publication_role_guard(self):
+        from concert_calendar.automation import (
+            validate_reviewed_publication_survivors, ProductionValidationError,
+        )
+        base = {
+            "d": "2026-11-22",
+            "h": "Accept",
+            "v": "L'Olympia Bruno Coquatrix",
+            "t": "https://www.olympiahall.com/agenda/accept/",
+            "et": "50th Anniversary Tour 2026",
+            "o": ["Dynazty", "Enforcer"],
+        }
+        validate_reviewed_publication_survivors([base])
+        for changed in (
+            dict(base, h="ACCEPT 50th Anniversary Tour 2026"),
+            dict(base, et=""),
+            dict(base, o=["Dynazty"]),
+        ):
+            with self.subTest(changed=changed):
+                with self.assertRaisesRegex(ProductionValidationError, "Accept"):
+                    validate_reviewed_publication_survivors([changed])
+
+    def test_bad_biches_publication_guard_and_other_cabarets(self):
+        from concert_calendar.automation import (
+            validate_reviewed_publication_survivors, ProductionValidationError,
+        )
+        bad = {
+            "d": "2026-11-21",
+            "h": "Cabaret Bad Biches : Qui a tué Constance Palmer ?",
+            "v": "Les Trois Baudets",
+            "t": "https://dice.fm/event/6ace08ea4bb69200019f0926",
+        }
+        with self.assertRaisesRegex(ProductionValidationError, "Bad Biches"):
+            validate_reviewed_publication_survivors([bad])
+        musical_cabaret = dict(
+            bad, h="Jazz Cabaret Orchestra",
+            t="https://dice.fm/event/another-musical-show",
+        )
+        validate_reviewed_publication_survivors([musical_cabaret])
+        other_date = dict(bad, d="2026-11-22")
+        validate_reviewed_publication_survivors([other_date])
+
     def test_explicit_tour_suffix_changes_display_not_identity(self):
         original = "KATSEYE - THE WILDWORLD TOUR"
 
