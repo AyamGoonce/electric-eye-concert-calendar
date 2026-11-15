@@ -134,6 +134,44 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         self.assertEqual(events[0].ticket_status, "free")
 
     @freeze_date("concert_calendar.scrapers.sunset_sunside")
+    def test_quoted_programme_separated_when_official_ticket_slug_corrobates(self):
+        payload = self.payload([
+            {"startDate": "2026-12-08T19:00:00+01:00",
+             "status": "opened", "onSale": True},
+        ], room="Sunside", title='Alicia Witt "Christmas Songs"')
+        payload["props"]["pageProps"]["entities"]["ticketing"]["description"] = (
+            "Billets VIP pour la rencontre avec l'artiste"
+        )
+        events = parse_detail_payload(
+            payload,
+            "https://billetterie.sunset-sunside.com/event/"
+            "871032-alicia-witt-christmas-songs",
+        )
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0].headliner, "Alicia Witt")
+        self.assertEqual(events[0].event_title, 'Alicia Witt "Christmas Songs"')
+        self.assertEqual(events[0].date, "2026-12-08")
+        self.assertEqual(events[0].start_time, "19:00")
+        self.assertEqual(events[0].venue, "Sunset/Sunside — Sunside")
+
+    @freeze_date("concert_calendar.scrapers.sunset_sunside")
+    def test_quoted_names_not_split_without_corroborating_slug(self):
+        for title, slug in (
+            ('Mystery Band "Christmas Songs"', "different-programme"),
+            ('Xeno "Oaklander"', "some-other-artist"),
+        ):
+            with self.subTest(title=title):
+                events = parse_detail_payload(
+                    self.payload([
+                        {"startDate": "2026-12-08T19:00:00+01:00",
+                         "status": "opened", "onSale": True},
+                    ], title=title),
+                    f"https://billetterie.sunset-sunside.com/event/{slug}",
+                )
+                self.assertEqual(events[0].headliner, title)
+                self.assertEqual(events[0].event_title, title)
+
+    @freeze_date("concert_calendar.scrapers.sunset_sunside")
     def test_incomplete_detail_pagination_fails_loudly(self):
         payload = self.payload([
             {"startDate": "2026-10-11T21:30:00+02:00", "status": "opened", "onSale": True},
