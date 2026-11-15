@@ -336,21 +336,26 @@ def _cross_source_artists(
     group: list[ConcertEvent],
     billing: str,
 ) -> list[str]:
-    opaque = _key(billing)
+    """Accept independent roster evidence only for the *entire* billing.
+
+    Substring containment is insufficient: a title may mention two artists
+    while also naming a third act, a tribute or a series. Preserve the
+    independently supplied order rather than guessing a role assignment.
+    """
     event_sources = set(event.source_names or [])
+    separator = r"\\s+(?:\\+|/|•|&|et|[–—-])\\s+"
     for candidate in group:
         artists = _stable_unique(candidate.performers or [])
         if candidate is event or len(artists) < 2:
             continue
         if event_sources and set(candidate.source_names or []) == event_sources:
             continue
-        parts = _split_spaced_plus(billing)
-        if _valid_parts(parts) and [_key(part) for part in parts] == [_key(part) for part in artists]:
-            return artists
-        if all(
-            re.search(rf"(?<![a-z0-9]){re.escape(_key(name))}(?![a-z0-9])", opaque)
-            for name in artists
-        ):
+        # Keep artist punctuation literal, but permit normalized whitespace.
+        # An anchored match prevents partial rosters from swallowing extra acts.
+        pattern = "^" + separator.join(
+            re.escape(name).replace(r"\\ ", r"\\s+") for name in artists
+        ) + "$"
+        if re.fullmatch(pattern, _clean(billing), re.IGNORECASE):
             return artists
     return []
 
