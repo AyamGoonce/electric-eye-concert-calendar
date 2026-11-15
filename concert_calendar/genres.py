@@ -756,6 +756,12 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         event.genre_method = "artist_source_consensus"
         event.genre_source = "independent_same_run_source_genre"
         stats["artist_source_consensus"] += 1
+        stats["blank_no_raw"] -= 1
+        unresolved = unresolved_artists.get(artist_key)
+        if unresolved is not None:
+            unresolved["affected_events"] -= 1
+            if unresolved["affected_events"] <= 0:
+                del unresolved_artists[artist_key]
 
     populated = sum(bool(event.genre_public) for event in events)
     return {
