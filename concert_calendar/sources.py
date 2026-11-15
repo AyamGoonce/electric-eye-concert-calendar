@@ -288,7 +288,7 @@ def classify_event_eligibility(event):
     is_dice = "DICE" in (event.source_names or [])
     source_title = normalize_text_for_matching(event.raw_title or event.headliner)
     generic_edition = bool(re.fullmatch(
-        r"[a-z0-9][a-z0-9 ._'-]{1,48}\\s+(?:ep(?:isode)?|edition|edicion)\\s*#?\\d{1,3}",
+        r"[a-z0-9][a-z0-9 ._'-]{1,48}\s+(?:ep(?:isode)?|edition|edicion)\\s*#?\d{1,3}",
         source_title,
     ))
     has_billing = bool(event.performers or event.openers or event.co_headliners)
