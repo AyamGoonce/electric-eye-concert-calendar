@@ -232,6 +232,19 @@ def _explicit_nonconcert_activity(event):
         value = " ".join(normalize_text_for_matching(title).split())
         if not value:
             continue
+        # Independently reviewed theatrical murder-mystery cabaret (not a
+        # musical concert). Constrain to the actual event/date/venue: musical
+        # cabarets and performers named "Bad Biches" remain eligible elsewhere.
+        if (
+            event.date[:10] == "2026-11-21"
+            and normalize_venue_key(event.venue) == "les trois baudets"
+            and re.fullmatch(
+                r"(?:cabaret\\s+)?bad\\s+biches\\s*[:\\-]\\s*"
+                r"qui\\s+a\\s+tue\\s+constance\\s+palmer\\s*\\??",
+                value,
+            )
+        ):
+            return "non_music_theatrical_cabaret"
         if re.search(r"\b(?:sophro[\s-]?danse|bingo\s+et\s+gouter)\b", value):
             return "non_music_activity"
         if re.match(r"^hors\s+antenne\s*:\s*arret\s+sur\s+images\b", value):
