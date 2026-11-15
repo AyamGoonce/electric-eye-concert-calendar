@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - feature/verified-artist-catalog-phase1-20261116
   workflow_dispatch:
 
 permissions:
