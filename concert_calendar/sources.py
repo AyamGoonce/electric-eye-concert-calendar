@@ -108,6 +108,7 @@ class PipelineReport:
     opener_enriched_records: int
     billing_variants_merged: int
     artist_billing_resolution: dict
+    artist_identity_catalog: dict
     unresolved_deduplication_candidates: list[dict]
     suspicious_near_duplicate_candidates: list[dict]
     genre_report: dict
@@ -717,6 +718,9 @@ def load_events_with_report(
         ),
         artist_billing_resolution=deduplication_diagnostics.get(
             "artist_billing_resolution", {}
+        ),
+        artist_identity_catalog=deduplication_diagnostics.get(
+            "artist_identity_catalog", {}
         ),
         unresolved_deduplication_candidates=deduplication_diagnostics.get(
             "unresolved_candidates", []

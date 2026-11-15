@@ -403,6 +403,18 @@ def resolve_artist_billings(
         identities.setdefault(key, value)
     for key, value in current_structured_standalone_artist_evidence(events).items():
         identities.setdefault(key, value)
+    # Expand the *current run* exact-identity catalogue only with
+    # individually structured performer records and preserve provenance.
+    # Reviewed identities, aliases and the published content index retain
+    # precedence. Uncorroborated names are reported but not admitted.
+    from concert_calendar.artist_identity_catalog import collect_structured_artist_evidence
+    new_identities, identity_evidence_report = collect_structured_artist_evidence(
+        events, existing=identities,
+    )
+    for key, display in new_identities.items():
+        identities.setdefault(key, display)
+    if diagnostics is not None:
+        diagnostics["artist_identity_catalog"] = identity_evidence_report
     profiles = reviews.get("sourceProfiles") or {}
     external = {
         _key(name): item
