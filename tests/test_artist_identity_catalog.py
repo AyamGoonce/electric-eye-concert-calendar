@@ -107,5 +107,50 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
+    def test_mixed_separators_require_independently_known_artists(self):
+        opaque = record("Blackgold + Sumo Cyco / Hyro The Hero")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "blackgold": "Blackgold", "sumo cyco": "Sumo Cyco",
+                "hyro the hero": "Hyro The Hero",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+
+    def test_mixed_separator_unknown_member_does_not_split(self):
+        opaque = record("Blackgold + Mystery Artist / Hyro The Hero")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "blackgold": "Blackgold", "hyro the hero": "Hyro The Hero",
+            },
+        )
+        self.assertEqual(
+            opaque.headliner, "Blackgold + Mystery Artist / Hyro The Hero"
+        )
+
+    def test_known_ampersand_band_is_protected_in_mixed_bill(self):
+        opaque = record("Earth, Wind & Fire + Sumo Cyco / Hyro The Hero")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "earth wind fire": "Earth, Wind & Fire",
+                "sumo cyco": "Sumo Cyco",
+                "hyro the hero": "Hyro The Hero",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Earth, Wind & Fire")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+
+    def test_ambiguous_catalogue_partition_does_not_split(self):
+        opaque = record("Aaa & Bbb + Ccc")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "aaa": "Aaa", "bbb": "Bbb", "aaa bbb": "Aaa & Bbb",
+                "ccc": "Ccc",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Aaa & Bbb + Ccc")
+
+
 if __name__ == "__main__":
     unittest.main()
