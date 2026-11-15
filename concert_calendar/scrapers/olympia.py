@@ -86,8 +86,8 @@ def parse_explicit_support_title(value):
 
 
 ANNIVERSARY_TOUR_SUFFIX_RE = re.compile(
-    r"^(?P<artist>.+?)\\s+(?P<context>\\d{1,3}(?:st|nd|rd|th|e|ème|eme)\\s+"
-    r"(?:Anniversary|Anniversaire)\\s+Tour\\s+20\\d{2})$",
+    r"^(?P<artist>.+?)\s+(?P<context>\d{1,3}(?:st|nd|rd|th|e|ème|eme)\s+"
+    r"(?:Anniversary|Anniversaire)\s+Tour\s+20\d{2})$",
     flags=re.IGNORECASE,
 )
 
