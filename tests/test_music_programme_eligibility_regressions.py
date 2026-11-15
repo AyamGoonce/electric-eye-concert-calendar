@@ -120,6 +120,48 @@ class ReviewedTheatricalCabaretTests(unittest.TestCase):
                 )[0])
 
 
+class AmbiguousTicketingEditionTests(unittest.TestCase):
+    def test_unbilled_late_night_dice_edition_is_not_a_concert(self):
+        for title in ("INFRRD Ep02", "INFRRD Ep03", "New Signal Edition 4"):
+            with self.subTest(title=title):
+                record = item(
+                    title, venue="Vogue", day="2026-11-20",
+                    start_time="23:45", source_names=["DICE"],
+                    raw_title=title,
+                )
+                self.assertEqual(
+                    (False, "unverified_late_night_edition"),
+                    classify_event_eligibility(record),
+                )
+                self.assertEqual([], filter_eligible_retained_events([record]))
+                self.assertEqual(
+                    (False, "unverified_late_night_edition"),
+                    classify_event_eligibility(deduplicate_events([record])[0]),
+                )
+
+    def test_proven_performance_and_other_sources_survive(self):
+        cases = (
+            dict(performers=["The Musician"]),
+            dict(genre="Electronic"),
+            dict(event_type="live performance"),
+            dict(start_time="19:00"),
+            dict(source_names=["Official venue"]),
+        )
+        for kwargs in cases:
+            with self.subTest(kwargs=kwargs):
+                params = dict(start_time="23:45", source_names=["DICE"])
+                params.update(kwargs)
+                record = item("Signal Ep03", venue="Vogue", **params)
+                self.assertTrue(classify_event_eligibility(record)[0])
+
+    def test_non_series_band_names_are_not_rejected(self):
+        for title in ("Episode 4", "The Ep 3", "Ep 02 and the Bad Seeds"):
+            with self.subTest(title=title):
+                record = item(title, venue="Vogue", start_time="23:45",
+                              source_names=["DICE"])
+                self.assertTrue(classify_event_eligibility(record)[0])
+
+
 class ProgrammeBillingTests(unittest.TestCase):
     def test_reviewed_city_presentation_is_not_the_artist(self):
         raw = "Athènes débarque à la Méca : THEODORE + SOMA"
