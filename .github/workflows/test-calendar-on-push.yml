@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - fix/accept-tour-and-theatrical-cabaret-20261115
   workflow_dispatch:
 
 permissions:
