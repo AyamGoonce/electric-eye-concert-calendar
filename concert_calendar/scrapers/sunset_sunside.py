@@ -4,7 +4,7 @@ import threading
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, datetime
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -77,7 +77,12 @@ def _fold(value):
     return "".join(character for character in value if not unicodedata.combining(character))
 
 
-def evidenced_title_semantics(title, description):
+def _title_slug(value):
+    folded = _fold(value)
+    return re.sub(r"[^a-z0-9]+", "-", folded).strip("-")
+
+
+def evidenced_title_semantics(title, description, detail_url=None):
     """Separate Sunset presentation copy only when its own detail proves it."""
     raw = clean_text(title).strip(" .")
     prose = clean_text(
@@ -153,6 +158,22 @@ def evidenced_title_semantics(title, description):
         if exact_evidence or duo_evidence or ensemble_evidence:
             return candidate, raw
 
+        # Some ticketing descriptions contain only booking instructions.
+        # Accept a quoted programme title when the independently supplied
+        # ticket URL corroborates the *whole* ticket title and its artist
+        # prefix. Never split quotation marks on their own.
+        path_slug = urlparse(detail_url or "").path.rsplit("/", 1)[-1]
+        path_slug = re.sub(r"^\d+-", "", path_slug)
+        candidate_slug = _title_slug(candidate)
+        if (
+            candidate_slug
+            and _title_slug(raw) == path_slug
+            and path_slug.startswith(candidate_slug + "-")
+        ):
+            programme = clean_text(raw[len(candidate):]).strip(' -–—"“”«»')
+            if programme:
+                return candidate, programme
+
     festival = re.fullmatch(r"(?P<artist>.+?)\s+[-–—]\s+Festival\s+.+", raw, re.I)
     if festival:
         candidate = clean_text(festival.group("artist"))
@@ -188,7 +209,7 @@ def parse_detail_payload(payload, detail_url, listing_item=None):
             category = clean_text(listing_category.get("name"))
     picture = image_url(ticketing)
     description = clean_text(ticketing.get("description"))
-    headliner, evidenced_event_title = evidenced_title_semantics(raw_title, description)
+    headliner, evidenced_event_title = evidenced_title_semantics(raw_title, description, detail_url)
     if not headliner or not venue:
         return []
 
