@@ -5,6 +5,51 @@ from concert_calendar.scrapers import olympia
 
 
 class OlympiaDiagnosticsTests(unittest.TestCase):
+    def test_official_anniversary_tour_is_programme_not_band_name(self):
+        from concert_calendar.deduplication import deduplicate_events
+        from concert_calendar.production_export import event_to_data
+        item = {
+            "ID": 5261,
+            "post_title": "ACCEPT 50th Anniversary Tour 2026",
+            "permalink": "https://www.olympiahall.com/agenda/accept/",
+            "terms": {"genre": [{"name": "Metal / Hard Rock"}]},
+            "meta": {
+                "begin_date_ymd": "2026-11-22",
+                "end_date_ymd": "2026-11-22",
+                "show_statuses": ["open"],
+                "infos_text_status": "",
+                "artistes_premiere_partie": "DYNAZTY + ENFORCER",
+            },
+        }
+        parsed = olympia.parse_item(item)
+        self.assertEqual(1, len(parsed))
+        self.assertEqual("ACCEPT", parsed[0].headliner)
+        self.assertEqual("50th Anniversary Tour 2026", parsed[0].event_title)
+        self.assertEqual(["DYNAZTY", "ENFORCER"], parsed[0].openers)
+        self.assertEqual(item["post_title"], parsed[0].raw_title)
+        self.assertIn(item["post_title"], parsed[0].identity_aliases)
+        reconciled = deduplicate_events(parsed)
+        self.assertEqual(1, len(reconciled))
+        exported = event_to_data(reconciled[0])
+        self.assertEqual("Accept", exported["h"])
+        self.assertEqual("50th Anniversary Tour 2026", exported["et"])
+        self.assertEqual(["Dynazty", "Enforcer"], exported["o"])
+
+    def test_anniversary_words_do_not_split_without_venue_artist_evidence(self):
+        cases = (
+            ("Accept 50th Anniversary Tour 2026",
+             "https://www.olympiahall.com/agenda/another-artist/"),
+            ("The 50th Anniversary Tour",
+             "https://www.olympiahall.com/agenda/the-50th-anniversary-tour/"),
+            ("Fifty Years of Metal",
+             "https://www.olympiahall.com/agenda/fifty-years-of-metal/"),
+        )
+        for title, url in cases:
+            with self.subTest(title=title):
+                self.assertEqual(
+                    (title, None), olympia.separate_official_tour_suffix(title, url),
+                )
+
     def test_raw_item_diagnostics_do_not_change_parsed_events(self):
         item = {
             "ID": 123,
