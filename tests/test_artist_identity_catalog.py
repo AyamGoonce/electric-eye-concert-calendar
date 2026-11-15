@@ -107,6 +107,20 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
+    def test_same_source_partial_roster_cannot_erase_third_artist(self):
+        opaque = record("Blackgold + Sumo Cyco + Unverified Act")
+        opaque._billing_evidence = {
+            "artists": ["Blackgold", "Sumo Cyco"],
+            "confidence": 95,
+            "evidence": ["separate source roles"],
+        }
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={},
+        )
+        self.assertEqual(
+            opaque.headliner, "Blackgold + Sumo Cyco + Unverified Act"
+        )
+
     def test_cross_source_partial_roster_cannot_erase_third_artist(self):
         opaque = record("Blackgold + Sumo Cyco + Unverified Act", source="DICE")
         corroboration = record(
