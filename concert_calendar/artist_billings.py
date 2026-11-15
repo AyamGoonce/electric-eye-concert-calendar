@@ -267,8 +267,12 @@ def _set_resolution(
     event.identity_aliases = _stable_unique([*(event.identity_aliases or []), original]) or None
     event.headliner = artists[0]
     if not preserve_roles:
+        # A source-verified opener must not be silently promoted to
+        # co-headliner when the same act also appears in a flat bill.
+        opener_keys = {_key(name) for name in (event.openers or [])}
         event.co_headliners = _stable_unique(
-            [*(event.co_headliners or []), *artists[1:]]
+            [*(event.co_headliners or []),
+             *(name for name in artists[1:] if _key(name) not in opener_keys)]
         ) or None
     event.performers = artists
     if presenter:
