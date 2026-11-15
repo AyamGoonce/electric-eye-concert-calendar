@@ -107,6 +107,31 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
+    def test_cross_source_partial_roster_cannot_erase_third_artist(self):
+        opaque = record("Blackgold + Sumo Cyco + Unverified Act", source="DICE")
+        corroboration = record(
+            "Blackgold + Sumo Cyco", source="Official venue",
+            performers=["Blackgold", "Sumo Cyco"],
+        )
+        apply_reviewed_artist_billings(
+            [opaque, corroboration], identity_catalog={},
+        )
+        self.assertEqual(
+            opaque.headliner, "Blackgold + Sumo Cyco + Unverified Act"
+        )
+
+    def test_cross_source_exact_full_roster_can_resolve_mixed_separators(self):
+        opaque = record("Blackgold + Sumo Cyco / Hyro The Hero", source="DICE")
+        corroboration = record(
+            "Blackgold + Sumo Cyco / Hyro The Hero", source="Official venue",
+            performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"],
+        )
+        apply_reviewed_artist_billings(
+            [opaque, corroboration], identity_catalog={},
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+
     def test_mixed_separators_require_independently_known_artists(self):
         opaque = record("Blackgold + Sumo Cyco / Hyro The Hero")
         apply_reviewed_artist_billings(
