@@ -152,5 +152,19 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(opaque.headliner, "Aaa & Bbb + Ccc")
 
 
+    def test_verified_opener_role_is_not_promoted_to_coheadliner(self):
+        opaque = record("Blackgold + Sumo Cyco")
+        opaque.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "blackgold": "Blackgold", "sumo cyco": "Sumo Cyco",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.openers, ["Sumo Cyco"])
+        self.assertIsNone(opaque.co_headliners)
+        self.assertEqual(opaque.performers, ["Blackgold", "Sumo Cyco"])
+
+
 if __name__ == "__main__":
     unittest.main()
