@@ -35,6 +35,33 @@ class OlympiaDiagnosticsTests(unittest.TestCase):
         self.assertEqual("50th Anniversary Tour 2026", exported["et"])
         self.assertEqual(["Dynazty", "Enforcer"], exported["o"])
 
+    def test_late_source_merge_cannot_restore_full_tour_title_as_artist(self):
+        from concert_calendar.models import ConcertEvent
+        from concert_calendar.deduplication import deduplicate_events
+        from concert_calendar.production_export import event_to_data
+        row = ConcertEvent(
+            "2026-11-22", "ACCEPT 50th Anniversary Tour 2026",
+            "L'Olympia Bruno Coquatrix", "Paris", "75",
+            raw_title="ACCEPT 50th Anniversary Tour 2026",
+            openers=["DYNAZTY", "ENFORCER"],
+            performers=["ACCEPT 50th Anniversary Tour 2026"],
+            ticket_url="https://www.olympiahall.com/agenda/accept/",
+            source_names=["L’Olympia Bruno Coquatrix"],
+        )
+        public = event_to_data(deduplicate_events([row])[0])
+        self.assertEqual("Accept", public["h"])
+        self.assertEqual("50th Anniversary Tour 2026", public["et"])
+        self.assertEqual(["Dynazty", "Enforcer"], public["o"])
+
+        unrelated = ConcertEvent(
+            "2026-11-22", "ACCEPT 50th Anniversary Tour 2026",
+            "L'Olympia Bruno Coquatrix", "Paris", "75",
+            ticket_url="https://www.olympiahall.com/agenda/another-artist/",
+        )
+        self.assertNotEqual(
+            "Accept", event_to_data(deduplicate_events([unrelated])[0])["h"]
+        )
+
     def test_anniversary_words_do_not_split_without_venue_artist_evidence(self):
         cases = (
             ("Accept 50th Anniversary Tour 2026",
