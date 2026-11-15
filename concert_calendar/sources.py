@@ -239,8 +239,8 @@ def _explicit_nonconcert_activity(event):
             event.date[:10] == "2026-11-21"
             and normalize_venue_key(event.venue) == "les trois baudets"
             and re.fullmatch(
-                r"(?:cabaret\\s+)?bad\\s+biches\\s*[:\\-]\\s*"
-                r"qui\\s+a\\s+tue\\s+constance\\s+palmer\\s*\\??",
+                r"(?:cabaret\s+)?bad\s+biches\s*[:\-]\s*"
+                r"qui\s+a\s+tue\s+constance\s+palmer\s*\??",
                 value,
             )
         ):
