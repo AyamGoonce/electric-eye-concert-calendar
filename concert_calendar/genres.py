@@ -719,13 +719,51 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             item["raw_genres"].update(x.get("raw") for x in evidence if x.get("raw"))
             item["sources"].update(x.get("source") for x in evidence if x.get("source"))
 
+    # A genre explicitly supplied by a programme is event-level evidence,
+    # not a universal artist fact. Reuse it for an otherwise unclassified
+    # appearance only when at least two distinct dated performances agree.
+    # No missing genres are invented from a venue or an opaque multi-act bill.
+    same_run_artist_genres = defaultdict(lambda: defaultdict(set))
+    for event in events:
+        if (
+            event.genre_public
+            and event.genre_method in {"source_explicit", "source_mapping"}
+            and not event.festival_name
+            and not event.co_headliners
+            and not event.openers
+            and not re.search(r"\\s+(?:\\+|/|•)\\s+", event.headliner)
+        ):
+            artist_key = normalize_artist_component(event.headliner)
+            if artist_key:
+                same_run_artist_genres[artist_key][event.genre_public].add(
+                    (event.date[:10], event.venue)
+                )
+    for event in events:
+        if (
+            event.genre_public or event.genre_evidence or event.festival_name
+            or event.co_headliners or event.openers
+            or re.search(r"\\s+(?:\\+|/|•)\\s+", event.headliner)
+        ):
+            continue
+        artist_key = normalize_artist_component(event.headliner)
+        consensus = same_run_artist_genres.get(artist_key, {})
+        if len(consensus) != 1:
+            continue
+        genre, performances = next(iter(consensus.items()))
+        if len(performances) < 2:
+            continue
+        event.genre_public = genre
+        event.genre_method = "artist_source_consensus"
+        event.genre_source = "independent_same_run_source_genre"
+        stats["artist_source_consensus"] += 1
+
     populated = sum(bool(event.genre_public) for event in events)
     return {
         "total": len(events), "populated": populated, "blank": len(events) - populated,
         "coverage_percentage": round(populated * 100 / len(events), 2) if events else 0,
         "source_explicit": stats["source_explicit"], "source_mapping": stats["source_mapping"],
         "artist_mapping": stats["artist_mapping"], "override": stats["override"],
-        "event_context": stats["event_context"], "bill_consensus": stats["bill_consensus"],
+        "event_context": stats["event_context"], "bill_consensus": stats["bill_consensus"], "artist_source_consensus": stats["artist_source_consensus"],
         "blank_no_raw": stats["blank_no_raw"], "blank_unresolved_raw": stats["blank_unresolved_raw"],
         "blank_festival": stats["blank_festival"], "conflict_count": stats["conflict"],
         "conflicts": conflicts, "raw_inventory": dict(raw_inventory.most_common()),
