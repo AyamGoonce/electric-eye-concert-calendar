@@ -130,6 +130,29 @@ def current_official_standalone_artist_evidence(events: list[ConcertEvent]) -> d
     return trusted
 
 
+def current_structured_standalone_artist_evidence(events: list[ConcertEvent]) -> dict[str, str]:
+    """Include independently named single artists from source performer fields.
+
+    These names are supplied as individual identities by ticketing/venue
+    sources, not guessed from separators. The complete billing still takes
+    precedence if it is itself a known artist identity.
+    """
+    trusted = {}
+    for event in events:
+        names = _stable_unique(event.performers or [])
+        if len(names) != 1 or _key(names[0]) != _key(event.headliner):
+            continue
+        name = names[0]
+        if (
+            not event.source_names
+            or re.search(r"\s+(?:\+|&|/|•|feat\.?|featuring|with|avec)\s+", name, re.I)
+            or re.search(r"\b(?:release party|festival|concert|programme)\b", name, re.I)
+        ):
+            continue
+        trusted.setdefault(_key(name), name)
+    return trusted
+
+
 def _review_lookups(reviews: dict) -> tuple[dict, dict, dict]:
     canonical = {}
     for name, item in (reviews.get("canonicalIdentities") or {}).items():
@@ -174,7 +197,7 @@ def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> li
     if not title or _key(title) in identities:
         return []
 
-    for pattern in (r"\s+\+\s+", r"\s+&\s+", r"\s+et\s+", r"\s+[–—-]\s+"):
+    for pattern in (r"\s+\+\s+", r"\s+/\s+", r"\s+•\s+", r"\s+&\s+", r"\s+et\s+", r"\s+[–—-]\s+"):
         parts = [_clean(part) for part in re.split(pattern, title, flags=re.I)]
         if len(parts) < 2:
             continue
@@ -377,6 +400,8 @@ def resolve_artist_billings(
     # identity evidence for corroborating a longer source's separated bill.
     # Reviewed identities and aliases always take precedence.
     for key, value in current_official_standalone_artist_evidence(events).items():
+        identities.setdefault(key, value)
+    for key, value in current_structured_standalone_artist_evidence(events).items():
         identities.setdefault(key, value)
     profiles = reviews.get("sourceProfiles") or {}
     external = {
