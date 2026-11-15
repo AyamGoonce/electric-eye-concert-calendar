@@ -489,8 +489,8 @@ def validate_reviewed_publication_survivors(events: list[dict]) -> None:
                 urlparse(item.get("t") or "").path.rstrip("/")
                 == "/event/6ace08ea4bb69200019f0926"
                 or re.fullmatch(
-                    r"(?:cabaret\\s+)?bad\\s+biches\\s*[:\\-]\\s*"
-                    r"qui\\s+a\\s+tu[ée]\\s+constance\\s+palmer\\s*\\??",
+                    r"(?:cabaret\s+)?bad\s+biches\s*[:\-]\s*"
+                    r"qui\s+a\s+tu[ée]\s+constance\s+palmer\s*\??",
                     item["h"].casefold(),
                 )
             )
