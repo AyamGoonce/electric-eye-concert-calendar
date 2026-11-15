@@ -731,7 +731,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             and not event.festival_name
             and not event.co_headliners
             and not event.openers
-            and not re.search(r"\\s+(?:\\+|/|•)\\s+", event.headliner)
+            and not re.search(r"\s+(?:\+|/|•)\s+", event.headliner)
         ):
             artist_key = normalize_artist_component(event.headliner)
             if artist_key:
@@ -742,7 +742,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         if (
             event.genre_public or event.genre_evidence or event.festival_name
             or event.co_headliners or event.openers
-            or re.search(r"\\s+(?:\\+|/|•)\\s+", event.headliner)
+            or re.search(r"\s+(?:\+|/|•)\s+", event.headliner)
         ):
             continue
         artist_key = normalize_artist_component(event.headliner)
