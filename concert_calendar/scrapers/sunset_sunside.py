@@ -163,14 +163,16 @@ def evidenced_title_semantics(title, description, detail_url=None):
         # ticket URL corroborates the *whole* ticket title and its artist
         # prefix. Never split quotation marks on their own.
         path_slug = urlparse(detail_url or "").path.rsplit("/", 1)[-1]
-        path_slug = re.sub(r"^\\d+-", "", path_slug)
+        path_slug = re.sub(r"^\d+-", "", path_slug)
         candidate_slug = _title_slug(candidate)
         if (
             candidate_slug
             and _title_slug(raw) == path_slug
             and path_slug.startswith(candidate_slug + "-")
         ):
-            return candidate, raw
+            programme = clean_text(raw[len(candidate):]).strip(' -–—"“”«»')
+            if programme:
+                return candidate, programme
 
     festival = re.fullmatch(r"(?P<artist>.+?)\s+[-–—]\s+Festival\s+.+", raw, re.I)
     if festival:
