@@ -80,10 +80,17 @@ def apply_official_programme_credits(events, *, records=None):
             continue
         record = matches[0]
         artist = record["artist"]
+        # Some ticketing providers mistakenly populate their structured
+        # performer array with the show's title. That is not independent
+        # evidence against the venue's credited artist.
         supplied = {_key(name) for name in (event.performers or [])}
-        if supplied and supplied != {_key(artist), _key(record["eventTitle"])} and supplied != {_key(artist)}:
+        if supplied - {_key(artist), _key(record["eventTitle"])}:
             skipped.append({"date": event.date, "venue": event.venue,
                             "title": event.headliner, "reason": "conflicting_structured_performers"})
+            continue
+        if _key(event.headliner) not in {_key(artist), _key(record["eventTitle"])}:
+            skipped.append({"date": event.date, "venue": event.venue,
+                            "title": event.headliner, "reason": "conflicting_headliner"})
             continue
         if _key(event.headliner) == _key(artist):
             continue
