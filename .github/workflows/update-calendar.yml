@@ -1,6 +1,7 @@
 name: Update Electric Eye Concert Calendar
 
 on:
+  # Release: source-verified final Accept billing reconciliation after regression pass.
   # Release: correct source-verified Accept tour billing and exclude reviewed theatrical cabaret.
   # Public-label safety release: guard formatting-only text and log field-specific failures.
   # Verified final output repair: Baby Berserk credits and John Bush single show.
