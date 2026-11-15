@@ -188,27 +188,53 @@ def _split_spaced_plus(value: str) -> list[str]:
 
 
 def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> list[str]:
-    """Split only if every complete component is an existing artist identity.
+    """Resolve uniquely partitioned bills, with every member independently known.
 
-    Prioritize the spaced '+' billing separator; names may themselves
-    contain ampersands, dashes or 'et'. Never recursively split a component.
+    Delimiters are only candidate boundaries. A complete artist identity wins
+    (e.g. Earth, Wind & Fire). Mixed separators are accepted only if exactly
+    one partition of the entire billing matches the established catalogue.
     """
     title = _clean(value)
     if not title or _key(title) in identities:
         return []
 
-    for pattern in (r"\s+\+\s+", r"\s+/\s+", r"\s+•\s+", r"\s+&\s+", r"\s+et\s+", r"\s+[–—-]\s+"):
-        parts = [_clean(part) for part in re.split(pattern, title, flags=re.I)]
-        if len(parts) < 2:
-            continue
-        # A more strongly delimited complete bill contains project names
-        # such as "Earth, Wind & Fire"; do not reinterpret their internals.
-        if not _valid_parts(parts) or len({_key(part) for part in parts}) != len(parts):
-            return []
-        return [identities[_key(part)] for part in parts] if all(
-            _key(part) in identities for part in parts
-        ) else []
-    return []
+    separators = list(re.finditer(
+        r"\s+(?:\+|/|•|&|et|[–—-])\s+", title, flags=re.I
+    ))
+    if not separators or len(separators) > 8:
+        return []
+
+    # Each partition joins consecutive chunks back with their original
+    # punctuation, so legitimate artist names containing '&' stay intact.
+    chunks = []
+    cursor = 0
+    for match in separators:
+        chunks.append(title[cursor:match.start()])
+        cursor = match.end()
+    chunks.append(title[cursor:])
+    separators_text = [match.group(0) for match in separators]
+    solutions = []
+
+    def visit(position: int, chosen: list[str]) -> None:
+        if len(solutions) > 1:
+            return
+        if position == len(chunks):
+            if len(chosen) >= 2 and len(set(map(_key, chosen))) == len(chosen):
+                solutions.append(chosen)
+            return
+        for stop in range(position + 1, len(chunks) + 1):
+            component = chunks[position]
+            for index in range(position, stop - 1):
+                component += separators_text[index] + chunks[index + 1]
+            component = _clean(component)
+            if not _valid_parts([component, "placeholder"]):
+                continue
+            canonical = identities.get(_key(component))
+            if canonical:
+                visit(stop, [*chosen, canonical])
+
+    visit(0, [])
+    return solutions[0] if len(solutions) == 1 else []
 
 
 def _valid_parts(parts: list[str]) -> bool:
