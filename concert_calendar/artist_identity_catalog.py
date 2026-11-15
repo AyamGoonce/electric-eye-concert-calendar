@@ -24,7 +24,7 @@ CONTEXT = re.compile(
     r"quiz musical|concert gratuit)\b",
     re.I,
 )
-SEPARATORS = re.compile(r"\s+(?:\+|/|•|&|with|avec|feat\.?|featuring)\s+", re.I)
+SEPARATORS = re.compile(r"\s+(?:\+|/|•|&|x|×|vs\.?|versus|with|avec|ft\.?|feat\.?|featuring)\s+", re.I)
 
 
 def identity_key(value):
