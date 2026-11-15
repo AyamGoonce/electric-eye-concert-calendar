@@ -280,6 +280,30 @@ def classify_event_eligibility(event):
         return False, "non_music_social_event"
     if is_non_music_quiz_title(event.headliner):
         return False, "non_music_quiz_event"
+    # Unbilled, numbered late-night editions from incomplete ticketing
+    # inventories are not evidence of a concert. This is a contextual
+    # evidence gate, not a blocked event/brand ID or a blanket EpNN rule.
+    # A named performer, an established concert type, or genre evidence
+    # prevents exclusion (DJ/live sets can qualify as musical performances).
+    is_dice = "DICE" in (event.source_names or [])
+    source_title = normalize_text_for_matching(event.raw_title or event.headliner)
+    generic_edition = bool(re.fullmatch(
+        r"[a-z0-9][a-z0-9 ._'-]{1,48}\\s+(?:ep(?:isode)?|edition|edicion)\\s*#?\\d{1,3}",
+        source_title,
+    ))
+    has_billing = bool(event.performers or event.openers or event.co_headliners)
+    has_music_evidence = bool(
+        event.genre or event.genre_public or event.genres_public
+        or normalize_text_for_matching(event.event_type or "") in {
+            "concert", "live music", "live performance", "dj performance", "live set"
+        }
+    )
+    if (
+        is_dice and generic_edition
+        and (event.start_time or "") >= "23:00"
+        and not has_billing and not has_music_evidence
+    ):
+        return False, "unverified_late_night_edition"
     values = [event.category, *(event.tags or [])]
     normalized = {normalize_text_for_matching(value) for value in values if value}
     for value in normalized:
