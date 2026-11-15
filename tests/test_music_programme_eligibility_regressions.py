@@ -120,6 +120,78 @@ class ReviewedTheatricalCabaretTests(unittest.TestCase):
                 )[0])
 
 
+class AmbiguousTicketingEditionTests(unittest.TestCase):
+    def test_unbilled_late_night_dice_edition_is_not_a_concert(self):
+        for title in ("INFRRD Ep02", "INFRRD Ep03", "New Signal Edition 4"):
+            with self.subTest(title=title):
+                record = item(
+                    title, venue="Vogue", day="2026-11-20",
+                    start_time="23:45", source_names=["DICE"],
+                    raw_title=title,
+                )
+                self.assertEqual(
+                    (False, "unverified_late_night_edition"),
+                    classify_event_eligibility(record),
+                )
+                self.assertEqual([], filter_eligible_retained_events([record]))
+                self.assertEqual(
+                    (False, "unverified_late_night_edition"),
+                    classify_event_eligibility(deduplicate_events([record])[0]),
+                )
+
+    def test_proven_performance_and_other_sources_survive(self):
+        cases = (
+            dict(performers=["The Musician"]),
+            dict(genre="Electronic"),
+            dict(event_type="live performance"),
+            dict(start_time="19:00"),
+            dict(source_names=["Official venue"]),
+        )
+        for kwargs in cases:
+            with self.subTest(kwargs=kwargs):
+                params = dict(start_time="23:45", source_names=["DICE"])
+                params.update(kwargs)
+                record = item("Signal Ep03", venue="Vogue", **params)
+                self.assertTrue(classify_event_eligibility(record)[0])
+
+    def test_non_series_band_names_are_not_rejected(self):
+        for title in ("Episode 4", "The Ep 3", "Ep 02 and the Bad Seeds"):
+            with self.subTest(title=title):
+                record = item(title, venue="Vogue", start_time="23:45",
+                              source_names=["DICE"])
+                self.assertTrue(classify_event_eligibility(record)[0])
+
+
+class SourceCreditedStagePerformanceTests(unittest.TestCase):
+    def test_named_work_uses_structured_artist_credit(self):
+        work = "A long music and movement performance with an evocative narrative title"
+        result = dice.parse_event({
+            "id": "source-credited-work",
+            "name": work,
+            "artists": [{"name": "Performing Musician"}],
+            "dates": {"event_start_date": "2027-01-13T20:30:00+01:00"},
+            "venues": [{"name": "Maison des Métallos", "city": {"name": "Paris"}}],
+        })
+        self.assertEqual(result.headliner, "Performing Musician")
+        self.assertEqual(result.event_title, work)
+        self.assertEqual(result.raw_title, work)
+        self.assertEqual(result.performers, ["Performing Musician"])
+        self.assertTrue(classify_event_eligibility(result)[0])
+
+    def test_uncredited_or_multi_artist_titles_not_guessed(self):
+        work = "A long music and movement performance with an evocative narrative title"
+        for artists in ([], [{"name": "One"}, {"name": "Two"}]):
+            with self.subTest(artists=artists):
+                result = dice.parse_event({
+                    "id": "unresolved-stage-work",
+                    "name": work,
+                    "artists": artists,
+                    "dates": {"event_start_date": "2027-01-13T20:30:00+01:00"},
+                    "venues": [{"name": "Maison des Métallos", "city": {"name": "Paris"}}],
+                })
+                self.assertEqual(result.headliner, work)
+
+
 class ProgrammeBillingTests(unittest.TestCase):
     def test_reviewed_city_presentation_is_not_the_artist(self):
         raw = "Athènes débarque à la Méca : THEODORE + SOMA"
