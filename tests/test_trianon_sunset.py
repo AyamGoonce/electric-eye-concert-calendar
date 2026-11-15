@@ -134,7 +134,7 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         self.assertEqual(events[0].ticket_status, "free")
 
     @freeze_date("concert_calendar.scrapers.sunset_sunside")
-    def test_quoted_programme_separated_when_official_ticket_slug_corrobates(self):
+    def test_quoted_programme_separated_when_official_ticket_slug_corroborates(self):
         payload = self.payload([
             {"startDate": "2026-12-08T19:00:00+01:00",
              "status": "opened", "onSale": True},
@@ -149,7 +149,8 @@ class SunsetSunsideScraperTests(unittest.TestCase):
         )
         self.assertEqual(len(events), 1)
         self.assertEqual(events[0].headliner, "Alicia Witt")
-        self.assertEqual(events[0].event_title, 'Alicia Witt "Christmas Songs"')
+        self.assertEqual(events[0].event_title, "Christmas Songs")
+        self.assertEqual(events[0].raw_title, 'Alicia Witt "Christmas Songs"')
         self.assertEqual(events[0].date, "2026-12-08")
         self.assertEqual(events[0].start_time, "19:00")
         self.assertEqual(events[0].venue, "Sunset/Sunside — Sunside")
