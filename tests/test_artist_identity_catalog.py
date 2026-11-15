@@ -86,6 +86,11 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertFalse(artist_candidate("One + Two"))
         self.assertFalse(artist_candidate("Guest"))
         self.assertFalse(artist_candidate("VIP release party"))
+        self.assertFalse(artist_candidate("Bliss My Heart x Cliff Estatof"))
+        self.assertFalse(artist_candidate("THE DEAD DAISIES ft. KELLY HANSEN"))
+        self.assertFalse(artist_candidate("Artist vs. Artist"))
+        self.assertTrue(artist_candidate("The xx"))
+
 
     def test_source_identity_can_resolve_a_separate_opaque_billing(self):
         title = "Blackgold + Sumo Cyco + Hyro The Hero"
