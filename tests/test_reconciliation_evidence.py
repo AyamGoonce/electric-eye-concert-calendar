@@ -7,6 +7,9 @@ import unittest
 from concert_calendar.artist_billings import apply_reviewed_artist_billings
 from concert_calendar.genres import enrich_event_genres
 from concert_calendar.models import ConcertEvent
+from concert_calendar.event_state import (
+    canonical_event_identity, _reviewed_predecessor_identities,
+)
 from concert_calendar.official_programmes import (
     apply_official_programme_credits, load_official_credits,
 )
@@ -46,6 +49,15 @@ class OfficialProgrammeCreditTests(unittest.TestCase):
         self.assertEqual(len({record.ticket_url for record in records}), 3)
         self.assertTrue(all(record.raw_title == original for record in records))
         self.assertTrue(all(not record.identity_aliases for record in records))
+
+    def test_verified_title_repair_preserves_previous_event_identity(self):
+        original = self.credit["eventTitle"]
+        row = event(original, source_names=["DICE"])
+        old_id = canonical_event_identity(row)
+        apply_official_programme_credits([row], records=[self.credit])
+        self.assertNotEqual(old_id, canonical_event_identity(row))
+        self.assertIn(old_id, _reviewed_predecessor_identities(row))
+        self.assertIsNone(row.identity_aliases)
 
     def test_other_dates_venues_titles_or_independent_performers_are_untouched(self):
         title = self.credit["eventTitle"]
