@@ -321,7 +321,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Jonas De Kesel"
+            ],
             "date": "2026-11-25",
             "department": "75",
             "event_title": null,
@@ -330,23 +332,28 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": "artist_mapping",
+            "genre_method": "bill_consensus",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Wikidata genre statements (P136)",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
             "headliner": "Trixie Whitley",
             "identity_aliases": [
-              "Trixie Whitley"
+              "Trixie Whitley",
+              "Trixie Whitley + Jonas De Kesel"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-03-23/42f4709d-2baf-4fdf-948d-6ca955b0dc48.jpg?rect=0%2C0%2C1075%2C1075",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
+            "performers": [
+              "Trixie Whitley",
+              "Jonas De Kesel"
             ],
-            "raw_title": "Trixie Whitley",
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Trixie Whitley + Jonas De Kesel",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:30",
@@ -569,7 +576,7 @@
             "genres_public": null,
             "headliner": "greek",
             "identity_aliases": [
-              "greek"
+              "Greek"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-06-25/70031f6e-669e-41fd-b562-0d7c29458e9f.jpg?rect=0%2C313%2C2070%2C2070",
@@ -577,9 +584,10 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "AEG Presents France"
+              "AEG Presents France",
+              "Supersonic"
             ],
-            "raw_title": "greek",
+            "raw_title": "Greek",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:30",
@@ -1060,7 +1068,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Barrett"
+            ],
             "date": "2026-12-12",
             "department": "75",
             "event_title": null,
@@ -1075,17 +1085,22 @@
             "genres_public": null,
             "headliner": "Hans Williams",
             "identity_aliases": [
-              "Hans Williams"
+              "Hans Williams",
+              "Hans Williams + Barrett"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-09-09/81b55780-1166-4d62-877c-2c5624ac2965.jpg?rect=1141%2C0%2C4492%2C4492",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
+            "performers": [
+              "Hans Williams",
+              "Barrett"
             ],
-            "raw_title": "Hans Williams",
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Hans Williams + Barrett",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:30",
@@ -2826,7 +2841,8 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "AEG Presents France"
+              "AEG Presents France",
+              "Supersonic"
             ],
             "raw_title": "Master Peace",
             "series_name": null,
@@ -2834,7 +2850,7 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.aegpresents.fr/event/master-peace/",
+            "ticket_url": "https://supersonic-club.fr/evenement/master-peace-23rd-feb-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
           "first_seen": "2026-10-13T17:01:22Z",
@@ -3504,7 +3520,8 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "AEG Presents France"
+              "AEG Presents France",
+              "Supersonic"
             ],
             "raw_title": "Steinza",
             "series_name": null,
@@ -3548,7 +3565,8 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "AEG Presents France"
+              "AEG Presents France",
+              "Supersonic"
             ],
             "raw_title": "Finn Forster",
             "series_name": null,
@@ -4385,7 +4403,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Neon Dreams"
+            ],
             "date": "2027-05-02",
             "department": "75",
             "event_title": null,
@@ -4400,17 +4420,22 @@
             "genres_public": null,
             "headliner": "Booshle G.",
             "identity_aliases": [
-              "Booshle G."
+              "Booshle G.",
+              "Booshle G. + Neon Dreams"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-10-23/b606335d-c91c-4c8e-b31c-52b94d27cade.jpg?rect=0%2C2120%2C5834%2C5834",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "AEG Presents France"
+            "performers": [
+              "Booshle G.",
+              "Neon Dreams"
             ],
-            "raw_title": "Booshle G.",
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Booshle G. + Neon Dreams",
             "series_name": null,
             "sold_out": false,
             "start_time": "20:30",
@@ -5689,7 +5714,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -10669,7 +10694,7 @@
           "state_identity": "d11318ed922609c1c69c26d4321ff9d9c45b907573e07d73fe0b522e555f120d"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11319,7 +11344,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -13636,7 +13661,7 @@
           "state_identity": "3af6c22b73b6bce34eff1833561ae75fe0618e08126e0abaffc838d6be0fb455"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -14367,7 +14392,8 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "Alias Production"
+              "Alias Production",
+              "Supersonic"
             ],
             "raw_title": "Oscar Lindsey",
             "series_name": null,
@@ -14375,7 +14401,7 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://link.dice.fm/z71b7e58a99d",
+            "ticket_url": "https://supersonic-club.fr/evenement/oscar-lindsey-13th-feb-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
           "first_seen": "2026-10-19T18:29:04Z",
@@ -15560,7 +15586,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -15871,7 +15897,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -17290,7 +17316,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -18790,7 +18816,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -20136,7 +20162,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -21902,7 +21928,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -23148,7 +23174,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -24863,7 +24889,7 @@
           "state_identity": "90716293fd943618bb05e2d75d6f2a5a5333d07968b66300fd79fc954a2ae1d5"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -26081,7 +26107,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -26952,7 +26978,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -27467,7 +27493,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -29335,7 +29361,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -29547,7 +29573,7 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -32812,7 +32838,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -33578,7 +33604,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -35873,10 +35899,10 @@
             "promoters": null,
             "raw_title": "Logic1000",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "19:30",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://laboule-noire.fr/logic1000/",
             "venue": "La Boule Noire"
           },
@@ -36425,7 +36451,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -40992,7 +41018,7 @@
           "state_identity": "78038585cae60e039bd57c6975a2fcb1b06a92b68aa5c374c8f7e45b1c73ddce"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -42171,7 +42197,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -43172,7 +43198,7 @@
           "state_identity": "ad7ccaf6b6a026b3a1c89d0d50512b155686b8baf06dc90b8ccbffb0ad257cc8"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -48674,7 +48700,7 @@
           "state_identity": "44ad8bbae83d6f35e0cfd0c643bf09d5fd5d0eff3c241dcc59d21bfbf1607dca"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -50285,7 +50311,7 @@
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -50895,7 +50921,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -51776,7 +51802,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -52935,7 +52961,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -55250,7 +55276,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -58372,7 +58398,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -59894,7 +59920,7 @@
           "state_identity": "a8a46784cdd00eea555f70ff6c98afe06e8a839cc6998043d6f1591f3c762459"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -64459,7 +64485,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -65456,7 +65482,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -66394,7 +66420,10 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Ghost on Tape",
+              "Sucrose"
+            ],
             "date": "2026-11-24",
             "department": "75",
             "event_title": null,
@@ -66412,17 +66441,23 @@
             "genre_public": "Metal / Hard Rock",
             "genre_source": "Live Nation",
             "genres_public": null,
-            "headliner": "Grommet + Ghost on Tape + Sucrose",
+            "headliner": "Grommet",
             "identity_aliases": [
-              "Grommet"
+              "Grommet",
+              "Grommet + Ghost on Tape + Sucrose"
             ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/d/g/m/337406b9-ae96-4016-8e99-30fa76dd9f10.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Grommet",
+              "Ghost on Tape",
+              "Sucrose"
+            ],
             "promoters": [
-              "Live Nation"
+              "Live Nation",
+              "Supersonic"
             ],
             "raw_title": "Grommet + Ghost on Tape + Sucrose",
             "series_name": null,
@@ -66430,7 +66465,7 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://dice.fm/event/6a22df8d40d506000117585d",
+            "ticket_url": "https://supersonic-club.fr/evenement/grommet-ghost-on-tape-sucrose-24th-nov-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -69026,6 +69061,56 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
+            "city": "Enghien-les-Bains",
+            "co_headliners": null,
+            "date": "2027-02-04",
+            "department": "95",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alternative and Indie, Pop, Rock",
+            "genre_evidence": [
+              {
+                "raw": "Alternative and Indie, Pop, Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Live Nation",
+            "genres_public": [
+              "Pop",
+              "Rock / Indie / Punk"
+            ],
+            "headliner": "Boulevard des Airs",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/z/o/x/d1659081-de85-4023-9725-b2c3a5ebb977.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.casinosbarriere.com/enghien/spectacle/boulevard-des-airs",
+            "venue": "Théâtre du Casino Barrière d'Enghien-les-Bains"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "2b841d5b37032cc5",
+          "state_identity": "2b841d5b37032cc58e89070847f8a7d563d7db1b4a58766772405335d2d47536"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-02-05",
@@ -71261,16 +71346,19 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Will Linley",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Will Linley"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/d/k/w/077eda37-db07-42e1-8edc-bacffe0bfc0d.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "Live Nation"
+              "Live Nation",
+              "Supersonic"
             ],
-            "raw_title": null,
+            "raw_title": "Will Linley",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -72165,7 +72253,8 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "Live Nation"
+              "Live Nation",
+              "Supersonic"
             ],
             "raw_title": "The Lilacs",
             "series_name": null,
@@ -72173,7 +72262,7 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.livenation.fr/event/the-lilacs-paris-tickets-edp1670178",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-lilacs-10th-apr-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -75277,7 +75366,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -75786,7 +75875,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -80121,7 +80210,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -82879,7 +82968,7 @@
           "state_identity": "830171c653d94a1553bd4e737ca82ad91b5ee8d179750e21a2ae0eee291fc45a"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -83449,7 +83538,7 @@
           "state_identity": "aca808ec020beb2983b627845ed0ea2aaaf9a3b1753543879119c096416f7428"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -83684,7 +83773,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -85180,7 +85269,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -85218,12 +85307,12 @@
             "promoters": [
               "Vedettes"
             ],
-            "raw_title": "David Eugene Edwards + Catherine Graindorge",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://petitbain.org/evenement/david-eugene-edwards-2/",
             "venue": "Petit Bain"
           },
@@ -86986,7 +87075,7 @@
           "state_identity": "7c4ebb62acf570558a3053d393ae5e06fde9567c73c0bb278501adc85e242b81"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -87636,7 +87725,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -88666,7 +88755,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -89626,12 +89715,12 @@
           "state_identity": "166e1538856e800efc7958682fea9bcc1290304692b2a95d387311e71e99a573"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -93318,7 +93407,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -93945,105 +94034,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-15",
-            "department": "75",
-            "event_title": "Jazz & goûter fête les divas du jazz : Nina Simone, Billie Holiday et Ella Fitzgerald",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz kids",
-            "genre_evidence": [
-              {
-                "raw": "Jazz kids",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Léa Castro",
-            "identity_aliases": [
-              "Jazz & goûter fête les divas du jazz : Nina Simone, Billie Holiday et Ella Fitzgerald avec Léa Castro"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/7/3/6a47bd10ee8b7-jazz-et-gouter-ancienne-version.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Jazz & goûter fête les divas du jazz : Nina Simone, Billie Holiday et Ella Fitzgerald avec Léa Castro",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "15:00",
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/792921-jazz-gouter-fete-les-divas-du-jazz-nina-simone-billie-holiday-et-ella-fitzgerald-avec-lea-castro",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "abed044adc170c5e",
-          "state_identity": "abed044adc170c5e18adb32433ad8d50e5f2aee14b1e9d63fb7b6f17dc045e95"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-15",
-            "department": "75",
-            "event_title": "Jazz & goûter fête les divas du jazz : Nina Simone, Billie Holiday et Ella Fitzgerald",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Jazz kids",
-            "genre_evidence": [
-              {
-                "raw": "Jazz kids",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Sunset/Sunside",
-            "genres_public": null,
-            "headliner": "Léa Castro",
-            "identity_aliases": [
-              "Jazz & goûter fête les divas du jazz : Nina Simone, Billie Holiday et Ella Fitzgerald avec Léa Castro"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/7/3/6a47bd10ee8b7-jazz-et-gouter-ancienne-version.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Jazz & goûter fête les divas du jazz : Nina Simone, Billie Holiday et Ella Fitzgerald avec Léa Castro",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "17:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/792921-jazz-gouter-fete-les-divas-du-jazz-nina-simone-billie-holiday-et-ella-fitzgerald-avec-lea-castro",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-08-28T19:25:05Z",
-          "public_id": "db99403000248be5",
-          "state_identity": "db99403000248be5283f9caf19b9a49dceae6d8dd879529f22dbd1f1fb1e9abb"
-        },
         {
           "event": {
             "announced_at": null,
@@ -101182,11 +101177,1108 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
       "events": [
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Pop Punk: Blink-182, Sum 41, Green Day, The Offspring",
+            "identity_aliases": [
+              "Sunday Tribute – Pop Punk: Blink-182, Sum 41, Green Day, The Offspring"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-07-10/432704bf-1605-400c-8e33-c7c4922023ad.jpg?rect=0%2C352%2C1922%2C1922",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Pop Punk: Blink-182, Sum 41, Green Day, The Offspring",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-pop-punk-blink-182-sum-41-green-day-the-offspring-15th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "0aae299b752dbb36",
+          "state_identity": "0aae299b752dbb36adb9f8761e246c54cf7993e1e21ecacb37ca4b3e1e454fd2"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Subzero fun",
+              "No Gravity"
+            ],
+            "date": "2026-11-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Shaki Tavi",
+            "identity_aliases": [
+              "Shaki Tavi + Subzero fun + No Gravity",
+              "Shaki Tavi"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-22/94ec5589-af48-41cb-83ef-6272eb1ed103.jpg?rect=328%2C0%2C2345%2C2345",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Shaki Tavi",
+              "Subzero fun",
+              "No Gravity"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Shaki Tavi + Subzero fun + No Gravity",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/shaki-tavi-subzero-fun-no-gravity-17th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "fdcfd6b2c842980c",
+          "state_identity": "fdcfd6b2c842980c21366c7b34e6f71e07af03dab927d16d6f47ee99a26b330d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Carne",
+              "Final Girl"
+            ],
+            "date": "2026-11-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Carsick",
+            "identity_aliases": [
+              "Carsick + Carne + Final Girl",
+              "CARSICK"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-18/b9f92373-a0a5-4178-99ed-fcbc210ccae8.jpg?rect=0%2C938%2C2496%2C2496",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Carsick",
+              "Carne",
+              "Final Girl"
+            ],
+            "promoters": [
+              "Supersonic",
+              "VeryShow"
+            ],
+            "raw_title": "Carsick + Carne + Final Girl",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/carsick-carne-final-girl-18th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-22T17:01:11Z",
+          "public_id": "6fc440ff51f2d0b6",
+          "state_identity": "6fc440ff51f2d0b60285a66d94b42aa394f7c44dd70bd97cf4d3c80d984beb74"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Kino Motel",
+              "Moon-li 历"
+            ],
+            "date": "2026-11-19",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "60 Juno",
+            "identity_aliases": [
+              "60 Juno + Kino Motel + Moon-li 历",
+              "60 Juno"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-06-04/c086d9a1-569a-430d-9f16-f6cb196ddd7c.jpg?rect=0%2C206%2C1080%2C1080",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "60 Juno",
+              "Kino Motel",
+              "Moon-li 历"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "60 Juno + Kino Motel + Moon-li 历",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/60-juno-kino-motel-moon-li-19th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "57860798bfe2e603",
+          "state_identity": "57860798bfe2e6032187f801085c4105777495644d2bbbe3143d793259d6bc68"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Isidore",
+              "Sub/City"
+            ],
+            "date": "2026-11-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Roman Ausen",
+            "identity_aliases": [
+              "Roman Ausen + Isidore + Sub/City",
+              "Roman Ausen"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-21/a8d0822c-6c55-4772-b62f-e6b8e0090151.jpg?rect=0%2C0%2C3744%2C3744",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Roman Ausen",
+              "Isidore",
+              "Sub/City"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Roman Ausen + Isidore + Sub/City",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/roman-ausen-isidore-subcity-20th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-21T17:20:36Z",
+          "public_id": "db55288d82d4e046",
+          "state_identity": "db55288d82d4e046b736959d66b4e4262576b98995b9efaf9284e12b1a13f748"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Bye Bye Horse",
+              "Vamp Chérie"
+            ],
+            "date": "2026-11-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "ILA",
+            "identity_aliases": [
+              "ILA + Bye Bye Horse + Vamp Chérie",
+              "ILA"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-13/1313a794-7a10-4ecf-b3d2-1c1e28464eff.jpg?rect=0%2C772%2C1544%2C1544",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "ILA",
+              "Bye Bye Horse",
+              "Vamp Chérie"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "ILA + Bye Bye Horse + Vamp Chérie",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/ila-bye-bye-horse-vamp-chrie-21st-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-20T12:30:29Z",
+          "public_id": "5d0e14c7d5d0c730",
+          "state_identity": "5d0e14c7d5d0c730d12bcc05f67596ede25e458e74a1089b686a16071268774c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - The Cure",
+            "identity_aliases": [
+              "Sunday Tribute – The Cure"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-08-19/df671801-6b74-4526-b199-f172ad912501.jpg?rect=0%2C402%2C2239%2C2239",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - The Cure",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-the-cure-22nd-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-29T13:48:57Z",
+          "public_id": "2ec7666735877056",
+          "state_identity": "2ec7666735877056d5b0e858154961a9061388a310c41ed5f9acbd7dbb8310e8"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Penny & The Pits",
+              "PEUF!"
+            ],
+            "date": "2026-11-23",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "Shaking Hand",
+            "identity_aliases": [
+              "Shaking Hand + Penny & The Pits + PEUF!",
+              "Shaking Hand"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-04-09/64e40cc9-d834-403f-9c50-d7121aff36a8.jpg?rect=538%2C0%2C3931%2C3931",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Shaking Hand",
+              "Penny & The Pits",
+              "PEUF!"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Shaking Hand + Penny & The Pits + PEUF!",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/shaking-hand-penny-the-pits-peuf-23rd-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "5426f96d3fa9fe94",
+          "state_identity": "5426f96d3fa9fe946e2d9001783a5ccd517edfece7832cb2576bf3289d695c85"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Ghost on Tape",
+              "Sucrose"
+            ],
+            "date": "2026-11-24",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Hard rock / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Hard rock / Metal",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Grommet",
+            "identity_aliases": [
+              "Grommet",
+              "Grommet + Ghost on Tape + Sucrose"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/d/g/m/337406b9-ae96-4016-8e99-30fa76dd9f10.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Grommet",
+              "Ghost on Tape",
+              "Sucrose"
+            ],
+            "promoters": [
+              "Live Nation",
+              "Supersonic"
+            ],
+            "raw_title": "Grommet + Ghost on Tape + Sucrose",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/grommet-ghost-on-tape-sucrose-24th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "d0fce8bf40ccd103",
+          "state_identity": "d0fce8bf40ccd1035087c8e344679c99fb9581a6ebec916fb936e4d08bbab517"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Bedroom Vacation",
+              "Tatum & The Benzos"
+            ],
+            "date": "2026-11-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "The Youth Play",
+            "identity_aliases": [
+              "The Youth Play + Bedroom Vacation + Tatum & The Benzos",
+              "The Youth Play"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-22/0a08140d-0e2d-4503-819d-c6b1cfe61c4f.jpg?rect=0%2C1040%2C4160%2C4160",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "The Youth Play",
+              "Bedroom Vacation",
+              "Tatum & The Benzos"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "The Youth Play + Bedroom Vacation + Tatum & The Benzos",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-youth-play-bedroom-vacation-tatum-the-benzos-25th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "cd62b68ed26b308f",
+          "state_identity": "cd62b68ed26b308fd6cc11b0a7898f607bf8224d75035da9065a139ec44da531"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Jonas De Kesel"
+            ],
+            "date": "2026-11-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "Trixie Whitley",
+            "identity_aliases": [
+              "Trixie Whitley",
+              "Trixie Whitley + Jonas De Kesel"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-03-23/42f4709d-2baf-4fdf-948d-6ca955b0dc48.jpg?rect=0%2C0%2C1075%2C1075",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Trixie Whitley",
+              "Jonas De Kesel"
+            ],
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Trixie Whitley + Jonas De Kesel",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/TrixieWhitley-AEG26",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "7a272eb1803cf8ca",
+          "state_identity": "7a272eb1803cf8ca99e208d416be5a5304c1c85030799285a1412187a8f06568"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "JK & The GGG's",
+              "Parkainge"
+            ],
+            "date": "2026-11-26",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Modern Woman",
+            "identity_aliases": [
+              "Modern Woman + JK & The GGG's + Parkainge",
+              "Modern Woman"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-30/f97646f7-21fa-426f-8776-cccbd2a1b5ee.jpg?rect=185%2C0%2C1667%2C1667",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Modern Woman",
+              "JK & The GGG's",
+              "Parkainge"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Modern Woman + JK & The GGG's + Parkainge",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/modern-woman-jk-the-gggs-parkainge-26th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-01T18:27:32Z",
+          "public_id": "f750265aa539bc66",
+          "state_identity": "f750265aa539bc663d2204099ea14be23ec355bc2297b88198fc184e1dd29a92"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Kate Couriel",
+              "Bay Haven"
+            ],
+            "date": "2026-11-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "Seb Lowe",
+            "identity_aliases": [
+              "Seb Lowe + Kate Couriel + Bay Haven",
+              "Seb Lowe"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-05-22/351acbda-a681-42e6-a8db-752ad00ef21a.jpg?rect=0%2C852%2C2624%2C2624",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Seb Lowe",
+              "Kate Couriel",
+              "Bay Haven"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Seb Lowe + Kate Couriel + Bay Haven",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/seb-lowe-kate-couriel-bay-haven-27th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "44d3a5ecbe487a69",
+          "state_identity": "44d3a5ecbe487a69dd44debe1978dd5b1ad4e7a64deede0b5430f1b32a456083"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Apple Music artist metadata",
+            "genres_public": null,
+            "headliner": "Alexandra Alden",
+            "identity_aliases": [
+              "Alexandra Alden"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-04-27/83cf5de5-8b2a-49ab-a849-e888bf23edf4.jpg?rect=0%2C117%2C1478%2C1478",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Alexandra Alden",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/alexandra-alden-28th-nov-supersonic-records-paris-tickets/",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "dc86db8aee44b5df",
+          "state_identity": "dc86db8aee44b5dff28fcc1502679a5bb1e6a352f649288d2d2c7ee479913438"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Off Center",
+              "Ytso & Wayne"
+            ],
+            "date": "2026-11-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "The Wants",
+            "identity_aliases": [
+              "The Wants + Off Center + Ytso & Wayne",
+              "The Wants"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/413329a2-10b0-4230-af04-2b0caa3aa46c.jpg?rect=171%2C0%2C2400%2C2400",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "The Wants",
+              "Off Center",
+              "Ytso & Wayne"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "The Wants + Off Center + Ytso & Wayne",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-wants-off-center-ytso-wayne-28th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-28T19:25:05Z",
+          "public_id": "98b31868c894839c",
+          "state_identity": "98b31868c894839ca734d62d477bc2ac3927f151f363e71eeb6acfe50d5e4bd7"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - The Doors",
+            "identity_aliases": [
+              "Sunday Tribute – The Doors"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-07-10/d0e6aa5e-aab4-4d3d-afc9-27e93cfb6a6a.jpg?rect=0%2C679%2C2714%2C2714",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - The Doors",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-the-doors-29th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-29T13:48:57Z",
+          "public_id": "7f2be921bd4c63ba",
+          "state_identity": "7f2be921bd4c63bafb35e35912cb2a0d75385b9afef0586e47aafcb0d955deee"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-11-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Wikidata genre statements (P136)",
+            "genres_public": null,
+            "headliner": "greek",
+            "identity_aliases": [
+              "Greek"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-06-25/70031f6e-669e-41fd-b562-0d7c29458e9f.jpg?rect=0%2C313%2C2070%2C2070",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Greek",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/Greek-AEG26",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "75b4edc8f517e4d0",
+          "state_identity": "75b4edc8f517e4d0dc28c6bcecbb31e05f170625040f2e07bd1bc0e25de26f2c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Pocket",
+              "Tempura"
+            ],
+            "date": "2026-11-30",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "The Silverados",
+            "identity_aliases": [
+              "The Silverados + Pocket + Tempura",
+              "The Silverados"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-02/97fee162-0a56-4e23-a93a-acda2cca9b8a.jpg?rect=0%2C525%2C1365%2C1365",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "The Silverados",
+              "Pocket",
+              "Tempura"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "The Silverados + Pocket + Tempura",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-silverados-pocket-tempura-30th-nov-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-04T17:55:34Z",
+          "public_id": "36571d436a7c020c",
+          "state_identity": "36571d436a7c020c9a4f523e44f68f3e439cc37c1ffbce1812780d9225555d14"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Official/current event description and reviewed exact artist catalog",
+            "genres_public": null,
+            "headliner": "Haunt Me",
+            "identity_aliases": [
+              "Haunt Me"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-06-02/0c5202d3-62bf-4a2e-89d3-69428082385b.jpg?rect=0%2C290%2C1179%2C1179",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Haunt Me",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/haunt-me-1st-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "fb80289433c5b9cd",
+          "state_identity": "fb80289433c5b9cd038f32fdbd0c48654b7f72424d43f970138edec88a44cc7b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Joobieseaz",
+              "DZY"
+            ],
+            "date": "2026-12-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "bill_consensus",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "mapped_bill_artists",
+            "genres_public": null,
+            "headliner": "The Publics",
+            "identity_aliases": [
+              "The Publics + Joobieseaz + DZY",
+              "The Publics"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-04-02/28ab7576-94d6-4e94-9783-07c01cc85852.jpg?rect=0%2C2336%2C4672%2C4672",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "The Publics",
+              "Joobieseaz",
+              "DZY"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "The Publics + Joobieseaz + DZY",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-publics-joobieseaz-dzy-2nd-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "c260c93d7f8918cf",
+          "state_identity": "c260c93d7f8918cf5a978d80fc696c132c7566e8a5bd66f4d5b864587d2a84b0"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-04",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "La Bûche Fest: Tombola + Ping Pong de concerts avec Them Flying Monkeys + Loveth Besamoh + L'Ecuyer + Painkiller + M.Lucky",
+            "identity_aliases": [
+              "La Bûche Fest: Tombola + Ping Pong de concerts avec Them Flying Monkeys + Loveth Besamoh + L'Ecuyer + Painkiller + M.Lucky"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-13/68768a95-ef08-485d-a101-6e476bed5beb.jpg?rect=5%2C0%2C1303%2C1303",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "La Bûche Fest: Tombola + Ping Pong de concerts avec Them Flying Monkeys + Loveth Besamoh + L'Ecuyer + Painkiller + M.Lucky",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/la-bche-fest-tombola-ping-pong-de-concerts-avec-them-flying-monkeys-loveth-besamoh-lecuyer-painkiller-mlucky-4th-dec-supersonic-paris-supersonic-records-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-05T13:10:50Z",
+          "public_id": "04c7a021a87aae7a",
+          "state_identity": "04c7a021a87aae7ae19cb93fc4baee3eefacfdf9aa035cb60da9becbd0ba0052"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "KyoYoko",
+              "S.C.H.E.M.E",
+              "big long sun"
+            ],
+            "date": "2026-12-05",
+            "department": "75",
+            "event_title": "La Bûche Fest: Maria Iskariot + KyoYoko + S.C.H.E.M.E + Big Long Sun",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Maria Iskariot",
+            "identity_aliases": [
+              "Maria Iskariot",
+              "La Bûche Fest: Maria Iskariot + KyoYoko + S.C.H.E.M.E + Big Long Sun"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-13/a2f1ec94-c259-45eb-852d-651b56309e29.jpg?rect=5%2C0%2C1303%2C1303",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Maria Iskariot",
+              "KyoYoko",
+              "S.C.H.E.M.E",
+              "big long sun"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "La Bûche Fest: Maria Iskariot + KyoYoko + S.C.H.E.M.E + Big Long Sun",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/la-bche-fest-maria-iskariot-kyoyoko-scheme-big-long-sun-5th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-05T13:10:50Z",
+          "public_id": "6477536248afa94a",
+          "state_identity": "6477536248afa94aabe4a04e00ac51ca64569923bad18cbb25269062182763e2"
+        },
         {
           "event": {
             "announced_at": null,
@@ -101228,9 +102320,2315 @@
           "first_seen": "2026-11-05T13:10:50Z",
           "public_id": "20fb7f7230b19951",
           "state_identity": "20fb7f7230b1995143e06a7a28acbf06eea75315af1853229d569c3fe5e9a83d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-11",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Official/current event description",
+            "genres_public": null,
+            "headliner": "Lucidvox",
+            "identity_aliases": [
+              "Lucidvox"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-07-20/40e37431-3e30-46e5-99c5-5bbb31ef4b26.jpg?rect=1029%2C0%2C3621%2C3621",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Lucidvox",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/lucidvox-11th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "f5f1e3157601474a",
+          "state_identity": "f5f1e3157601474af38f57ddbafb4693d7095f2de08f2f0d021128da29108328"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Barrett"
+            ],
+            "date": "2026-12-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Hans Williams",
+            "identity_aliases": [
+              "Hans Williams",
+              "Hans Williams + Barrett"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-09/81b55780-1166-4d62-877c-2c5624ac2965.jpg?rect=1141%2C0%2C4492%2C4492",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Hans Williams",
+              "Barrett"
+            ],
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Hans Williams + Barrett",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/HansWilliams-AEG26",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-09-09T18:30:51Z",
+          "public_id": "c5e880903bbcaa3e",
+          "state_identity": "c5e880903bbcaa3eacef6abd412d4429527d6278b54587b472baccad772b0aa3"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Pills For Tomorrow",
+              "Red Money"
+            ],
+            "date": "2026-12-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Jim Younger's Spirit",
+            "identity_aliases": [
+              "Jim Younger's Spirit + Pills For Tomorrow + Red Money",
+              "Jim Younger's Spirit"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-15/3d015f4a-1cce-4f30-b1b2-f7caabea8127.jpg?rect=0%2C0%2C4472%2C4472",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Jim Younger's Spirit",
+              "Pills For Tomorrow",
+              "Red Money"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Jim Younger's Spirit + Pills For Tomorrow + Red Money",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/jim-youngers-spirit-pills-for-tomorrow-red-money-12th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-15T21:29:21Z",
+          "public_id": "fc1227f353df751a",
+          "state_identity": "fc1227f353df751ad8701e96eb740258ed40d9b535ae2df40b16219da372d40e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Tame Impala",
+            "identity_aliases": [
+              "Sunday Tribute – Tame Impala"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-08-19/01fdc089-e4ed-4cdf-a504-e626f3b25c42.jpg?rect=0%2C549%2C2472%2C2472",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Tame Impala",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-tame-impala-13th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-29T13:48:57Z",
+          "public_id": "ceb66151191e9d54",
+          "state_identity": "ceb66151191e9d54a8e6aab27303eb5c4c04e94fa3699e6b99291a35e36ee299"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Prize Horse",
+              "Long Lost"
+            ],
+            "date": "2026-12-14",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Spite House",
+            "identity_aliases": [
+              "Spite House + Prize Horse + Long Lost",
+              "Spite House"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi2oSqpyOy0UBFhfTeW_OVwEst1Hkbs4AIxUBkNfMKK3FROtS1CjcY-bMbGCmJG2B8PrRkBAXDdZhrcrLXRcQjQTxs860dDVfg0Zd27aOnEir0fzigy3ETWC-EPVrUVjo3Xz7GEgUszQpZWEcvmH85Tg2_e5KbIsVlsC6dw0nHNO3pr-UENHLFd8rO4cyA/s72-w640-h426-c-rw/Spite%20House20260210La%20MaroquinerieParis%2020_40.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Spite House",
+              "Prize Horse",
+              "Long Lost"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Spite House + Prize Horse + Long Lost",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/spite-house-prize-horse-long-lost-14th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-27T15:42:39Z",
+          "public_id": "e583ddd72ab63c05",
+          "state_identity": "e583ddd72ab63c0577afb8c199310d489ae4f08b562dbe491cfe2b3507896859"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Billy Bonbon",
+              "Bloodsugar Pölitik"
+            ],
+            "date": "2026-12-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Gallus",
+            "identity_aliases": [
+              "Gallus + Billy Bonbon + Bloodsugar Pölitik",
+              "Gallus"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-02/37fd5014-a313-43c6-b852-031c44789bc9.jpg?rect=1254%2C0%2C4000%2C4000",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Gallus",
+              "Billy Bonbon",
+              "Bloodsugar Pölitik"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Gallus + Billy Bonbon + Bloodsugar Pölitik",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/gallus-billy-bonbon-bloodsugar-plitik-15th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-04T17:55:34Z",
+          "public_id": "411c43253776c4b9",
+          "state_identity": "411c43253776c4b9db28727a75963bda317b6529e29a2de0ca74d09353e3c3de"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Apple Music + Bandcamp",
+            "genres_public": null,
+            "headliner": "Cowboyy",
+            "identity_aliases": [
+              "Cowboyy"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/0a22c6ae-c8e8-424b-a3ad-062c7e14122c.jpg?rect=377%2C0%2C2075%2C2075",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Cowboyy",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/cowboyy-16th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-28T19:25:05Z",
+          "public_id": "f8854832177b00a1",
+          "state_identity": "f8854832177b00a1c0e1b06e9bff4bdd4e8302fd3eb5754f4ed78afe8a00add5"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "The AA",
+              "Monday Sparks"
+            ],
+            "date": "2026-12-19",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday, June",
+            "identity_aliases": [
+              "Sunday, June + The AA + Monday Sparks",
+              "Sunday, June"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-10/9d84ff31-5403-49ba-bed2-08090449c365.jpg?rect=1219%2C0%2C3592%2C3592",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Sunday, June",
+              "The AA",
+              "Monday Sparks"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday, June + The AA + Monday Sparks",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-june-the-aa-monday-sparks-19th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "6948e36c13122adf",
+          "state_identity": "6948e36c13122adfcf67aedc5457079f0822cad527102bec1f46b38234230120"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Red Hot Chili Peppers",
+            "identity_aliases": [
+              "Sunday Tribute – Red Hot Chili Peppers"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-08-25/65f8ca26-cf32-4516-acdd-fde2d951b0d3.jpg?rect=0%2C352%2C2814%2C2814",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Red Hot Chili Peppers",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-red-hot-chili-peppers-20th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-29T13:48:57Z",
+          "public_id": "5610959245f0de89",
+          "state_identity": "5610959245f0de8992da6537f744ecd46f0a08c0296ecb079d08fab909961620"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Flurp",
+              "Namakis"
+            ],
+            "date": "2026-12-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Shoom",
+            "identity_aliases": [
+              "Shoom + Flurp + Namakis",
+              "Shoom"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-30/d6cd75d5-4b5e-4595-ab8b-6436344109df.jpg?rect=659%2C0%2C3542%2C3542",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Shoom",
+              "Flurp",
+              "Namakis"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Shoom + Flurp + Namakis",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/shoom-flurp-namakis-21st-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-01T18:27:32Z",
+          "public_id": "2b9ed6701db557b2",
+          "state_identity": "2b9ed6701db557b2588370e02c938042bbe5789013034e273762c744c47b063f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Over the Stars",
+              "Panic Monster"
+            ],
+            "date": "2026-12-26",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Kiss Cam",
+            "identity_aliases": [
+              "Kiss Cam + Over the Stars + Panic Monster",
+              "Kiss Cam"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-06/eafec7a6-52fc-477d-abb5-0da24b32a574.jpg?rect=342%2C0%2C1365%2C1365",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Kiss Cam",
+              "Over the Stars",
+              "Panic Monster"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Kiss Cam + Over the Stars + Panic Monster",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/kiss-cam-over-the-stars-panic-monster-26th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-06T23:15:35Z",
+          "public_id": "11c0d45d7778fb4b",
+          "state_identity": "11c0d45d7778fb4b9b9896aafa9b77c9b1c8d7a1a2d9f168186e6058fe03b7b8"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - System of a Down",
+            "identity_aliases": [
+              "Sunday Tribute – System of a Down"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-04/06f0d942-ac20-4b53-ad03-3981fdbbd70d.jpg?rect=0%2C97%2C768%2C768",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - System of a Down",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-system-of-a-down-27th-dec-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "ddfeb74cb9e4d54b",
+          "state_identity": "ddfeb74cb9e4d54b8054298a6a4b0301bdf1b6372a3452d764e125d218079053"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-03",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Arctic Monkeys",
+            "identity_aliases": [
+              "Sunday Tribute – Arctic Monkeys"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-04-03/0230ecdf-bf12-4511-949b-216d6745141d.jpg?rect=0%2C717%2C2866%2C2866",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Arctic Monkeys",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-arctic-monkeys-3rd-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "8dbba95858536f60",
+          "state_identity": "8dbba95858536f606b1f8ff13f7d23494bc6b9810b9b35a8a6b28a379c82124f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-08",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Trint Eastwood",
+            "identity_aliases": [
+              "Trint Eastwood"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-14/6e6e7ead-9c90-4498-8047-5afb28e53950.jpg?rect=1209%2C0%2C2667%2C2667",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Trint Eastwood",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/trint-eastwood-8th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-14T16:52:08Z",
+          "public_id": "51815e1f3291496f",
+          "state_identity": "51815e1f3291496f8043929c8388a1628656fcefa8bf23ed5776a5be3504d74f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Crimson Effect",
+              "Lava Bow"
+            ],
+            "date": "2027-01-09",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Big Trousers",
+            "identity_aliases": [
+              "Big Trousers + Crimson Effect + Lava Bow",
+              "Big Trousers"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-06/ab6e989f-8c8a-440d-8b74-e0c52658ee45.jpg?rect=0%2C708%2C3854%2C3854",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Big Trousers",
+              "Crimson Effect",
+              "Lava Bow"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Big Trousers + Crimson Effect + Lava Bow",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/big-trousers-crimson-effect-lava-bow-9th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-06T16:57:47Z",
+          "public_id": "fb5df6415db57e2c",
+          "state_identity": "fb5df6415db57e2c02a339d35c118fc1280fb4ce020998c1a5e16023c6b24142"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - David Bowie",
+            "identity_aliases": [
+              "Sunday Tribute – David Bowie"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-12-04/495289a3-8867-4582-83f2-49801dfcd750.jpg?rect=0%2C785%2C3142%2C3142",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - David Bowie",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-david-bowie-10th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "e3adefd593043e24",
+          "state_identity": "e3adefd593043e24783d53f2a242a6f3be7180479117cb8e621cfe6ffad7f996"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Sungrave",
+              "Maudits"
+            ],
+            "date": "2027-01-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Embers",
+            "identity_aliases": [
+              "Embers + Sungrave + Maudits",
+              "Embers"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-16/2fee710b-c27d-424e-93a7-5152a7618359.jpg?rect=0%2C444%2C3549%2C3549",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Embers",
+              "Sungrave",
+              "Maudits"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Embers + Sungrave + Maudits",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/embers-sungrave-maudits-15th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-20T12:30:29Z",
+          "public_id": "a074e41db3d20ad3",
+          "state_identity": "a074e41db3d20ad320cbb916eaa3243ae3b1b3a66ab1b02696355ccbe5b44618"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Classic Hard Rock (Black Sabbath, Motorhead, Iron Maiden, Alice Cooper)",
+            "identity_aliases": [
+              "Sunday Tribute – Classic Hard Rock (Black Sabbath, Motorhead, Iron Maiden, Alice Cooper)"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-03-19/b836c9f7-1e0e-45a5-bec3-4f185a317e7b.jpg?rect=0%2C603%2C2410%2C2410",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Classic Hard Rock (Black Sabbath, Motorhead, Iron Maiden, Alice Cooper)",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-classic-hard-rock-black-sabbath-motorhead-iron-maiden-alice-cooper-17th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "ddb30ff2a322b383",
+          "state_identity": "ddb30ff2a322b3836dd5e21d1951b4689c0375b2256321287bcbc8ad7550e5af"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-24",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Lana Del Rey",
+            "identity_aliases": [
+              "Sunday Tribute – Lana Del Rey"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-10/26ba199e-8060-4af7-8509-b6f44f2e16ba.jpg?rect=0%2C534%2C3121%2C3121",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Lana Del Rey",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-lana-del-rey-24th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "28b4fa4fe404a9cf",
+          "state_identity": "28b4fa4fe404a9cfde12a57da06386bdf6955dba574e003db16e674abdfb4dc9"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "High Hi",
+            "identity_aliases": [
+              "High Hi"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-25/21f823f8-51b4-45cb-ab5a-3cc031e7b6a8.jpg?rect=841%2C0%2C2160%2C2160",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "High Hi",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/high-hi-29th-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-28T20:21:41Z",
+          "public_id": "0c17688a36a91b4a",
+          "state_identity": "0c17688a36a91b4a3e5723b7b5c203575b77a13ef46a9afb2db5a58ae52dae06"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-01-31",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Linkin Park",
+            "identity_aliases": [
+              "Sunday Tribute – Linkin Park"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-12-10/a7336b8a-6dd7-45b4-a877-5b69a0ac44d9.jpg?rect=0%2C400%2C1942%2C1942",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Linkin Park",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-linkin-park-31st-jan-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "f5e1d9f66cc8b9b1",
+          "state_identity": "f5e1d9f66cc8b9b14c3ca63558372571e137505b723d55bffe6b9a28c6097960"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-07",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - The Beatles",
+            "identity_aliases": [
+              "Sunday Tribute – The Beatles"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-12-11/ec065e96-5742-4b47-b2ea-096f299404fd.jpg?rect=0%2C847%2C3389%2C3389",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - The Beatles",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-the-beatles-7th-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "06735492557bcede",
+          "state_identity": "06735492557bcede708dd4d1634368979908da90a8eaf276caef40c2bcb51028"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Farveblind",
+            "identity_aliases": [
+              "Farveblind"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-29/578b0b91-58db-4fad-ae82-5db9b71a5608.jpg?rect=0%2C1157%2C2893%2C2893",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Farveblind",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/farveblind-10th-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "fc8335b05422354f",
+          "state_identity": "fc8335b05422354faf63f14ff724e4b110a41bc687b293011a175a70b9984f78"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Oscar Lindsey",
+            "identity_aliases": [
+              "Oscar Lindsey"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-14/13a570b1-2e0f-4fda-a2e3-2655aa6bbc4c.jpg?rect=743%2C0%2C2433%2C2433",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production",
+              "Supersonic"
+            ],
+            "raw_title": "Oscar Lindsey",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/oscar-lindsey-13th-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-19T18:29:04Z",
+          "public_id": "e4fb6379e91da924",
+          "state_identity": "e4fb6379e91da9240969fa48a003a7b91bd53d9b2916a9abf54f5534bd103cf4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Anniversaire du Supersonic (Best Of Rock)",
+            "identity_aliases": [
+              "Sunday Tribute – Anniversaire du Supersonic (Best Of Rock)"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-10/840558c5-5df6-4bf3-8835-40a43a1e9cd1.jpg?rect=0%2C435%2C1739%2C1739",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Anniversaire du Supersonic (Best Of Rock)",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-anniversaire-du-supersonic-best-of-rock-21st-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "bd4d7d4ca7d99b13",
+          "state_identity": "bd4d7d4ca7d99b13c60ab62af8782d715302b46204cebcc9bda6ccfaa3263389"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-23",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Master Peace",
+            "identity_aliases": [
+              "Master Peace"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-12/9329a197-693c-4393-9522-ad36376e0c2d.jpg?rect=695%2C0%2C2667%2C2667",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Master Peace",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/master-peace-23rd-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-13T17:01:22Z",
+          "public_id": "63e759c276ba3038",
+          "state_identity": "63e759c276ba3038b711298f8c165afada818218fcf8195db0419cc486de7c8a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Hesse Kassel",
+            "identity_aliases": [
+              "Hesse Kassel"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-09/86b9b0ac-a2b6-4385-adbc-d3098b5f89d7.jpg?rect=166%2C0%2C1367%2C1367",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Hesse Kassel",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/hesse-kassel-27th-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-12T20:01:48Z",
+          "public_id": "b2469b6979235ca4",
+          "state_identity": "b2469b6979235ca41c50f4341b1a987e55cbd65b363d5a7d8d825d9c4caba31e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-28",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Queen",
+            "identity_aliases": [
+              "Sunday Tribute – Queen"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2025-12-18/143bced9-294e-45ad-b429-0a87d894fc86.jpg?rect=0%2C0%2C2140%2C2140",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Queen",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-queen-28th-feb-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "03fa1466fd60dabf",
+          "state_identity": "03fa1466fd60dabf04fc4284456c6839b5c2a3dd9155518b7a618861f7593a0a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Winona Riders",
+            "identity_aliases": [
+              "Winona Riders"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-20/b50d1618-63cc-4914-a994-427828d82d81.jpg?rect=927%2C0%2C3708%2C3708",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Winona Riders",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/winona-riders-2nd-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-20T18:16:13Z",
+          "public_id": "95fa08fd8b9dcfd8",
+          "state_identity": "95fa08fd8b9dcfd83ec17224fc6d63f8cd9579e99b4cf7fb21d43782e6409349"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Tense of Fools"
+            ],
+            "date": "2027-03-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Keshavara",
+            "identity_aliases": [
+              "Keshavara + Tense of Fools",
+              "Keshavara"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-07/933ab41f-546e-4ddf-96fa-2859cb30e0cf.jpg?rect=848%2C0%2C4221%2C4221",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Keshavara",
+              "Tense of Fools"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Keshavara + Tense of Fools",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/keshavara-tense-of-fools-5th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-08T18:54:36Z",
+          "public_id": "9f284861455ad64a",
+          "state_identity": "9f284861455ad64a754c11cacb73c269bd164b6fdc734d77413a9c2b1561e630"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-06",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "The Spook School",
+            "identity_aliases": [
+              "The Spook School"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-09/4a1681dd-61e5-430a-b313-78584d75657f.jpg?rect=858%2C0%2C3430%2C3430",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "The Spook School",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-spook-school-6th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-09T18:26:11Z",
+          "public_id": "abdbb25239a629d2",
+          "state_identity": "abdbb25239a629d27ea69b60a2ee697af7f1607b6847c9e86db5edbcfd2263bb"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-07",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - The Strokes",
+            "identity_aliases": [
+              "Sunday Tribute – The Strokes"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-10/c5cd2aca-7d7b-4409-9304-6988d98692ab.jpg?rect=0%2C580%2C2676%2C2676",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - The Strokes",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-the-strokes-7th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "ff1213205a31517f",
+          "state_identity": "ff1213205a31517f5197e1d70dcb51efcf696898d157360f7f068dc4eb8a901d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Oskar Haag",
+            "identity_aliases": [
+              "Oskar Haag"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-29/ac44a7db-7557-41a3-a9d8-cdfb2b32da83.jpg?rect=0%2C626%2C1934%2C1934",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Oskar Haag",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/oskar-haag-10th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "f2d8b994755e75ea",
+          "state_identity": "f2d8b994755e75ea38d88d95b0ff3411176be5f41e91cf34fe63e0b2dbc97958"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "A.R.T",
+            "identity_aliases": [
+              "A.R.T"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-05/181726f3-3428-4c17-9144-c4f2269c25e3.jpg?rect=493%2C0%2C2048%2C2048",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "A.R.T",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/art-12th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-06T17:16:10Z",
+          "public_id": "2eaae8700d45e0c8",
+          "state_identity": "2eaae8700d45e0c8ca79a0d41e590e583d200a679442b5ccc7fbcdc4596847ed"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Steinza",
+            "identity_aliases": [
+              "Steinza"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-22/c1b1a23c-65a1-4445-8597-6432c5410b7e.jpg?rect=898%2C0%2C3649%2C3649",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Steinza",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/Steinza-AEG27",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-10-26T20:36:13Z",
+          "public_id": "c457ffb05be63e5e",
+          "state_identity": "c457ffb05be63e5ed1421e9c98de9c2febf44b50f0f1e7e73704ddb28b0ea19f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Bombargo",
+            "identity_aliases": [
+              "Bombargo"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-26/bd81169f-b25d-460c-9128-f0463bad5abc.jpg?rect=0%2C981%2C4669%2C4669",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Bombargo",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/bombargo-13th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "51aa71a3888c60d4",
+          "state_identity": "51aa71a3888c60d4527c0292fb884361c64910bb5e26683d1fa8698e9230b97c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Finn Forster",
+            "identity_aliases": [
+              "Finn Forster"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiLMMnN2DrTJXlp4uy6zfainMW3FWKNpDKL0xKOHXXOCz0b_x2LUGU50I2KbSNm2XxzO0B2xMFi9kbofOOcsEdqVPCzrWzzDh5_aMEtHaNtv9JkGBl8jHzMs9za2B7uiV5HYyCGU_h_1EDAP97kdqo2s_Pbh5JCkwj0p4b0cpRwxFg_Se0isWbtDPrIphs/s72-w640-h426-c-rw/Finn%20Foster300425Le%20Ze%CC%81nithParis%2019_66.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Finn Forster",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/FinnForster-AEG27",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-10-20T12:30:29Z",
+          "public_id": "9a90f60a6c82a74e",
+          "state_identity": "9a90f60a6c82a74e2aa2eaddba12536d6b3427a607f95c5533a03cc7b5aa6d38"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-14",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Sunday Tribute - Dire Straits",
+            "identity_aliases": [
+              "Sunday Tribute – Dire Straits"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-01-15/2626c70f-b74c-45d0-a510-c72caa0cf4dd.jpg?rect=0%2C545%2C2182%2C2182",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Sunday Tribute - Dire Straits",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-dire-straits-14th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "6e961ebfba503e3a",
+          "state_identity": "6e961ebfba503e3ae565d1a41e23a89b5df00e1345095b776efef351f91356da"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Bluai",
+            "identity_aliases": [
+              "Bluai"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-11/1eb37c88-5979-4682-b386-87d1617e0eca.jpg?rect=1331%2C0%2C5332%2C5332",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Bluai",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/bluai-18th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-14T11:57:51Z",
+          "public_id": "e88e641855cc47a5",
+          "state_identity": "e88e641855cc47a55e9ee308543cc51fbd36409a9a0105e6723e3f5cc05a0708"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-19",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Bug Teeth",
+            "identity_aliases": [
+              "Bug Teeth"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-04/8d3d9b00-85dc-44cd-bbbe-dda5057181d1.jpg?rect=962%2C0%2C3856%2C3856",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Bug Teeth",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/bug-teeth-19th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-05T13:10:50Z",
+          "public_id": "96e8beb5ecfb8d96",
+          "state_identity": "96e8beb5ecfb8d966fa3a6ace04748eece3a382d80b795101c821cb24622e581"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop",
+            "genre_evidence": [
+              {
+                "raw": "Pop",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Will Linley",
+            "identity_aliases": [
+              "Will Linley"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/d/k/w/077eda37-db07-42e1-8edc-bacffe0bfc0d.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation",
+              "Supersonic"
+            ],
+            "raw_title": "Will Linley",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/will-linley-billet/idlist/6696/idtier/4827637",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-11-09T19:53:33Z",
+          "public_id": "127c2e0206d352e0",
+          "state_identity": "127c2e0206d352e0a046ebdc4522293d90abda61b5747fceb1b4487bf0c023cf"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Monday Tribute - Led Zeppelin",
+            "identity_aliases": [
+              "Monday Tribute – Led Zeppelin"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-10/882ca356-e832-4231-9b77-780ff280db78.jpg?rect=0%2C237%2C1080%2C1080",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Monday Tribute - Led Zeppelin",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/monday-tribute-led-zeppelin-29th-mar-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-10T21:20:12Z",
+          "public_id": "02ee041acfcb4c05",
+          "state_identity": "02ee041acfcb4c05c9159a4cc1cfe463e2732c21cd1e8fefd77233bbb4f05c7e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Worries and Other Plants",
+            "identity_aliases": [
+              "Worries and Other Plants"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-09-22/08cacf2b-148f-4a58-be76-af94debc6a09.jpg?rect=0%2C400%2C3200%2C3200",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Worries and Other Plants",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/worries-and-other-plants-5th-apr-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "320e047dd6ec6480",
+          "state_identity": "320e047dd6ec64806de02b7529c2dae107c4ed4d2a9db1f78db10b7c0f5ecc2d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Alternative and Indie",
+            "genre_evidence": [
+              {
+                "raw": "Alternative and Indie",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "The Lilacs",
+            "identity_aliases": [
+              "The Lilacs"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/x/h/y/7166bdb3-2720-4dda-a825-b8375e98e5f8.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation",
+              "Supersonic"
+            ],
+            "raw_title": "The Lilacs",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/the-lilacs-10th-apr-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "7d08800830f8e8ed",
+          "state_identity": "7d08800830f8e8ed12327f6a3b8f14c8d3d9600e7543832eca7386b3bb4a30bc"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Alberta Cross",
+            "identity_aliases": [
+              "Alberta Cross"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHE8MBG8ir6efZrwrm2fM7ezchkTw76xcXCtr1DWjOv5Fbrp55aPZj7R8ft5I3lNAb_eOCfF_9azDI0aX7YAx5HqHGkPmaFgzVUdxqf3pMHcZDgYQBA-oYDMdt7cne4-xGNXZoTVgrqx6wb6iNbYTt9XigdyVnHz6E250Ligi5LAdgmee7TM_021o7At4/s72-w640-h426-c-rw/Alberta%20Cross300325AlhambraParis%2010.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Alberta Cross",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/alberta-cross-13th-apr-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-09-30T19:34:11Z",
+          "public_id": "03fd80e1e6c126fb",
+          "state_identity": "03fd80e1e6c126fbd95e4a8931d8ada8854fc73e207a0c1dbc5b8ba9ff95371e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-24",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Blackout Problems",
+            "identity_aliases": [
+              "Blackout Problems"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-16/e2adb922-c38c-4bb4-bf02-7f104d2e1ea0.jpg?rect=0%2C819%2C3905%2C3905",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Blackout Problems",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/blackout-problems-24th-apr-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-20T12:30:29Z",
+          "public_id": "0c8f65873eb7297f",
+          "state_identity": "0c8f65873eb7297fd7e3f5de1001f2807ff773d8da92b703a645089ce6db5539"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Bliss My Heart x Cliff Estatof"
+            ],
+            "date": "2027-05-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Nite",
+            "identity_aliases": [
+              "Nite + Bliss My Heart x Cliff Estatof",
+              "Nite"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-13/61c3e341-3066-4125-8a33-e07b613f72b5.jpg?rect=345%2C0%2C900%2C900",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Nite",
+              "Bliss My Heart x Cliff Estatof"
+            ],
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Nite + Bliss My Heart x Cliff Estatof",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/nite-bliss-my-heart-x-cliff-estatof-1st-may-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-20T12:30:29Z",
+          "public_id": "d7aadbfc90ecc7a2",
+          "state_identity": "d7aadbfc90ecc7a215a23b83fc1490ef3eedc14e87793fc173e6b0c7fe0d5a03"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Neon Dreams"
+            ],
+            "date": "2027-05-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Booshle G.",
+            "identity_aliases": [
+              "Booshle G.",
+              "Booshle G. + Neon Dreams"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-23/b606335d-c91c-4c8e-b31c-52b94d27cade.jpg?rect=0%2C2120%2C5834%2C5834",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "Booshle G.",
+              "Neon Dreams"
+            ],
+            "promoters": [
+              "AEG Presents France",
+              "Supersonic"
+            ],
+            "raw_title": "Booshle G. + Neon Dreams",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://bit.ly/BooshleG-AEG27",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-10-26T13:14:55Z",
+          "public_id": "075922b2c494fc64",
+          "state_identity": "075922b2c494fc64511a5bfbe16a7cd834f709e5986fb84b0839615745609b7c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-05-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Velvet Two Stripes",
+            "identity_aliases": [
+              "Velvet Two Stripes"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-06/4a7d7795-9a63-4cdc-bc47-2802d484c3a6.jpg?rect=0%2C128%2C960%2C960",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "Velvet Two Stripes",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/velvet-two-stripes-5th-may-supersonic-paris-tickets/",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-11-06T23:15:35Z",
+          "public_id": "61fc84539d50684d",
+          "state_identity": "61fc84539d50684d42864fe5c0f07db875bb5e476d65e5684e3b24d7c1604637"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-05-30",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Official/current event description",
+            "genres_public": null,
+            "headliner": "re6ce",
+            "identity_aliases": [
+              "re6ce"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-06-24/2127eadf-9f2f-4085-becf-595c5baeab82.jpg?rect=0%2C150%2C1200%2C1200",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Supersonic"
+            ],
+            "raw_title": "re6ce",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://supersonic-club.fr/evenement/re6ce/",
+            "venue": "Supersonic Records"
+          },
+          "first_seen": "2026-11-02T21:47:21Z",
+          "public_id": "a56de48d76d01f6a",
+          "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-15T06:43:36Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -101331,7 +104729,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -101369,12 +104767,12 @@
             "promoters": [
               "Vedettes"
             ],
-            "raw_title": "David Eugene Edwards + Catherine Graindorge",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://petitbain.org/evenement/david-eugene-edwards-2/",
             "venue": "Petit Bain"
           },
@@ -102567,7 +105965,7 @@
           "state_identity": "9e22085fae6ff891b4353d92bd8f51588d2d04e89f06c340bfa30d27db5d25be"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -102626,7 +106024,10 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Carne",
+              "Final Girl"
+            ],
             "date": "2026-11-18",
             "department": "75",
             "event_title": null,
@@ -102639,16 +106040,22 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Carsick + Carne + Final Girl",
+            "headliner": "Carsick",
             "identity_aliases": [
+              "Carsick + Carne + Final Girl",
               "CARSICK"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-09-18/b9f92373-a0a5-4178-99ed-fcbc210ccae8.jpg?rect=0%2C938%2C2496%2C2496",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Carsick",
+              "Carne",
+              "Final Girl"
+            ],
             "promoters": [
+              "Supersonic",
               "VeryShow"
             ],
             "raw_title": "Carsick + Carne + Final Girl",
@@ -102657,7 +106064,7 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://dice.fm/event/6aad4ffb83965b000128cc33",
+            "ticket_url": "https://supersonic-club.fr/evenement/carsick-carne-final-girl-18th-nov-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
           "first_seen": "2026-09-22T17:01:11Z",
@@ -106043,7 +109450,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -106118,15 +109525,19 @@
             "genre_public": "Pop",
             "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "BLOWSOM",
+            "headliner": "Blowsom",
             "identity_aliases": [
-              "BLOWSOM"
+              "Blowsom",
+              "Blowsom + DO not DO"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/add6e785-ed0f-47a9-bd30-ec6a92d0da87.jpg?rect=0%2C0%2C1182%2C1182",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Blowsom",
+              "DO not DO"
+            ],
             "promoters": [
               "Zouave"
             ],
@@ -106136,7 +109547,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://dice.fm/event/6a91ae7c9562bc00010ed89d",
+            "ticket_url": "https://billetterie.laclef.asso.fr/agenda/297-BLOWSOM-DO-NOT-DO",
             "venue": "La CLEF"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -106848,7 +110259,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -109411,7 +112822,7 @@
             "genre_public": "Pop",
             "genre_source": "Apple Music artist metadata",
             "genres_public": null,
-            "headliner": "BLOWSOM",
+            "headliner": "Blowsom",
             "identity_aliases": null,
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/blowsom-elysee-montmartre.jpg",
@@ -109433,10 +112844,10 @@
           "state_identity": "b17be160cdf51b4b9dd4e4a2222d2a7356891f0f4c960b7279f9780ee487eb97"
         }
       ],
-      "last_successful_at": "2026-11-15T12:01:18Z",
+      "last_successful_at": "2026-11-15T16:25:06Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-15T12:01:18Z",
+  "updated_at": "2026-11-15T16:25:06Z",
   "version": 1
 }
