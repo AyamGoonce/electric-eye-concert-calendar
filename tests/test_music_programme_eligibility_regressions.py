@@ -78,6 +78,48 @@ class NonMusicalQuizTests(unittest.TestCase):
         )
 
 
+class ReviewedTheatricalCabaretTests(unittest.TestCase):
+    def test_bad_biches_ticket_is_not_a_concert_even_with_music_language(self):
+        title = "Cabaret Bad Biches : Qui a tué Constance Palmer ?"
+        event = dice.parse_event({
+            "id": "6ace08ea4bb69200019f0926",
+            "name": title,
+            "dates": {"event_start_date": "2026-11-21T20:00:00+01:00"},
+            "venues": [{"name": "Les Trois Baudets",
+                        "city": {"name": "Paris"}}],
+        })
+        self.assertIsNotNone(event)
+        self.assertEqual(
+            (False, "non_music_theatrical_cabaret"),
+            classify_event_eligibility(event),
+        )
+        # Both the initial and post-dedup gates must enforce this.
+        event.headliner = "Bad Biches"
+        event.raw_title = title
+        event.performers = ["Bad Biches"]
+        event.event_type = "live performance"
+        self.assertEqual(
+            (False, "non_music_theatrical_cabaret"),
+            classify_event_eligibility(event),
+        )
+        self.assertEqual([], filter_eligible_retained_events([event]))
+
+    def test_bad_biches_exception_does_not_exclude_real_music_cabarets(self):
+        for title, venue, day in (
+            ("Cabaret Bad Biches : Qui a tué Constance Palmer ?",
+             "Les Trois Baudets", "2026-11-22"),
+            ("Cabaret Bad Biches : Qui a tué Constance Palmer ?",
+             "Le Trianon", "2026-11-21"),
+            ("Cabaret Concert: Les Voix du Jazz",
+             "Les Trois Baudets", "2026-11-21"),
+            ("Bad Biches", "Les Trois Baudets", "2026-11-21"),
+        ):
+            with self.subTest(title=title, venue=venue, day=day):
+                self.assertTrue(classify_event_eligibility(
+                    item(title, venue=venue, day=day)
+                )[0])
+
+
 class ProgrammeBillingTests(unittest.TestCase):
     def test_reviewed_city_presentation_is_not_the_artist(self):
         raw = "Athènes débarque à la Méca : THEODORE + SOMA"
