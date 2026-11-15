@@ -162,6 +162,36 @@ class AmbiguousTicketingEditionTests(unittest.TestCase):
                 self.assertTrue(classify_event_eligibility(record)[0])
 
 
+class SourceCreditedStagePerformanceTests(unittest.TestCase):
+    def test_named_work_uses_structured_artist_credit(self):
+        work = "A long music and movement performance with an evocative narrative title"
+        result = dice.parse_event({
+            "id": "source-credited-work",
+            "name": work,
+            "artists": [{"name": "Performing Musician"}],
+            "dates": {"event_start_date": "2027-01-13T20:30:00+01:00"},
+            "venues": [{"name": "Maison des Métallos", "city": {"name": "Paris"}}],
+        })
+        self.assertEqual(result.headliner, "Performing Musician")
+        self.assertEqual(result.event_title, work)
+        self.assertEqual(result.raw_title, work)
+        self.assertEqual(result.performers, ["Performing Musician"])
+        self.assertTrue(classify_event_eligibility(result)[0])
+
+    def test_uncredited_or_multi_artist_titles_not_guessed(self):
+        work = "A long music and movement performance with an evocative narrative title"
+        for artists in ([], [{"name": "One"}, {"name": "Two"}]):
+            with self.subTest(artists=artists):
+                result = dice.parse_event({
+                    "id": "unresolved-stage-work",
+                    "name": work,
+                    "artists": artists,
+                    "dates": {"event_start_date": "2027-01-13T20:30:00+01:00"},
+                    "venues": [{"name": "Maison des Métallos", "city": {"name": "Paris"}}],
+                })
+                self.assertEqual(result.headliner, work)
+
+
 class ProgrammeBillingTests(unittest.TestCase):
     def test_reviewed_city_presentation_is_not_the_artist(self):
         raw = "Athènes débarque à la Méca : THEODORE + SOMA"
