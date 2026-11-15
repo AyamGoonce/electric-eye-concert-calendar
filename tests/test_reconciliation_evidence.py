@@ -72,6 +72,20 @@ class OfficialProgrammeCreditTests(unittest.TestCase):
         self.assertEqual(len(report["skipped"]), 1)
         self.assertTrue(all(r.headliner != "Baby Volcano" for r in records))
 
+    def test_ticketing_work_title_does_not_veto_official_artist_credit(self):
+        title = self.credit["eventTitle"]
+        row = event(title, performers=[title])
+        report = apply_official_programme_credits([row], records=[self.credit])
+        self.assertEqual(len(report["corrected"]), 1)
+        self.assertEqual(row.performers, ["Baby Volcano"])
+
+    def test_another_already_resolved_headliner_is_not_overwritten(self):
+        title = self.credit["eventTitle"]
+        row = event("Another Performer", raw_title=title)
+        report = apply_official_programme_credits([row], records=[self.credit])
+        self.assertEqual(row.headliner, "Another Performer")
+        self.assertEqual(len(report["skipped"]), 1)
+
     def test_conflicting_official_evidence_is_not_silently_selected(self):
         title = self.credit["eventTitle"]
         duplicate = dict(self.credit, artist="Another Artist")
