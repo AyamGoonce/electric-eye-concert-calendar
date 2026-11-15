@@ -613,6 +613,27 @@ def load_events_with_report(
         diagnostics=deduplication_diagnostics,
         billing_identity_catalog=billing_identity_catalog,
     )
+    # The official venue programme can identify the performing artist behind
+    # a ticketing page that names only a work. Apply this after all dedup merges
+    # so no later identity reconciliation can restore the work as the artist.
+    # Records are independent source-attributed evidence, not scraper patches.
+    from concert_calendar.official_programmes import apply_official_programme_credits
+    programme_report = apply_official_programme_credits(deduplicated_events)
+    for kind, items in programme_report.items():
+        for record in items:
+            source_diagnostics.append({
+                "source_name": "Official venue programme credits",
+                "kind": kind,
+                **record,
+            })
+    print(
+        "OFFICIAL PROGRAMME CREDITS | corrected={0} ambiguous={1} skipped={2}".format(
+            len(programme_report["corrected"]),
+            len(programme_report["ambiguous"]),
+            len(programme_report["skipped"]),
+        ),
+        flush=True,
+    )
     # A second gate is essential: billing reconciliation can turn an activity
     # title into an apparent performer and can inherit misleading source roles.
     # Keep eligibility independent of artist identification.
