@@ -338,6 +338,14 @@ def parse_event(data):
         return None
 
     event_name = headliner
+    # Prefer DICE's explicit performer credits to a presentation title when
+    # the source supplies exactly one distinct musical artist. This rule uses
+    # source roles, not punctuation or a title-specific name substitution.
+    named_artists = list(dict.fromkeys(
+        clean_text(item.get("name")) for item in
+        (data.get("artists") or data.get("performers") or [])
+        if isinstance(item, dict) and clean_text(item.get("name"))
+    ))
     performer_title, series_name = split_festival_suffix(event_name)
     performer_title = normalize_presentation_wrapper(performer_title)
     performer_title, named_guest_openers = parse_named_guest(performer_title)
@@ -365,6 +373,23 @@ def parse_event(data):
     co_headliners = None
     if not openers:
         headliner, co_headliners = parse_neutral_cobill(headliner)
+
+    # A standalone credited artist may be presented under a named work or
+    # stage production rather than under the performer's name. Preserve
+    # the work as programme context; do not mistake a group of credited
+    # artists for a headliner+support bill.
+    credited_work = (
+        len(named_artists) == 1
+        and named_artists[0].casefold() != headliner.casefold()
+        and not (openers or co_headliners)
+        and (
+            len(event_name.split()) >= 8
+            or len(event_name) >= 60
+        )
+    )
+    if credited_work:
+        headliner = named_artists[0]
+        series_name = None
 
     diagnostic_priority = _diagnostic_priority(
         title=event_name,
@@ -423,10 +448,7 @@ def parse_event(data):
         promoters=None,
         genre=None,
         raw_title=event_name,
-        performers=list(dict.fromkeys(
-            clean_text(item.get('name')) for item in (data.get('artists') or data.get('performers') or [])
-            if isinstance(item, dict) and clean_text(item.get('name'))
-        )) or None,
+        performers=named_artists or None,
         facebook_event_url=None,
         ticket_url=f"https://dice.fm/event/{event_id}",
         sold_out=(raw_status == "sold-out"),
@@ -434,7 +456,7 @@ def parse_event(data):
         start_time=start_time,
         image_url=image_url,
         image_source="DICE" if image_url else None,
-        event_title=event_name if (openers or co_headliners or series_name) else None,
+        event_title=event_name if (openers or co_headliners or series_name or credited_work) else None,
         series_name=series_name,
     )
 
