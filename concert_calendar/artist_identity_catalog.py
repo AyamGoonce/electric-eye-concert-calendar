@@ -104,6 +104,16 @@ def collect_structured_artist_evidence(events, *, existing=None):
         rows = evidence[key]
         source_set = sorted({source for row in rows for source in row["sources"]})
         display_names = sorted({row["name"] for row in rows}, key=lambda n: (n.casefold(), n))
+        if key not in existing and len({
+            unicodedata.normalize("NFC", value).casefold()
+            for value in display_names
+        }) > 1:
+            unresolved.append({
+                "identity": key, "display_names": display_names,
+                "reason": "variant_spelling_requires_review",
+                "sources": source_set, "events": len(rows),
+            })
+            continue
         if key in existing:
             canonical = existing[key]
             status = "already_known"
