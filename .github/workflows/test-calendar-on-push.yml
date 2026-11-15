@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - supersonic-scraper
-      - fix/dice-evidence-gated-eligibility-20261115
   workflow_dispatch:
 
 permissions:
