@@ -129,15 +129,30 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
-    def test_explicit_source_roles_expand_identity_catalogue(self):
+    def test_source_roles_require_independent_source_to_expand_catalogue(self):
         event = record("Blackgold", source="Official venue")
         event.openers = ["Sumo Cyco"]
         additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+        self.assertTrue(all(
+            row["reason"] == "source_role_requires_independent_source"
+            for row in audit["unresolved_records"]
+        ))
+        independent = record("Blackgold", source="Ticketing Platform")
+        independent.openers = ["Sumo Cyco"]
+        additions, audit = collect_structured_artist_evidence([event, independent])
         self.assertEqual(set(additions), {"blackgold", "sumo cyco"})
         self.assertTrue(all(
             item["evidence"][0]["evidence_type"] == "separate_source_event_role"
             for item in audit["verified_records"]
         ))
+
+    def test_source_role_prose_not_admitted_from_one_source(self):
+        event = record("15 000 choristes", source="Accor Arena")
+        event.openers = ["Dans chaque ville, près de 500 choristes monteront sur scène"]
+        additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+        self.assertGreater(audit["unresolved"], 0)
 
     def test_flat_title_cannot_supply_source_role_identities(self):
         event = record("Blackgold + Sumo Cyco", source="Official venue")
