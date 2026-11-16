@@ -129,6 +129,29 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
+    def test_explicit_source_roles_expand_identity_catalogue(self):
+        event = record("Blackgold", source="Official venue")
+        event.openers = ["Sumo Cyco"]
+        additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(set(additions), {"blackgold", "sumo cyco"})
+        self.assertTrue(all(
+            item["evidence"][0]["evidence_type"] == "separate_source_event_role"
+            for item in audit["verified_records"]
+        ))
+
+    def test_flat_title_cannot_supply_source_role_identities(self):
+        event = record("Blackgold + Sumo Cyco", source="Official venue")
+        event.openers = ["Sumo Cyco"]
+        additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+        self.assertEqual(audit["rejected"].get("invalid_or_ambiguous_source_roles"), 1)
+
+    def test_roles_with_guest_placeholder_do_not_enter_catalogue(self):
+        event = record("Blackgold", source="Official venue")
+        event.openers = ["Guests"]
+        additions, _ = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+
     def test_complete_structured_roster_updates_flat_display_title(self):
         event = record(
             "BLACKGOLD + SUMO CYCO / HYRO THE HERO",
