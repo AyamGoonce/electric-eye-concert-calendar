@@ -129,6 +129,67 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
+    def test_complete_structured_roster_updates_flat_display_title(self):
+        event = record(
+            "BLACKGOLD + SUMO CYCO / HYRO THE HERO",
+            source="DICE",
+            performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"],
+        )
+        diagnostics = {}
+        apply_reviewed_artist_billings([event], diagnostics, identity_catalog={})
+        self.assertEqual(event.headliner, "Blackgold")
+        self.assertEqual(event.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+        self.assertEqual(event.performers, ["Blackgold", "Sumo Cyco", "Hyro The Hero"])
+        self.assertEqual(event.raw_title, "BLACKGOLD + SUMO CYCO / HYRO THE HERO")
+
+    def test_structured_roster_does_not_erase_unlisted_artist(self):
+        event = record(
+            "Blackgold + Sumo Cyco + Unlisted Act",
+            performers=["Blackgold", "Sumo Cyco"],
+        )
+        apply_reviewed_artist_billings([event], identity_catalog={})
+        self.assertEqual(event.headliner, "Blackgold + Sumo Cyco + Unlisted Act")
+        self.assertIsNone(event.co_headliners)
+
+    def test_structured_programme_title_stays_intact(self):
+        event = record(
+            "ARTE Dans le club",
+            performers=["GAL+LEDOUBLE", "NeS", "Gen"],
+        )
+        apply_reviewed_artist_billings([event], identity_catalog={})
+        self.assertEqual(event.headliner, "ARTE Dans le club")
+        self.assertIsNone(event.co_headliners)
+
+    def test_complete_structured_roster_preserves_existing_opener(self):
+        event = record(
+            "Blackgold + Sumo Cyco",
+            performers=["Blackgold", "Sumo Cyco"],
+        )
+        event.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings([event], identity_catalog={})
+        self.assertEqual(event.headliner, "Blackgold")
+        self.assertEqual(event.openers, ["Sumo Cyco"])
+        self.assertIsNone(event.co_headliners)
+
+    def test_explicit_independent_source_roles_resolve_full_bill(self):
+        opaque = record("Blackgold + Sumo Cyco", source="DICE")
+        official = record("Blackgold", source="Official venue")
+        official.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings(
+            [opaque, official], identity_catalog={},
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco"])
+
+    def test_partial_independent_source_roles_do_not_resolve_bill(self):
+        opaque = record("Blackgold + Sumo Cyco + Mystery Act", source="DICE")
+        official = record("Blackgold", source="Official venue")
+        official.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings(
+            [opaque, official], identity_catalog={},
+        )
+        self.assertEqual(opaque.headliner, "Blackgold + Sumo Cyco + Mystery Act")
+
     def test_same_source_partial_roster_cannot_erase_third_artist(self):
         opaque = record("Blackgold + Sumo Cyco + Unverified Act")
         opaque._billing_evidence = {
