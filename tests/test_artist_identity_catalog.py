@@ -41,6 +41,12 @@ class SourceIdentityHarvestTests(unittest.TestCase):
                     current_structured_standalone_artist_evidence([official]),
                 )
 
+    def test_pipeline_report_exports_repeated_solo_evidence(self):
+        from dataclasses import fields
+        from concert_calendar.sources import PipelineReport
+        field_names = {item.name for item in fields(PipelineReport)}
+        self.assertIn("repeated_standalone_artist_evidence", field_names)
+
     def test_independent_solo_credits_recover_missing_identity_in_flat_bill(self):
         from concert_calendar.artist_identity_catalog import (
             collect_repeated_standalone_artist_evidence,
