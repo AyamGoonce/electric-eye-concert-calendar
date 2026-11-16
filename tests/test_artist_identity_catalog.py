@@ -19,6 +19,28 @@ def record(title, *, source="Official source", performers=None, day="2026-12-18"
 
 
 class SourceIdentityHarvestTests(unittest.TestCase):
+    def test_flat_official_bill_not_reused_as_single_identity(self):
+        from concert_calendar.artist_billings import (
+            current_official_standalone_artist_evidence,
+            current_structured_standalone_artist_evidence,
+        )
+        for billing in (
+            "Blackgold / Sumo Cyco",
+            "Blackgold et Sumo Cyco",
+            "Blackgold x Sumo Cyco",
+        ):
+            with self.subTest(billing=billing):
+                official = record(billing, source="Le Chinois")
+                official.performers = [billing]
+                self.assertNotIn(
+                    billing.casefold(),
+                    current_official_standalone_artist_evidence([official]),
+                )
+                self.assertNotIn(
+                    billing.casefold(),
+                    current_structured_standalone_artist_evidence([official]),
+                )
+
     def test_real_separately_credited_artists_expand_catalogue(self):
         source = record("Blackgold + Sumo Cyco + Hyro The Hero",
                         performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"])
@@ -105,6 +127,104 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(opaque.headliner, "Blackgold")
         self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
+
+
+    def test_same_source_partial_roster_cannot_erase_third_artist(self):
+        opaque = record("Blackgold + Sumo Cyco + Unverified Act")
+        opaque._billing_evidence = {
+            "artists": ["Blackgold", "Sumo Cyco"],
+            "confidence": 95,
+            "evidence": ["separate source roles"],
+        }
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={},
+        )
+        self.assertEqual(
+            opaque.headliner, "Blackgold + Sumo Cyco + Unverified Act"
+        )
+
+    def test_cross_source_partial_roster_cannot_erase_third_artist(self):
+        opaque = record("Blackgold + Sumo Cyco + Unverified Act", source="DICE")
+        corroboration = record(
+            "Blackgold + Sumo Cyco", source="Official venue",
+            performers=["Blackgold", "Sumo Cyco"],
+        )
+        apply_reviewed_artist_billings(
+            [opaque, corroboration], identity_catalog={},
+        )
+        self.assertEqual(
+            opaque.headliner, "Blackgold + Sumo Cyco + Unverified Act"
+        )
+
+    def test_cross_source_exact_full_roster_can_resolve_mixed_separators(self):
+        opaque = record("Blackgold + Sumo Cyco / Hyro The Hero", source="DICE")
+        corroboration = record(
+            "Blackgold + Sumo Cyco / Hyro The Hero", source="Official venue",
+            performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"],
+        )
+        apply_reviewed_artist_billings(
+            [opaque, corroboration], identity_catalog={},
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+
+    def test_mixed_separators_require_independently_known_artists(self):
+        opaque = record("Blackgold + Sumo Cyco / Hyro The Hero")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "blackgold": "Blackgold", "sumo cyco": "Sumo Cyco",
+                "hyro the hero": "Hyro The Hero",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+
+    def test_mixed_separator_unknown_member_does_not_split(self):
+        opaque = record("Blackgold + Mystery Artist / Hyro The Hero")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "blackgold": "Blackgold", "hyro the hero": "Hyro The Hero",
+            },
+        )
+        self.assertEqual(
+            opaque.headliner, "Blackgold + Mystery Artist / Hyro The Hero"
+        )
+
+    def test_known_ampersand_band_is_protected_in_mixed_bill(self):
+        opaque = record("Earth, Wind & Fire + Sumo Cyco / Hyro The Hero")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "earth wind fire": "Earth, Wind & Fire",
+                "sumo cyco": "Sumo Cyco",
+                "hyro the hero": "Hyro The Hero",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Earth, Wind & Fire")
+        self.assertEqual(opaque.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+
+    def test_ambiguous_catalogue_partition_does_not_split(self):
+        opaque = record("Aaa & Bbb + Ccc")
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "aaa": "Aaa", "bbb": "Bbb", "aaa bbb": "Aaa & Bbb",
+                "ccc": "Ccc",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Aaa & Bbb + Ccc")
+
+
+    def test_verified_opener_role_is_not_promoted_to_coheadliner(self):
+        opaque = record("Blackgold + Sumo Cyco")
+        opaque.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings(
+            [opaque], identity_catalog={
+                "blackgold": "Blackgold", "sumo cyco": "Sumo Cyco",
+            },
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.openers, ["Sumo Cyco"])
+        self.assertIsNone(opaque.co_headliners)
+        self.assertEqual(opaque.performers, ["Blackgold", "Sumo Cyco"])
 
 
 if __name__ == "__main__":

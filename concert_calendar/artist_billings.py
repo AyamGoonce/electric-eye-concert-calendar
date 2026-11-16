@@ -102,6 +102,14 @@ def identity_catalog_from_content_index(index: dict) -> dict[str, str]:
     return catalog
 
 
+def _looks_like_flat_billing(value: str) -> bool:
+    """Exclude apparent multi-act bills from standalone evidence."""
+    return bool(re.search(
+        r"\s+(?:\+|/|•|&|et|x|×|vs\.?|with|avec|ft\.?|feat\.?|featuring|[–—])\s+",
+        value, re.I,
+    ))
+
+
 def current_official_standalone_artist_evidence(events: list[ConcertEvent]) -> dict[str, str]:
     """Use standalone artists explicitly billed by official venues this run.
 
@@ -115,7 +123,7 @@ def current_official_standalone_artist_evidence(events: list[ConcertEvent]) -> d
         name = _clean(event.headliner)
         if (
             not name
-            or re.search(r"\s+(?:\+|&|x|×|with|avec|feat\.?|featuring)\s+", name, re.I)
+            or _looks_like_flat_billing(name)
             or re.search(r"\b(?:release\s+party|premi[èe]re\s+partie|festival)\b", name, re.I)
             or event.event_title and _key(event.event_title) == _key(name)
             or event.performers and any(_key(artist) != _key(name) for artist in event.performers)
@@ -145,7 +153,7 @@ def current_structured_standalone_artist_evidence(events: list[ConcertEvent]) ->
         name = names[0]
         if (
             not event.source_names
-            or re.search(r"\s+(?:\+|&|/|•|feat\.?|featuring|with|avec)\s+", name, re.I)
+            or _looks_like_flat_billing(name)
             or re.search(r"\b(?:release party|festival|concert|programme)\b", name, re.I)
         ):
             continue
@@ -188,27 +196,53 @@ def _split_spaced_plus(value: str) -> list[str]:
 
 
 def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> list[str]:
-    """Split only if every complete component is an existing artist identity.
+    """Resolve uniquely partitioned bills, with every member independently known.
 
-    Prioritize the spaced '+' billing separator; names may themselves
-    contain ampersands, dashes or 'et'. Never recursively split a component.
+    Delimiters are only candidate boundaries. A complete artist identity wins
+    (e.g. Earth, Wind & Fire). Mixed separators are accepted only if exactly
+    one partition of the entire billing matches the established catalogue.
     """
     title = _clean(value)
     if not title or _key(title) in identities:
         return []
 
-    for pattern in (r"\s+\+\s+", r"\s+/\s+", r"\s+•\s+", r"\s+&\s+", r"\s+et\s+", r"\s+[–—-]\s+"):
-        parts = [_clean(part) for part in re.split(pattern, title, flags=re.I)]
-        if len(parts) < 2:
-            continue
-        # A more strongly delimited complete bill contains project names
-        # such as "Earth, Wind & Fire"; do not reinterpret their internals.
-        if not _valid_parts(parts) or len({_key(part) for part in parts}) != len(parts):
-            return []
-        return [identities[_key(part)] for part in parts] if all(
-            _key(part) in identities for part in parts
-        ) else []
-    return []
+    separators = list(re.finditer(
+        r"\s+(?:\+|/|•|&|et|[–—-])\s+", title, flags=re.I
+    ))
+    if not separators or len(separators) > 8:
+        return []
+
+    # Each partition joins consecutive chunks back with their original
+    # punctuation, so legitimate artist names containing '&' stay intact.
+    chunks = []
+    cursor = 0
+    for match in separators:
+        chunks.append(title[cursor:match.start()])
+        cursor = match.end()
+    chunks.append(title[cursor:])
+    separators_text = [match.group(0) for match in separators]
+    solutions = []
+
+    def visit(position: int, chosen: list[str]) -> None:
+        if len(solutions) > 1:
+            return
+        if position == len(chunks):
+            if len(chosen) >= 2 and len(set(map(_key, chosen))) == len(chosen):
+                solutions.append(chosen)
+            return
+        for stop in range(position + 1, len(chunks) + 1):
+            component = chunks[position]
+            for index in range(position, stop - 1):
+                component += separators_text[index] + chunks[index + 1]
+            component = _clean(component)
+            if not _valid_parts([component, "placeholder"]):
+                continue
+            canonical = identities.get(_key(component))
+            if canonical:
+                visit(stop, [*chosen, canonical])
+
+    visit(0, [])
+    return solutions[0] if len(solutions) == 1 else []
 
 
 def _valid_parts(parts: list[str]) -> bool:
@@ -241,8 +275,12 @@ def _set_resolution(
     event.identity_aliases = _stable_unique([*(event.identity_aliases or []), original]) or None
     event.headliner = artists[0]
     if not preserve_roles:
+        # A source-verified opener must not be silently promoted to
+        # co-headliner when the same act also appears in a flat bill.
+        opener_keys = {_key(name) for name in (event.openers or [])}
         event.co_headliners = _stable_unique(
-            [*(event.co_headliners or []), *artists[1:]]
+            [*(event.co_headliners or []),
+             *(name for name in artists[1:] if _key(name) not in opener_keys)]
         ) or None
     event.performers = artists
     if presenter:
@@ -301,12 +339,23 @@ def _same_event_groups(events: list[ConcertEvent]):
     return groups
 
 
+def _billing_matches_roster(billing: str, artists: list[str]) -> bool:
+    """Verify that the complete displayed bill matches every roster member."""
+    if len(artists) < 2:
+        return False
+    separator = r"\s+(?:\+|/|•|&|et|[–—-])\s+"
+    pattern = "^" + separator.join(
+        re.escape(name).replace(r"\ ", r"\s+") for name in artists
+    ) + "$"
+    return re.fullmatch(pattern, _clean(billing), re.IGNORECASE) is not None
+
+
 def _cross_source_artists(
     event: ConcertEvent,
     group: list[ConcertEvent],
     billing: str,
 ) -> list[str]:
-    opaque = _key(billing)
+    """Accept independent roster evidence only for the *entire* billing."""
     event_sources = set(event.source_names or [])
     for candidate in group:
         artists = _stable_unique(candidate.performers or [])
@@ -314,13 +363,8 @@ def _cross_source_artists(
             continue
         if event_sources and set(candidate.source_names or []) == event_sources:
             continue
-        parts = _split_spaced_plus(billing)
-        if _valid_parts(parts) and [_key(part) for part in parts] == [_key(part) for part in artists]:
-            return artists
-        if all(
-            re.search(rf"(?<![a-z0-9]){re.escape(_key(name))}(?![a-z0-9])", opaque)
-            for name in artists
-        ):
+        # An anchored match prevents a partial roster swallowing extra acts.
+        if _billing_matches_roster(billing, artists):
             return artists
     return []
 
@@ -329,7 +373,16 @@ def _same_source_evidence(event: ConcertEvent, billing: str) -> tuple[list[str],
     """Return a bill supported by per-record source structure, never punctuation alone."""
     supplied = getattr(event, "_billing_evidence", None) or {}
     supplied_artists = _stable_unique(supplied.get("artists") or [])
-    if len(supplied_artists) >= 2 and int(supplied.get("confidence") or 0) >= 95:
+    if (
+        len(supplied_artists) >= 2
+        and int(supplied.get("confidence") or 0) >= 95
+        # A flat bill with recognized separators must account for *every*
+        # listed act, even when the provider also sends a separate roster.
+        and (
+            not re.search(r"\s+(?:\+|/|•|&|et|[–—-])\s+", billing, re.I)
+            or _billing_matches_roster(billing, supplied_artists)
+        )
+    ):
         return supplied_artists, list(
             supplied.get("evidence") or ["source supplied per-record billing evidence"]
         )
