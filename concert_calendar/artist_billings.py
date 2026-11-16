@@ -343,9 +343,9 @@ def _billing_matches_roster(billing: str, artists: list[str]) -> bool:
     """Verify that the complete displayed bill matches every roster member."""
     if len(artists) < 2:
         return False
-    separator = r"\\s+(?:\\+|/|•|&|et|[–—-])\\s+"
+    separator = r"\s+(?:\+|/|•|&|et|[–—-])\s+"
     pattern = "^" + separator.join(
-        re.escape(name).replace(r"\\ ", r"\\s+") for name in artists
+        re.escape(name).replace(r"\ ", r"\s+") for name in artists
     ) + "$"
     return re.fullmatch(pattern, _clean(billing), re.IGNORECASE) is not None
 
