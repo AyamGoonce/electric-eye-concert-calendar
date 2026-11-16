@@ -272,6 +272,27 @@ EXACT_RAW_MAPPINGS = {
     "guitare espagnole": "World / Latin",
     "rap, hip hop": "Hip-hop / Rap",
     "concert rock": "Rock / Indie / Punk",
+    # Phase 3: exact, directly observed source taxonomy tokens from the
+    # November 16 production gap inventory. Never interpret a generic
+    # activity (tribute, dance, cinema, conference) as a musical genre.
+    "deathcore": "Metal / Hard Rock",
+    "groove metal": "Metal / Hard Rock",
+    "industrial metal": "Metal / Hard Rock",
+    "melodic death metal": "Metal / Hard Rock",
+    "thrash metal": "Metal / Hard Rock",
+    "post-hardcore": "Rock / Indie / Punk",
+    "punk-hardcore": "Rock / Indie / Punk",
+    "prog rock": "Rock / Indie / Punk",
+    "house": "Electronic",
+    "drum-and-bass": "Electronic",
+    "synth-pop": "Pop",
+    "pop inde": "Pop",
+    "concert indie folk": "Folk / Country",
+    "##rap": "Hip-hop / Rap",
+    "#rnb": "R&B / Soul / Funk",
+    "#alt #rock #indie": "Rock / Indie / Punk",
+    "#noise #rock": "Rock / Indie / Punk",
+    "#psychrock #rock": "Rock / Indie / Punk",
     "zouk": "World / Latin",
 }
 
