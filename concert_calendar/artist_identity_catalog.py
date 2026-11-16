@@ -67,7 +67,7 @@ def collect_repeated_standalone_artist_evidence(events, *, existing=None):
         # Conjunctions and dash-separated compound titles may still be bills.
         # This catalogue deliberately sacrifices recall rather than admitting
         # such a title as an indivisible artist identity.
-        if re.search(r"\\s+(?:et|[–—])\\s+", name, re.I):
+        if re.search(r"\s+(?:et|[–—])\s+", name, re.I):
             continue
         if event.event_title and identity_key(event.event_title) != identity_key(name):
             continue
