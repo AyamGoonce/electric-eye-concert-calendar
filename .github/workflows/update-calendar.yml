@@ -258,12 +258,27 @@ jobs:
         if: steps.final_verify.outcome == 'failure'
         run: exit 1
 
+      # Advisory quality indicators run only after verified publication.
+      # A monitoring failure cannot undo a valid calendar release.
+      - name: Publish Phase 4 monitoring summary
+        if: steps.final_verify.outcome == 'success'
+        continue-on-error: true
+        run: |
+          python -m concert_calendar.release_monitor \
+            --report output/automation/automation-report.json \
+            --json-output output/automation/quality-monitor.json \
+            --markdown-output output/automation/quality-monitor.md
+          cat output/automation/quality-monitor.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload production diagnostics
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: calendar-production-report-${{ github.run_id }}
-          path: output/automation/automation-report.json
+          path: |
+            output/automation/automation-report.json
+            output/automation/quality-monitor.json
+            output/automation/quality-monitor.md
           if-no-files-found: warn
           retention-days: 30
 
