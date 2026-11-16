@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - supersonic-scraper
+      - phase2-billing-catalog-partition
   pull_request:
     branches:
       - supersonic-scraper
