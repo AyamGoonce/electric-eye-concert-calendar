@@ -1048,7 +1048,25 @@ def build(args) -> int:
         ),
         flush=True,
     )
+    from concert_calendar.genre_release_audit import genre_release_audit
+    try:
+        genre_acceptance = genre_release_audit(
+            events, pipeline_report.genre_report, events_data, published_events,
+        )
+    except ValueError as exc:
+        raise ProductionValidationError(str(exc)) from exc
+    print(
+        "GENRE ACCEPTANCE | comparable={0} genre_losses={1} "
+        "billing_changes={2} provenance_defects={3}".format(
+            genre_acceptance["baseline_comparable_ids"],
+            len(genre_acceptance["genre_losses_on_retained_ids"]),
+            len(genre_acceptance["billing_changes_on_retained_ids"]),
+            len(genre_acceptance["provenance_defects"]),
+        ),
+        flush=True,
+    )
     report = {
+        "genre_acceptance": genre_acceptance,
         "reconciliation_quality": quality_report,
         **report_fields,
         "published_baseline_count": published_count,
