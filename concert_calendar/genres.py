@@ -744,6 +744,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
     # not a universal artist fact. Reuse it for an otherwise unclassified
     # appearance only when at least two distinct dated performances agree.
     # No missing genres are invented from a venue or an opaque multi-act bill.
+    from concert_calendar.genre_editorial import _safe_standalone_name
     same_run_artist_genres = defaultdict(lambda: defaultdict(set))
     for event in events:
         if (
@@ -752,7 +753,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
             and not event.festival_name
             and not event.co_headliners
             and not event.openers
-            and not re.search(r"\s+(?:\+|/|•)\s+", event.headliner)
+            and _safe_standalone_name(event.headliner)
         ):
             artist_key = normalize_artist_component(event.headliner)
             if artist_key:
@@ -763,7 +764,7 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         if (
             event.genre_public or event.genre_evidence or event.festival_name
             or event.co_headliners or event.openers
-            or re.search(r"\s+(?:\+|/|•)\s+", event.headliner)
+            or not _safe_standalone_name(event.headliner)
         ):
             continue
         artist_key = normalize_artist_component(event.headliner)

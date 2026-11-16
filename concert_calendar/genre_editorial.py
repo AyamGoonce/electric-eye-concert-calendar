@@ -77,10 +77,18 @@ def build_editorial_artist_genre_evidence(content_index):
     taxonomy = load_genre_taxonomy()
     records = {}
     articles = content_index.get("articles") or []
-    for entry in (content_index.get("artists") or {}).values():
+    artists = content_index.get("artists") or {}
+    # A normalized name must identify exactly one indexed artist. Distinct
+    # slugs (homonyms, aliases) cannot silently replace one another's genre.
+    key_counts = Counter(
+        _artist_key(entry.get("n") or "")
+        for entry in artists.values()
+        if _artist_key(entry.get("n") or "")
+    )
+    for slug, entry in artists.items():
         name = (entry.get("n") or "").strip()
         key = _artist_key(name)
-        if not key or not _safe_standalone_name(name):
+        if not key or key_counts[key] != 1 or not _safe_standalone_name(name):
             continue
         identity = entry.get("identity") or {}
         if identity.get("ambiguityClass", "distinctive") != "distinctive":
@@ -106,7 +114,7 @@ def build_editorial_artist_genre_evidence(content_index):
                 continue
             article = articles[index]
             credited = article.get("a") or []
-            if len(set(credited)) != 1 or not _title_contains_artist(name, article.get("t") or ""):
+            if set(credited) != {slug} or not _title_contains_artist(name, article.get("t") or ""):
                 continue
             raw_labels = article.get("l") or []
             article_buckets = {
