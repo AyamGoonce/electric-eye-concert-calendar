@@ -138,6 +138,8 @@ class SourceIdentityHarvestTests(unittest.TestCase):
             "Blackgold + Sumo Cyco",
             "Festival pass",
             "Blind Test",
+            "Blackgold et Sumo Cyco",
+            "Blackgold — Sumo Cyco",
         ]
         for title in examples:
             with self.subTest(title=title):
