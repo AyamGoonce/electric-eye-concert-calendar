@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - supersonic-scraper
-      - phase2-billing-catalog-partition
   pull_request:
     branches:
       - supersonic-scraper
@@ -58,59 +57,3 @@ jobs:
 
       - name: Run artist auto-linker regression
         run: node --test tests/artist_autolinker.test.js
-
-  phase2-publication-dry-run:
-    name: Phase 2 live build and publication audit (no deployment)
-    if: github.event_name == 'push' && github.ref == 'refs/heads/phase2-billing-catalog-partition'
-    needs: regression-tests
-    runs-on: ubuntu-24.04
-    timeout-minutes: 80
-    steps:
-      - name: Check out candidate branch
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: "3.12"
-          cache: pip
-
-      - name: Install dependencies
-        run: python -m pip install --requirement requirements.txt
-
-      - name: Seed genre resolution cache
-        run: |
-          mkdir -p output
-          cp concert_calendar/data/genre_cache_seed/*.json output/
-
-      - name: Check out published baseline read-only
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          ref: gh-pages
-          path: pages
-          persist-credentials: false
-
-      - name: Run full live build without any publication
-        run: |
-          python -m concert_calendar.automation build \
-            --output-dir output/phase2-audit \
-            --published-pointer pages/proof/calendar-current.js \
-            --published-state pages/proof/calendar-state.json
-
-      - name: Summarize reconciliation and baseline changes
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          report = json.loads(Path("output/phase2-audit/automation-report.json").read_text())
-          summary = {
-              "baseline_count": report.get("published_baseline_count"),
-              "candidate_count": report.get("event_count"),
-              "genre": report.get("genre_report"),
-              "reconciliation_quality": report.get("reconciliation_quality"),
-              "change_report": report.get("change_report"),
-          }
-          print(json.dumps(summary, ensure_ascii=False, indent=2)[:50000])
-          PY
