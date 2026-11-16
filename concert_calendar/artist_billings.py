@@ -354,7 +354,7 @@ def _cross_source_artists(
     event: ConcertEvent,
     group: list[ConcertEvent],
     billing: str,
-) -> list[str]:
+) -> tuple[list[str], list[str]]:
     """Accept independent roster evidence only for the *entire* billing."""
     event_sources = set(event.source_names or [])
     for candidate in group:
@@ -382,8 +382,8 @@ def _cross_source_artists(
                 _billing_matches_roster(billing, artists)
                 and all(not GENERIC_PART_RE.fullmatch(name) for name in artists)
             ):
-                return artists
-    return []
+                return artists, _stable_unique(candidate.openers or [])
+    return [], []
 
 
 def _same_source_evidence(event: ConcertEvent, billing: str) -> tuple[list[str], list[str]]:
@@ -618,15 +618,21 @@ def resolve_artist_billings(
 
         # Strong corroboration must be evaluated before any source grammar
         # hint. The hint may identify candidate punctuation, but is not proof.
-        corroborated = _cross_source_artists(
+        corroborated, corroborated_openers = _cross_source_artists(
             event,
             groups[(event.date[:10], _key(event.venue))],
             billing,
         )
         if corroborated:
+            # Explicit roles from the corroborating source are stronger than
+            # the neutral hierarchy suggested by a flat display bill.
+            if corroborated_openers:
+                event.openers = _stable_unique([
+                    *(event.openers or []), *corroborated_openers
+                ]) or None
             _set_resolution(
                 event, corroborated, method="cross_source", confidence=95,
-                evidence=["another source supplied separate performers for the same date and venue"],
+                evidence=["another source supplied a complete separately credited roster for the same date and venue"],
                 presenter=presenter, description=description,
             )
             _record(audit, event)
