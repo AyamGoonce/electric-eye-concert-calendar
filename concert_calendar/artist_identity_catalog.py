@@ -146,6 +146,23 @@ def collect_structured_artist_evidence(events, *, existing=None):
         if key in existing:
             canonical = existing[key]
             status = "already_known"
+        elif (
+            len(source_set) < 2
+            and all(
+                row["evidence_type"] == "separate_source_event_role"
+                for row in rows
+            )
+        ):
+            # A role slot alone is not independently trustworthy: some venue
+            # feeds inadvertently place presentation prose in support fields.
+            # Require corroboration from a second source before adding the
+            # role name to the global artist identity catalogue.
+            unresolved.append({
+                "identity": key, "display_names": display_names,
+                "reason": "source_role_requires_independent_source",
+                "sources": source_set, "events": len(rows),
+            })
+            continue
         elif len(key) < 4 and len(source_set) < 2:
             unresolved.append({
                 "identity": key, "display_names": display_names,
