@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import argparse
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import date, datetime, timezone
 import hashlib
 import json
@@ -865,6 +865,16 @@ def build(args) -> int:
     print("PHASE START | content_index_enrichment", flush=True)
     phase_started = time.perf_counter()
     enrich_events(events, content_index)
+    # Artist-specific editorial genre evidence is available only after the
+    # Blogger index is built. It may fill empty genres, but never rewrite
+    # explicit source taxonomy or event billing roles.
+    from concert_calendar.genre_editorial import enrich_unclassified_with_editorial_genres
+    pipeline_report = replace(
+        pipeline_report,
+        genre_report=enrich_unclassified_with_editorial_genres(
+            events, content_index, pipeline_report.genre_report,
+        ),
+    )
     content_result = write_assets(output_dir, content_index)
     print(f"PHASE COMPLETE | content_index_enrichment | elapsed={max(0.0, time.perf_counter() - phase_started):.2f}s", flush=True)
     print("PHASE START | state_export", flush=True)
