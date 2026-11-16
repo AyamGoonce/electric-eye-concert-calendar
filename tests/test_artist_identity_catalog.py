@@ -41,6 +41,127 @@ class SourceIdentityHarvestTests(unittest.TestCase):
                     current_structured_standalone_artist_evidence([official]),
                 )
 
+    def test_independent_solo_credits_recover_missing_identity_in_flat_bill(self):
+        from concert_calendar.artist_identity_catalog import (
+            collect_repeated_standalone_artist_evidence,
+        )
+        # The same name appears by itself at two different engagements and
+        # two independent providers, not merely in copied multi-act bills.
+        solo_a = record("WRANG", source="DICE", day="2026-11-20")
+        solo_b = record("WRANG", source="Independent promoter", day="2026-12-01")
+        opaque = record(
+            "DARVAZA + MERRIMACK + WRANG + DETRESSE",
+            source="Garmonbozia", day="2026-12-10",
+        )
+        identities, evidence = collect_repeated_standalone_artist_evidence(
+            [solo_a, solo_b, opaque], existing={},
+        )
+        self.assertEqual(identities, {"wrang": "WRANG"})
+        self.assertEqual(evidence["new_verified"], 1)
+        diagnostics = {}
+        apply_reviewed_artist_billings(
+            [solo_a, solo_b, opaque], diagnostics,
+            identity_catalog={
+                "darvaza": "DARVAZA",
+                "merrimack": "MERRIMACK",
+                "detresse": "DETRESSE",
+            },
+        )
+        self.assertEqual(opaque.headliner, "DARVAZA")
+        self.assertEqual(
+            opaque.co_headliners, ["MERRIMACK", "WRANG", "DETRESSE"]
+        )
+        self.assertEqual(
+            diagnostics["repeated_standalone_artist_evidence"]["new_verified"], 1,
+        )
+
+    def test_same_input_counterfactual_yields_one_safe_new_resolution(self):
+        from copy import deepcopy
+        from unittest.mock import patch
+        items = [
+            record("WRANG", source="DICE", day="2026-11-20"),
+            record("WRANG", source="Promoter", day="2026-12-01"),
+            record(
+                "DARVAZA + MERRIMACK + WRANG + DETRESSE",
+                source="Garmonbozia", day="2026-12-10",
+            ),
+        ]
+        existing = {
+            "darvaza": "DARVAZA",
+            "merrimack": "MERRIMACK",
+            "detresse": "DETRESSE",
+        }
+        baseline = deepcopy(items)
+        with patch(
+            "concert_calendar.artist_identity_catalog.collect_repeated_standalone_artist_evidence",
+            return_value=({}, {"new_verified": 0}),
+        ):
+            apply_reviewed_artist_billings(baseline, identity_catalog=existing)
+        apply_reviewed_artist_billings(items, identity_catalog=existing)
+        self.assertEqual(
+            baseline[-1].headliner,
+            "DARVAZA + MERRIMACK + WRANG + DETRESSE",
+        )
+        self.assertEqual(items[-1].headliner, "DARVAZA")
+        self.assertEqual(
+            items[-1].co_headliners, ["MERRIMACK", "WRANG", "DETRESSE"]
+        )
+        self.assertEqual(
+            [(x.date, x.venue) for x in baseline],
+            [(x.date, x.venue) for x in items],
+        )
+
+    def test_repeated_same_event_or_single_source_not_independent(self):
+        from concert_calendar.artist_identity_catalog import (
+            collect_repeated_standalone_artist_evidence,
+        )
+        same_concert = [
+            record("WRANG", source="DICE", day="2026-11-20"),
+            record("WRANG", source="Independent promoter", day="2026-11-20"),
+        ]
+        self.assertEqual(
+            collect_repeated_standalone_artist_evidence(same_concert)[0], {},
+        )
+        same_source = [
+            record("WRANG", source="DICE", day="2026-11-20"),
+            record("WRANG", source="DICE", day="2026-12-01"),
+        ]
+        self.assertEqual(
+            collect_repeated_standalone_artist_evidence(same_source)[0], {},
+        )
+
+    def test_event_programmes_and_flat_bills_never_become_solo_identities(self):
+        from concert_calendar.artist_identity_catalog import (
+            collect_repeated_standalone_artist_evidence,
+        )
+        examples = [
+            "Blackgold + Sumo Cyco",
+            "Festival pass",
+            "Blind Test",
+            "Blackgold et Sumo Cyco",
+            "Blackgold — Sumo Cyco",
+        ]
+        for title in examples:
+            with self.subTest(title=title):
+                events = [
+                    record(title, source="DICE", day="2026-11-20"),
+                    record(title, source="Promoter", day="2026-12-01"),
+                ]
+                self.assertEqual(
+                    collect_repeated_standalone_artist_evidence(events)[0], {},
+                )
+
+    def test_solo_title_cannot_contradict_structured_source_roles(self):
+        from concert_calendar.artist_identity_catalog import (
+            collect_repeated_standalone_artist_evidence,
+        )
+        a = record("WRANG", source="DICE", day="2026-11-20")
+        a.performers = ["Different musician"]
+        b = record("WRANG", source="Promoter", day="2026-12-01")
+        self.assertEqual(
+            collect_repeated_standalone_artist_evidence([a, b])[0], {},
+        )
+
     def test_real_separately_credited_artists_expand_catalogue(self):
         source = record("Blackgold + Sumo Cyco + Hyro The Hero",
                         performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"])

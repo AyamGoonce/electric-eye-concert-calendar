@@ -48,6 +48,82 @@ def artist_candidate(name):
     return True
 
 
+
+def collect_repeated_standalone_artist_evidence(events, *, existing=None):
+    """Admit a standalone name only after separate source and event corroboration.
+
+    A promoter's flat bill is never sufficient evidence for splitting. Two
+    distinct sources must independently use the *same standalone name* on
+    at least two different date/venue engagements. A repeated listing for
+    the same physical concert, even on two sites, does not qualify.
+    """
+    existing = existing or {}
+    candidates = defaultdict(list)
+    for event in events:
+        name = " ".join(str(event.headliner or "").split())
+        raw = " ".join(str(event.raw_title or name).split())
+        if not artist_candidate(name) or identity_key(raw) != identity_key(name):
+            continue
+        # Conjunctions and dash-separated compound titles may still be bills.
+        # This catalogue deliberately sacrifices recall rather than admitting
+        # such a title as an indivisible artist identity.
+        if re.search(r"\s+(?:et|[–—])\s+", name, re.I):
+            continue
+        if event.event_title and identity_key(event.event_title) != identity_key(name):
+            continue
+        if event.series_name or event.festival_name or event.openers or event.co_headliners:
+            continue
+        performers = [value for value in (event.performers or []) if value]
+        if performers and (
+            len(performers) != 1 or identity_key(performers[0]) != identity_key(name)
+        ):
+            continue
+        sources = sorted(set(event.source_names or []))
+        if not sources or identity_key(name) == identity_key(event.venue):
+            continue
+        candidates[identity_key(name)].append({
+            "name": name,
+            "sources": sources,
+            "date": str(event.date)[:10],
+            "venue": event.venue,
+            "ticket_url": event.ticket_url,
+        })
+
+    accepted, records, withheld = {}, [], []
+    for key, rows in sorted(candidates.items()):
+        if key in existing:
+            continue
+        sources = sorted({source for row in rows for source in row["sources"]})
+        engagements = {(row["date"], identity_key(row["venue"])) for row in rows}
+        display_names = sorted({row["name"] for row in rows}, key=lambda n: (n.casefold(), n))
+        if len(sources) < 2 or len(engagements) < 2:
+            withheld.append({
+                "identity": key, "reason": "requires_two_sources_and_distinct_engagements",
+                "sources": sources, "engagements": len(engagements),
+            })
+            continue
+        if len({unicodedata.normalize("NFC", x).casefold() for x in display_names}) > 1:
+            withheld.append({
+                "identity": key, "reason": "variant_spelling_requires_review",
+                "sources": sources, "engagements": len(engagements),
+            })
+            continue
+        accepted[key] = display_names[0]
+        records.append({
+            "identity": key, "canonical": display_names[0],
+            "sources": sources, "engagements": len(engagements),
+            "evidence_type": "independently_repeated_standalone_billing",
+            "evidence": rows[:8],
+        })
+    return accepted, {
+        "new_verified": len(accepted),
+        "verified_records": records,
+        "withheld": len(withheld),
+        "withheld_records": withheld[:100],
+        "policy": "two distinct sources and two distinct engagements; exact standalone names only",
+    }
+
+
 def collect_structured_artist_evidence(events, *, existing=None):
     """Return new exact identities and an auditable evidence inventory.
 

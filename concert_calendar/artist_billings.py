@@ -456,6 +456,20 @@ def resolve_artist_billings(
         identities.setdefault(key, value)
     for key, value in current_structured_standalone_artist_evidence(events).items():
         identities.setdefault(key, value)
+    # Independently repeated standalone credits on different engagements
+    # can corroborate identities missing from structured performer arrays.
+    # Never treat two identical flat bills as evidence for a split.
+    from concert_calendar.artist_identity_catalog import (
+        collect_repeated_standalone_artist_evidence,
+    )
+    standalone_additions, standalone_report = collect_repeated_standalone_artist_evidence(
+        events, existing=identities,
+    )
+    for key, display in standalone_additions.items():
+        identities.setdefault(key, display)
+    if diagnostics is not None:
+        diagnostics["repeated_standalone_artist_evidence"] = standalone_report
+
     # Expand the *current run* exact-identity catalogue only with
     # individually structured performer records and preserve provenance.
     # Reviewed identities, aliases and the published content index retain
