@@ -1,7 +1,7 @@
 import re
 import time
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 
@@ -115,6 +115,7 @@ class PipelineReport:
     source_diagnostics: list[dict]
     retained_snapshots: dict[str, list[dict]]
     retention_details: list[dict]
+    repeated_standalone_artist_evidence: dict = field(default_factory=dict)
 
 
 def normalize_text_for_matching(text):
@@ -721,6 +722,9 @@ def load_events_with_report(
         ),
         artist_identity_catalog=deduplication_diagnostics.get(
             "artist_identity_catalog", {}
+        ),
+        repeated_standalone_artist_evidence=deduplication_diagnostics.get(
+            "repeated_standalone_artist_evidence", {}
         ),
         unresolved_deduplication_candidates=deduplication_diagnostics.get(
             "unresolved_candidates", []
