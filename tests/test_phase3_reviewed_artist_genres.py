@@ -54,7 +54,7 @@ class Phase3ArtistReviewTests(unittest.TestCase):
         row = event("Lambrini Girls", genre="Electronic", genre_source="Venue")
         enrich_event_genres([row])
         self.assertEqual(row.genre_public, "Electronic")
-        self.assertEqual(row.genre_method, "source_mapping")
+        self.assertEqual(row.genre_method, "source_explicit")
 
 
 if __name__ == "__main__":
