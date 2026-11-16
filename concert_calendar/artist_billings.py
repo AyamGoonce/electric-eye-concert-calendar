@@ -624,6 +624,31 @@ def resolve_artist_billings(
             )
             continue
 
+        # A differently timed source record with explicit roles may be a
+        # second performance or an earlier advertised doors/show time.
+        # Avoid pre-emptively rewriting the venue's display identity; let
+        # the specialized time reconciliation decide the event match first.
+        conflicting_timed_role_peer = False
+        if event.start_time:
+            for peer in groups[(event.date[:10], _key(event.venue))]:
+                if (
+                    peer is event or not peer.start_time
+                    or peer.start_time == event.start_time
+                    or not (peer.openers or peer.co_headliners)
+                    or _looks_like_flat_billing(peer.headliner)
+                ):
+                    continue
+                peer_roles = _stable_unique([
+                    peer.headliner, *(peer.co_headliners or []),
+                    *(peer.openers or []),
+                ])
+                if _billing_matches_roster(billing, peer_roles):
+                    conflicting_timed_role_peer = True
+                    break
+        if conflicting_timed_role_peer:
+            _apply_profile_context(event, original, billing, presenter, description)
+            continue
+
         # Strong corroboration must be evaluated before any source grammar
         # hint. The hint may identify candidate punctuation, but is not proof.
         corroborated, corroborated_openers = _cross_source_artists(
