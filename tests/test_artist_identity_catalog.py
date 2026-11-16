@@ -179,7 +179,8 @@ class SourceIdentityHarvestTests(unittest.TestCase):
             [opaque, official], identity_catalog={},
         )
         self.assertEqual(opaque.headliner, "Blackgold")
-        self.assertEqual(opaque.co_headliners, ["Sumo Cyco"])
+        self.assertEqual(opaque.openers, ["Sumo Cyco"])
+        self.assertIsNone(opaque.co_headliners)
 
     def test_partial_independent_source_roles_do_not_resolve_bill(self):
         opaque = record("Blackgold + Sumo Cyco + Mystery Act", source="DICE")
