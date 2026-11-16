@@ -64,6 +64,11 @@ def collect_repeated_standalone_artist_evidence(events, *, existing=None):
         raw = " ".join(str(event.raw_title or name).split())
         if not artist_candidate(name) or identity_key(raw) != identity_key(name):
             continue
+        # Conjunctions and dash-separated compound titles may still be bills.
+        # This catalogue deliberately sacrifices recall rather than admitting
+        # such a title as an indivisible artist identity.
+        if re.search(r"\\s+(?:et|[–—])\\s+", name, re.I):
+            continue
         if event.event_title and identity_key(event.event_title) != identity_key(name):
             continue
         if event.series_name or event.festival_name or event.openers or event.co_headliners:
