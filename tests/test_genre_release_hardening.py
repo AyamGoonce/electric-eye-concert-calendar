@@ -44,8 +44,8 @@ class GenreReleaseHardeningTests(unittest.TestCase):
 
     def test_bill_collaboration_cannot_inherit_same_run_artist_consensus(self):
         events = [
-            event("Lambrini Girls", genre="Punk", venue="Le Trabendo"),
-            event("Lambrini Girls", genre="Punk", venue="Le Bataclan",
+            event("Lambrini Girls et Guest", genre="Punk", venue="Le Trabendo"),
+            event("Lambrini Girls et Guest", genre="Punk", venue="Le Bataclan",
                   date="2027-01-12"),
             event("Lambrini Girls et Guest"),
         ]
