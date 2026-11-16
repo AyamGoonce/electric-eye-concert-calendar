@@ -792,7 +792,9 @@ def enrich_event_genres(events: list[ConcertEvent], mapping_path: Path | None = 
         "artist_mapping": stats["artist_mapping"], "override": stats["override"],
         "event_context": stats["event_context"], "bill_consensus": stats["bill_consensus"], "artist_source_consensus": stats["artist_source_consensus"],
         "blank_no_raw": stats["blank_no_raw"], "blank_unresolved_raw": stats["blank_unresolved_raw"],
-        "blank_festival": stats["blank_festival"], "conflict_count": stats["conflict"],
+        "blank_festival": stats["blank_festival"],
+        "blank_unresolved_taxonomy": stats["blank_unresolved_taxonomy"],
+        "conflict_count": stats["conflict"],
         "conflicts": conflicts, "raw_inventory": dict(raw_inventory.most_common()),
         "raw_sources": {raw: sorted(sources) for raw, sources in sorted(raw_sources.items())},
         "raw_genres": [
