@@ -102,6 +102,14 @@ def identity_catalog_from_content_index(index: dict) -> dict[str, str]:
     return catalog
 
 
+def _looks_like_flat_billing(value: str) -> bool:
+    """Exclude apparent multi-act bills from standalone evidence."""
+    return bool(re.search(
+        r"\s+(?:\+|/|•|&|et|x|×|vs\.?|with|avec|ft\.?|feat\.?|featuring|[–—])\s+",
+        value, re.I,
+    ))
+
+
 def current_official_standalone_artist_evidence(events: list[ConcertEvent]) -> dict[str, str]:
     """Use standalone artists explicitly billed by official venues this run.
 
@@ -115,7 +123,7 @@ def current_official_standalone_artist_evidence(events: list[ConcertEvent]) -> d
         name = _clean(event.headliner)
         if (
             not name
-            or re.search(r"\s+(?:\+|&|x|×|with|avec|feat\.?|featuring)\s+", name, re.I)
+            or _looks_like_flat_billing(name)
             or re.search(r"\b(?:release\s+party|premi[èe]re\s+partie|festival)\b", name, re.I)
             or event.event_title and _key(event.event_title) == _key(name)
             or event.performers and any(_key(artist) != _key(name) for artist in event.performers)
@@ -145,7 +153,7 @@ def current_structured_standalone_artist_evidence(events: list[ConcertEvent]) ->
         name = names[0]
         if (
             not event.source_names
-            or re.search(r"\s+(?:\+|&|/|•|feat\.?|featuring|with|avec)\s+", name, re.I)
+            or _looks_like_flat_billing(name)
             or re.search(r"\b(?:release party|festival|concert|programme)\b", name, re.I)
         ):
             continue
