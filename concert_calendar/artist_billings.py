@@ -362,6 +362,14 @@ def _cross_source_artists(
             continue
         if event_sources and set(candidate.source_names or []) == event_sources:
             continue
+        # Different stated start times can indicate different performances.
+        # Keep those records untouched for the later dedicated time/venue
+        # reconciler, which applies source-authority rules.
+        if (
+            event.start_time and candidate.start_time
+            and event.start_time != candidate.start_time
+        ):
+            continue
 
         # A second source can corroborate the complete bill in either its
         # independently supplied performer array or explicit event roles.
