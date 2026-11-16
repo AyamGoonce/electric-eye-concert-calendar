@@ -379,7 +379,7 @@ def _same_source_evidence(event: ConcertEvent, billing: str) -> tuple[list[str],
         # A flat bill with recognized separators must account for *every*
         # listed act, even when the provider also sends a separate roster.
         and (
-            not re.search(r"\\s+(?:\\+|/|•|&|et|[–—-])\\s+", billing, re.I)
+            not re.search(r"\s+(?:\+|/|•|&|et|[–—-])\s+", billing, re.I)
             or _billing_matches_roster(billing, supplied_artists)
         )
     ):
