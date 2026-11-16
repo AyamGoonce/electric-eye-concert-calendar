@@ -178,6 +178,23 @@ class EditorialGenreTests(unittest.TestCase):
             with self.subTest(raw=raw):
                 self.assertEqual(map_raw_genres(raw), [target])
 
+    def test_ambiguous_official_multi_select_is_reported_as_blank(self):
+        from concert_calendar.genres import enrich_event_genres
+        row = concert(genre_evidence=[{
+            "raw": "Rock, Pop, Electronic",
+            "source": "La Seine Musicale",
+            "classification": "official_multi_select_taxonomy",
+        }])
+        result = enrich_event_genres([row])
+        self.assertIsNone(row.genre_public)
+        self.assertEqual(result["blank_unresolved_taxonomy"], 1)
+        self.assertEqual(
+            result["blank"],
+            result["blank_no_raw"] + result["blank_unresolved_raw"]
+            + result["blank_festival"] + result["blank_unresolved_taxonomy"]
+            + result["conflict_count"],
+        )
+
     def test_non_genre_and_cross_bucket_labels_still_unresolved(self):
         for raw in (
             "Ciné concert", "Conférence", "Tribute", "Danse",
