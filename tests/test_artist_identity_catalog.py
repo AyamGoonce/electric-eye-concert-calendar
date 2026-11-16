@@ -205,6 +205,20 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(opaque.openers, ["Sumo Cyco"])
         self.assertIsNone(opaque.co_headliners)
 
+    def test_cross_source_roles_defer_conflicting_performance_times(self):
+        opaque = record("Blackgold + Sumo Cyco", source="Official venue")
+        opaque.start_time = "20:00"
+        external = record("Blackgold", source="Ticketing Platform")
+        external.openers = ["Sumo Cyco"]
+        external.start_time = "19:00"
+        apply_reviewed_artist_billings(
+            [opaque, external], identity_catalog={},
+        )
+        # The separate dedicated venue-time reconciler decides whether these
+        # are separate performances or differing advertised doors/show times.
+        self.assertEqual(opaque.headliner, "Blackgold + Sumo Cyco")
+        self.assertIsNone(opaque.openers)
+
     def test_partial_independent_source_roles_do_not_resolve_bill(self):
         opaque = record("Blackgold + Sumo Cyco + Mystery Act", source="DICE")
         official = record("Blackgold", source="Official venue")
