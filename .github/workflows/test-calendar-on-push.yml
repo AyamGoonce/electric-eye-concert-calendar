@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - supersonic-scraper
+  pull_request:
+    branches:
+      - supersonic-scraper
   workflow_dispatch:
 
 permissions:
