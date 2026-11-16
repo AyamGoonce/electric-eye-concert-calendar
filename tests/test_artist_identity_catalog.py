@@ -19,6 +19,28 @@ def record(title, *, source="Official source", performers=None, day="2026-12-18"
 
 
 class SourceIdentityHarvestTests(unittest.TestCase):
+    def test_flat_official_bill_not_reused_as_single_identity(self):
+        from concert_calendar.artist_billings import (
+            current_official_standalone_artist_evidence,
+            current_structured_standalone_artist_evidence,
+        )
+        for billing in (
+            "Blackgold / Sumo Cyco",
+            "Blackgold et Sumo Cyco",
+            "Blackgold x Sumo Cyco",
+        ):
+            with self.subTest(billing=billing):
+                official = record(billing, source="Le Chinois")
+                official.performers = [billing]
+                self.assertNotIn(
+                    billing.casefold(),
+                    current_official_standalone_artist_evidence([official]),
+                )
+                self.assertNotIn(
+                    billing.casefold(),
+                    current_structured_standalone_artist_evidence([official]),
+                )
+
     def test_real_separately_credited_artists_expand_catalogue(self):
         source = record("Blackgold + Sumo Cyco + Hyro The Hero",
                         performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"])
