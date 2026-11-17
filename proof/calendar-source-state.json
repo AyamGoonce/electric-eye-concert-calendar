@@ -202,7 +202,7 @@
               "HEY, NOTHING"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-hey-nothing.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-hey-nothing.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -863,7 +863,7 @@
               "PYO"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/Event-Grid-Image.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/Event-Grid-Image.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -1522,7 +1522,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2370/the-milk-carton-kids-complet/?of=42",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2370/the-milk-carton-kids-complet/?of=41",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-09-14T16:52:08Z",
@@ -2503,7 +2503,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2401/madra-salach-complet/?of=6",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2401/madra-salach-complet/?of=5",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-10-15T11:40:16Z",
@@ -3203,10 +3203,10 @@
             ],
             "raw_title": "Basht.",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://petitbain.org/evenement/basht/",
             "venue": "Petit Bain"
           },
@@ -3757,7 +3757,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2361/stella-lefty-complet/?of=23",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2361/stella-lefty-complet/?of=22",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-09-01T13:15:20Z",
@@ -4253,10 +4253,10 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "SOFY",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://laboule-noire.fr/sofy-3/",
@@ -4390,10 +4390,10 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "Paris Jackson",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/837/paris_jackson",
@@ -5465,7 +5465,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2285/john-vincent-iii/?of=25",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2285/john-vincent-iii/?of=24",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -5852,7 +5852,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -10787,51 +10787,11 @@
           "state_identity": "d11318ed922609c1c69c26d4321ff9d9c45b907573e07d73fe0b522e555f120d"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "TAEMIN",
-            "identity_aliases": null,
-            "image_source": "Adidas Arena",
-            "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/e354be36-ee1b-4e2a-bd14-7858d4c9aec8.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.adidasarena.com/programmation/taemin--1498",
-            "venue": "Adidas Arena"
-          },
-          "first_seen": "2026-09-03T12:50:16Z",
-          "public_id": "6abdf59d9677095c",
-          "state_identity": "6abdf59d9677095c37fe17a2d1f64b5784e67b3eb2cccc7784ebc756e13b372d"
-        },
         {
           "event": {
             "announced_at": null,
@@ -11437,64 +11397,11 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "ROCK / METAL",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "ROCK / METAL",
-            "genre_evidence": [
-              {
-                "raw": "ROCK / METAL",
-                "source": "Alhambra"
-              },
-              {
-                "raw": "Alternative and Indie, Electronic, Pop",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Alhambra",
-            "genres_public": null,
-            "headliner": "Neoni",
-            "identity_aliases": [
-              "Neoni"
-            ],
-            "image_source": "Alhambra",
-            "image_url": "https://www.alhambra-paris.com/files/125/v_2609011159170.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.alhambra-paris.com/neoni-lo4660.html",
-            "venue": "L'Alhambra"
-          },
-          "first_seen": "2026-09-01T13:15:20Z",
-          "public_id": "bc801eb8e6122e25",
-          "state_identity": "bc801eb8e6122e25840ff5e949676c8e23b7f9ef80b3c01c00313d71cc5bb767"
-        },
         {
           "event": {
             "announced_at": null,
@@ -13754,7 +13661,7 @@
           "state_identity": "3af6c22b73b6bce34eff1833561ae75fe0618e08126e0abaffc838d6be0fb455"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -15723,7 +15630,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16034,7 +15941,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -17453,7 +17360,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -18910,7 +18817,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -19047,7 +18954,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2149/changeline-complet/?of=17",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2149/changeline-complet/?of=16",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -20062,7 +19969,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2337/odezenne-complet/?of=1",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2337/odezenne-complet/?of=0",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -20210,64 +20117,11 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Hard rock / Metal",
-            "genre_evidence": [
-              {
-                "raw": "Hard rock / Metal",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Live Nation",
-            "genres_public": null,
-            "headliner": "Converge",
-            "identity_aliases": [
-              "Converge"
-            ],
-            "image_source": "Bataclan",
-            "image_url": "https://bataclan-medias.s3.eu-west-3.amazonaws.com/list_1080x1080_0fc12f3b53.jpg",
-            "openers": [
-              "Sanguisugabogg",
-              "Blackbraid",
-              "Pupil Slicer"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/775/converge",
-            "venue": "Bataclan"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "07bcfc2632201f80",
-          "state_identity": "07bcfc2632201f800ab708651127826bd63ff02de0b54abafd93efa798793fb4"
-        },
         {
           "event": {
             "announced_at": null,
@@ -21678,10 +21532,10 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "Paris Jackson",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/837/paris_jackson",
@@ -21971,7 +21825,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -23217,56 +23071,11 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "World",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "World",
-            "genre_evidence": [
-              {
-                "raw": "World",
-                "source": "Café de la Danse"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "World / Latin",
-            "genre_source": "Café de la Danse",
-            "genres_public": null,
-            "headliner": "CONCERT DESSINÉ DE JOANN SFAR & LES LUFTMENSCHEN",
-            "identity_aliases": null,
-            "image_source": "Café de la Danse",
-            "image_url": "https://www.cafedeladanse.com/app/uploads/2026/10/jazz-n-klezmer.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:30",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.billetweb.fr/concert-dessine2%20",
-            "venue": "Café de la Danse"
-          },
-          "first_seen": "2026-10-29T18:33:50Z",
-          "public_id": "7e4ad567e899b68c",
-          "state_identity": "7e4ad567e899b68ca2e2d813dd08c803beacce026d914ffa9c0bad0026d04527"
-        },
         {
           "event": {
             "announced_at": null,
@@ -24932,7 +24741,7 @@
           "state_identity": "90716293fd943618bb05e2d75d6f2a5a5333d07968b66300fd79fc954a2ae1d5"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -26057,55 +25866,11 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Electronic",
-            "genre_source": "Reviewed stable electronic artist classification, 2026-08-23",
-            "genres_public": null,
-            "headliner": "Sebastien Tellier",
-            "identity_aliases": [
-              "Sébastien Tellier"
-            ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-06-08/2f09f37f-e59a-4f54-9be1-471da03743e8.jpg?rect=0%2C11%2C4569%2C4569",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Corida"
-            ],
-            "raw_title": "Sébastien Tellier",
-            "series_name": null,
-            "sold_out": true,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.sallepleyel.com/evenement/sebastien-tellier/",
-            "venue": "Salle Pleyel"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "31ba89be56b007c5",
-          "state_identity": "31ba89be56b007c5b65472f2591328a1d94b40e2a40352b6ee6dbf3b33acca42"
-        },
         {
           "event": {
             "announced_at": null,
@@ -26928,7 +26693,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -27443,7 +27208,7 @@
           "state_identity": "a644b6421ccbb83ab006cc477bbf42f92b12e8f4ec0b3eea2916f5952e1279c1"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -29311,7 +29076,7 @@
           "state_identity": "fc1542a38b577193e432706c9523ef8b82c01ebd5b323633a9974f34fd197440"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -29523,58 +29288,11 @@
           "state_identity": "e28a663be716e8c5d71a876a947b842a8d384d45bc2a7e27961d9d2e5e3e66ab"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rock",
-            "genre_evidence": [
-              {
-                "raw": "Rock",
-                "source": "Gérard Drouot Productions"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Reviewed stable artist classification, 2026-08-23",
-            "genres_public": null,
-            "headliner": "Uriah Heep",
-            "identity_aliases": null,
-            "image_source": "Electric Eye concert review",
-            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj7YDDrKYJb3cUGMdqRACcCKzB_KO1Me7J211jmbCHapStalHp2jteJ6_vFXDZZdThZzt9EcUsi2Rr6LbSEPShJXwpeHSZy0ueAlLkU1IcBcoI80cRmzQt5nWhsp25GZUFNaukKNMNZ5D7hUQvcmR-XKLsUSNbIGlRrIaMCkIqg7vJFoxq3xTZs7c9ONw/s72-w640-h426-c-rw/Uriah%20Heep.%2002%20(Electric)16_10_2022OlympiaParis_124.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Gérard Drouot Productions"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.casinodeparis.fr/fr/product/2272/casino_de_paris/uriah_heep",
-            "venue": "Casino de Paris"
-          },
-          "first_seen": "2026-08-23T16:46:51Z",
-          "public_id": "e1715b6c35045f32",
-          "state_identity": "e1715b6c35045f325856e603b11ebee3ab605c310ee9258892657e37561ee7a7"
-        },
         {
           "event": {
             "announced_at": null,
@@ -32833,7 +32551,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -33081,7 +32799,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.labellevilloise.com/evenement/candlelight-babies/",
+            "ticket_url": "https://www.labellevilloise.com/evenement/candlelight-babies-2/",
             "venue": "La Bellevilloise"
           },
           "first_seen": "2026-11-12T20:01:48Z",
@@ -33599,51 +33317,11 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "PAULVITESSE!",
-            "identity_aliases": null,
-            "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800px.jpg.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://laboule-noire.fr/paul-vitesse/",
-            "venue": "La Boule Noire"
-          },
-          "first_seen": "2026-09-08T16:33:21Z",
-          "public_id": "5b1485f1a741676c",
-          "state_identity": "5b1485f1a741676c25576a71b1309bcd9d325e614d194c407755f8f8078fac49"
-        },
         {
           "event": {
             "announced_at": null,
@@ -33666,7 +33344,7 @@
             "headliner": "DERNIER MOTEL",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800-Dernier-Motel-Marina-Viguier.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800-Dernier-Motel-Marina-Viguier.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33706,7 +33384,7 @@
             "headliner": "ELOQUENCE",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/08/1800x1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/08/1800x1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33746,7 +33424,7 @@
             "headliner": "NUMAH",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/20261119_NUMAH-1800x1800px.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/20261119_NUMAH-1800x1800px.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33786,7 +33464,7 @@
             "headliner": "nothhingspecial",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/08/Nothhingspecial_visuelweb_boule-noire_1800x1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/08/Nothhingspecial_visuelweb_boule-noire_1800x1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33826,7 +33504,7 @@
             "headliner": "HOLSEEK",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/HOLSEEK-1800X1800-SITE.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/HOLSEEK-1800X1800-SITE.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33868,7 +33546,7 @@
               "HEY, NOTHING"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-hey-nothing.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/Format-Site-hey-nothing.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33910,7 +33588,7 @@
             "headliner": "HÔTEL PARTICULIER",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/Design-sans-titre-14.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/Design-sans-titre-14.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33950,7 +33628,7 @@
             "headliner": "BAPTISTE SARTORIA",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Valentin-Pitarch-1-scaled.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Valentin-Pitarch-1-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33990,7 +33668,7 @@
             "headliner": "THX4CRYING",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800-x-1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800-x-1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34079,7 +33757,7 @@
             "headliner": "EMMA HOET",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/Emma-Hoet-la-boule-noire-1080x1080-sanstext-compresse.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/07/Emma-Hoet-la-boule-noire-1080x1080-sanstext-compresse.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34119,7 +33797,7 @@
             "headliner": "JAMES SMITH",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800x1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34159,7 +33837,7 @@
             "headliner": "DRACOBOY",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-DRACOBOY.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/04/Format-Site-DRACOBOY.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34199,7 +33877,7 @@
             "headliner": "NADE",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/260522_Nade_La-Boule-Noire_1800x1800.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/260522_Nade_La-Boule-Noire_1800x1800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34241,7 +33919,7 @@
               "OAN KIM"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Oan-1800×1800-px--scaled.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/Oan-1800×1800-px--scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34281,7 +33959,7 @@
             "headliner": "ISIMARIA",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/1800x1800.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/06/1800x1800.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34361,7 +34039,7 @@
             "headliner": "GOTTI MARAS",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/1800x1800.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34401,7 +34079,7 @@
             "headliner": "26KEUSS",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/carre.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/09/carre.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34443,7 +34121,7 @@
               "PYO"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/Event-Grid-Image.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/Event-Grid-Image.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34485,7 +34163,7 @@
             "headliner": "SOLAMOUR",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800X1800-1.jpg.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/05/1800X1800-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34525,7 +34203,7 @@
             "headliner": "SOROSORO",
             "identity_aliases": null,
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/1800x1800.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/10/1800x1800.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34567,7 +34245,7 @@
               "Saam Sultan"
             ],
             "image_source": "La Boule Noire",
-            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/08/Design-sans-titre-11.png.webp",
+            "image_url": "https://laboule-noire.fr/wp-content/uploads/2026/08/Design-sans-titre-11.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35888,10 +35566,10 @@
             "promoters": null,
             "raw_title": "Logic1000",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "19:30",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://laboule-noire.fr/logic1000/",
             "venue": "La Boule Noire"
           },
@@ -36132,10 +35810,10 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "SOFY",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://laboule-noire.fr/sofy-3/",
@@ -36524,58 +36202,11 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Rap",
-            "genre_evidence": [
-              {
-                "raw": "Rap",
-                "source": "La Cigale"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Hip-hop / Rap",
-            "genre_source": "La Cigale",
-            "genres_public": null,
-            "headliner": "NEMZZZ",
-            "identity_aliases": [
-              "NEMZZZ"
-            ],
-            "image_source": "La Cigale",
-            "image_url": "https://lacigale.fr/wp-content/uploads/2026/08/main.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "NEMZZZ",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://lacigale.fr/evenements/nemzzz/",
-            "venue": "La Cigale"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "464086658ea489bb",
-          "state_identity": "464086658ea489bbc3d762475fe52d93b56647db068f4479e1faa08154e5041f"
-        },
         {
           "event": {
             "announced_at": null,
@@ -36612,10 +36243,10 @@
             "promoters": null,
             "raw_title": "Bilal Hassani",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "19:45",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://lacigale.fr/evenements/bilal-hassani/",
             "venue": "La Cigale"
           },
@@ -41091,61 +40722,11 @@
           "state_identity": "78038585cae60e039bd57c6975a2fcb1b06a92b68aa5c374c8f7e45b1c73ddce"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "NeS",
-              "Gen"
-            ],
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": "ARTE Dans le club",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "GAL+LEDOUBLE",
-            "identity_aliases": [
-              "ARTE Dans le club",
-              "ARTE Dans le Club #57 : NeS / Gen / GAL+LEDOUBLE"
-            ],
-            "image_source": "La Gaîté Lyrique",
-            "image_url": "https://osuny-1b4da.kxcdn.com/opi8i5s41nu2vadu6g2nuxy3z11a?width=1280&height=720&fit=inside&quality=80",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "GAL+LEDOUBLE",
-              "NeS",
-              "Gen"
-            ],
-            "promoters": null,
-            "raw_title": "ARTE Dans le club",
-            "series_name": null,
-            "sold_out": true,
-            "start_time": "19:30",
-            "tags": null,
-            "ticket_status": "sold_out",
-            "ticket_url": "https://www.gaite-lyrique.net/agenda/2026/arte-dans-le-club-1-1-2-1/",
-            "venue": "La Gaîté Lyrique"
-          },
-          "first_seen": "2026-11-11T17:39:28Z",
-          "public_id": "c950fb4b39796dc7",
-          "state_identity": "c950fb4b39796dc74cdca3d93d0240ceb340b3e1ef163dc6a1fa1e03aa2ded46"
-        },
         {
           "event": {
             "announced_at": null,
@@ -42109,7 +41690,7 @@
             "co_headliners": null,
             "date": "2027-03-27",
             "department": "75",
-            "event_title": null,
+            "event_title": "ROB - LA GAÎTÉ LYRIQUE",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -42120,19 +41701,21 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "rob",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "ROB - LA GAÎTÉ LYRIQUE"
+            ],
             "image_source": "La Gaîté Lyrique",
             "image_url": "https://osuny-1b4da.kxcdn.com/esvzarfh7ed2jkpljh092tcvo9zo?width=1280&height=720&fit=inside&quality=80",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "ROB - LA GAÎTÉ LYRIQUE",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://www.gaite-lyrique.net/agenda/2027/rob-1/",
             "venue": "La Gaîté Lyrique"
           },
@@ -42349,7 +41932,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -43350,51 +42933,11 @@
           "state_identity": "ad7ccaf6b6a026b3a1c89d0d50512b155686b8baf06dc90b8ccbffb0ad257cc8"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Reviewed stable artist classification, 2026-08-23",
-            "genres_public": null,
-            "headliner": "HOLLYSIZ",
-            "identity_aliases": null,
-            "image_source": "La Maroquinerie",
-            "image_url": "https://www.lamaroquinerie.fr/files/event_thumbnail_2258.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.concert-auguri.fr/fr/manifestation/4698/hollysiz",
-            "venue": "La Maroquinerie"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "592dc2eee5e36b87",
-          "state_identity": "592dc2eee5e36b879041c443d438b751dd01df64415bf38694e14c7659a75bab"
-        },
         {
           "event": {
             "announced_at": null,
@@ -43720,7 +43263,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2303/anais-rosso-complet/?of=9",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2303/anais-rosso-complet/?of=8",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -43760,7 +43303,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2281/bardix-le-gaulois-complet/?of=10",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2281/bardix-le-gaulois-complet/?of=9",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -43802,7 +43345,7 @@
             "start_time": "19:30",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2203/chest-complet/?of=11",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2203/chest-complet/?of=10",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -43938,7 +43481,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2241/julia-wolf-complet/?of=14",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2241/julia-wolf-complet/?of=13",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -43978,7 +43521,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2420/solann-complet/?of=15",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2420/solann-complet/?of=14",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-11-09T14:44:30Z",
@@ -44064,7 +43607,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2149/changeline-complet/?of=17",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2149/changeline-complet/?of=16",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -44237,7 +43780,7 @@
             "start_time": "19:30",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2292/oathbreaker-complet/?of=21",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2292/oathbreaker-complet/?of=20",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -44329,7 +43872,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2289/lemofil-complet/?of=23",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2289/lemofil-complet/?of=22",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -44453,7 +43996,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2308/jeanne-complet/?of=26",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2308/jeanne-complet/?of=25",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -44537,7 +44080,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2291/youv-dee/?of=28",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2291/youv-dee/?of=27",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -44787,7 +44330,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2287/vernis-rouge-complet/?of=34",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2287/vernis-rouge-complet/?of=33",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -45119,7 +44662,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2370/the-milk-carton-kids-complet/?of=42",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2370/the-milk-carton-kids-complet/?of=41",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-09-14T16:52:08Z",
@@ -45715,7 +45258,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2401/madra-salach-complet/?of=6",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2401/madra-salach-complet/?of=5",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-10-15T11:40:16Z",
@@ -45895,7 +45438,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2329/louve/?of=10",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2329/louve/?of=9",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -45935,7 +45478,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2390/gwendoline-complet/?of=11",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2390/gwendoline-complet/?of=10",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-10-07T16:39:27Z",
@@ -46192,7 +45735,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2421/archimede/?of=17",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2421/archimede/?of=16",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-11-02T13:51:22Z",
@@ -46457,7 +46000,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2361/stella-lefty-complet/?of=23",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2361/stella-lefty-complet/?of=22",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-09-01T13:15:20Z",
@@ -46964,7 +46507,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2394/keo/?of=35",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2394/keo/?of=34",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-10-05T14:53:22Z",
@@ -47641,7 +47184,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2337/odezenne-complet/?of=1",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2337/odezenne-complet/?of=0",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -47763,7 +47306,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2340/odezenne-complet/?of=4",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2340/odezenne-complet/?of=3",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -47803,7 +47346,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2341/odezenne-complet/?of=5",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2341/odezenne-complet/?of=4",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -48047,7 +47590,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2347/odezenne-complet/?of=11",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2347/odezenne-complet/?of=10",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -48293,7 +47836,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2353/odezenne-complet/?of=17",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2353/odezenne-complet/?of=16",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -48537,7 +48080,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2359/odezenne-complet/?of=23",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2359/odezenne-complet/?of=22",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-31T14:04:04Z",
@@ -48623,7 +48166,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2285/john-vincent-iii/?of=25",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2285/john-vincent-iii/?of=24",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -48665,7 +48208,7 @@
             "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2399/michel-hubert/?of=26",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2399/michel-hubert/?of=25",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-10-13T17:01:22Z",
@@ -48921,7 +48464,7 @@
           "state_identity": "44ad8bbae83d6f35e0cfd0c643bf09d5fd5d0eff3c241dcc59d21bfbf1607dca"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -50532,7 +50075,7 @@
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -51182,7 +50725,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -52023,56 +51566,11 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "#psychrock #rock",
-            "genre_evidence": [
-              {
-                "raw": "#psychrock #rock",
-                "source": "Le Hasard Ludique"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Le Hasard Ludique",
-            "genres_public": null,
-            "headliner": "No Cigar",
-            "identity_aliases": null,
-            "image_source": "Le Hasard Ludique",
-            "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/16690/6522db1b-4908-4fce-add3-4ee4e9cdd6b3.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.lehasardludique.paris/concert/2026-10-13/no-cigar#reservation",
-            "venue": "Le Hasard Ludique"
-          },
-          "first_seen": "2026-10-13T17:01:22Z",
-          "public_id": "60c2ae6cce5257b6",
-          "state_identity": "60c2ae6cce5257b6b92b3dc7189dce5308170f3932e193088b4436ff230a158b"
-        },
         {
           "event": {
             "announced_at": null,
@@ -52400,7 +51898,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Fat Concubine"
+            ],
             "date": "2026-11-27",
             "department": "75",
             "event_title": null,
@@ -52414,9 +51914,9 @@
                 "source": "Le Hasard Ludique"
               }
             ],
-            "genre_method": "artist_mapping",
+            "genre_method": "bill_consensus",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Deezer artist catalog metadata",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
             "headliner": "Spike Fuck",
             "identity_aliases": [
@@ -52428,7 +51928,7 @@
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": "Spike Fuck",
+            "raw_title": "Spike Fuck + Fat Concubine",
             "series_name": null,
             "sold_out": true,
             "start_time": "20:00",
@@ -53182,55 +52682,11 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "Asara"
-            ],
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": "https://fb.me/e/8mmgkHX78",
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "Ava Joe",
-            "identity_aliases": [
-              "Ava Joe"
-            ],
-            "image_source": "Le Pop-Up du Label",
-            "image_url": "https://www.popup.paris/wp-content/uploads/2026/10/Capture-decran-2026-10-05-a-11.02.19.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Ava Joe + Asara",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "20:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://link.dice.fm/Of603d1f9290",
-            "venue": "Le Pop-Up du Label"
-          },
-          "first_seen": "2026-10-05T09:47:53Z",
-          "public_id": "bce208e901c56ea3",
-          "state_identity": "bce208e901c56ea3e94e251a80b8067726b16eb7106e16b41d77cda8cbbdf47e"
-        },
         {
           "event": {
             "announced_at": null,
@@ -55833,7 +55289,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -58906,7 +58362,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -60428,7 +59884,7 @@
           "state_identity": "a8a46784cdd00eea555f70ff6c98afe06e8a839cc6998043d6f1591f3c762459"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -60558,10 +60014,10 @@
             "promoters": null,
             "raw_title": "DANYL",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://le-zenith.com/shows/Danyl-20186",
             "venue": "Le Zénith Paris – La Villette"
           },
@@ -64942,51 +64398,11 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
-            "genres_public": null,
-            "headliner": "BLAIR DAVIE",
-            "identity_aliases": null,
-            "image_source": "Les Étoiles",
-            "image_url": "https://www.etoiles.paris/wp-content/uploads/2026/10/FINAL-PACKSHOT.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "19:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.etoiles.paris/evenement/blair-davie/",
-            "venue": "Les Étoiles"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "3ceffce2fd426ce7",
-          "state_identity": "3ceffce2fd426ce7a092333e07b78fa0527df732bcc05ac5dbf2b43fb6af87e0"
-        },
         {
           "event": {
             "announced_at": null,
@@ -65886,117 +65302,11 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Hard rock / Metal",
-            "genre_evidence": [
-              {
-                "raw": "Hard rock / Metal",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Metal / Hard Rock",
-            "genre_source": "Live Nation",
-            "genres_public": null,
-            "headliner": "Converge",
-            "identity_aliases": [
-              "Converge"
-            ],
-            "image_source": "Bataclan",
-            "image_url": "https://bataclan-medias.s3.eu-west-3.amazonaws.com/list_1080x1080_0fc12f3b53.jpg",
-            "openers": [
-              "Sanguisugabogg",
-              "Blackbraid",
-              "Pupil Slicer"
-            ],
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/775/converge",
-            "venue": "Bataclan"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "07bcfc2632201f80",
-          "state_identity": "07bcfc2632201f800ab708651127826bd63ff02de0b54abafd93efa798793fb4"
-        },
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": "ROCK / METAL",
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "ROCK / METAL",
-            "genre_evidence": [
-              {
-                "raw": "ROCK / METAL",
-                "source": "Alhambra"
-              },
-              {
-                "raw": "Alternative and Indie, Electronic, Pop",
-                "source": "Live Nation"
-              }
-            ],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": "Alhambra",
-            "genres_public": null,
-            "headliner": "Neoni",
-            "identity_aliases": [
-              "Neoni"
-            ],
-            "image_source": "Alhambra",
-            "image_url": "https://www.alhambra-paris.com/files/125/v_2609011159170.png",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Live Nation"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.alhambra-paris.com/neoni-lo4660.html",
-            "venue": "L'Alhambra"
-          },
-          "first_seen": "2026-09-01T13:15:20Z",
-          "public_id": "bc801eb8e6122e25",
-          "state_identity": "bc801eb8e6122e25840ff5e949676c8e23b7f9ef80b3c01c00313d71cc5bb767"
-        },
         {
           "event": {
             "announced_at": null,
@@ -67491,7 +66801,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2241/julia-wolf-complet/?of=14",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2241/julia-wolf-complet/?of=13",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -68171,7 +67481,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2289/lemofil-complet/?of=23",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2289/lemofil-complet/?of=22",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -72031,7 +71341,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2394/keo/?of=35",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2394/keo/?of=34",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-10-05T14:53:22Z",
@@ -75562,7 +74872,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -76071,56 +75381,11 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Variété Internationale",
-            "genre_evidence": [
-              {
-                "raw": "Variété Internationale",
-                "source": "L’Olympia Bruno Coquatrix"
-              }
-            ],
-            "genre_method": "source_mapping",
-            "genre_public": "Pop",
-            "genre_source": "L’Olympia Bruno Coquatrix",
-            "genres_public": null,
-            "headliner": "Le Maroc à L'Olympia",
-            "identity_aliases": null,
-            "image_source": "L’Olympia Bruno Coquatrix",
-            "image_url": "https://www.olympiahall.com/wp-content/uploads/2025/06/le-maroc-a-l-olympia-concert-olympia-parisnom-artiste-concert-olympia-paris-352x440.jpg.webp",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.olympiahall.com/agenda/le-maroc-a-lolympia/",
-            "venue": "L'Olympia Bruno Coquatrix"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "a4c1d3cce7a91f0a",
-          "state_identity": "a4c1d3cce7a91f0a00b69b5c5907262b425ab2be7fae06dbc488aa13cb5b9600"
-        },
         {
           "event": {
             "announced_at": null,
@@ -79970,19 +79235,21 @@
             "genre_source": "L’Olympia Bruno Coquatrix",
             "genres_public": null,
             "headliner": "Romsii",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Romsii"
+            ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/03/romsii-concert-olympia-paris-352x440.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Romsii",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://www.olympiahall.com/agenda/romsii/",
             "venue": "L'Olympia Bruno Coquatrix"
           },
@@ -80400,7 +79667,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -82488,17 +81755,19 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Butcher Brown",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Butcher Brown"
+            ],
             "image_source": "New Morning",
             "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8752.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Butcher Brown",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://www.newmorning.com/20270310-8042-butcher-brown.html",
@@ -83164,6 +82433,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-04-30",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Lizz Wright",
+            "identity_aliases": null,
+            "image_source": "New Morning",
+            "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8754.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.newmorning.com/20270430-8044-lizz-wright.html",
+            "venue": "New Morning"
+          },
+          "first_seen": "2026-11-17T03:57:30Z",
+          "public_id": "d9d1f13938b9f069",
+          "state_identity": "d9d1f13938b9f06938c7aa049e0b2d07f1648f1c783c066c6458f6905aea2d65"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-05-04",
             "department": "75",
             "event_title": null,
@@ -83198,7 +82507,7 @@
           "state_identity": "830171c653d94a1553bd4e737ca82ad91b5ee8d179750e21a2ae0eee291fc45a"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -83856,53 +83165,11 @@
           "state_identity": "b6291222780cff48081e6aefb17268c0cafc16f614c378b26bed7ffb276db8f5"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Courbevoie",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "92",
-            "event_title": null,
-            "event_type": "concert",
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "https://artists.hammondorganco.com/kevin-gullage",
-            "genres_public": null,
-            "headliner": "SONNY GULLAGE",
-            "identity_aliases": null,
-            "image_source": "On the RoaD Again / ORDA",
-            "image_url": "https://ontheroad-again.eu/wp-content/uploads/2017/04/Sonny_Gullage_2024_Horizontal_Tan_Glasses-1024x631.jpg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": [
-              "SONNY GULLAGE"
-            ],
-            "promoters": null,
-            "raw_title": "SONNY GULLAGE",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "21:00",
-            "tags": null,
-            "ticket_status": "tickets",
-            "ticket_url": "https://www.sortiracourbevoie.fr/detail/3584/sonny-gullage",
-            "venue": "Cabaret Jazz Club"
-          },
-          "first_seen": "2026-09-30T12:01:31Z",
-          "public_id": "2eae155266eef689",
-          "state_identity": "2eae155266eef689a68444f8168fd47378c22a9b21adff90940fd47ceac83f3b"
-        },
         {
           "event": {
             "announced_at": null,
@@ -84091,7 +83358,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -85538,7 +84805,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -85816,7 +85083,7 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Pralines#2 : Zwangere Guy",
+            "headliner": "Pralines#2 : Zwangere Guy + Ly",
             "identity_aliases": [
               "Pralines #2"
             ],
@@ -85826,7 +85093,7 @@
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": "Pralines#2 : Zwangere Guy",
+            "raw_title": "Pralines#2 : Zwangere Guy + Ly",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:30",
@@ -87074,10 +86341,10 @@
             ],
             "raw_title": "Basht.",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://petitbain.org/evenement/basht/",
             "venue": "Petit Bain"
           },
@@ -87298,7 +86565,7 @@
           "state_identity": "7c4ebb62acf570558a3053d393ae5e06fde9567c73c0bb278501adc85e242b81"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -87948,7 +87215,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -88978,57 +88245,11 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": [
-              "Interpol"
-            ],
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": null,
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": "bill_consensus",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "mapped_bill_artists",
-            "genres_public": null,
-            "headliner": "Bloc Party",
-            "identity_aliases": [
-              "Interpol"
-            ],
-            "image_source": null,
-            "image_url": null,
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": [
-              "Radical Production"
-            ],
-            "raw_title": null,
-            "series_name": null,
-            "sold_out": false,
-            "start_time": null,
-            "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://radical-production.trium.fr/fr/t/-/event/63901",
-            "venue": "Le Zénith Paris – La Villette"
-          },
-          "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "e238bcc6f51d46e1",
-          "state_identity": "e238bcc6f51d46e1e7fa2fb8c52c3289d603f27cb2f121593c06fd019fa47cf5"
-        },
         {
           "event": {
             "announced_at": null,
@@ -89938,12 +89159,12 @@
           "state_identity": "166e1538856e800efc7958682fea9bcc1290304692b2a95d387311e71e99a573"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -90083,10 +89304,10 @@
             "promoters": null,
             "raw_title": "Bleachers",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.sallepleyel.com/evenement/bleachers/",
             "venue": "Salle Pleyel"
           },
@@ -93675,7 +92896,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -94302,58 +93523,11 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
       "events": [
-        {
-          "event": {
-            "announced_at": null,
-            "authoritative_billing": false,
-            "category": null,
-            "city": "Paris",
-            "co_headliners": null,
-            "date": "2026-11-16",
-            "department": "75",
-            "event_title": "Hommage à Dexter Gordon",
-            "event_type": null,
-            "facebook_event_url": null,
-            "festival_name": null,
-            "genre": "Entrée libre⎥jam session",
-            "genre_evidence": [
-              {
-                "raw": "Entrée libre⎥jam session",
-                "source": "Sunset/Sunside"
-              }
-            ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Jazz / Blues",
-            "genre_source": "Apple Music + Bandcamp",
-            "genres_public": null,
-            "headliner": "david Sauzay",
-            "identity_aliases": [
-              "Hommage à Dexter Gordon avec david Sauzay"
-            ],
-            "image_source": "Sunset/Sunside",
-            "image_url": "https://img.mapado.net/2026/9/23/6ab3d39a1e392-ab6761610000e5eb7e357392ac4637109f24e459.jpeg_thumbs/340-340.jpeg",
-            "openers": null,
-            "performance_marker": null,
-            "performers": null,
-            "promoters": null,
-            "raw_title": "Hommage à Dexter Gordon avec david Sauzay",
-            "series_name": null,
-            "sold_out": false,
-            "start_time": "21:30",
-            "tags": null,
-            "ticket_status": "free",
-            "ticket_url": "https://billetterie.sunset-sunside.com/event/852490-hommage-a-dexter-gordon-avec-david-sauzay",
-            "venue": "Sunset/Sunside — Sunside"
-          },
-          "first_seen": "2026-09-27T01:20:20Z",
-          "public_id": "ae0cb4a6a66e28bf",
-          "state_identity": "ae0cb4a6a66e28bf072aba177bb65bb765ed237839a89e049b6e43bafdc3fd30"
-        },
         {
           "event": {
             "announced_at": null,
@@ -101418,7 +100592,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -102297,11 +101471,11 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Official/current event description and reviewed exact artist catalog",
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
-            "headliner": "Haunt Me",
+            "headliner": "Haunt Me + Alix Fernz + Tout Debord",
             "identity_aliases": [
               "Haunt Me"
             ],
@@ -102313,7 +101487,7 @@
             "promoters": [
               "Supersonic"
             ],
-            "raw_title": "Haunt Me",
+            "raw_title": "Haunt Me + Alix Fernz + Tout Debord",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:00",
@@ -102532,11 +101706,11 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": "artist_mapping",
-            "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Official/current event description",
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
             "genres_public": null,
-            "headliner": "Lucidvox",
+            "headliner": "Lucidvox + Bloody Jenny + Eigengrau",
             "identity_aliases": [
               "Lucidvox"
             ],
@@ -102548,7 +101722,7 @@
             "promoters": [
               "Supersonic"
             ],
-            "raw_title": "Lucidvox",
+            "raw_title": "Lucidvox + Bloody Jenny + Eigengrau",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:00",
@@ -104869,7 +104043,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -104970,7 +104144,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -105204,7 +104378,7 @@
             "start_time": "19:30",
             "tags": null,
             "ticket_status": "sold_out",
-            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2292/oathbreaker-complet/?of=21",
+            "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2292/oathbreaker-complet/?of=20",
             "venue": "La Maroquinerie"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -106051,10 +105225,10 @@
             ],
             "raw_title": "Lambrini Girls + Taqbir",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "19:30",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/lambrini-girls/",
             "venue": "Élysée Montmartre"
           },
@@ -106155,7 +105329,7 @@
           "state_identity": "9e22085fae6ff891b4353d92bd8f51588d2d04e89f06c340bfa30d27db5d25be"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -109640,7 +108814,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -109715,19 +108889,15 @@
             "genre_public": "Pop",
             "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "Blowsom",
+            "headliner": "BLOWSOM",
             "identity_aliases": [
-              "Blowsom",
-              "Blowsom + DO not DO"
+              "BLOWSOM"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/add6e785-ed0f-47a9-bd30-ec6a92d0da87.jpg?rect=0%2C0%2C1182%2C1182",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Blowsom",
-              "DO not DO"
-            ],
+            "performers": null,
             "promoters": [
               "Zouave"
             ],
@@ -109737,7 +108907,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.laclef.asso.fr/agenda/297-BLOWSOM-DO-NOT-DO",
+            "ticket_url": "https://dice.fm/event/6a91ae7c9562bc00010ed89d",
             "venue": "La CLEF"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -110449,7 +109619,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -112844,10 +112014,10 @@
             ],
             "raw_title": "Lambrini Girls + Taqbir",
             "series_name": null,
-            "sold_out": false,
+            "sold_out": true,
             "start_time": "19:30",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/lambrini-girls/",
             "venue": "Élysée Montmartre"
           },
@@ -113012,7 +112182,7 @@
             "genre_public": "Pop",
             "genre_source": "Apple Music artist metadata",
             "genres_public": null,
-            "headliner": "Blowsom",
+            "headliner": "BLOWSOM",
             "identity_aliases": null,
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/blowsom-elysee-montmartre.jpg",
@@ -113034,10 +112204,10 @@
           "state_identity": "b17be160cdf51b4b9dd4e4a2222d2a7356891f0f4c960b7279f9780ee487eb97"
         }
       ],
-      "last_successful_at": "2026-11-16T19:39:55Z",
+      "last_successful_at": "2026-11-17T03:57:30Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-16T19:39:55Z",
+  "updated_at": "2026-11-17T03:57:30Z",
   "version": 1
 }
