@@ -256,6 +256,120 @@ class SourceIdentityHarvestTests(unittest.TestCase):
         self.assertEqual(diagnostics["artist_identity_catalog"]["new_verified"], 3)
 
 
+    def test_source_roles_require_independent_source_to_expand_catalogue(self):
+        event = record("Blackgold", source="Official venue")
+        event.openers = ["Sumo Cyco"]
+        additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+        self.assertTrue(all(
+            row["reason"] == "source_role_requires_independent_source"
+            for row in audit["unresolved_records"]
+        ))
+        independent = record("Blackgold", source="Ticketing Platform")
+        independent.openers = ["Sumo Cyco"]
+        additions, audit = collect_structured_artist_evidence([event, independent])
+        self.assertEqual(set(additions), {"blackgold", "sumo cyco"})
+        self.assertTrue(all(
+            item["evidence"][0]["evidence_type"] == "separate_source_event_role"
+            for item in audit["verified_records"]
+        ))
+
+    def test_source_role_prose_not_admitted_from_one_source(self):
+        event = record("15 000 choristes", source="Accor Arena")
+        event.openers = ["Dans chaque ville, près de 500 choristes monteront sur scène"]
+        additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+        self.assertGreater(audit["unresolved"], 0)
+
+    def test_flat_title_cannot_supply_source_role_identities(self):
+        event = record("Blackgold + Sumo Cyco", source="Official venue")
+        event.openers = ["Sumo Cyco"]
+        additions, audit = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+        self.assertEqual(audit["rejected"].get("invalid_or_ambiguous_source_roles"), 1)
+
+    def test_roles_with_guest_placeholder_do_not_enter_catalogue(self):
+        event = record("Blackgold", source="Official venue")
+        event.openers = ["Guests"]
+        additions, _ = collect_structured_artist_evidence([event])
+        self.assertEqual(additions, {})
+
+    def test_complete_structured_roster_updates_flat_display_title(self):
+        event = record(
+            "BLACKGOLD + SUMO CYCO / HYRO THE HERO",
+            source="DICE",
+            performers=["Blackgold", "Sumo Cyco", "Hyro The Hero"],
+        )
+        diagnostics = {}
+        apply_reviewed_artist_billings([event], diagnostics, identity_catalog={})
+        self.assertEqual(event.headliner, "Blackgold")
+        self.assertEqual(event.co_headliners, ["Sumo Cyco", "Hyro The Hero"])
+        self.assertEqual(event.performers, ["Blackgold", "Sumo Cyco", "Hyro The Hero"])
+        self.assertEqual(event.raw_title, "BLACKGOLD + SUMO CYCO / HYRO THE HERO")
+
+    def test_structured_roster_does_not_erase_unlisted_artist(self):
+        event = record(
+            "Blackgold + Sumo Cyco + Unlisted Act",
+            performers=["Blackgold", "Sumo Cyco"],
+        )
+        apply_reviewed_artist_billings([event], identity_catalog={})
+        self.assertEqual(event.headliner, "Blackgold + Sumo Cyco + Unlisted Act")
+        self.assertIsNone(event.co_headliners)
+
+    def test_structured_programme_title_stays_intact(self):
+        event = record(
+            "ARTE Dans le club",
+            performers=["GAL+LEDOUBLE", "NeS", "Gen"],
+        )
+        apply_reviewed_artist_billings([event], identity_catalog={})
+        self.assertEqual(event.headliner, "ARTE Dans le club")
+        self.assertIsNone(event.co_headliners)
+
+    def test_complete_structured_roster_preserves_existing_opener(self):
+        event = record(
+            "Blackgold + Sumo Cyco",
+            performers=["Blackgold", "Sumo Cyco"],
+        )
+        event.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings([event], identity_catalog={})
+        self.assertEqual(event.headliner, "Blackgold")
+        self.assertEqual(event.openers, ["Sumo Cyco"])
+        self.assertIsNone(event.co_headliners)
+
+    def test_explicit_independent_source_roles_resolve_full_bill(self):
+        opaque = record("Blackgold + Sumo Cyco", source="DICE")
+        official = record("Blackgold", source="Official venue")
+        official.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings(
+            [opaque, official], identity_catalog={},
+        )
+        self.assertEqual(opaque.headliner, "Blackgold")
+        self.assertEqual(opaque.openers, ["Sumo Cyco"])
+        self.assertIsNone(opaque.co_headliners)
+
+    def test_cross_source_roles_defer_conflicting_performance_times(self):
+        opaque = record("Blackgold + Sumo Cyco", source="Official venue")
+        opaque.start_time = "20:00"
+        external = record("Blackgold", source="Ticketing Platform")
+        external.openers = ["Sumo Cyco"]
+        external.start_time = "19:00"
+        apply_reviewed_artist_billings(
+            [opaque, external], identity_catalog={},
+        )
+        # The separate dedicated venue-time reconciler decides whether these
+        # are separate performances or differing advertised doors/show times.
+        self.assertEqual(opaque.headliner, "Blackgold + Sumo Cyco")
+        self.assertIsNone(opaque.openers)
+
+    def test_partial_independent_source_roles_do_not_resolve_bill(self):
+        opaque = record("Blackgold + Sumo Cyco + Mystery Act", source="DICE")
+        official = record("Blackgold", source="Official venue")
+        official.openers = ["Sumo Cyco"]
+        apply_reviewed_artist_billings(
+            [opaque, official], identity_catalog={},
+        )
+        self.assertEqual(opaque.headliner, "Blackgold + Sumo Cyco + Mystery Act")
+
     def test_same_source_partial_roster_cannot_erase_third_artist(self):
         opaque = record("Blackgold + Sumo Cyco + Unverified Act")
         opaque._billing_evidence = {

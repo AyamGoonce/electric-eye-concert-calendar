@@ -354,19 +354,44 @@ def _cross_source_artists(
     event: ConcertEvent,
     group: list[ConcertEvent],
     billing: str,
-) -> list[str]:
+) -> tuple[list[str], list[str]]:
     """Accept independent roster evidence only for the *entire* billing."""
     event_sources = set(event.source_names or [])
     for candidate in group:
-        artists = _stable_unique(candidate.performers or [])
-        if candidate is event or len(artists) < 2:
+        if candidate is event:
             continue
         if event_sources and set(candidate.source_names or []) == event_sources:
             continue
-        # An anchored match prevents a partial roster swallowing extra acts.
-        if _billing_matches_roster(billing, artists):
-            return artists
-    return []
+        # Different stated start times can indicate different performances.
+        # Keep those records untouched for the later dedicated time/venue
+        # reconciler, which applies source-authority rules.
+        if (
+            event.start_time and candidate.start_time
+            and event.start_time != candidate.start_time
+        ):
+            continue
+
+        # A second source can corroborate the complete bill in either its
+        # independently supplied performer array or explicit event roles.
+        # Never treat another source's unsplit headline as role evidence.
+        rosters = [_stable_unique(candidate.performers or [])]
+        if (
+            candidate.headliner
+            and not _looks_like_flat_billing(candidate.headliner)
+            and (candidate.co_headliners or candidate.openers)
+        ):
+            rosters.append(_stable_unique([
+                candidate.headliner,
+                *(candidate.co_headliners or []),
+                *(candidate.openers or []),
+            ]))
+        for artists in rosters:
+            if (
+                _billing_matches_roster(billing, artists)
+                and all(not GENERIC_PART_RE.fullmatch(name) for name in artists)
+            ):
+                return artists, _stable_unique(candidate.openers or [])
+    return [], []
 
 
 def _same_source_evidence(event: ConcertEvent, billing: str) -> tuple[list[str], list[str]]:
@@ -522,13 +547,28 @@ def resolve_artist_billings(
                     continue
 
         if len(structured) >= 2:
-            event._billing_resolution = {
-                "original": event.raw_title or original,
-                "artists": structured,
-                "method": "structured_source",
-                "confidence": 100,
-                "evidence": ["source supplied separate performers"],
-            }
+            # This source may supply individual performers while leaving the
+            # display headliner as an opaque flat bill. Previous processing
+            # recorded those performers but never applied them to the event.
+            # Apply only when the complete bill matches the independently
+            # supplied roster, preserving all named acts and existing roles.
+            if (
+                _billing_matches_roster(original, structured)
+                and all(not GENERIC_PART_RE.fullmatch(name) for name in structured)
+            ):
+                _set_resolution(
+                    event, structured, method="structured_source",
+                    confidence=100,
+                    evidence=["source supplied a separate, complete performer roster"],
+                )
+            else:
+                event._billing_resolution = {
+                    "original": event.raw_title or original,
+                    "artists": structured,
+                    "method": "structured_source",
+                    "confidence": 100,
+                    "evidence": ["source supplied separate performers; headline left intact"],
+                }
             _record(audit, event)
             continue
 
@@ -598,17 +638,48 @@ def resolve_artist_billings(
             )
             continue
 
+        # A differently timed source record with explicit roles may be a
+        # second performance or an earlier advertised doors/show time.
+        # Avoid pre-emptively rewriting the venue's display identity; let
+        # the specialized time reconciliation decide the event match first.
+        conflicting_timed_role_peer = False
+        if event.start_time:
+            for peer in groups[(event.date[:10], _key(event.venue))]:
+                if (
+                    peer is event or not peer.start_time
+                    or peer.start_time == event.start_time
+                    or not (peer.openers or peer.co_headliners)
+                    or _looks_like_flat_billing(peer.headliner)
+                ):
+                    continue
+                peer_roles = _stable_unique([
+                    peer.headliner, *(peer.co_headliners or []),
+                    *(peer.openers or []),
+                ])
+                if _billing_matches_roster(billing, peer_roles):
+                    conflicting_timed_role_peer = True
+                    break
+        if conflicting_timed_role_peer:
+            _apply_profile_context(event, original, billing, presenter, description)
+            continue
+
         # Strong corroboration must be evaluated before any source grammar
         # hint. The hint may identify candidate punctuation, but is not proof.
-        corroborated = _cross_source_artists(
+        corroborated, corroborated_openers = _cross_source_artists(
             event,
             groups[(event.date[:10], _key(event.venue))],
             billing,
         )
         if corroborated:
+            # Explicit roles from the corroborating source are stronger than
+            # the neutral hierarchy suggested by a flat display bill.
+            if corroborated_openers:
+                event.openers = _stable_unique([
+                    *(event.openers or []), *corroborated_openers
+                ]) or None
             _set_resolution(
                 event, corroborated, method="cross_source", confidence=95,
-                evidence=["another source supplied separate performers for the same date and venue"],
+                evidence=["another source supplied a complete separately credited roster for the same date and venue"],
                 presenter=presenter, description=description,
             )
             _record(audit, event)

@@ -127,7 +127,7 @@ def collect_repeated_standalone_artist_evidence(events, *, existing=None):
 def collect_structured_artist_evidence(events, *, existing=None):
     """Return new exact identities and an auditable evidence inventory.
 
-    Only a source's individually supplied performer list is evidence. A
+    Only a source's independently supplied performer list or explicit current\n    event roles are evidence. A
     repeated display name is not an alias. Short or otherwise ambiguous
     identities require corroboration by two distinct source names. A flat
     headline, a URL slug and a previous calendar billing are not proof.
@@ -142,6 +142,35 @@ def collect_structured_artist_evidence(events, *, existing=None):
             for name in (event.performers or [])
         ))
         if len(performers) < 2:
+            # Separately attributed current-event roles are structured
+            # identities too, provided the headliner is a standalone name.
+            # These fields originate in source-specific performer semantics;
+            # never split the display title to manufacture role evidence.
+            role_names = [
+                event.headliner,
+                *(event.co_headliners or []),
+                *(event.openers or []),
+            ]
+            roles = list(dict.fromkeys(
+                " ".join(str(name or "").split()) for name in role_names
+            ))
+            sources = sorted(set(event.source_names or []))
+            if (
+                len(roles) >= 2 and sources
+                and all(artist_candidate(name) for name in roles)
+                and len({identity_key(name) for name in roles}) == len(roles)
+            ):
+                for name in roles:
+                    evidence[identity_key(name)].append({
+                        "name": name,
+                        "sources": sources,
+                        "date": event.date[:10],
+                        "venue": event.venue,
+                        "ticket_url": event.ticket_url,
+                        "evidence_type": "separate_source_event_role",
+                    })
+            elif len(roles) >= 2:
+                rejected["invalid_or_ambiguous_source_roles"] += 1
             continue
         if len({identity_key(name) for name in performers}) != len(performers):
             rejected["duplicate_performer_fields"] += 1
@@ -193,6 +222,23 @@ def collect_structured_artist_evidence(events, *, existing=None):
         if key in existing:
             canonical = existing[key]
             status = "already_known"
+        elif (
+            len(source_set) < 2
+            and all(
+                row["evidence_type"] == "separate_source_event_role"
+                for row in rows
+            )
+        ):
+            # A role slot alone is not independently trustworthy: some venue
+            # feeds inadvertently place presentation prose in support fields.
+            # Require corroboration from a second source before adding the
+            # role name to the global artist identity catalogue.
+            unresolved.append({
+                "identity": key, "display_names": display_names,
+                "reason": "source_role_requires_independent_source",
+                "sources": source_set, "events": len(rows),
+            })
+            continue
         elif len(key) < 4 and len(source_set) < 2:
             unresolved.append({
                 "identity": key, "display_names": display_names,
@@ -221,5 +267,5 @@ def collect_structured_artist_evidence(events, *, existing=None):
         "rejected": dict(sorted(rejected.items())),
         "verified_records": verified,
         "unresolved_records": unresolved,
-        "policy": "exact identities only; no inferred aliases or artist roles",
+        "policy": "exact separately credited performer or source-role identities only; no inferred aliases",
     }
