@@ -37,3 +37,67 @@ class GrandRexTests(TestCase):
 
     def test_explicit_full_concert_title_in_card_copy_is_preserved(self):
         self.assertEqual("La Légende de Korra en Concert", self.events[3].headliner)
+
+    def test_empty_canonical_listing_tries_legacy_path(self):
+        from unittest.mock import Mock, patch
+        from concert_calendar.scrapers.grand_rex import load_events
+
+        canonical = Mock(text="<html></html>")
+        legacy = Mock(text=FIXTURE.read_text())
+        session = Mock()
+        session.get.side_effect = [canonical, legacy]
+
+        with patch("concert_calendar.scrapers.grand_rex.requests.Session", return_value=session), \
+             patch("concert_calendar.scrapers.grand_rex.parse_events", side_effect=lambda soup: parse_events(soup, today=date(2026, 9, 1))):
+            events = load_events()
+
+        self.assertGreater(len(events), 0)
+        self.assertEqual(
+            [call.args[0] for call in session.get.call_args_list],
+            ["https://www.legrandrex.com/evenement", "https://www.legrandrex.com/evenement/"],
+        )
+
+    def test_canonical_listing_with_concerts_skips_legacy_path(self):
+        from unittest.mock import Mock, patch
+        from concert_calendar.scrapers.grand_rex import load_events
+
+        session = Mock()
+        session.get.return_value = Mock(text=FIXTURE.read_text())
+
+        with patch("concert_calendar.scrapers.grand_rex.requests.Session", return_value=session), \
+             patch("concert_calendar.scrapers.grand_rex.parse_events", side_effect=lambda soup: parse_events(soup, today=date(2026, 9, 1))):
+            events = load_events()
+
+        self.assertGreater(len(events), 0)
+        self.assertEqual(session.get.call_count, 1)
+
+    def test_redesigned_concert_cards_are_scraped_without_shows_or_date_ranges(self):
+        html = """
+        <main>
+          <article class="carte carte--anis"><a class="carte__lien" href="/evenement/1">
+            <span class="carte__categorie">Sport &amp; Aventure</span>
+            <h3 class="carte__titre">THE SKI FILM</h3><span class="carte__date">08/01/2027</span>
+          </a></article>
+          <article class="carte carte--violet"><a class="carte__lien" href="/evenement/1780">
+            <span class="carte__categorie">Concert</span>
+            <div class="carte__affiche"><img src="/images/evenements/sofloyd.jpg"></div>
+            <h3 class="carte__titre"><span class="carte__libelle">SO FLOYD</span></h3>
+            <span class="carte__date">08/01/2027</span>
+          </a></article>
+          <article class="carte carte--violet"><a class="carte__lien" href="/evenement/1999">
+            <span class="carte__categorie">Concert</span>
+            <h3 class="carte__titre">DATE RANGE</h3>
+            <span class="carte__date">du 08 au 09/01/2027</span>
+          </a></article>
+          <article class="carte carte--vert"><a class="carte__lien" href="/evenement/3">
+            <span class="carte__categorie">Spectacle</span>
+            <h3 class="carte__titre">STAND-UP SHOW</h3>
+            <span class="carte__date">12/01/2027</span>
+          </a></article>
+        </main>
+        """
+        events = parse_events(BeautifulSoup(html, "html.parser"), today=date(2026, 11, 20))
+        self.assertEqual(["SO FLOYD"], [e.headliner for e in events])
+        self.assertEqual("2027-01-08", events[0].date)
+        self.assertEqual("https://www.legrandrex.com/evenement/1780", events[0].ticket_url)
+        self.assertEqual("https://www.legrandrex.com/images/evenements/sofloyd.jpg", events[0].image_url)
