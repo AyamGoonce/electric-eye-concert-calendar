@@ -112,11 +112,19 @@ def parse_events(soup, *, today=None):
 def load_events():
     session = requests.Session()
     print(f"Downloading Le Grand Rex programme: {PROGRAMME_URL}")
-    response = session.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
-    response.raise_for_status()
-    unique = {}
-    for event in parse_events(BeautifulSoup(response.text, "html.parser")):
-        unique.setdefault((event.date, event.start_time, event.headliner.casefold()), event)
-    result = discard_repeated_generic_images(list(unique.values()))
-    print(f"Created {len(result)} Le Grand Rex ConcertEvent records")
-    return result
+    # Both paths are published by the venue, but their responses may differ.
+    # Try the canonical path before the legacy trailing-slash path; an empty
+    # response is not a valid inventory and must never erase retained records.
+    for url in (PROGRAMME_URL.rstrip("/"), PROGRAMME_URL):
+        response = session.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+        unique = {}
+        for event in parse_events(BeautifulSoup(response.text, "html.parser")):
+            unique.setdefault((event.date, event.start_time, event.headliner.casefold()), event)
+        if unique:
+            result = discard_repeated_generic_images(list(unique.values()))
+            print(f"Created {len(result)} Le Grand Rex ConcertEvent records")
+            return result
+        print(f"No Le Grand Rex concerts found at {url}; trying alternate path")
+    print("Created 0 Le Grand Rex ConcertEvent records")
+    return []
