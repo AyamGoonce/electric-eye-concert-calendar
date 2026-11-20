@@ -34,7 +34,7 @@ jobs:
                   print("URL", url, "status", resp.status_code, "final", resp.url,
                         "server",resp.headers.get("Server",""),
                         "cards",len(cards), "tagged_concerts", len(tagged), "parsed",len(parsed),
-                        "titles",[e.headliner for e in parsed[:6]],flush=True)
+                        "titles",[e.headliner for e in parsed[:6]], "body_bytes",len(resp.content), "page_title",(soup.title.get_text(" ",strip=True) if soup.title else ""), "h3",[x.get_text(" ",strip=True)[:85] for x in soup.select("h3")[:10]], "links",[a.get("href","")[:90] for a in soup.select("a[href]")[:14]], "scripts",[x.get("src","")[:90] for x in soup.select("script[src]")[:6]],flush=True)
               except Exception as error:
                   print("URL",url,"error",type(error).__name__,str(error)[:140],flush=True)
           PY
