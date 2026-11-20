@@ -70,3 +70,34 @@ class GrandRexTests(TestCase):
 
         self.assertGreater(len(events), 0)
         self.assertEqual(session.get.call_count, 1)
+
+    def test_redesigned_concert_cards_are_scraped_without_shows_or_date_ranges(self):
+        html = """
+        <main>
+          <article class="carte carte--anis"><a class="carte__lien" href="/evenement/1">
+            <span class="carte__categorie">Sport &amp; Aventure</span>
+            <h3 class="carte__titre">THE SKI FILM</h3><span class="carte__date">08/01/2027</span>
+          </a></article>
+          <article class="carte carte--violet"><a class="carte__lien" href="/evenement/1780">
+            <span class="carte__categorie">Concert</span>
+            <div class="carte__affiche"><img src="/images/evenements/sofloyd.jpg"></div>
+            <h3 class="carte__titre"><span class="carte__libelle">SO FLOYD</span></h3>
+            <span class="carte__date">08/01/2027</span>
+          </a></article>
+          <article class="carte carte--violet"><a class="carte__lien" href="/evenement/1999">
+            <span class="carte__categorie">Concert</span>
+            <h3 class="carte__titre">DATE RANGE</h3>
+            <span class="carte__date">du 08 au 09/01/2027</span>
+          </a></article>
+          <article class="carte carte--vert"><a class="carte__lien" href="/evenement/3">
+            <span class="carte__categorie">Spectacle</span>
+            <h3 class="carte__titre">STAND-UP SHOW</h3>
+            <span class="carte__date">12/01/2027</span>
+          </a></article>
+        </main>
+        """
+        events = parse_events(BeautifulSoup(html, "html.parser"), today=date(2026, 11, 20))
+        self.assertEqual(["SO FLOYD"], [e.headliner for e in events])
+        self.assertEqual("2027-01-08", events[0].date)
+        self.assertEqual("https://www.legrandrex.com/evenement/1780", events[0].ticket_url)
+        self.assertEqual("https://www.legrandrex.com/images/evenements/sofloyd.jpg", events[0].image_url)
