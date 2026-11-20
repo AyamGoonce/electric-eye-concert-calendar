@@ -35,6 +35,16 @@ jobs:
                         "server",resp.headers.get("Server",""),
                         "cards",len(cards), "tagged_concerts", len(tagged), "parsed",len(parsed),
                         "titles",[e.headliner for e in parsed[:6]], "body_bytes",len(resp.content), "page_title",(soup.title.get_text(" ",strip=True) if soup.title else ""), "h3",[x.get_text(" ",strip=True)[:85] for x in soup.select("h3")[:10]], "links",[a.get("href","")[:90] for a in soup.select("a[href]")[:14]], "scripts",[x.get("src","")[:90] for x in soup.select("script[src]")[:6]],flush=True)
+                  for heading in soup.select("h3")[:9]:
+                      par = heading
+                      chain=[]
+                      for _ in range(4):
+                          if par is None: break
+                          chain.append({"tag":par.name,"class":par.get("class",[]),"data":{k:v for k,v in par.attrs.items() if k.startswith("data-")},"text":par.get_text(" ",strip=True)[:110]})
+                          par = par.parent
+                      print("HEADING_CHAIN",chain,flush=True)
+                  for elem in soup.select("[data-date], time, .date, [class*=event], [class*=concert]")[:16]:
+                      print("STRUCTURE",elem.name,elem.get("class",[]),{k:str(v)[:90] for k,v in elem.attrs.items() if k.startswith("data-") or k=="datetime"},elem.get_text(" ",strip=True)[:90],flush=True)
               except Exception as error:
                   print("URL",url,"error",type(error).__name__,str(error)[:140],flush=True)
           PY
