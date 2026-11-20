@@ -1,5 +1,8 @@
 name: Diagnose Alias 403 (read-only)
 on:
+  pull_request:
+    branches:
+      - supersonic-scraper
   push:
     branches:
       - diagnostic-alias-403-2026-11-20
