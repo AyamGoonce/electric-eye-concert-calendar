@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 import re
 from urllib.parse import urljoin
 
@@ -57,9 +57,56 @@ def _explicit_concert_title(card, title):
     return title
 
 
+def _parse_modern_cards(soup, cutoff):
+    """Parse the venue's redesigned category-labelled concert cards.
+
+    Only explicitly classified Concert cards with one exact date qualify.
+    Date ranges and generic Spectacle/film categories remain excluded.
+    """
+    events = []
+    for card in soup.select("article.carte"):
+        category = card.select_one(".carte__categorie")
+        if not category or _clean(category.get_text(" ", strip=True)).casefold() != "concert":
+            continue
+        title_node = card.select_one(".carte__titre")
+        date_node = card.select_one(".carte__date")
+        link = card.select_one("a.carte__lien[href]")
+        if not (title_node and date_node and link):
+            continue
+        title = _clean(title_node.get_text(" ", strip=True))
+        raw_date = _clean(date_node.get_text(" ", strip=True))
+        if not title or not re.fullmatch(r"\d{2}/\d{2}/\d{4}", raw_date):
+            continue
+        try:
+            event_date = datetime.strptime(raw_date, "%d/%m/%Y").date()
+        except ValueError:
+            continue
+        if event_date < cutoff:
+            continue
+        href = _clean(link.get("href"))
+        if not href:
+            continue
+        image = element_image_url(
+            card.select_one(".carte__affiche img"), base_url=PROGRAMME_URL,
+        )
+        events.append(ConcertEvent(
+            date=event_date.isoformat(), headliner=title, venue=SOURCE_NAME,
+            city="Paris", department="75",
+            ticket_url=urljoin(PROGRAMME_URL, href),
+            ticket_status="tickets", image_url=image,
+            image_source=SOURCE_NAME if image else None,
+        ))
+    return events
+
+
 def parse_events(soup, *, today=None):
     cutoff = today or date.today()
     events = []
+    # The venue replaced its legacy .row-event cards with article.carte.
+    # Prefer the new explicit concert category when present; keep the old
+    # implementation for archived HTML and future transition periods.
+    if soup.select("article.carte"):
+        return _parse_modern_cards(soup, cutoff)
     for card in soup.select(".row-event"):
         classes = set(card.get("class", []))
         # The venue's broad visible category combines concerts and shows.  The
