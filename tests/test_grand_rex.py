@@ -47,7 +47,8 @@ class GrandRexTests(TestCase):
         session = Mock()
         session.get.side_effect = [canonical, legacy]
 
-        with patch("concert_calendar.scrapers.grand_rex.requests.Session", return_value=session):
+        with patch("concert_calendar.scrapers.grand_rex.requests.Session", return_value=session), \
+             patch("concert_calendar.scrapers.grand_rex.parse_events", side_effect=lambda soup: parse_events(soup, today=date(2026, 9, 1))):
             events = load_events()
 
         self.assertGreater(len(events), 0)
