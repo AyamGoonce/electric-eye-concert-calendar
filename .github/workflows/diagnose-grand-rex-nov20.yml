@@ -1,0 +1,40 @@
+name: Grand Rex listings diagnostic
+on:
+  pull_request:
+    branches:
+      - supersonic-scraper
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -q requests beautifulsoup4
+      - name: Compare canonical and legacy programme pages
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import requests
+          from bs4 import BeautifulSoup
+          from datetime import date
+          from concert_calendar.scrapers.grand_rex import parse_events, HEADERS
+          urls = ("https://www.legrandrex.com/evenement", "https://www.legrandrex.com/evenement/")
+          for url in urls:
+              try:
+                  resp = requests.get(url, headers=HEADERS, timeout=15)
+                  soup = BeautifulSoup(resp.text, "html.parser")
+                  cards = soup.select(".row-event")
+                  tagged = [e for e in cards if "concerts" in e.get("class", [])]
+                  parsed = parse_events(soup)
+                  print("URL", url, "status", resp.status_code, "final", resp.url,
+                        "server",resp.headers.get("Server",""),
+                        "cards",len(cards), "tagged_concerts", len(tagged), "parsed",len(parsed),
+                        "titles",[e.headliner for e in parsed[:6]],flush=True)
+              except Exception as error:
+                  print("URL",url,"error",type(error).__name__,str(error)[:140],flush=True)
+          PY
