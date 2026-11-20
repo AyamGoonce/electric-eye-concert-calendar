@@ -42,3 +42,20 @@ jobs:
                   title = re.search(r"<title[^>]*>(.*?)</title>", body, re.I|re.S)
                   print(name, identity, "status", response.status, "url", response.geturl(), "server", headers.get("Server", ""), "cf-ray-present", bool(headers.get("Cf-Ray")), "content-type", headers.get("Content-Type", ""), "title", (title.group(1).strip()[:120] if title else ""), "body_sha256_4k", hashlib.sha256(body.encode()).hexdigest()[:16], "challenge", any(x in body.casefold() for x in ("cloudflare", "access denied", "captcha", "bot verification", "forbidden")), flush=True)
           PY
+
+      - name: Compare exact production requests client
+        shell: bash
+        run: |
+          python3 -m venv /tmp/alias-probe
+          /tmp/alias-probe/bin/pip -q install requests
+          /tmp/alias-probe/bin/python - <<'PY'
+          import requests, re
+          ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Safari/537.36"
+          for name, headers in (("production", {"User-Agent": ua}), ("default", {})):
+              with requests.Session() as session:
+                  try:
+                      response = session.get("https://alias-production.fr/billetterie/", headers=headers, timeout=12)
+                      print(name, "status", response.status_code, "server", response.headers.get("Server"), "cf-ray", bool(response.headers.get("Cf-Ray")), "url", response.url, "html_title", (re.search(r"<title[^>]*>(.*?)</title>", response.text, re.I|re.S).group(1) if re.search(r"<title[^>]*>(.*?)</title>", response.text, re.I|re.S) else "")[:90], flush=True)
+                  except Exception as exc:
+                      print(name, type(exc).__name__, str(exc)[:120], flush=True)
+          PY
