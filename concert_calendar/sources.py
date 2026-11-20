@@ -425,8 +425,20 @@ def load_events_with_report(
                     f"Attempt {attempt}/{scraper_attempts} failed for "
                     f"{scraper.SOURCE_NAME}: {error}"
                 )
-                if attempt < scraper_attempts and retry_delay_seconds:
-                    time.sleep(retry_delay_seconds * attempt)
+                if attempt < scraper_attempts:
+                    delay = retry_delay_seconds * attempt
+                    policy = getattr(scraper, "retry_delay_for_error", None)
+                    if callable(policy):
+                        delay = policy(error, attempt, retry_delay_seconds)
+                    # Keep any source-specific backoff bounded; no last-attempt sleep.
+                    delay = max(0.0, min(float(delay), 30.0))
+                    if delay:
+                        print(
+                            f"SOURCE BACKOFF | {scraper.SOURCE_NAME} | "
+                            f"attempt={attempt} | seconds={delay:.1f}",
+                            flush=True,
+                        )
+                        time.sleep(delay)
 
         if not scraper_events and last_error is not None:
             source_failures[scraper.SOURCE_NAME] = (
