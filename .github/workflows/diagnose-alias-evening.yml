@@ -1,0 +1,31 @@
+name: Alias recurrence probe (read-only)
+on:
+  pull_request:
+    branches: [supersonic-scraper]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Probe Alias from an independent GitHub runner
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error
+          from datetime import datetime, timezone
+          headers={"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Safari/537.36"}
+          for url in ("https://alias-production.fr/", "https://alias-production.fr/billetterie/"):
+              request=urllib.request.Request(url,headers=headers)
+              try:
+                  with urllib.request.urlopen(request,timeout=15) as response:
+                      print("ALIAS PROBE",datetime.now(timezone.utc).isoformat(),url,response.status,
+                            "server",response.headers.get("Server"),"cf-ray",response.headers.get("CF-Ray"),flush=True)
+              except urllib.error.HTTPError as error:
+                  print("ALIAS PROBE",datetime.now(timezone.utc).isoformat(),url,error.code,
+                        "server",error.headers.get("Server"),"cf-ray",error.headers.get("CF-Ray"),
+                        "retry-after",error.headers.get("Retry-After"),flush=True)
+              except Exception as error:
+                  print("ALIAS PROBE",datetime.now(timezone.utc).isoformat(),url,type(error).__name__,str(error)[:160],flush=True)
+          PY
