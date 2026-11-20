@@ -1,4 +1,6 @@
 import re
+import hashlib
+from urllib.parse import urlsplit
 from datetime import date
 
 import requests
@@ -12,6 +14,43 @@ SOURCE_NAME = "Alias Production"
 EVENTS_URL = "https://alias-production.fr/billetterie/"
 AJAX_URL = "https://alias-production.fr/wp-admin/admin-ajax.php"
 REQUEST_TIMEOUT = 30
+# Cloudflare may reject an individual GitHub runner while accepting the next.
+# Backoff is bounded, leaving source retention in charge of failed runs.
+HTTP_403_BACKOFF_SECONDS = (8.0, 16.0)
+_ACCESS_DIAGNOSTICS = []
+
+
+def retry_delay_for_error(error, attempt, default_delay):
+    response = getattr(error, "response", None)
+    if getattr(response, "status_code", None) == 403:
+        if 1 <= attempt <= len(HTTP_403_BACKOFF_SECONDS):
+            return HTTP_403_BACKOFF_SECONDS[attempt - 1]
+    return default_delay * attempt
+
+
+def get_diagnostics():
+    return list(_ACCESS_DIAGNOSTICS)
+
+
+def _fetch(session, url, **kwargs):
+    response = session.get(url, **kwargs)
+    if getattr(response, "status_code", None) == 403:
+        headers = response.headers
+        # Never log response bodies, cookies, tokens or arbitrary headers.
+        body = (response.content or b"")[:4096]
+        _ACCESS_DIAGNOSTICS.append({
+            "kind": "http_access_denied",
+            "status_code": 403,
+            "path": urlsplit(url).path,
+            "server": str(headers.get("Server", ""))[:80],
+            "cf_ray": str(headers.get("CF-Ray", ""))[:100],
+            "retry_after": str(headers.get("Retry-After", ""))[:50],
+            "body_sha256_prefix": hashlib.sha256(body).hexdigest()[:16],
+            "body_sample_bytes": len(body),
+        })
+    response.raise_for_status()
+    return response
+
 
 HEADERS = {
     "User-Agent": (
@@ -187,13 +226,12 @@ def add_months(year, month, amount):
 def get_initial_cards(session):
     print(f"Downloading {EVENTS_URL}...")
 
-    response = session.get(
+    response = _fetch(
+        session,
         EVENTS_URL,
         headers=HEADERS,
         timeout=REQUEST_TIMEOUT,
     )
-    response.raise_for_status()
-
     soup = BeautifulSoup(
         response.text,
         "html.parser",
@@ -234,7 +272,8 @@ def fetch_more_cards(
         f"{end_year:04d}-{end_month:02d}..."
     )
 
-    response = session.get(
+    response = _fetch(
+        session,
         AJAX_URL,
         params={
             "action": "more_concert_ajax",
@@ -256,8 +295,6 @@ def fetch_more_cards(
         },
         timeout=REQUEST_TIMEOUT,
     )
-    response.raise_for_status()
-
     soup = BeautifulSoup(
         response.text,
         "html.parser",
@@ -276,6 +313,7 @@ def event_key(event):
 
 
 def load_events():
+    _ACCESS_DIAGNOSTICS.clear()
     session = requests.Session()
     cards, advertised_count = get_initial_cards(
         session
