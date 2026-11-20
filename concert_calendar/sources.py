@@ -580,6 +580,24 @@ def load_events_with_report(
         normalize_event_promoters(event)
         normalized_events.append(event)
 
+    # An Alias outage does not erase independent venue listings. Record exact
+    # first-party overlap before replaying failed-source snapshots, without
+    # changing event ownership or promoter provenance.
+    from concert_calendar.alias_coverage import alias_official_overlap
+    coverage_diagnostics = alias_official_overlap(
+        prior_source_state, source_health, normalized_events, now=now,
+    )
+    source_diagnostics.extend(coverage_diagnostics)
+    for item in coverage_diagnostics:
+        if item["kind"] == "official_venue_coverage_summary":
+            print(
+                "ALIAS OFFICIAL COVERAGE | "
+                f"prior={item['prior_future_events']} "
+                f"venue_verified={item['independently_covered']} "
+                f"unverified={item['not_independently_verified']}",
+                flush=True,
+            )
+
     retained_events, retained_snapshots, retention_details = hydrate_failed_sources(
         prior_source_state, source_health, normalized_events, now=now,
     )
