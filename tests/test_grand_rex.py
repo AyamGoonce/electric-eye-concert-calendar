@@ -37,3 +37,34 @@ class GrandRexTests(TestCase):
 
     def test_explicit_full_concert_title_in_card_copy_is_preserved(self):
         self.assertEqual("La Légende de Korra en Concert", self.events[3].headliner)
+
+    def test_empty_canonical_listing_tries_legacy_path(self):
+        from unittest.mock import Mock, patch
+        from concert_calendar.scrapers.grand_rex import load_events
+
+        canonical = Mock(text="<html></html>")
+        legacy = Mock(text=FIXTURE.read_text())
+        session = Mock()
+        session.get.side_effect = [canonical, legacy]
+
+        with patch("concert_calendar.scrapers.grand_rex.requests.Session", return_value=session):
+            events = load_events()
+
+        self.assertGreater(len(events), 0)
+        self.assertEqual(
+            [call.args[0] for call in session.get.call_args_list],
+            ["https://www.legrandrex.com/evenement", "https://www.legrandrex.com/evenement/"],
+        )
+
+    def test_canonical_listing_with_concerts_skips_legacy_path(self):
+        from unittest.mock import Mock, patch
+        from concert_calendar.scrapers.grand_rex import load_events
+
+        session = Mock()
+        session.get.return_value = Mock(text=FIXTURE.read_text())
+
+        with patch("concert_calendar.scrapers.grand_rex.requests.Session", return_value=session):
+            events = load_events()
+
+        self.assertGreater(len(events), 0)
+        self.assertEqual(session.get.call_count, 1)
