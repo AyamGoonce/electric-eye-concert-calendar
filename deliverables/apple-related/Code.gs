@@ -2999,7 +2999,7 @@ function eeArtistCatalogueSheet_() {
 
 function eeUpsertRow_(sheet,key,value,rowValues) {
   var values=sheet.getDataRange().getValues(),target=values.length+1;
-  for(var row=1;row<values.length;row+=1)if(String(values[row][key])===String(value)){target=row+1;break;}
+  for(var row=0;row<values.length;row+=1)if(String(values[row][key])===String(value)){target=row+1;break;}
   sheet.getRange(target,1,1,rowValues.length).setValues([rowValues]);return target;
 }
 
@@ -6433,36 +6433,77 @@ function eeRefreshStaleArtistsMaintenanceWorker_() {
   properties.setProperty("EE_APPLE_STALE_REFRESH_INDEX","1");return {status:"COMPLETE",cursor:1};}finally{eeClearExecutionDeadline_();eeReleaseWorkerLease_("STALE_REFRESH");}
 }
 
+function eeAssemblyIdentityRows_(values) {
+  // A user can sort the entire sheet, moving its header into the data area.
+  // Identify records by Blogger post ID, not physical row position.
+  var byId={},headers=0,malformed=0,duplicates=0;
+  for(var i=0;i<values.length;i+=1) {
+    var record=values[i],postId=String(record[0]||"").trim();
+    if(postId==="postId" && String(record[4]||"")==="primaryArtistKeys"){headers+=1;continue;}
+    if(!postId)continue;
+    if(!/^\d+$/.test(postId)){malformed+=1;console.log(JSON.stringify({kind:"APPLE_IDENTITY_INVALID_ID",sheetRow:i+1}));continue;}
+    try {
+      var keys=JSON.parse(String(record[4]||"[]")),names=JSON.parse(String(record[5]||"[]"));
+      if(!Array.isArray(keys)||!Array.isArray(names)||
+          !keys.every(function(k){return typeof k==="string";})||
+          !names.every(function(n){return typeof n==="string";}))throw new Error("Invalid artist arrays");
+    }catch(error){
+      malformed+=1;
+      console.log(JSON.stringify({kind:"APPLE_IDENTITY_INVALID_JSON",postId:postId,sheetRow:i+1}));
+      continue;
+    }
+    var previous=byId[postId];
+    if(previous)duplicates+=1;
+    if(!previous||String(record[2]||"")>=String(previous.values[2]||""))
+      byId[postId]={postId:postId,values:record};
+  }
+  var rows=Object.keys(byId).sort().map(function(id){return byId[id];});
+  if(headers||malformed||duplicates)
+    console.log(JSON.stringify({kind:"APPLE_IDENTITY_SHEET_AUDIT",headerRows:headers,malformedRows:malformed,duplicatePostIds:duplicates,validPosts:rows.length}));
+  return rows;
+}
+
+function eeAssemblyResumeIndex_(rows,lastPostId) {
+  if(!lastPostId)return 0;
+  for(var i=0;i<rows.length;i+=1)if(rows[i].postId>lastPostId)return i;
+  return rows.length;
+}
+
+function eeAdvanceAssemblyCursor_(properties,postId,nextCursor) {
+  properties.setProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID",postId);
+  properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));
+}
+
 var EE_APPLE_ASSEMBLY_ROW_LIMIT=25;
 var EE_APPLE_ASSEMBLY_TIME_LIMIT_MS=150000;
 function eeAssembleArticlePayloadsMaintenanceWorker_() {
   if(!eeAcquireWorkerLease_("ASSEMBLY",240000))return {status:"BUSY"};
   var started=Date.now();
   try{
-    var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),cursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1));
+    var properties=PropertiesService.getScriptProperties(),sheet=eeArticleIdentitySheet_(),values=sheet.getDataRange().getValues(),identityRows=eeAssemblyIdentityRows_(values),cursor=eeAssemblyResumeIndex_(identityRows,String(properties.getProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID")||""));
     var totals={status:"OK",processed:0,readyWritten:0,readyPreserved:0,skippedNoSubject:0,skippedUnresolved:0,skippedNoProducts:0,skippedMissingPost:0,nextCursor:cursor,elapsedMs:0};
-    for(var row=cursor;row<values.length&&totals.processed<EE_APPLE_ASSEMBLY_ROW_LIMIT&&Date.now()-started<EE_APPLE_ASSEMBLY_TIME_LIMIT_MS;row+=1){
-      var nextCursor=row+1;totals.processed+=1;
-      var keys=JSON.parse(String(values[row][4]||"[]"));if(!keys.length){totals.skippedNoSubject+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
-      var records=keys.map(eeGetArtistCatalogue_).filter(Boolean),resolved=records.filter(function(record){return record.status==="RESOLVED"||record.status==="RELATED";});if(!resolved.length){totals.skippedUnresolved+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
-      var catalogues=resolved.filter(function(record){return eePayloadHasRecommendations_(record.catalogue);});if(!catalogues.length){totals.skippedNoProducts+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
-      var postId=String(values[row][0]),post=null;
+    for(var row=cursor;row<identityRows.length&&totals.processed<EE_APPLE_ASSEMBLY_ROW_LIMIT&&Date.now()-started<EE_APPLE_ASSEMBLY_TIME_LIMIT_MS;row+=1){
+      var nextCursor=row+1,identityRow=identityRows[row].values,postId=identityRows[row].postId;totals.processed+=1;
+      var keys=JSON.parse(String(identityRow[4]||"[]"));if(!keys.length){totals.skippedNoSubject+=1;eeAdvanceAssemblyCursor_(properties,postId,nextCursor);totals.nextCursor=nextCursor;continue;}
+      var records=keys.map(eeGetArtistCatalogue_).filter(Boolean),resolved=records.filter(function(record){return record.status==="RESOLVED"||record.status==="RELATED";});if(!resolved.length){totals.skippedUnresolved+=1;eeAdvanceAssemblyCursor_(properties,postId,nextCursor);totals.nextCursor=nextCursor;continue;}
+      var catalogues=resolved.filter(function(record){return eePayloadHasRecommendations_(record.catalogue);});if(!catalogues.length){totals.skippedNoProducts+=1;eeAdvanceAssemblyCursor_(properties,postId,nextCursor);totals.nextCursor=nextCursor;continue;}
+      var postId=String(identityRow[0]),post=null;
       try{
         post=eeFetchPostById_(postId);
       }catch(error){
         if(String(error&&error.message||error)==="Blogger post not found: "+postId){
           totals.skippedMissingPost+=1;
-          properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));
+          eeAdvanceAssemblyCursor_(properties,postId,nextCursor);
           totals.nextCursor=nextCursor;
           continue;
         }
         throw error;
       }
-      var analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(values[row][5]||"[]")),people:[],identityConfidence:String(values[row][6]),articleType:String(values[row][9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(!eePayloadHasRecommendations_(payload)){totals.skippedNoProducts+=1;properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;continue;}
-      var existing=eeGetPayload_(String(values[row][0])),preserved=eePayloadHasRecommendations_(existing)&&!eePayloadAtLeastAsUseful_(payload,existing);eePutPayload_(post,payload,"READY","",0);if(preserved)totals.readyPreserved+=1;else totals.readyWritten+=1;
-      properties.setProperty("EE_APPLE_ASSEMBLY_INDEX",String(nextCursor));totals.nextCursor=nextCursor;
+      var analysis={primaryArtistKeys:keys,primaryArtists:JSON.parse(String(identityRow[5]||"[]")),people:[],identityConfidence:String(identityRow[6]),articleType:String(identityRow[9])},payload=eeAssemblePayloadFromCatalogues_(post,analysis,catalogues);if(!eePayloadHasRecommendations_(payload)){totals.skippedNoProducts+=1;eeAdvanceAssemblyCursor_(properties,postId,nextCursor);totals.nextCursor=nextCursor;continue;}
+      var existing=eeGetPayload_(String(identityRow[0])),preserved=eePayloadHasRecommendations_(existing)&&!eePayloadAtLeastAsUseful_(payload,existing);eePutPayload_(post,payload,"READY","",0);if(preserved)totals.readyPreserved+=1;else totals.readyWritten+=1;
+      eeAdvanceAssemblyCursor_(properties,postId,nextCursor);totals.nextCursor=nextCursor;
     }
-    if(Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1)>=values.length)properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");
+    if(eeAssemblyResumeIndex_(identityRows,String(properties.getProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID")||""))>=records.length){properties.deleteProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID");properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");}
     totals.nextCursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1));
     totals.elapsedMs=Date.now()-started;console.log(JSON.stringify(totals));return totals;
   }finally{eeReleaseWorkerLease_("ASSEMBLY");}
