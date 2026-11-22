@@ -6068,6 +6068,12 @@ def build_code() -> str:
         "public slice cache invalidation",
     )
     code = replace_function(code, "doGet", "eeDiagnoseAppleArtistResolution", PUBLIC_DO_GET)
+    code = replace_once(
+        code,
+        'for(var row=1;row<values.length;row+=1)if(String(values[row][key])===String(value))',
+        'for(var row=0;row<values.length;row+=1)if(String(values[row][key])===String(value))',
+        "sorted sheet first-row upsert",
+    )
     debug_start = code.index("function eeRetryBackfillFrom9()")
     code = code[:debug_start].rstrip() + WORKER + "\n"
     marker="function eeReadyAuditReplacementPreview_(finding,existing,registry)"
