@@ -2999,7 +2999,7 @@ function eeArtistCatalogueSheet_() {
 
 function eeUpsertRow_(sheet,key,value,rowValues) {
   var values=sheet.getDataRange().getValues(),target=values.length+1;
-  for(var row=1;row<values.length;row+=1)if(String(values[row][key])===String(value)){target=row+1;break;}
+  for(var row=0;row<values.length;row+=1)if(String(values[row][key])===String(value)){target=row+1;break;}
   sheet.getRange(target,1,1,rowValues.length).setValues([rowValues]);return target;
 }
 
