@@ -24,10 +24,11 @@ class AppleSortedIdentityTests(unittest.TestCase):
             "/* Old scheduled entry points", 1
         )[0]
         self.assertIn("EE_APPLE_ASSEMBLY_AFTER_POST_ID", source)
-        self.assertIn("records=eeAssemblyIdentityRows_(values)", worker)
-        self.assertIn("identityRow=records[row].values", worker)
+        self.assertIn("identityRows=eeAssemblyIdentityRows_(values)", worker)
+        self.assertIn("identityRow=identityRows[row].values", worker)
         self.assertNotIn("JSON.parse(String(values[row][4]", worker)
         self.assertIn("eeAdvanceAssemblyCursor_", worker)
+        self.assertIn("for(var row=cursor;row<identityRows.length", worker)
         self.assertIn("for(var row=0;row<values.length;row+=1)if(String(values[row][key])", source)
 
     @unittest.skipUnless(shutil.which("node"), "Runtime JS checks run in CI; Node not installed locally")
