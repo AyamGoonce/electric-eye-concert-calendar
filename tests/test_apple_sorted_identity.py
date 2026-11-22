@@ -19,7 +19,7 @@ class AppleSortedIdentityTests(unittest.TestCase):
         # The full builder needs an externally generated artist-index.json,
         # which CI deliberately does not create. Compare its worker template
         # directly with the committed deliverable without invoking the export.
-        template = module.WORKER
+        template = module.ARTIST_REGISTRY
         template = template.split("function eeAssemblyIdentityRows_(", 1)[1]
         template = "function eeAssemblyIdentityRows_(" + template.split(
             "function eeSeedArtistCataloguesFromGeneration2()", 1
