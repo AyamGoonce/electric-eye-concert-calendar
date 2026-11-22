@@ -46,6 +46,8 @@ class AppleSortedIdentityTests(unittest.TestCase):
         self.assertNotIn("JSON.parse(String(values[row][4]", worker)
         self.assertIn("eeAdvanceAssemblyCursor_", worker)
         self.assertIn("for(var row=cursor;row<identityRows.length", worker)
+        self.assertIn(">=identityRows.length", worker)
+        self.assertNotIn(">=records.length", worker)
         self.assertIn("for(var row=0;row<values.length;row+=1)if(String(values[row][key])", source)
 
     @unittest.skipUnless(shutil.which("node"), "Runtime JS checks run in CI; Node not installed locally")

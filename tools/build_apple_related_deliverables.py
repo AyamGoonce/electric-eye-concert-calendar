@@ -5015,7 +5015,7 @@ function eeAssembleArticlePayloadsWorker() {
       var existing=eeGetPayload_(String(identityRow[0])),preserved=eePayloadHasRecommendations_(existing)&&!eePayloadAtLeastAsUseful_(payload,existing);eePutPayload_(post,payload,"READY","",0);if(preserved)totals.readyPreserved+=1;else totals.readyWritten+=1;
       eeAdvanceAssemblyCursor_(properties,postId,nextCursor);totals.nextCursor=nextCursor;
     }
-    if(eeAssemblyResumeIndex_(identityRows,String(properties.getProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID")||""))>=records.length){properties.deleteProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID");properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");}
+    if(eeAssemblyResumeIndex_(identityRows,String(properties.getProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID")||""))>=identityRows.length){properties.deleteProperty("EE_APPLE_ASSEMBLY_AFTER_POST_ID");properties.setProperty("EE_APPLE_ASSEMBLY_INDEX","1");}
     totals.nextCursor=Math.max(1,Number(properties.getProperty("EE_APPLE_ASSEMBLY_INDEX")||1));
     totals.elapsedMs=Date.now()-started;console.log(JSON.stringify(totals));return totals;
   }finally{eeReleaseWorkerLease_("ASSEMBLY");}
