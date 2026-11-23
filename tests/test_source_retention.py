@@ -507,14 +507,66 @@ class SourceRetentionTests(unittest.TestCase):
         self.assertEqual(["Fresh"], rows[0].openers)
         self.assertEqual(1, report.source_health[1]["fallback_suppressed_count"])
 
-    def test_suppressed_row_is_pruned_from_failed_snapshot(self):
-        prior, _ = source_state()
-        rows, report = run([scraper("Official", [event()]),
-                            scraper("DICE", RuntimeError("403"))], prior)
-        reconcile_state(rows, None, now=NOW)
+    def test_corroborated_failed_snapshot_survives_without_public_duplicate(self):
+        prior, _ = source_state("Supersonic", rows=[
+            event("Confirmed Act", ticket_url="https://supersonic.test/old",
+                  openers=["Previous Support"]),
+        ])
+        official = event("Confirmed Act", ticket_url="https://official.test/current",
+                         openers=["Current Support"])
+        rows, report = run([
+            scraper("Official", [official]),
+            scraper("Supersonic", RuntimeError("timeout")),
+        ], prior)
+        self.assertEqual(1, len(rows))
+        self.assertEqual(["Current Support"], rows[0].openers)
+        self.assertEqual(["Official"], rows[0].source_names)
+        health = next(h for h in report.source_health if h["source_name"] == "Supersonic")
+        self.assertEqual(0, health["fallback_event_count"])
+        self.assertEqual(1, health["fallback_suppressed_count"])
+        self.assertEqual(1, len(report.retained_snapshots["Supersonic"]))
+
+        state = reconcile_state(rows, None, now=NOW)
+        validate_retained_identities(rows, state, report.retained_snapshots)
         candidate = build_source_state(rows, report.source_health, prior, now=NOW,
-                                      retained_snapshots=report.retained_snapshots)
-        self.assertEqual([], candidate["sources"]["DICE"]["events"])
+                                       retained_snapshots=report.retained_snapshots)
+        self.assertEqual(1, len(candidate["sources"]["Supersonic"]["events"]))
+        self.assertEqual(prior["sources"]["Supersonic"]["last_successful_at"],
+                         candidate["sources"]["Supersonic"]["last_successful_at"])
+
+        restored, second_report = run([
+            scraper("Official", [], allow_empty=True),
+            scraper("Supersonic", RuntimeError("timeout")),
+        ], candidate, now=NOW+timedelta(days=1))
+        self.assertEqual(1, len(restored))
+        self.assertEqual(["Supersonic"], restored[0].source_names)
+        self.assertEqual(["Previous Support"], restored[0].openers)
+        self.assertEqual(1, next(h for h in second_report.source_health
+                                 if h["source_name"] == "Supersonic")["fallback_event_count"])
+
+        expired, expired_report = run([
+            scraper("Official", [], allow_empty=True),
+            scraper("Supersonic", RuntimeError("timeout")),
+        ], candidate, now=NOW+timedelta(days=7, seconds=1))
+        self.assertEqual([], expired)
+        self.assertEqual(1, next(h for h in expired_report.source_health
+                                 if h["source_name"] == "Supersonic")["fallback_expired_count"])
+
+    def test_relocated_duplicate_is_not_saved_as_dormant_snapshot(self):
+        prior, _ = source_state("Supersonic", rows=[
+            event("South Arcade", date="2027-03-18", venue="Backstage By The Mill",
+                  ticket_url="https://supersonic.test/old"),
+        ])
+        relocated = event("South Arcade", date="2027-03-18", venue="L'Alhambra",
+                          ticket_url="https://official.test/new")
+        rows, report = run([
+            scraper("Official", [relocated]),
+            scraper("Supersonic", RuntimeError("timeout")),
+        ], prior)
+        self.assertEqual(1, len(rows))
+        candidate = build_source_state(rows, report.source_health, prior, now=NOW,
+                                       retained_snapshots=report.retained_snapshots)
+        self.assertEqual([], candidate["sources"]["Supersonic"]["events"])
 
     def test_expired_snapshot_is_pruned_but_clock_is_not_refreshed(self):
         prior, _ = source_state(now=NOW)

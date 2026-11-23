@@ -20,7 +20,7 @@ from concert_calendar.event_state import parse_timestamp, utc_iso
 from concert_calendar.geography import is_ile_de_france_event, normalize_event_geography
 from concert_calendar.models import ConcertEvent
 from concert_calendar.promoters import normalize_event_promoters
-from concert_calendar.venues import normalize_event_venue
+from concert_calendar.venues import normalize_event_venue, normalize_venue_key
 
 
 SOURCE_STATE_FILENAME = "calendar-source-state.json"
@@ -183,6 +183,16 @@ def write_source_state(path: Path, state: dict) -> str:
     return hashlib.sha256(body).hexdigest()
 
 
+def _independent_same_venue_match(fresh: ConcertEvent, retained: ConcertEvent, source: str) -> bool:
+    """Only corroborate the same performance, not a superseded venue move."""
+    return (
+        source not in (fresh.source_names or [])
+        and fresh.date[:10] == retained.date[:10]
+        and normalize_venue_key(fresh.venue) == normalize_venue_key(retained.venue)
+        and len(deduplicate_events([deepcopy(fresh), deepcopy(retained)])) == 1
+    )
+
+
 def hydrate_failed_sources(
     prior_state: dict | None,
     source_health: list[dict],
@@ -283,10 +293,16 @@ def hydrate_failed_sources(
                 # A partial source's current fallback row wins in the public
                 # calendar, while its prior primary snapshot remains the
                 # last-known-good inventory for later bounded replay.
-                if health["status"] == "partial" and any(
-                    name in (fresh.source_names or [])
+                if (
+                    health["status"] == "partial"
+                    and any(name in (fresh.source_names or []) for fresh in matching_fresh)
+                ) or any(
+                    _independent_same_venue_match(fresh, retained, name)
                     for fresh in matching_fresh
                 ):
+                    # Keep the failed source's corroborated safety net, but
+                    # never expose it alongside the current independent row.
+                    # A relocated show must not preserve its old venue.
                     retained_snapshots[name].append(deepcopy(snapshot))
                 health["fallback_suppressed_count"] += 1
                 continue
@@ -371,6 +387,21 @@ def validate_retained_identities(
                 continue  # Sidecar hints are optional; event state remains authoritative.
             event = current_by_public_id.get(public_id)
             if event is None or source not in (event.source_names or []):
+                # A duplicate suppressed by live independent coverage has no
+                # public row of its own. Validate the corroboration instead of
+                # treating this intentionally dormant snapshot as identity drift.
+                try:
+                    retained = ConcertEvent(**deepcopy(snapshot["event"]))
+                    normalize_event_venue(retained)
+                except (TypeError, ValueError, KeyError) as exc:
+                    raise SourceStateError(
+                        f"Malformed retained {source} event for {public_id}"
+                    ) from exc
+                if any(
+                    _independent_same_venue_match(fresh, retained, source)
+                    for fresh in events
+                ):
+                    continue
                 raise SourceStateError(f"Retained {source} event lost prior public ID {public_id}")
             state_record = candidate_state["events"].get(event._state_identity)
             if state_record is None or state_record.get("public_id") != public_id:
