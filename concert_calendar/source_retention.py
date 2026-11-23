@@ -390,8 +390,13 @@ def validate_retained_identities(
                 # A duplicate suppressed by live independent coverage has no
                 # public row of its own. Validate the corroboration instead of
                 # treating this intentionally dormant snapshot as identity drift.
-                retained = ConcertEvent(**deepcopy(snapshot["event"]))
-                normalize_event_venue(retained)
+                try:
+                    retained = ConcertEvent(**deepcopy(snapshot["event"]))
+                    normalize_event_venue(retained)
+                except (TypeError, ValueError, KeyError) as exc:
+                    raise SourceStateError(
+                        f"Malformed retained {source} event for {public_id}"
+                    ) from exc
                 if any(
                     _independent_same_venue_match(fresh, retained, source)
                     for fresh in events
