@@ -586,14 +586,17 @@
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
             "headliner": "Phoebe Bridgers",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Phoebe Bridgers"
+            ],
             "image_source": null,
             "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
-              "AEG Presents France"
+              "AEG Presents France",
+              "Alias Production"
             ],
             "raw_title": null,
             "series_name": null,
@@ -1094,8 +1097,8 @@
             "identity_aliases": [
               "MICO"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-08/7ac48dc8-70e8-4198-bf34-1d1cab236d24.jpg?rect=0%2C768%2C3072%2C3072",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/mico-milwaukee-9.28-40-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -2055,8 +2058,8 @@
             "identity_aliases": [
               "GIANT ROOKS"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-01/fde7b1f6-eadd-4d55-bde0-2d438aa16243.jpg?rect=0%2C560%2C4480%2C4480",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/design-sans-titre-16-e1793786895791.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -2950,8 +2953,8 @@
             "identity_aliases": [
               "PALACE"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-09-25/a47d3f29-a523-4979-8386-d490ef874150.jpg?rect=0%2C1584%2C6336%2C6336",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/credit-adrian-lee-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -2961,15 +2964,15 @@
             "raw_title": "Palace",
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/palace/",
             "venue": "La Cigale"
           },
-          "first_seen": "2026-11-23T00:19:30Z",
-          "public_id": "4fb7e3ec93e97a87",
-          "state_identity": "4fb7e3ec93e97a87ff873a967717f00999d053c677ea723e3ad06b11134c8ce7"
+          "first_seen": "2026-09-28T12:08:30Z",
+          "public_id": "63986a8cb6d428b5",
+          "state_identity": "63986a8cb6d428b539b4d7cb8fd96725287c49ca345a28845b06347b7bc0199d"
         },
         {
           "event": {
@@ -5585,18 +5588,24 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": null,
-            "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Salle Pleyel",
             "genres_public": null,
             "headliner": "Legacy",
             "identity_aliases": [
-              "Roger Waters Presents Legacy"
+              "Roger Waters Presents Legacy",
+              "LEGACY"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "Salle Pleyel",
+            "image_url": "https://www.sallepleyel.com/app/uploads/2026/10/RWL-SITE-333x483.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -5609,7 +5618,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://bit.ly/RogerWatersLegacy-AEG27",
+            "ticket_url": "https://www.sallepleyel.com/evenement/roger-waters-presents-legacy/",
             "venue": "Salle Pleyel"
           },
           "first_seen": "2026-10-06T10:04:19Z",
@@ -5693,8 +5702,8 @@
             "identity_aliases": [
               "THE INTERRUPTERS"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-11-02/3b59305b-824d-4e17-9749-75402a999001.jpg?rect=192%2C0%2C768%2C768",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/1800x1800-2.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -5946,7 +5955,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -8434,14 +8443,18 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "SIMPLE MINDS",
-            "identity_aliases": null,
+            "headliner": "Simple Minds",
+            "identity_aliases": [
+              "Simple Minds"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEib0rx3ZAhL5b6ZGu3rd9pSvTb1PzZk3xay27v4RFx2Lt75gKHro2HhpbPEB7HCsVvCaa0-Tl_cc6byLA96Pc46MnKOclgeSjX8foX5xnLVK8IoZdACM0vj6UzAlGnsRxoMJIzqPvTdyh2ihn-S70sdq2trDHbznAZq8K78afb9jFnvgoWdSWiMkqYiqyA/s72-w640-h360-c-rw/Simple%20Minds%2002190424Le%20Z%C3%A9nithParis%2019_51.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -9521,14 +9534,18 @@
             "genre_public": "R&B / Soul / Funk",
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "JAMIROQUAI",
-            "identity_aliases": null,
+            "headliner": "Jamiroquai",
+            "identity_aliases": [
+              "Jamiroquai"
+            ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/b277c563-9d46-4203-b26d-07a50b244a05.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -9566,14 +9583,18 @@
             "genre_public": "R&B / Soul / Funk",
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "JAMIROQUAI",
-            "identity_aliases": null,
+            "headliner": "Jamiroquai",
+            "identity_aliases": [
+              "Jamiroquai"
+            ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/b277c563-9d46-4203-b26d-07a50b244a05.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -10146,14 +10167,18 @@
             "genre_public": null,
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "CHARLOTTE CARDIN",
-            "identity_aliases": null,
+            "headliner": "Charlotte Cardin",
+            "identity_aliases": [
+              "Charlotte Cardin"
+            ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/5437b47c-d44d-4fb1-a3b8-96797bc100f8.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -10191,14 +10216,18 @@
             "genre_public": null,
             "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "CHARLOTTE CARDIN",
-            "identity_aliases": null,
+            "headliner": "Charlotte Cardin",
+            "identity_aliases": [
+              "Charlotte Cardin"
+            ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/5437b47c-d44d-4fb1-a3b8-96797bc100f8.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -10719,7 +10748,7 @@
           "state_identity": "d11318ed922609c1c69c26d4321ff9d9c45b907573e07d73fe0b522e555f120d"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11078,14 +11107,18 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "ARCHIVE",
-            "identity_aliases": null,
+            "headliner": "Archive",
+            "identity_aliases": [
+              "Archive"
+            ],
             "image_source": "Adidas Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/6c9c09f0-d39a-4308-9442-45d52b1f03ca.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -11158,14 +11191,18 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "Apple Music exact artist catalog",
             "genres_public": null,
-            "headliner": "SAEZ",
-            "identity_aliases": null,
+            "headliner": "Saez",
+            "identity_aliases": [
+              "Saez"
+            ],
             "image_source": "Adidas Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/2ce687fa-3e69-44c6-ba03-ef5395876c8f.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -11180,7 +11217,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -11455,16 +11492,18 @@
             "genre_public": "R&B / Soul / Funk",
             "genre_source": "Alhambra",
             "genres_public": null,
-            "headliner": "TANK AND THE BANGAS",
+            "headliner": "Tank And The Bangas",
             "identity_aliases": [
-              "TANK AND THE BANGAS"
+              "Tank And The Bangas"
             ],
             "image_source": "Alhambra",
             "image_url": "https://www.alhambra-paris.com/files/125/v_2607071846150.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "TANK AND THE BANGAS",
             "series_name": null,
             "sold_out": false,
@@ -13492,11 +13531,63 @@
           "state_identity": "3af6c22b73b6bce34eff1833561ae75fe0618e08126e0abaffc838d6be0fb455"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
       "events": [
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Nanterre",
+            "co_headliners": null,
+            "date": "2026-11-27",
+            "department": "92",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Muse",
+            "identity_aliases": [
+              "Muse"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/v/x/w/86e6cd63-8880-4f07-bede-065865a4a651.jpg",
+            "openers": [
+              "Dead Poet Society"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production",
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://tix.to/museSI/declk",
+            "venue": "Plénitude Arena"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "caf113d829fa53ab",
+          "state_identity": "caf113d829fa53ab7dbb43ea7039ad48325b474f23edb901cd55ede6ed8b590e"
+        },
         {
           "event": {
             "announced_at": null,
@@ -13584,6 +13675,294 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "9114ba317c3ca0e7",
           "state_identity": "2ff7d485d48a473390a3972449c456ecceb0b42ed3f0a31fc3b91b0e58376d7f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "R&B / SOUL",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "R&B / SOUL",
+            "genre_evidence": [
+              {
+                "raw": "R&B / SOUL",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "Tank And The Bangas",
+            "identity_aliases": [
+              "Tank And The Bangas"
+            ],
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2607071846150.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "TANK AND THE BANGAS",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/tank-and-the-bangas-lo4622.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "4657c02408284d55",
+          "state_identity": "4657c02408284d555642c55fcd130f7dfb0a8662448a622278973e1958617d3d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop, RnB",
+            "genre_evidence": [
+              {
+                "raw": "Pop, RnB",
+                "source": "L’Olympia Bruno Coquatrix"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genres_public": [
+              "Pop",
+              "R&B / Soul / Funk"
+            ],
+            "headliner": "Tori Kelly",
+            "identity_aliases": [
+              "Tori Kelly"
+            ],
+            "image_source": "L’Olympia Bruno Coquatrix",
+            "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/05/tori-kelly-concert-olympia-parisnom-artiste-concert-olympia-paris-352x440.png.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.olympiahall.com/agenda/tori-kelly/",
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "462f38a2850e5b22",
+          "state_identity": "462f38a2850e5b225f4e7c0c62fed0c72491a317d9e9854b78fef9cf0cd37aea"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-03",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Indie Folk",
+            "genre_evidence": [
+              {
+                "raw": "Indie Folk",
+                "source": "Point Éphémère"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Point Éphémère",
+            "genres_public": null,
+            "headliner": "Dove Ellis",
+            "identity_aliases": [
+              "DOVE ELLIS"
+            ],
+            "image_source": "Point Éphémère",
+            "image_url": "https://images.prismic.io/pointf/HOpZa35JRNaK93IH_WEB_DoveEllislead.jpg?auto=format,compress",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "DOVE ELLIS",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://link.dice.fm/H4f210faf7ca",
+            "venue": "Point Éphémère"
+          },
+          "first_seen": "2026-09-29T09:55:45Z",
+          "public_id": "894c2dea5e27b6e3",
+          "state_identity": "894c2dea5e27b6e333e4ac678ed6751e49ac07e7c3abf22a5af865385fa46e0b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-03",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "post-rock",
+            "genre_evidence": [
+              {
+                "raw": "post-rock",
+                "source": "Le Trabendo"
+              }
+            ],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Gurriers",
+            "identity_aliases": [
+              "Gurriers"
+            ],
+            "image_source": "Le Trabendo",
+            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/05/Image-site-Trabendo-2-1500x844.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "GURRIERS",
+            "series_name": null,
+            "sold_out": true,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "sold_out",
+            "ticket_url": "https://www.letrabendo.net/programmation/gurriers/",
+            "venue": "Le Trabendo"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "f17cb0d7453a1db5",
+          "state_identity": "f17cb0d7453a1db57ddca487f5c1d731d7c641dd81e4e256a695a8ff63d3ca7c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-04",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Phoebe Bridgers",
+            "identity_aliases": [
+              "Phoebe Bridgers"
+            ],
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France",
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://bit.ly/PhoebeBridgers-AEG26",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "bb4f1f502a62e7f1",
+          "state_identity": "bb4f1f502a62e7f158e8f0cbdf868ef294ba63431864c860538424e3dca995ff"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Reviewed stable artist classification, 2026-08-23",
+            "genres_public": null,
+            "headliner": "Blondshell",
+            "identity_aliases": [
+              "Blondshell"
+            ],
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/sitz1xa7o46wmmvgypkahecb1j4v?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "Blondshell",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://tix.to/SSTFR26SI/csrjt",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "85173d8de613ccd6",
+          "state_identity": "85173d8de613ccd6f35072aa78742ec38725eeb93ac79fef07ea28a40fb3e8c7"
         },
         {
           "event": {
@@ -13718,6 +14097,319 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-01-29",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "MorMor",
+            "identity_aliases": [
+              "Mormor"
+            ],
+            "image_source": "Point Éphémère",
+            "image_url": "https://images.prismic.io/pointf/5jqMswFdbcpRHmsw_MorMor_tour_solo_Square.jpg?auto=format,compress",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "MorMor",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://link.dice.fm/Md95cc6cd32b",
+            "venue": "Point Éphémère"
+          },
+          "first_seen": "2026-10-27T15:31:09Z",
+          "public_id": "66d2507961ee2215",
+          "state_identity": "66d2507961ee22158522a2a0cf58591d383f452f04b71ec68df2ad6e0f9b291d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Oscar Lindsey",
+            "identity_aliases": [
+              "Oscar Lindsey"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-10-14/13a570b1-2e0f-4fda-a2e3-2655aa6bbc4c.jpg?rect=743%2C0%2C2433%2C2433",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "Oscar Lindsey",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://link.dice.fm/z71b7e58a99d",
+            "venue": "Supersonic"
+          },
+          "first_seen": "2026-10-19T18:29:04Z",
+          "public_id": "e4fb6379e91da924",
+          "state_identity": "e4fb6379e91da9240969fa48a003a7b91bd53d9b2916a9abf54f5534bd103cf4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": "https://fb.me/e/7x82HroaN",
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Ziyad Al-Samman",
+            "identity_aliases": [
+              "Ziyad Al-Samman"
+            ],
+            "image_source": "Le Pop-Up du Label",
+            "image_url": "https://www.popup.paris/wp-content/uploads/2026/10/Press-Photo-2-©-Ziyad-Al-Samman.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "Ziyad Al-Samman",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://tix.to/ziyad-al-sammanSL/unnod",
+            "venue": "Le Pop-Up du Label"
+          },
+          "first_seen": "2026-10-07T12:12:30Z",
+          "public_id": "868b9c2d93a463e4",
+          "state_identity": "868b9c2d93a463e43cc1ffc8f0759eb9b900e732d24ef317585be4164023ab38"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "R'n'b/Soul",
+            "genre_evidence": [
+              {
+                "raw": "R'n'b/Soul",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Salle Pleyel",
+            "genres_public": null,
+            "headliner": "Emeli Sandé",
+            "identity_aliases": [
+              "EMELI SANDE"
+            ],
+            "image_source": "Salle Pleyel",
+            "image_url": "https://www.sallepleyel.com/app/uploads/2026/09/EMELI-SANDE-SITE-717x1024-OK-333x483.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.sallepleyel.com/evenement/emeli-sande/",
+            "venue": "Salle Pleyel"
+          },
+          "first_seen": "2026-09-04T11:34:41Z",
+          "public_id": "eac3c4de23d7f0f7",
+          "state_identity": "eac3c4de23d7f0f7ae7b3f26603224912b865dbd40e3e4b24cf9b75554a466e4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Man/Woman/Chainsaw",
+            "identity_aliases": [
+              "Man/Woman/Chainsaw"
+            ],
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/11/4x5-1-800x800.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "Man/Woman/Chainsaw",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://petitbain.org/evenement/man-woman-chainsaw/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-11-18T11:20:57Z",
+          "public_id": "173652643e72ec1c",
+          "state_identity": "173652643e72ec1cfa1c7cbcac3cdeef59896b64cf42c98c02e5c14af23df177"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Passenger",
+            "identity_aliases": [
+              "PASSENGER"
+            ],
+            "image_source": "Casino de Paris",
+            "image_url": "https://www.casinodeparis.fr/sites/hubber_site_casinodeparis8/files/styles/vignette_card_image/public/2026-08/1280x720.jpg?itok=dF0VJwFN",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "PASSENGER",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.casinodeparis.fr/fr/Passenger-En-Concert-17-Mars-2027-Billetterie-Paris",
+            "venue": "Casino de Paris"
+          },
+          "first_seen": "2026-08-24T13:21:23Z",
+          "public_id": "09d3e485637fa619",
+          "state_identity": "09d3e485637fa619c0094c9df69da38cb079599326883a37a5198821f212cad6"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Wikidata genre statements (P136)",
+            "genres_public": null,
+            "headliner": "Waxx",
+            "identity_aliases": [
+              "Waxx"
+            ],
+            "image_source": "Le Zénith Paris – La Villette",
+            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a3beac978c4a096611769.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://le-zenith.com/shows/Waxx-22354",
+            "venue": "Le Zénith Paris – La Villette"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "97916c6550fb6b63",
+          "state_identity": "97916c6550fb6b637e9055dd0f089f342753a95a7007deb8584cf71c545da683"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-03-18",
             "department": "75",
             "event_title": null,
@@ -13794,6 +14486,192 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "d867a1a5081f85ec",
           "state_identity": "d867a1a5081f85ec908034f2ea1ec1f1efe463799eedea86ed97e1d74c7a8ea6"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Apple Music + Bandcamp",
+            "genres_public": null,
+            "headliner": "This Is Lorelei",
+            "identity_aliases": [
+              "This is Lorelei"
+            ],
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/m4q1p9151fzqntgu42345nm6r81i?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "THIS IS LORELEI",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.gaite-lyrique.net/agenda/2027/this-is-lorelei/",
+            "venue": "La Gaîté Lyrique"
+          },
+          "first_seen": "2026-09-25T14:27:21Z",
+          "public_id": "679088c27d3870d2",
+          "state_identity": "679088c27d3870d2694b38f9a19eceb0632bf6f170fb2d805e6fc57d7bbfe9c1"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-24",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "ANGELIQUE KIDJO AND YOUSSOU NDOUR",
+            "identity_aliases": [
+              "Youssou Ndour"
+            ],
+            "image_source": "Le Grand Rex",
+            "image_url": "https://www.legrandrex.com/images/evenements/1080x1350_1.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.legrandrex.com/evenement/1822",
+            "venue": "Le Grand Rex"
+          },
+          "first_seen": "2026-09-03T11:32:28Z",
+          "public_id": "2c7143fee9dad06d",
+          "state_identity": "2c7143fee9dad06d73376243ebf653d9af8b1c4375fc5e753532b179c3aa4396"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Folk",
+            "genre_evidence": [
+              {
+                "raw": "Folk",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "Salle Pleyel",
+            "genres_public": null,
+            "headliner": "Loreena McKennitt",
+            "identity_aliases": [
+              "LOREENA MCKENNITT"
+            ],
+            "image_source": "Salle Pleyel",
+            "image_url": "https://www.sallepleyel.com/app/uploads/2026/05/LOREENA-SITE-OK-027-333x483.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.sallepleyel.com/evenement/loreena-mckennitt-2/",
+            "venue": "Salle Pleyel"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "bae2349cac56848e",
+          "state_identity": "bae2349cac56848ed80deb97ee650b1a567de6368be113c646b4b6542e13453b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "Néo Classique",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-03",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Néo Classique",
+            "genre_evidence": [
+              {
+                "raw": "Néo Classique",
+                "source": "Café de la Danse"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Café de la Danse",
+            "genres_public": null,
+            "headliner": "Jean-Michel Blais",
+            "identity_aliases": [
+              "JEAN-MICHEL BLAIS"
+            ],
+            "image_source": "Café de la Danse",
+            "image_url": "https://www.cafedeladanse.com/app/uploads/2026/09/1x1-1-952x579.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://tix.to/jeanmichelblaisAR/gujei",
+            "venue": "Café de la Danse"
+          },
+          "first_seen": "2026-09-25T10:38:40Z",
+          "public_id": "11e58fdc0de10f65",
+          "state_identity": "11e58fdc0de10f65ea193fb198a25910e0301d49d170fdd7292cc1bdf0204d41"
         },
         {
           "event": {
@@ -13886,6 +14764,104 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-04-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "ROCK",
+            "genre_evidence": [
+              {
+                "raw": "ROCK",
+                "source": "Accor Arena"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Simple Minds",
+            "identity_aliases": [
+              "Simple Minds"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEib0rx3ZAhL5b6ZGu3rd9pSvTb1PzZk3xay27v4RFx2Lt75gKHro2HhpbPEB7HCsVvCaa0-Tl_cc6byLA96Pc46MnKOclgeSjX8foX5xnLVK8IoZdACM0vj6UzAlGnsRxoMJIzqPvTdyh2ihn-S70sdq2trDHbznAZq8K78afb9jFnvgoWdSWiMkqYiqyA/s72-w640-h360-c-rw/Simple%20Minds%2002190424Le%20Z%C3%A9nithParis%2019_51.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:45",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/simple-minds-billet/idmanif/671513/idseance/4405778/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-09-03T08:19:39Z",
+          "public_id": "81165e1ce719465a",
+          "state_identity": "81165e1ce719465a04e24024edca226608f2f3d58f073afbd32c354318771eec"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-13",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Variété internationale",
+            "genre_evidence": [
+              {
+                "raw": "Variété internationale",
+                "source": "La Cigale"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "La Cigale",
+            "genres_public": null,
+            "headliner": "Jake Bugg",
+            "identity_aliases": [
+              "Jake Bugg"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/venue-website-e1789057810396.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": "JAKE BUGG",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://lacigale.fr/evenements/jake-bugg/",
+            "venue": "La Cigale"
+          },
+          "first_seen": "2026-09-02T11:30:30Z",
+          "public_id": "5e0b48bd5f016aa1",
+          "state_identity": "5e0b48bd5f016aa121ed1f53ba70a71a6933c26eb847cd89bfe4a4d192cd3290"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-04-18",
             "department": "75",
             "event_title": null,
@@ -13970,6 +14946,94 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-04-30",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Whitney",
+            "identity_aliases": [
+              "Whitney"
+            ],
+            "image_source": "La Gaîté Lyrique",
+            "image_url": "https://osuny-1b4da.kxcdn.com/bu3k53j37zvx36ah8n3pki6qxbql?width=1280&height=720&fit=inside&quality=80",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.gaite-lyrique.net/agenda/2027/whitney/",
+            "venue": "La Gaîté Lyrique"
+          },
+          "first_seen": "2026-11-02T11:23:30Z",
+          "public_id": "d2d1995d58afc19e",
+          "state_identity": "d2d1995d58afc19eeb874bca94b5cf4af2fb2f83ececb5d596882291c12fe6c7"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-05-03",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": "https://fb.me/e/87eqztt1o",
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Xana",
+            "identity_aliases": [
+              "Xana"
+            ],
+            "image_source": "Le Pop-Up du Label",
+            "image_url": "https://www.popup.paris/wp-content/uploads/2026/11/Xana-Brooklyn-Clean-1-1200x798.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://tix.to/XANA_FRFB/kzsul",
+            "venue": "Le Pop-Up du Label"
+          },
+          "first_seen": "2026-11-16T16:24:42Z",
+          "public_id": "359548f8d29807ab",
+          "state_identity": "359548f8d29807ab37b27ff9708f6eaeb94167a8fac630f71a20bf883463822c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-05-13",
             "department": "75",
             "event_title": null,
@@ -14004,6 +15068,245 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "61f2f7b9892046c6",
           "state_identity": "61f2f7b9892046c66432cbc863d52d8274a728fb5b38ece9c112c8867bf8b55e"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-05-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Chanson Française / Variétés",
+            "genre_source": "Reviewed stable artist classification, 2026-08-23",
+            "genres_public": null,
+            "headliner": "Bénabar",
+            "identity_aliases": [
+              "BENABAR"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwfSpu6UJMWN4rI0o4yN6wtHnbzzUjGsjyZ3bOshTE6uWsnzecnl6O12xf2CvVGvH0UZWZ3Sz_8QSbcmmBZB_9lziL4n0mi4YmyjYHdgmZ0bme3z7sQS2e4YwpEWRjIjP2PgN25mLSrw8Z-OARS77Diue6N6gUI23NloN59qL4oJ-5-AHyX4HgRuhOmzM/s72-w640-h426-c-rw/Renaud20260517Z%C3%A9nithParis%2019_11.JPG",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://caramba.trium.fr/fr/t/-/event/66207",
+            "venue": "Dôme de Paris – Palais des Sports"
+          },
+          "first_seen": "2026-09-25T14:27:21Z",
+          "public_id": "7756190357f9e408",
+          "state_identity": "7756190357f9e408f8343007be639f53016d8dfd0dfe036e7caf15262310901a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-06-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "King Gizzard & The Lizard Wizard",
+            "identity_aliases": [
+              "King Gizzard & The Lizard Wizard"
+            ],
+            "image_source": "Le Zénith Paris – La Villette",
+            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6adf37c6ce933067744945.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://le-zenith.com/shows/King%20Gizzard%20%26%20The%20Lizard%20Wizard-22805",
+            "venue": "Le Zénith Paris – La Villette"
+          },
+          "first_seen": "2026-10-27T09:08:57Z",
+          "public_id": "66c5d636bda999fd",
+          "state_identity": "66c5d636bda999fde4c562b111dea5718ace2c3975acfb4489029a3006bf7877"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-07-09",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "RNB SOUL FUNK DISCO",
+            "genre_evidence": [
+              {
+                "raw": "RNB SOUL FUNK DISCO",
+                "source": "Accor Arena"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Jamiroquai",
+            "identity_aliases": [
+              "Jamiroquai"
+            ],
+            "image_source": "Accor Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/originals/b277c563-9d46-4203-b26d-07a50b244a05.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/jamiroquai-billet/idmanif/677929/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-11-06T11:36:16Z",
+          "public_id": "86949f983c19a38e",
+          "state_identity": "86949f983c19a38eb676f8f1a65f5a1947aa73bc1ba29f9ed63d0b03d3b26754"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-07-10",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "RNB SOUL FUNK DISCO",
+            "genre_evidence": [
+              {
+                "raw": "RNB SOUL FUNK DISCO",
+                "source": "Accor Arena"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Jamiroquai",
+            "identity_aliases": [
+              "Jamiroquai"
+            ],
+            "image_source": "Accor Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/originals/b277c563-9d46-4203-b26d-07a50b244a05.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/jamiroquai-billet/idmanif/677929/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-11-06T11:36:16Z",
+          "public_id": "a3f92c1c7cb45d08",
+          "state_identity": "a3f92c1c7cb45d087e3ecde9383c74b1aae8b8a9e149c818af1cf1a1af38418f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-09-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Blues, Rock, Soul",
+            "genre_evidence": [
+              {
+                "raw": "Blues, Rock, Soul",
+                "source": "L’Olympia Bruno Coquatrix"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genres_public": [
+              "Jazz / Blues",
+              "R&B / Soul / Funk",
+              "Rock / Indie / Punk"
+            ],
+            "headliner": "The Teskey Brothers",
+            "identity_aliases": [
+              "The Teskey Brothers"
+            ],
+            "image_source": "L’Olympia Bruno Coquatrix",
+            "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/10/the-teskey-brothers-concert-olympia-paris-352x440.jpg.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.olympiahall.com/agenda/the-teskey-brothers/",
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-11-03T10:37:28Z",
+          "public_id": "98774ce5a5dfd8f3",
+          "state_identity": "98774ce5a5dfd8f356e8d13dc0c3ae1acbe992b8cefe1b946678a14ed258b1be"
         },
         {
           "event": {
@@ -14088,9 +15391,195 @@
           "first_seen": "2026-11-19T11:49:28Z",
           "public_id": "f7f2f0ce630ba77e",
           "state_identity": "f7f2f0ce630ba77e97a70f0026997630d6e26aece2be041f95fded99ce23beba"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-09-25",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Archive",
+            "identity_aliases": [
+              "Archive"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/6c9c09f0-d39a-4308-9442-45d52b1f03ca.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/archive--1558",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-09-29T09:55:45Z",
+          "public_id": "dd4b9602d0ade711",
+          "state_identity": "dd4b9602d0ade711d14d5f50f02637453790a8289eabf01f06bb3b3c570d67b9"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-11-27",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Apple Music exact artist catalog",
+            "genres_public": null,
+            "headliner": "Saez",
+            "identity_aliases": [
+              "Saez"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/2ce687fa-3e69-44c6-ba03-ef5395876c8f.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "22:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/saez--1267",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-09-25T10:38:40Z",
+          "public_id": "e1acc4e2264e173e",
+          "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-12-04",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP ROCK FOLK",
+            "genre_evidence": [
+              {
+                "raw": "POP ROCK FOLK",
+                "source": "Accor Arena"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Charlotte Cardin",
+            "identity_aliases": [
+              "Charlotte Cardin"
+            ],
+            "image_source": "Accor Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/originals/5437b47c-d44d-4fb1-a3b8-96797bc100f8.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/charlotte-cardin-billet/idmanif/676451/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-10-22T17:18:36Z",
+          "public_id": "58e42261abe2b0c2",
+          "state_identity": "58e42261abe2b0c2cfd27d5c27c3011973796b82e0bcfadcba71478446b1f1e9"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-12-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP ROCK FOLK",
+            "genre_evidence": [
+              {
+                "raw": "POP ROCK FOLK",
+                "source": "Accor Arena"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Accor Arena",
+            "genres_public": null,
+            "headliner": "Charlotte Cardin",
+            "identity_aliases": [
+              "Charlotte Cardin"
+            ],
+            "image_source": "Accor Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/originals/5437b47c-d44d-4fb1-a3b8-96797bc100f8.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.accorarena.com/fr/manifestation/charlotte-cardin-billet/idmanif/676451/codtypadh/FTT/numadh/01/codeconf/FTMS01",
+            "venue": "Accor Arena"
+          },
+          "first_seen": "2026-10-30T18:06:11Z",
+          "public_id": "e9a0fbb1d5985cbb",
+          "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-22T19:47:23Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -14401,7 +15890,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -15814,7 +17303,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -17318,7 +18807,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -17869,8 +19358,8 @@
             "identity_aliases": [
               "THEORY OF A DEADMAN"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/format-site-theory-of-a-deadman.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -17880,7 +19369,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/theory-of-a-deadman/",
@@ -18543,8 +20032,8 @@
             "identity_aliases": [
               "BRAKENCE"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/650x650-brakence.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -18554,7 +20043,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/brakence/",
@@ -18573,7 +20062,7 @@
             "co_headliners": null,
             "date": "2027-10-09",
             "department": "75",
-            "event_title": null,
+            "event_title": "NO ONE IS INNOCENT",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -18588,12 +20077,12 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "NO ONE IS INNOCENT",
+            "headliner": "[No One Is Innocent]",
             "identity_aliases": [
               "NO ONE IS INNOCENT"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/nooneisinnocent-bikini-creditphotoericcanto_10.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -18603,7 +20092,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/no-one-is-innocent-8/",
@@ -18614,7 +20103,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -20325,7 +21814,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -21331,7 +22820,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -22789,14 +24278,18 @@
             "genre_public": null,
             "genre_source": "Café de la Danse",
             "genres_public": null,
-            "headliner": "JEAN-MICHEL BLAIS",
-            "identity_aliases": null,
+            "headliner": "Jean-Michel Blais",
+            "identity_aliases": [
+              "JEAN-MICHEL BLAIS"
+            ],
             "image_source": "Café de la Danse",
             "image_url": "https://www.cafedeladanse.com/app/uploads/2026/09/1x1-1-952x579.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -22949,7 +24442,7 @@
           "state_identity": "ea633a4aecc3aefa07cdb5d4e90e2263fd72e485eea5a7a81a19a80af402f318"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -23582,7 +25075,7 @@
             "genre_public": "Folk / Country",
             "genre_source": "MusicBrainz artist tags",
             "genres_public": null,
-            "headliner": "PASSENGER",
+            "headliner": "Passenger",
             "identity_aliases": [
               "PASSENGER"
             ],
@@ -23591,7 +25084,9 @@
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "PASSENGER",
             "series_name": null,
             "sold_out": false,
@@ -24020,7 +25515,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -24477,7 +25972,7 @@
             "co_headliners": null,
             "date": "2027-04-17",
             "department": "75",
-            "event_title": null,
+            "event_title": "DUO JATEKOK – Rammstein on the beach",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -24492,12 +25987,12 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "DUO JATEKOK – Rammstein",
+            "headliner": "Duo Jatekok",
             "identity_aliases": [
-              "Duo Jatekok"
+              "DUO JATEKOK"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/650x650-ctina-dubrovsky.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -24507,7 +26002,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/duo-jatekok-rammstein-on-the-beach/",
@@ -24799,7 +26294,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -25354,7 +26849,7 @@
           "state_identity": "8c9aad0e475087911f0973fea2061308222b78b22ae5baa867c01754fba977b7"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -27259,7 +28754,7 @@
           "state_identity": "5a73c867793dba8437946fdc1f6bb849cb57c3566bae3f6d711fefb663884f20"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -27560,7 +29055,7 @@
           "state_identity": "60fdc152d6b8314d939c84bb42f4cf0b5e0b6a62721fac5a9c4b7714acfb4f6f"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -28138,8 +29633,8 @@
             "identity_aliases": [
               "SHAÂRGHOT"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/03/shaarghot_2025_web_1080x1080_photo1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -28149,7 +29644,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/shaarghot-2/",
@@ -30835,7 +32330,7 @@
           "state_identity": "f240690b4dd6e1e7ddf765c2ba5ed1a2b7850223eb368c65f8d0510be1260301"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -31517,7 +33012,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -34240,7 +35735,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -34778,8 +36273,8 @@
             "genres_public": null,
             "headliner": "BROKEN BACK",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2025/12/brokenback.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34787,7 +36282,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/broken-back/",
@@ -34829,8 +36324,8 @@
             "identity_aliases": [
               "SHAÂRGHOT"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/03/shaarghot_2025_web_1080x1080_photo1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34840,7 +36335,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/shaarghot-2/",
@@ -34876,8 +36371,8 @@
             "genres_public": null,
             "headliner": "Wamen",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/03/650x650-la-cigale.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34885,7 +36380,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/wamen/",
@@ -34923,8 +36418,8 @@
             "identity_aliases": [
               "Jwles"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-01-08/385f3d1c-f9bc-496e-b986-6f3590e69bd7.jpg?rect=0%2C0%2C768%2C768",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/01/flyer-jwles_768x768.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -34967,17 +36462,19 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "JAVA & WINSTON MCANUFF",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "JAVA & WINSTON MCANUFF"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/03/java-mcanuuf-carre_.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "JAVA &#038; WINSTON MCANUFF",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/java-winston-mcanuff/",
@@ -35013,8 +36510,8 @@
             "genres_public": null,
             "headliner": "SHENG",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2025/11/format-site-sheng.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35022,7 +36519,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/sheng/",
@@ -35058,8 +36555,8 @@
             "genres_public": null,
             "headliner": "Ladaniva",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/07/ladaniva_photo-carree.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35067,7 +36564,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/ladaniva-3/",
@@ -35103,8 +36600,8 @@
             "genres_public": null,
             "headliner": "FLORENT MARCHET",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/650x650.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35112,7 +36609,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/florent-marchet-3/",
@@ -35150,8 +36647,8 @@
             "identity_aliases": [
               "Renan Luce - Joue Repenti"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-03-10/b4084226-388b-4287-9f17-e4c9ebea77fb.jpg?rect=0%2C0%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/01/renan-luce_2026_bd©laurent_seroussi_650x650.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35159,15 +36656,15 @@
             "raw_title": "Renan Luce - Joue Repenti",
             "series_name": null,
             "sold_out": true,
-            "start_time": "19:30",
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": "sold_out",
             "ticket_url": "https://lacigale.fr/evenements/renan-luce-3/",
             "venue": "La Cigale"
           },
           "first_seen": "2026-08-20T11:02:59Z",
-          "public_id": "f562c5852062dbfe",
-          "state_identity": "f562c5852062dbfe8b2a0d8f27c3476b966f1069167a02ae1717272676b7e4f1"
+          "public_id": "e5431293bfd8b12d",
+          "state_identity": "e5431293bfd8b12d5d70f97115434b4f9bf3dc5ef536e0bded76633e82e1f301"
         },
         {
           "event": {
@@ -35195,8 +36692,8 @@
             "genres_public": null,
             "headliner": "K-REEN",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/08/k-reen-cigale-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35204,7 +36701,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/k-reen/",
@@ -35240,8 +36737,8 @@
             "genres_public": null,
             "headliner": "MOUS-K",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/brute-1350x1080px-e1791209793670.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35249,7 +36746,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/mous-k/",
@@ -35287,8 +36784,8 @@
             "identity_aliases": [
               "Jersey"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-09-23/70dfbad7-c8b3-4a16-9264-cb4f3bad3eb5.jpg?rect=0%2C270%2C2160%2C2160",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/01_045-copie-e1790082631611.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35334,8 +36831,8 @@
             "identity_aliases": [
               "Jersey"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-09-17/b9f3f347-8b18-4554-9814-a0c195167c0b.jpg?rect=0%2C0%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/01_045-copie-e1790082631611.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35379,8 +36876,8 @@
             "genres_public": null,
             "headliner": "HEAVEN SAM",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/06/650x650.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35388,7 +36885,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/heaven-sam/",
@@ -35426,8 +36923,8 @@
             "identity_aliases": [
               "Dinaa"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-01-26/4c3e0136-06cd-475e-b45b-d8c3744ee6ea.jpg?rect=0%2C135%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/01/650x650.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35471,8 +36968,8 @@
             "genres_public": null,
             "headliner": "DMA",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/650x650-affiche-vierge-dma-la-cigale.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35480,7 +36977,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/dma/",
@@ -35521,8 +37018,8 @@
             "identity_aliases": [
               "Léon Phal"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-06-17/8899e2bd-4faa-4df6-89e1-b0c30b9206fc.jpg?rect=0%2C547%2C4378%2C4378",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/06/format-site-phal.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35568,8 +37065,8 @@
             "identity_aliases": [
               "MICO"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-08/7ac48dc8-70e8-4198-bf34-1d1cab236d24.jpg?rect=0%2C768%2C3072%2C3072",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/mico-milwaukee-9.28-40-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35598,7 +37095,7 @@
             "co_headliners": null,
             "date": "2027-01-21",
             "department": "75",
-            "event_title": null,
+            "event_title": "bROTHERS iN bAND – DIRE STRAITS TRIBUTE",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -35613,18 +37110,20 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "bROTHERS iN bAND – DIRE",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "headliner": "BROTHERS IN BAND – THE VERY BEST OF DIRE STRAITS",
+            "identity_aliases": [
+              "BROTHERS IN BAND – THE VERY BEST OF DIRE STRAITS"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/06/dire-straits-bib-la-cigale-650x650px.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "BROTHERS IN BAND &#8211; THE VERY BEST OF DIRE STRAITS",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/brothers-in-band-the-very-best-of-dire-straits/",
@@ -35658,18 +37157,20 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "LOGICALTRAMP – THE SPIRI",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "headliner": "LOGICALTRAMP – The Spirit of Supertramp",
+            "identity_aliases": [
+              "LOGICALTRAMP – The Spirit of Supertramp"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/06/logicaltramp-la-cigale-650x650px.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "LOGICALTRAMP &#8211; The Spirit of Supertramp",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/logicaltramp-the-spirit-of-supertramp/",
@@ -35703,18 +37204,20 @@
             "genre_public": "Folk / Country",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "LENOISE – A TRIBUTE TO N",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "headliner": "LENOISE – A TRIBUTE TO NEIL YOUNG",
+            "identity_aliases": [
+              "LENOISE – A TRIBUTE TO NEIL YOUNG"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/06/le-noise-la-cigale-650x650px.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "LENOISE &#8211; A TRIBUTE TO NEIL YOUNG",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/lenoise-a-tribute-to-neil-young/",
@@ -35750,8 +37253,8 @@
             "genres_public": null,
             "headliner": "PI JA MA",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/01/visuel_pi-ja-ma-la-cigale-2-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35759,7 +37262,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/53766/",
@@ -35801,8 +37304,8 @@
             "identity_aliases": [
               "Editors"
             ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/g/t/o/400ec93a-296c-4e50-b6d0-5523bcc50415.jpg",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/editors-2026by-rahi-rezvani-first-press-shot.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35812,7 +37315,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/editors-2/",
@@ -35831,7 +37334,7 @@
             "co_headliners": null,
             "date": "2027-01-29",
             "department": "75",
-            "event_title": null,
+            "event_title": "SEAN – tfkpourlafindumonde? TOUR",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -35846,10 +37349,10 @@
             "genre_public": "Hip-hop / Rap",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "SEAN – tfkpourlafindumon",
+            "headliner": "SEAN",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/©erwan-blaszka-1038304.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35857,7 +37360,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/sean-tfkpourlafindumonde-tour/",
@@ -35893,8 +37396,8 @@
             "genres_public": null,
             "headliner": "RESOLVE",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/resolve-2026-aurelien-mariat-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35902,7 +37405,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/resolve/",
@@ -35938,8 +37441,8 @@
             "genres_public": null,
             "headliner": "ALOÏSE SAUVAGE",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/07/format-site-eloise-sauvage-e1782830897583.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35947,7 +37450,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/aloise-sauvage-3/",
@@ -35983,8 +37486,8 @@
             "genres_public": null,
             "headliner": "ALOÏSE SAUVAGE",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/07/format-site-eloise-sauvage-e1782830897583.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -35992,7 +37495,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/aloise-sauvage-3/",
@@ -36028,8 +37531,8 @@
             "genres_public": null,
             "headliner": "JEANJASS",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/jeanjass-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36037,7 +37540,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/jeanjass/",
@@ -36073,8 +37576,8 @@
             "genres_public": null,
             "headliner": "JEANJASS",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/jeanjass-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36082,7 +37585,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/jeanjass/",
@@ -36173,8 +37676,8 @@
             "identity_aliases": [
               "THEORY OF A DEADMAN"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/format-site-theory-of-a-deadman.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36184,7 +37687,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/theory-of-a-deadman/",
@@ -36222,8 +37725,8 @@
             "identity_aliases": [
               "GIANT ROOKS"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-01/fde7b1f6-eadd-4d55-bde0-2d438aa16243.jpg?rect=0%2C560%2C4480%2C4480",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/design-sans-titre-16-e1793786895791.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36268,17 +37771,19 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "TAYRON KWIDAN’S",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "TAYRON KWIDAN’S"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/tk_2027_visuelweb_salle_650x650_cigale-e1791881724421.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "TAYRON KWIDAN&rsquo;S",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/tayron-kwidans-5/",
@@ -36320,8 +37825,8 @@
             "identity_aliases": [
               "Klangphonics"
             ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/n/x/d/2bb9cddd-9451-48ec-a77f-b64fbb7aecbc.jpg",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/1_1_klang_press-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36367,8 +37872,8 @@
             "genres_public": null,
             "headliner": "Typhee",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/ty-credit-_-filodo-1-e1789651182287.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36376,7 +37881,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/typhee/",
@@ -36410,10 +37915,10 @@
             "genre_public": "Pop",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "CRISTINA BRANCO",
+            "headliner": "Cristina Branco",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/cristina_brancofado1_@augusto_brazio-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36421,7 +37926,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/cristina-branco-2/",
@@ -36459,8 +37964,8 @@
             "identity_aliases": [
               "Trentemøller"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-04-15/7bb988eb-f37d-4ec5-b08e-b85275b49431.jpg?rect=0%2C109%2C1283%2C1283",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/trente_2026_credit_jj.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36468,15 +37973,15 @@
             "raw_title": "Trentemøller",
             "series_name": null,
             "sold_out": false,
-            "start_time": "18:30",
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/trentemoller/",
             "venue": "La Cigale"
           },
-          "first_seen": "2026-11-09T16:04:27Z",
-          "public_id": "fe34ac5a5822cf3d",
-          "state_identity": "fe34ac5a5822cf3dab77fee56ea211c3461c8b65bf8cfc1f135339c515eeba59"
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "f7d9af71205ee8ab",
+          "state_identity": "f7d9af71205ee8abec12a65829d0c6e103c4b2c3f4c61f44d22e750b040cb5a7"
         },
         {
           "event": {
@@ -36521,7 +38026,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/delta-goodrem/",
@@ -36554,8 +38059,8 @@
             "identity_aliases": [
               "PALACE"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-09-25/a47d3f29-a523-4979-8386-d490ef874150.jpg?rect=0%2C1584%2C6336%2C6336",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/credit-adrian-lee-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36565,15 +38070,15 @@
             "raw_title": "Palace",
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/palace/",
             "venue": "La Cigale"
           },
-          "first_seen": "2026-11-23T00:19:30Z",
-          "public_id": "4fb7e3ec93e97a87",
-          "state_identity": "4fb7e3ec93e97a87ff873a967717f00999d053c677ea723e3ad06b11134c8ce7"
+          "first_seen": "2026-09-28T12:08:30Z",
+          "public_id": "63986a8cb6d428b5",
+          "state_identity": "63986a8cb6d428b539b4d7cb8fd96725287c49ca345a28845b06347b7bc0199d"
         },
         {
           "event": {
@@ -36601,8 +38106,8 @@
             "genres_public": null,
             "headliner": "LOA MERCURY",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/01/loa@lacigale_650x650.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36610,7 +38115,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/loa-mercury/",
@@ -36644,12 +38149,12 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "NOÉ PRESZOW",
+            "headliner": "Noé Preszow",
             "identity_aliases": [
               "NOE PRESZOW"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/650x650_cigale.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36659,7 +38164,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/noe-preszow-3/",
@@ -36697,8 +38202,8 @@
             "identity_aliases": [
               "LANCELOT"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2025-04-14/9b024bd7-7560-4b43-8679-d493a7fafcb5.jpg?rect=0%2C0%2C1081%2C1081",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2025/04/lancelot_1000x1000_chugolardenet.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36744,8 +38249,8 @@
             "identity_aliases": [
               "Blanco White"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-04-30/3db16e2d-7019-4f82-9580-c8ef97c6ec0b.jpg?rect=267%2C0%2C1067%2C1067",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/blanco-white-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36753,15 +38258,15 @@
             "raw_title": "Blanco White",
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/blanco-white/",
             "venue": "La Cigale"
           },
-          "first_seen": "2026-11-09T16:04:27Z",
-          "public_id": "b0939c1f254571b4",
-          "state_identity": "b0939c1f254571b487b592f8a2d82b545b7c87f08d7ccf92d1c3702bde220958"
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "8e0baf60fc95c4da",
+          "state_identity": "8e0baf60fc95c4da43bc094edc3c7f790998d30d1d4f8bbe0a4cea9f6eec3e56"
         },
         {
           "event": {
@@ -36787,10 +38292,10 @@
             "genre_public": "Hip-hop / Rap",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "ASSASSIN",
+            "headliner": "Assassin",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/03/2_1080x1350-assassin-la-cigale-c-sixtine-raider.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36798,7 +38303,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/assassin-4/",
@@ -36817,7 +38322,7 @@
             "co_headliners": null,
             "date": "2027-03-16",
             "department": "75",
-            "event_title": null,
+            "event_title": "CALI – CALICIURI",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -36832,10 +38337,10 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "CALI – CALICIURI",
+            "headliner": "Cali",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/cali_cigale_site.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36843,7 +38348,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/cali-caliciuri/",
@@ -36877,10 +38382,10 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "JOYCE JONATHAN",
+            "headliner": "Joyce Jonathan",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/1080x1080-neutre.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36888,7 +38393,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/joyce-jonathan-3/",
@@ -36926,8 +38431,8 @@
             "identity_aliases": [
               "Asfar Shamsi"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-02-23/7b950e5d-c667-4416-ad22-106ccaaf8f71.jpg?rect=0%2C270%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/02/cigale4.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36971,8 +38476,8 @@
             "genres_public": null,
             "headliner": "MADAM",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/madam-credit-boby-1-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -36980,7 +38485,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/madam/",
@@ -37018,8 +38523,8 @@
             "identity_aliases": [
               "CHATON - LA CIGALE"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-06-02/3e2ff1a6-34db-43d2-8dfd-f4c2b80a94c6.jpg?rect=0%2C0%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/650-x-650.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37065,8 +38570,8 @@
             "identity_aliases": [
               "JÄDE"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-20/ff9ba852-13cc-40fb-8ffc-0554f2ec5a14.jpg?rect=0%2C488%2C3906%2C3906",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/sans-titre.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37110,8 +38615,8 @@
             "genres_public": null,
             "headliner": "DOMINIQUE A",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/650x650-1.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37119,7 +38624,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/dominique-a-5/",
@@ -37155,8 +38660,8 @@
             "genres_public": null,
             "headliner": "COLONEL REYEL",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/colonel-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37164,7 +38669,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/colonel-reyel/",
@@ -37203,8 +38708,8 @@
             ],
             "headliner": "General Elektriks",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/ge-600x600-1.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37212,7 +38717,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/general-elektriks-2/",
@@ -37250,8 +38755,8 @@
             "identity_aliases": [
               "Oria"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/610487de-6af1-4fc7-a21b-f143e872108d.jpg?rect=0%2C0%2C768%2C768",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/oria650x650.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37278,7 +38783,7 @@
             "co_headliners": null,
             "date": "2027-04-03",
             "department": "75",
-            "event_title": null,
+            "event_title": "P.L.L",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -37293,10 +38798,10 @@
             "genre_public": "World / Latin",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "P.L.L",
+            "headliner": "P.L.L.",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/07/p.l.l-hd-©tony-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37304,7 +38809,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/p-l-l/",
@@ -37340,8 +38845,8 @@
             "genres_public": null,
             "headliner": "LECYA",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/lecya-cigale-photo-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37349,7 +38854,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "18:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/lecya/",
@@ -37385,8 +38890,8 @@
             "genres_public": null,
             "headliner": "LECYA",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/lecya-cigale-photo-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37394,7 +38899,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "18:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/lecya/",
@@ -37429,17 +38934,19 @@
             "genre_source": "La Cigale",
             "genres_public": null,
             "headliner": "STARSEED’Z",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "STARSEED’Z"
+            ],
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/sublime_groupe-1800x1800px.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "STARSEED&rsquo;Z",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/starseedz/",
@@ -37473,16 +38980,18 @@
             "genre_public": "Pop",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "JAKE BUGG",
+            "headliner": "Jake Bugg",
             "identity_aliases": [
-              "JAKE BUGG"
+              "Jake Bugg"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-10-26/436597e6-e20a-41aa-b671-994eb9d5a587.jpg?rect=177%2C0%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/venue-website-e1789057810396.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "JAKE BUGG",
             "series_name": null,
             "sold_out": false,
@@ -37522,8 +39031,8 @@
             "genres_public": null,
             "headliner": "LUSHE",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/visu-cigale-650x650-1.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37531,7 +39040,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/lushe/",
@@ -37567,8 +39076,8 @@
             "genres_public": null,
             "headliner": "NTABA 2 LONDON",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/1800x1800-8.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37576,7 +39085,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/ntaba-2-london/",
@@ -37595,7 +39104,7 @@
             "co_headliners": null,
             "date": "2027-04-17",
             "department": "75",
-            "event_title": null,
+            "event_title": "DUO JATEKOK – Rammstein on the beach",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -37610,12 +39119,12 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "DUO JATEKOK – Rammstein",
+            "headliner": "Duo Jatekok",
             "identity_aliases": [
-              "Duo Jatekok"
+              "DUO JATEKOK"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/650x650-ctina-dubrovsky.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37625,7 +39134,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/duo-jatekok-rammstein-on-the-beach/",
@@ -37659,10 +39168,10 @@
             "genre_public": "Hip-hop / Rap",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "DJANGO",
+            "headliner": "Django",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/django-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37670,7 +39179,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/django-2/",
@@ -37704,10 +39213,10 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "ROVER",
+            "headliner": "Rover",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/650x650-rober-cigale_salle.gif",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37715,7 +39224,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/rover/",
@@ -37751,8 +39260,8 @@
             "genres_public": null,
             "headliner": "Juste Shani",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/650x650-justeshani-cigale.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37760,7 +39269,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/juste-shani/",
@@ -37798,8 +39307,8 @@
             "identity_aliases": [
               "Nouvelle Vague"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-05-28/8b2ecc26-d33e-4b20-8def-fce78bc9cc14.jpg?rect=0%2C0%2C1254%2C1254",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/nouvelle-vague.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37807,15 +39316,15 @@
             "raw_title": "Nouvelle Vague",
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/nouvelle-vague-2/",
             "venue": "La Cigale"
           },
-          "first_seen": "2026-11-09T16:04:27Z",
-          "public_id": "14e3fdc386f7c5a6",
-          "state_identity": "14e3fdc386f7c5a683f6b30d9e14074847ccc0acb419c78ae54ec507464cd8e4"
+          "first_seen": "2026-11-12T20:01:48Z",
+          "public_id": "c2dd8d22a6c92d26",
+          "state_identity": "c2dd8d22a6c92d269730e69354face42a66511279a11c84942bc3cef6eb3231a"
         },
         {
           "event": {
@@ -37843,8 +39352,8 @@
             "genres_public": null,
             "headliner": "LA YEGROS",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/1080x1080_sansecri.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37852,7 +39361,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/la-yegros-2/",
@@ -37888,8 +39397,8 @@
             "genres_public": null,
             "headliner": "THE ODDS",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/650x650.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37897,7 +39406,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/the-odds/",
@@ -37933,8 +39442,8 @@
             "genres_public": null,
             "headliner": "LE CRIME",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/le-crime-@leo-chardiet-mojo-vizion-scaled-e1791792506439.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -37942,7 +39451,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/le-crime/",
@@ -37983,8 +39492,8 @@
             "identity_aliases": [
               "Emile Londonien"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-09-24/573b8992-7291-4e2e-b65b-d6b7b4f59536.jpg?rect=34%2C0%2C856%2C856",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/c-ambre-savagnac-1-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38028,8 +39537,8 @@
             "genres_public": null,
             "headliner": "MÉLISSA LAVEAUX",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/05/melissa-laveaux-cigale-650x650-v2.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38037,7 +39546,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/melissa-laveaux/",
@@ -38073,8 +39582,8 @@
             "genres_public": null,
             "headliner": "SEVERIN",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/07/visuel-neutre-severin-650x650px.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38082,7 +39591,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/severin/",
@@ -38120,8 +39629,8 @@
             "identity_aliases": [
               "ANOUK"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-11-03/839c597a-1324-484b-9002-fb628a190322.jpg?rect=0%2C0%2C768%2C768",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/anouk-©ghalia-kriaa-1080x1350-1-e1793724305808.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38165,8 +39674,8 @@
             "genres_public": null,
             "headliner": "TKS 2G",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/photo-portrait-e1791970663459.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38174,7 +39683,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/tks-2g/",
@@ -38210,8 +39719,8 @@
             "genres_public": null,
             "headliner": "MANON LISA",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/051126©elodiedaguin_manonlisa__534_cmjn_fogra39-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38219,7 +39728,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/manon-lisa-petit-pecheur/",
@@ -38255,8 +39764,8 @@
             "genres_public": null,
             "headliner": "HIPPOCAMPE FOU",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/page-artiste-cigale-650x650-1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38264,7 +39773,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/hippocampe-fou-2/",
@@ -38302,8 +39811,8 @@
             "identity_aliases": [
               "BRAKENCE"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/650x650-brakence.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38313,7 +39822,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/brakence/",
@@ -38351,8 +39860,8 @@
             "identity_aliases": [
               "STANISLAS"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-07-22/e5925f83-64f8-4d1a-b963-4ff6ca423768.jpg?rect=0%2C0%2C1080%2C1080",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/07/1080-x-1440.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38396,8 +39905,8 @@
             "genres_public": null,
             "headliner": "LOU DOILLON",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/copie-de-camille-vivier_lou-doillon_look-5_0556_r3-scaled-e1792168069110.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38405,7 +39914,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/lou-doillon/",
@@ -38443,8 +39952,8 @@
             "identity_aliases": [
               "THE INTERRUPTERS"
             ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-11-02/3b59305b-824d-4e17-9749-75402a999001.jpg?rect=192%2C0%2C768%2C768",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/1800x1800-2.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38473,7 +39982,7 @@
             "co_headliners": null,
             "date": "2027-10-09",
             "department": "75",
-            "event_title": null,
+            "event_title": "NO ONE IS INNOCENT",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -38488,12 +39997,12 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "NO ONE IS INNOCENT",
+            "headliner": "[No One Is Innocent]",
             "identity_aliases": [
               "NO ONE IS INNOCENT"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/nooneisinnocent-bikini-creditphotoericcanto_10.jpeg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38503,7 +40012,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/no-one-is-innocent-8/",
@@ -38537,10 +40046,10 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "FELHUR X ANDRO",
+            "headliner": "FELHUR x ANDRO",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/affiche-felhuretandro-7794-scaled-e1789656496947.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38548,7 +40057,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/felhur-x-andro-3/",
@@ -38584,8 +40093,8 @@
             "genres_public": null,
             "headliner": "Mona Guba",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/1080x1080_sansecri.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38593,7 +40102,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/mona-guba/",
@@ -38632,8 +40141,8 @@
             ],
             "headliner": "LA CHICA",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/11/1800x1800-4.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38641,7 +40150,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/la-chica/",
@@ -38652,7 +40161,7 @@
           "state_identity": "78038585cae60e039bd57c6975a2fcb1b06a92b68aa5c374c8f7e45b1c73ddce"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -38849,14 +40358,16 @@
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "Blondshell",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.gaite-lyrique.net/agenda/2026/blondshell/",
+            "ticket_url": "https://tix.to/SSTFR26SI/csrjt",
             "venue": "Élysée Montmartre"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -39504,16 +41015,18 @@
             "genre_public": "Pop",
             "genre_source": "Apple Music + Bandcamp",
             "genres_public": null,
-            "headliner": "This is Lorelei",
+            "headliner": "This Is Lorelei",
             "identity_aliases": [
-              "THIS IS LORELEI"
+              "This is Lorelei"
             ],
             "image_source": "La Gaîté Lyrique",
             "image_url": "https://osuny-1b4da.kxcdn.com/m4q1p9151fzqntgu42345nm6r81i?width=1280&height=720&fit=inside&quality=80",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "THIS IS LORELEI",
             "series_name": null,
             "sold_out": false,
@@ -39755,13 +41268,17 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Whitney",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Whitney"
+            ],
             "image_source": "La Gaîté Lyrique",
             "image_url": "https://osuny-1b4da.kxcdn.com/bu3k53j37zvx36ah8n3pki6qxbql?width=1280&height=720&fit=inside&quality=80",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -39906,7 +41423,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -40799,7 +42316,7 @@
           "state_identity": "ad7ccaf6b6a026b3a1c89d0d50512b155686b8baf06dc90b8ccbffb0ad257cc8"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -46284,7 +47801,7 @@
           "state_identity": "b98f020651af0910698e2db4911b874ac13c2dc6f5e2e146f643d935f9a66a2a"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -46727,6 +48244,51 @@
           "first_seen": "2026-08-26T09:01:58Z",
           "public_id": "0cacdc0afd332033",
           "state_identity": "0cacdc0afd332033619706a868901b85db830c8b2d23901d644b8df4b3967e8d"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Boulogne-Billancourt",
+            "co_headliners": null,
+            "date": "2026-12-18",
+            "department": "92",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "K-pop",
+            "genre_evidence": [
+              {
+                "raw": "K-pop",
+                "source": "La Seine Musicale"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "La Seine Musicale",
+            "genres_public": null,
+            "headliner": "K-Pop Forever !",
+            "identity_aliases": null,
+            "image_source": "La Seine Musicale",
+            "image_url": "https://www.laseinemusicale.com/app/uploads/2025/12/k-pop-forever-la-seine-musicale-1-768x1024.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "#",
+            "venue": "La Seine Musicale"
+          },
+          "first_seen": "2026-08-26T09:01:58Z",
+          "public_id": "e19c1ce9860a67c2",
+          "state_identity": "e19c1ce9860a67c20264b00c940066d92cb7a723d2c0deff5c17359878239086"
         },
         {
           "event": {
@@ -47786,7 +49348,7 @@
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -48091,20 +49653,24 @@
             "genre_source": "Reviewed stable artist classification, 2026-08-23",
             "genres_public": null,
             "headliner": "Bénabar",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "BENABAR"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhwfSpu6UJMWN4rI0o4yN6wtHnbzzUjGsjyZ3bOshTE6uWsnzecnl6O12xf2CvVGvH0UZWZ3Sz_8QSbcmmBZB_9lziL4n0mi4YmyjYHdgmZ0bme3z7sQS2e4YwpEWRjIjP2PgN25mLSrw8Z-OARS77Diue6N6gUI23NloN59qL4oJ-5-AHyX4HgRuhOmzM/s72-w640-h426-c-rw/Renaud20260517Z%C3%A9nithParis%2019_11.JPG",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
             "start_time": null,
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://www.ledomedeparis.com/fr/spectacle/347/benabar",
+            "ticket_url": "https://caramba.trium.fr/fr/t/-/event/66207",
             "venue": "Dôme de Paris – Palais des Sports"
           },
           "first_seen": "2026-09-25T14:27:21Z",
@@ -48432,7 +49998,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -48760,13 +50326,17 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "ANGELIQUE KIDJO AND YOUSSOU NDOUR",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Youssou Ndour"
+            ],
             "image_source": "Le Grand Rex",
             "image_url": "https://www.legrandrex.com/images/evenements/1080x1350_1.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -49181,7 +50751,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -50068,7 +51638,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -51822,7 +53392,9 @@
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "Ziyad Al-Samman",
             "series_name": null,
             "sold_out": false,
@@ -52567,13 +54139,17 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Xana",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Xana"
+            ],
             "image_source": "Le Pop-Up du Label",
             "image_url": "https://www.popup.paris/wp-content/uploads/2026/11/Xana-Brooklyn-Clean-1-1200x798.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -52632,7 +54208,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -52958,14 +54534,16 @@
             "genres_public": null,
             "headliner": "Gurriers",
             "identity_aliases": [
-              "GURRIERS"
+              "Gurriers"
             ],
             "image_source": "Le Trabendo",
             "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/05/Image-site-Trabendo-2-1500x844.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "GURRIERS",
             "series_name": null,
             "sold_out": true,
@@ -55562,7 +57140,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -57080,7 +58658,7 @@
           "state_identity": "490e6185fc9601426f54b1684a6c10032f7565725bbbf086fb3f6377f0fe8ccd"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -59345,13 +60923,17 @@
             "genre_source": "Wikidata genre statements (P136)",
             "genres_public": null,
             "headliner": "Waxx",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Waxx"
+            ],
             "image_source": "Le Zénith Paris – La Villette",
             "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6a3beac978c4a096611769.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -60589,13 +62171,17 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "King Gizzard & The Lizard Wizard",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "King Gizzard & The Lizard Wizard"
+            ],
             "image_source": "Le Zénith Paris – La Villette",
             "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6adf37c6ce933067744945.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -61368,7 +62954,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -62266,7 +63852,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -62603,7 +64189,9 @@
             "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Muse",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Muse"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/v/x/w/86e6cd63-8880-4f07-bede-065865a4a651.jpg",
             "openers": [
@@ -62612,6 +64200,7 @@
             "performance_marker": null,
             "performers": null,
             "promoters": [
+              "Alias Production",
               "Live Nation"
             ],
             "raw_title": null,
@@ -62620,7 +64209,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/muse-billet/idlist/6341/idtier/4827637",
+            "ticket_url": "https://tix.to/museSI/declk",
             "venue": "Plénitude Arena"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -64515,8 +66104,8 @@
             "identity_aliases": [
               "Editors"
             ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/g/t/o/400ec93a-296c-4e50-b6d0-5523bcc50415.jpg",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2023/03/editors-2026by-rahi-rezvani-first-press-shot.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -64526,7 +66115,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/editors-2/",
@@ -65945,8 +67534,8 @@
             "identity_aliases": [
               "Klangphonics"
             ],
-            "image_source": "Live Nation",
-            "image_url": "https://dynamicmedia.livenationinternational.com/n/x/d/2bb9cddd-9451-48ec-a77f-b64fbb7aecbc.jpg",
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/10/1_1_klang_press-scaled.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -66486,7 +68075,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/delta-goodrem/",
@@ -70052,6 +71641,53 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-07-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "artist_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Wikidata genre statements (P136)",
+            "genres_public": null,
+            "headliner": "The Strokes",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/y/a/s/fbc89c9a-9a28-45bd-8157-1375579bf1a7.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.livenation.fr/event/off-track-présente-the-strokes-paris-tickets-edp1715083",
+            "venue": "Hippodrome ParisLongchamp"
+          },
+          "first_seen": "2026-11-23T01:47:38Z",
+          "public_id": "0a510ba91329a63f",
+          "state_identity": "0a510ba91329a63f74940159401f2e20b193df601263c93516ffff49e03f6957"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
             "city": "Nanterre",
             "co_headliners": null,
             "date": "2027-07-16",
@@ -71514,7 +73150,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -72023,7 +73659,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -72483,13 +74119,17 @@
               "R&B / Soul / Funk"
             ],
             "headliner": "Tori Kelly",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Tori Kelly"
+            ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/05/tori-kelly-concert-olympia-parisnom-artiste-concert-olympia-paris-352x440.png.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -75399,13 +77039,17 @@
               "Rock / Indie / Punk"
             ],
             "headliner": "The Teskey Brothers",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "The Teskey Brothers"
+            ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/10/the-teskey-brothers-concert-olympia-paris-352x440.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -76241,7 +77885,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -79035,7 +80679,7 @@
           "state_identity": "981972eff4bd70168bf53d719a3b0b6f22019a2c1497fdfb7d152929c388e2e6"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -79696,7 +81340,7 @@
           "state_identity": "b6291222780cff48081e6aefb17268c0cafc16f614c378b26bed7ffb276db8f5"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -79845,7 +81489,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -81244,7 +82888,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -82858,7 +84502,9 @@
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "Man/Woman/Chainsaw",
             "series_name": null,
             "sold_out": false,
@@ -83125,7 +84771,7 @@
           "state_identity": "7c4ebb62acf570558a3053d393ae5e06fde9567c73c0bb278501adc85e242b81"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -83775,7 +85421,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -83999,7 +85645,7 @@
             "genre_public": "Folk / Country",
             "genre_source": "Point Éphémère",
             "genres_public": null,
-            "headliner": "DOVE ELLIS",
+            "headliner": "Dove Ellis",
             "identity_aliases": [
               "DOVE ELLIS"
             ],
@@ -84008,7 +85654,9 @@
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "DOVE ELLIS",
             "series_name": null,
             "sold_out": true,
@@ -84240,16 +85888,18 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Mormor",
+            "headliner": "MorMor",
             "identity_aliases": [
-              "MorMor"
+              "Mormor"
             ],
             "image_source": "Point Éphémère",
             "image_url": "https://images.prismic.io/pointf/5jqMswFdbcpRHmsw_MorMor_tour_solo_Square.jpg?auto=format,compress",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": "MorMor",
             "series_name": null,
             "sold_out": false,
@@ -84646,7 +86296,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -85593,12 +87243,12 @@
           "state_identity": "10f5008cd9e90ce8b8d8ea477bc5e6799d1cc88d7cf683b7329f67bd9e110628"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -87053,14 +88703,18 @@
             "genre_public": "R&B / Soul / Funk",
             "genre_source": "Salle Pleyel",
             "genres_public": null,
-            "headliner": "EMELI SANDE",
-            "identity_aliases": null,
+            "headliner": "Emeli Sandé",
+            "identity_aliases": [
+              "EMELI SANDE"
+            ],
             "image_source": "Salle Pleyel",
             "image_url": "https://www.sallepleyel.com/app/uploads/2026/09/EMELI-SANDE-SITE-717x1024-OK-333x483.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -87073,6 +88727,53 @@
           "first_seen": "2026-09-04T11:34:41Z",
           "public_id": "eac3c4de23d7f0f7",
           "state_identity": "eac3c4de23d7f0f7ae7b3f26603224912b865dbd40e3e4b24cf9b75554a466e4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-26",
+            "department": "75",
+            "event_title": "CELTIC LEGENDS - 25th anniversary Tour",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Grand spectacle",
+            "genre_evidence": [
+              {
+                "raw": "Grand spectacle",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Salle Pleyel",
+            "genres_public": null,
+            "headliner": "CELTIC LEGENDS",
+            "identity_aliases": [
+              "CELTIC LEGENDS - 25th anniversary Tour"
+            ],
+            "image_source": "Salle Pleyel",
+            "image_url": "https://www.sallepleyel.com/app/uploads/2025/12/CELTIC-SITE-OK-333x483.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": "CELTIC LEGENDS - 25th anniversary Tour",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.sallepleyel.com/evenement/celtic-legends-2/",
+            "venue": "Salle Pleyel"
+          },
+          "first_seen": "2026-09-01T13:15:20Z",
+          "public_id": "8694f16b3cea31f9",
+          "state_identity": "8694f16b3cea31f98d39bb21bf51075c937cc47808266e45182eb88c8a641625"
         },
         {
           "event": {
@@ -87756,13 +89457,17 @@
             "genre_source": "Salle Pleyel",
             "genres_public": null,
             "headliner": "Loreena McKennitt",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "LOREENA MCKENNITT"
+            ],
             "image_source": "Salle Pleyel",
             "image_url": "https://www.sallepleyel.com/app/uploads/2026/05/LOREENA-SITE-OK-027-333x483.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Alias Production"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -88555,6 +90260,56 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-06-13",
+            "department": "75",
+            "event_title": "Roger Waters",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Salle Pleyel"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Salle Pleyel",
+            "genres_public": null,
+            "headliner": "Legacy",
+            "identity_aliases": [
+              "Roger Waters Presents Legacy",
+              "LEGACY"
+            ],
+            "image_source": "Salle Pleyel",
+            "image_url": "https://www.sallepleyel.com/app/uploads/2026/10/RWL-SITE-333x483.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": "Roger Waters Presents Legacy",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.sallepleyel.com/evenement/roger-waters-presents-legacy/",
+            "venue": "Salle Pleyel"
+          },
+          "first_seen": "2026-10-06T10:04:19Z",
+          "public_id": "76e2adf16033a1c2",
+          "state_identity": "76e2adf16033a1c2f1aa457471a56c3e445bb8e2f98ce5d7d130149f65a373bf"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-06-19",
             "department": "75",
             "event_title": null,
@@ -89146,7 +90901,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -89773,7 +91528,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -98630,7 +100385,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -98690,7 +100445,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -99917,7 +101672,7 @@
           "state_identity": "9e22085fae6ff891b4353d92bd8f51588d2d04e89f06c340bfa30d27db5d25be"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -103070,7 +104825,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -103145,19 +104900,15 @@
             "genre_public": "Pop",
             "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "Blowsom",
+            "headliner": "BLOWSOM",
             "identity_aliases": [
-              "Blowsom",
-              "Blowsom + DO not DO"
+              "BLOWSOM"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/add6e785-ed0f-47a9-bd30-ec6a92d0da87.jpg?rect=0%2C0%2C1182%2C1182",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Blowsom",
-              "DO not DO"
-            ],
+            "performers": null,
             "promoters": [
               "Zouave"
             ],
@@ -103167,7 +104918,7 @@
             "start_time": "20:30",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://billetterie.laclef.asso.fr/agenda/297-BLOWSOM-DO-NOT-DO",
+            "ticket_url": "https://dice.fm/event/6a91ae7c9562bc00010ed89d",
             "venue": "La CLEF"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -103412,12 +105163,12 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "NOÉ PRESZOW",
+            "headliner": "Noé Preszow",
             "identity_aliases": [
               "NOE PRESZOW"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/04/650x650_cigale.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -103427,7 +105178,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/noe-preszow-3/",
@@ -103921,7 +105672,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -106386,7 +108137,7 @@
             "genre_public": "Pop",
             "genre_source": "Apple Music artist metadata",
             "genres_public": null,
-            "headliner": "Blowsom",
+            "headliner": "BLOWSOM",
             "identity_aliases": null,
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/blowsom-elysee-montmartre.jpg",
@@ -106408,10 +108159,10 @@
           "state_identity": "b17be160cdf51b4b9dd4e4a2222d2a7356891f0f4c960b7279f9780ee487eb97"
         }
       ],
-      "last_successful_at": "2026-11-23T00:19:30Z",
+      "last_successful_at": "2026-11-23T01:47:38Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-23T00:19:30Z",
+  "updated_at": "2026-11-23T01:47:38Z",
   "version": 1
 }
