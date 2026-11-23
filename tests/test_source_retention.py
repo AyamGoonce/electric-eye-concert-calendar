@@ -553,8 +553,12 @@ class SourceRetentionTests(unittest.TestCase):
                                  if h["source_name"] == "Supersonic")["fallback_expired_count"])
 
     def test_relocated_duplicate_is_not_saved_as_dormant_snapshot(self):
-        prior, _ = source_state("Supersonic", rows=[event("Confirmed Act", venue="La Cigale")])
-        relocated = event("Confirmed Act", venue="L'Alhambra")
+        prior, _ = source_state("Supersonic", rows=[
+            event("South Arcade", date="2027-03-18", venue="Backstage By The Mill",
+                  ticket_url="https://supersonic.test/old"),
+        ])
+        relocated = event("South Arcade", date="2027-03-18", venue="L'Alhambra",
+                          ticket_url="https://official.test/new")
         rows, report = run([
             scraper("Official", [relocated]),
             scraper("Supersonic", RuntimeError("timeout")),
