@@ -537,7 +537,21 @@ def resolve_artist_billings(
             ):
                 scoped_artists = _stable_unique(scoped_review.get("artists") or [])
                 if len(scoped_artists) >= 2:
+                    # The reviewed physical event can distinguish announced
+                    # supports from co-headliners. Never promote an expressly
+                    # supported act merely because a source sends a flat bill.
+                    reviewed_openers = _stable_unique(scoped_review.get("openers") or [])
+                    artist_keys = {_key(name) for name in scoped_artists}
+                    if reviewed_openers and (
+                        _key(scoped_artists[0]) in {_key(name) for name in reviewed_openers}
+                        or any(_key(name) not in artist_keys for name in reviewed_openers)
+                    ):
+                        raise ValueError("Reviewed support credits must be trailing members of the event roster")
                     event.co_headliners = None
+                    if reviewed_openers:
+                        event.openers = _stable_unique([
+                            *(event.openers or []), *reviewed_openers
+                        ]) or None
                     _set_resolution(
                         event, scoped_artists, method="reviewed_event",
                         confidence=100,
