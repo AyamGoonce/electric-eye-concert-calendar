@@ -207,7 +207,7 @@ def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> li
         return []
 
     separators = list(re.finditer(
-        r"\s+(?:\+|/|•|&|et|[–—-])\s+", title, flags=re.I
+        r"\s+(?:\+|/|•|&|et|[–—-])\s+|\s+w/\s*", title, flags=re.I
     ))
     if not separators or len(separators) > 8:
         return []
@@ -285,8 +285,8 @@ def _set_resolution(
     event.performers = artists
     if presenter:
         event.promoters = _stable_unique([*(event.promoters or []), presenter]) or None
-    if description:
-        event.event_title = event.event_title or description
+    if description and (not event.event_title or _key(event.event_title) == _key(original)):
+        event.event_title = description
     event._billing_resolution = {
         "original": original,
         "artists": artists,
@@ -303,6 +303,31 @@ def _source_profile(event: ConcertEvent, profiles: dict) -> tuple[str, dict] | N
         if source in profiles:
             return source, profiles[source] or {}
     return None
+
+
+def _presentation_context(value: str) -> tuple[str, str | None]:
+    """Remove only explicitly labeled show context, never punctuation alone.
+
+    Festival and album descriptors are not artist identities.  A later
+    identity-catalogue or independently structured lineup must still establish
+    every proposed performer boundary.
+    """
+    billing = _clean(value)
+    festival = re.fullmatch(
+        r"(?P<billing>.+?)\s+\|\s+(?P<context>[^|]*\bfestival\b[^|]*)",
+        billing,
+        re.I,
+    )
+    if festival:
+        return _clean(festival["billing"]), _clean(festival["context"])
+    album = re.fullmatch(
+        r"(?P<billing>.+?)\s+[-–—]\s+(?P<context>nouvel\s+album(?:\s+.+)?)",
+        billing,
+        re.I,
+    )
+    if album:
+        return _clean(album["billing"]), _clean(album["context"])
+    return billing, None
 
 
 def _profile_candidate(
@@ -323,6 +348,8 @@ def _profile_candidate(
             description = _clean(match.group(0))
             billing = _clean(billing[:match.start()])
             break
+    billing, label = _presentation_context(billing)
+    description = description or label
     candidate_plus = profile.get("candidateSpacedPlus") or profile.get("spacedPlus")
     return (
         billing,
@@ -343,7 +370,7 @@ def _billing_matches_roster(billing: str, artists: list[str]) -> bool:
     """Verify that the complete displayed bill matches every roster member."""
     if len(artists) < 2:
         return False
-    separator = r"\s+(?:\+|/|•|&|et|[–—-])\s+"
+    separator = r"(?:\s+(?:\+|/|•|&|et|[–—-])\s+|\s+w/\s*)"
     pattern = "^" + separator.join(
         re.escape(name).replace(r"\ ", r"\s+") for name in artists
     ) + "$"
@@ -416,8 +443,8 @@ def _apply_profile_context(
         event.headliner = billing
     if presenter:
         event.promoters = _stable_unique([*(event.promoters or []), presenter]) or None
-    if description:
-        event.event_title = event.event_title or description
+    if description and (not event.event_title or _key(event.event_title) == _key(original)):
+        event.event_title = description
 
 
 def _record(diagnostics: dict, event: ConcertEvent) -> None:
@@ -590,6 +617,8 @@ def resolve_artist_billings(
             billing, profile_parts, presenter, description = _profile_candidate(
                 original, profile
             )
+        else:
+            billing, description = _presentation_context(original)
 
         # A complete known project identity always protects its delimiters.
         if identity in identities or _key(billing) in identities:
