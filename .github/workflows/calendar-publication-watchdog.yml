@@ -1,0 +1,79 @@
+name: Watch Electric Eye Calendar Publication
+
+on:
+  schedule:
+    # Independent hourly check; the calendar itself remains on its three-hour schedule.
+    - cron: "43 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: electric-eye-calendar-watchdog
+  cancel-in-progress: false
+
+jobs:
+  check-publication:
+    name: Verify publication freshness and recover missed schedule
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out watchdog code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+
+      - name: Read verified publication and calendar-run history
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/contents/proof/calendar-current.js?ref=gh-pages" --jq '.content' | base64 --decode > "${RUNNER_TEMP}/calendar-pointer.js"
+          gh api "repos/${GITHUB_REPOSITORY}/actions/workflows/update-calendar.yml/runs?per_page=30" > "${RUNNER_TEMP}/calendar-runs.json"
+
+      - name: Evaluate publication freshness
+        id: decision
+        shell: bash
+        run: |
+          python -m concert_calendar.schedule_watchdog check \
+            --pointer "${RUNNER_TEMP}/calendar-pointer.js" \
+            --runs "${RUNNER_TEMP}/calendar-runs.json" > "${RUNNER_TEMP}/watchdog-decision.json"
+          cat "${RUNNER_TEMP}/watchdog-decision.json"
+          echo "action=$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["action"])' "${RUNNER_TEMP}/watchdog-decision.json")" >> "${GITHUB_OUTPUT}"
+
+      - name: Request guarded calendar recovery
+        if: steps.decision.outputs.action == 'recover'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/actions/workflows/update-calendar.yml/dispatches" -f ref=supersonic-scraper
+          echo "Requested the existing guarded calendar production workflow." >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Alert administrator about stale publication
+        if: steps.decision.outputs.action == 'recover'
+        continue-on-error: true
+        env:
+          ZOHO_MAIL_APP_PASSWORD: ${{ secrets.ZOHO_MAIL_APP_PASSWORD }}
+        run: |
+          python -m concert_calendar.schedule_watchdog notify \
+            --decision "${RUNNER_TEMP}/watchdog-decision.json" \
+            --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
+      - name: Record watchdog outcome
+        if: always()
+        shell: bash
+        run: |
+          if [ -f "${RUNNER_TEMP}/watchdog-decision.json" ]; then
+            echo '## Calendar publication watchdog' >> "${GITHUB_STEP_SUMMARY}"
+            echo '```json' >> "${GITHUB_STEP_SUMMARY}"
+            cat "${RUNNER_TEMP}/watchdog-decision.json" >> "${GITHUB_STEP_SUMMARY}"
+            echo '```' >> "${GITHUB_STEP_SUMMARY}"
+          fi
