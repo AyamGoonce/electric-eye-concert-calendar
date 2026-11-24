@@ -3119,12 +3119,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": "Tiny Habits",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.letrabendo.net/programmation/tiny-habits/",
             "venue": "Le Trabendo"
           },
@@ -3163,12 +3163,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": "Chanpan",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.labellevilloise.com/evenement/autogratis/",
             "venue": "La Bellevilloise"
           },
@@ -3185,7 +3185,7 @@
             "co_headliners": null,
             "date": "2027-03-08",
             "department": "75",
-            "event_title": "Lizzy McAlpine : The Over Country Tour",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -3205,8 +3205,7 @@
             ],
             "headliner": "Lizzy McAlpine",
             "identity_aliases": [
-              "Lizzy McAlpine",
-              "Lizzy McAlpine : The Over Country Tour"
+              "Lizzy McAlpine"
             ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/09/lizzy-mcalpine-concert-olympia-paris-352x440.png.webp",
@@ -3218,12 +3217,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": "Lizzy McAlpine : The Over Country Tour",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.olympiahall.com/agenda/lizzy-mcalpine/",
             "venue": "L'Olympia Bruno Coquatrix"
           },
@@ -3889,7 +3888,7 @@
               "Brooke Combe"
             ],
             "image_source": "La Bellevilloise",
-            "image_url": "https://www.labellevilloise.com/uploads/2026/10/568cb94e-copy-of-lead-pr-1440x960.jpg",
+            "image_url": "https://www.labellevilloise.com/uploads/2026/10/60275f7b-f7ba-490e-8d2b-19f49426d2c6.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -4666,6 +4665,48 @@
           "first_seen": "2026-11-18T20:38:47Z",
           "public_id": "69164cadd38cccc7",
           "state_identity": "69164cadd38cccc7ce1c90a2ef73500d006fe82a310150327b100124501f1127"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Isak Danielson",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://bit.ly/IsakDanielson-AEG27",
+            "venue": "Théâtre de la Tour Eiffel"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "e32f8de9d5b4e3ef",
+          "state_identity": "e32f8de9d5b4e3ef17543eb73539bafa5e379d13905bdfce5daabdd786e50c6c"
         },
         {
           "event": {
@@ -6028,7 +6069,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -10776,7 +10817,7 @@
           "state_identity": "d11318ed922609c1c69c26d4321ff9d9c45b907573e07d73fe0b522e555f120d"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11245,7 +11286,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -13604,7 +13645,7 @@
           "state_identity": "223a217a3f952f1dc7319c29e92a1a99082a9a7c7b469d215a9ec2d5ba4a2113"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -15697,7 +15738,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -15964,7 +16005,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -17326,7 +17367,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -18830,7 +18871,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -20126,7 +20167,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -21877,7 +21918,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -22883,7 +22924,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -24502,7 +24543,7 @@
           "state_identity": "ea633a4aecc3aefa07cdb5d4e90e2263fd72e485eea5a7a81a19a80af402f318"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -25579,7 +25620,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -26358,7 +26399,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -26913,7 +26954,7 @@
           "state_identity": "8c9aad0e475087911f0973fea2061308222b78b22ae5baa867c01754fba977b7"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -27428,9 +27469,11 @@
             "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "THE BLACK DAHLIA MURDER + FUMING MOUTH + CELESTIAL SANCTUARY",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "THE BLACK DAHLIA MURDER + FUMING MOUTH + CELESTIAL SANCTUARY"
+            ],
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/11/theblackdahliamurder-paris-web-800x800.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -27443,7 +27486,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://web.digitick.com/the-black-dahlia-murder-fuming-mouth-celestial-sanctuary-concert-dark-metal-css5-garmonbozia-pg51-ei1123929.html",
+            "ticket_url": "https://petitbain.org/evenement/the-black-dahlia-guest/",
             "venue": "Petit Bain"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -28069,9 +28112,11 @@
             "genre_source": "Garmonbozia",
             "genres_public": null,
             "headliner": "PEELINGFLESH",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "PEELINGFLESH"
+            ],
+            "image_source": "Glazart",
+            "image_url": "https://www.glazart.com/wp-content/uploads/2026/11/peelingflesh_paris_web-468x468.png",
             "openers": null,
             "performance_marker": null,
             "performers": [
@@ -28088,8 +28133,8 @@
             "sold_out": false,
             "start_time": null,
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://web.digitick.com/peelingflesh-snuffed-on-sight-corpse-pile-girl-of-glass-concert-dark-metal-css5-garmonbozia-pg51-ei1136745.html",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.glazart.com/12-03-27-concert-peelingflesh/",
             "venue": "Glazart"
           },
           "first_seen": "2026-10-05T09:47:53Z",
@@ -28100,7 +28145,7 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
-            "category": null,
+            "category": "concert",
             "city": "Paris",
             "co_headliners": null,
             "date": "2027-03-16",
@@ -28122,17 +28167,20 @@
             "genres_public": null,
             "headliner": "MOONSPELL",
             "identity_aliases": [
-              "MOONSPELL + IOTUNN + TODOMAL"
+              "MOONSPELL + IOTUNN + TODOMAL",
+              "MOONSPELL"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/11/moonspell-paris-header-1000x523.png",
             "openers": [
               "IOTUNN",
               "TODOMAL"
             ],
             "performance_marker": null,
             "performers": [
-              "MOONSPELL"
+              "MOONSPELL",
+              "IOTUNN",
+              "TODOMAL"
             ],
             "promoters": [
               "Garmonbozia"
@@ -28140,10 +28188,10 @@
             "raw_title": "MOONSPELL + IOTUNN + TODOMAL",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "18:30",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://web.digitick.com/moonspell-iotunn-todomal-concert-dark-metal-css5-garmonbozia-pg51-ei1136755.html",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/moonspell-iotunn-todomal/",
             "venue": "La Machine du Moulin Rouge"
           },
           "first_seen": "2026-10-05T14:53:22Z",
@@ -28859,9 +28907,58 @@
           "first_seen": "2026-11-18T11:20:57Z",
           "public_id": "5a73c867793dba84",
           "state_identity": "5a73c867793dba8437946fdc1f6bb849cb57c3566bae3f6d711fefb663884f20"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-11-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "PARADISE LOST + VOIVOD + DOOL",
+            "identity_aliases": [
+              "PARADISE LOST"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/paradise-lost-square.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/paradise-lost/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "96758d87facf9a2f",
+          "state_identity": "96758d87facf9a2f648aa33d3484e895ab0edb9778c45c957558d75d93b34a70"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -29078,6 +29175,64 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
+            "co_headliners": [
+              "SNUFFED ON SIGHT",
+              "CORPSE PILE",
+              "GIRL OF GLASS"
+            ],
+            "date": "2027-03-12",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "PEELINGFLESH",
+            "identity_aliases": [
+              "PEELINGFLESH"
+            ],
+            "image_source": "Glazart",
+            "image_url": "https://www.glazart.com/wp-content/uploads/2026/11/peelingflesh_paris_web-468x468.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": [
+              "PEELINGFLESH",
+              "SNUFFED ON SIGHT",
+              "CORPSE PILE",
+              "GIRL OF GLASS"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.glazart.com/12-03-27-concert-peelingflesh/",
+            "venue": "Glazart"
+          },
+          "first_seen": "2026-10-05T09:47:53Z",
+          "public_id": "3e1006be4761fc1e",
+          "state_identity": "3e1006be4761fc1e1cd24d90dc3d642f7cee67f49e1ccebb02257ea5cabe2a92"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
             "co_headliners": null,
             "date": "2027-04-03",
             "department": "75",
@@ -29162,7 +29317,7 @@
           "state_identity": "60fdc152d6b8314d939c84bb42f4cf0b5e0b6a62721fac5a9c4b7714acfb4f6f"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -31743,6 +31898,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-06-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "KANSAS",
+            "identity_aliases": [
+              "KANSAS"
+            ],
+            "image_source": "Le Grand Rex",
+            "image_url": "https://www.legrandrex.com/images/evenements/7d49a438e2e8e1cf9628c36e4499049b.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.legrandrex.com/evenement/1847",
+            "venue": "Le Grand Rex"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "2af52e9a47644abd",
+          "state_identity": "2af52e9a47644abda3281af40025db12220680e6c8df350f67ec79500018f43b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-06-29",
             "department": "75",
             "event_title": null,
@@ -32090,6 +32294,53 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-10-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz",
+            "genre_evidence": [
+              {
+                "raw": "Jazz",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "DIANA KRALL",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": null,
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "af38172cf72831e8",
+          "state_identity": "af38172cf72831e82527ec17f7184de94a521c0ff010a40723fb9d581aaf2c40"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
             "city": "Boulogne-Billancourt",
             "co_headliners": null,
             "date": "2027-10-15",
@@ -32133,6 +32384,53 @@
           "first_seen": "2026-10-21T10:31:35Z",
           "public_id": "1ca6afaabfa826f2",
           "state_identity": "1ca6afaabfa826f2793e201d9d7577b0a465480c7eb88eeabe392bc3ea58afe8"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-10-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Jazz",
+            "genre_evidence": [
+              {
+                "raw": "Jazz",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Jazz / Blues",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "DIANA KRALL",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": null,
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "cfa7abb398b9e1ce",
+          "state_identity": "cfa7abb398b9e1cefe5092c013d42005019ef0f47f02dc6dee21f70d363b4af2"
         },
         {
           "event": {
@@ -32490,7 +32788,7 @@
           "state_identity": "f51292ed2533b166216b6e4b343eb6d31928888ff6e7891ea44fb85cc7589eb7"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -32902,12 +33200,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": "Chanpan",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.labellevilloise.com/evenement/autogratis/",
             "venue": "La Bellevilloise"
           },
@@ -33067,7 +33365,7 @@
               "Brooke Combe"
             ],
             "image_source": "La Bellevilloise",
-            "image_url": "https://www.labellevilloise.com/uploads/2026/10/568cb94e-copy-of-lead-pr-1440x960.jpg",
+            "image_url": "https://www.labellevilloise.com/uploads/2026/10/60275f7b-f7ba-490e-8d2b-19f49426d2c6.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -33172,7 +33470,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -35895,7 +36193,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -38437,7 +38735,7 @@
             "co_headliners": null,
             "date": "2027-03-16",
             "department": "75",
-            "event_title": null,
+            "event_title": "CALI – CALICIURI",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -38452,10 +38750,10 @@
             "genre_public": "Chanson Française / Variétés",
             "genre_source": "La Cigale",
             "genres_public": null,
-            "headliner": "CALI – CALICIURI",
+            "headliner": "Cali",
             "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "image_source": "La Cigale",
+            "image_url": "https://lacigale.fr/wp-content/uploads/2026/09/cali_cigale_site.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -38463,7 +38761,7 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
             "ticket_status": null,
             "ticket_url": "https://lacigale.fr/evenements/cali-caliciuri/",
@@ -40329,7 +40627,7 @@
           "state_identity": "f51292ed2533b166216b6e4b343eb6d31928888ff6e7891ea44fb85cc7589eb7"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -41596,7 +41894,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -42280,6 +42578,63 @@
             "authoritative_billing": false,
             "category": "concert",
             "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-16",
+            "department": "75",
+            "event_title": "MOONSPELL + IOTUNN + TODOMAL",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "MOONSPELL",
+            "identity_aliases": [
+              "MOONSPELL + IOTUNN + TODOMAL",
+              "MOONSPELL"
+            ],
+            "image_source": "La Machine du Moulin Rouge",
+            "image_url": "https://www.lamachinedumoulinrouge.com/wp-content/uploads/2026/11/moonspell-paris-header-1000x523.png",
+            "openers": [
+              "IOTUNN",
+              "TODOMAL"
+            ],
+            "performance_marker": null,
+            "performers": [
+              "MOONSPELL",
+              "IOTUNN",
+              "TODOMAL"
+            ],
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": "MOONSPELL + IOTUNN + TODOMAL",
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:30",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.lamachinedumoulinrouge.com/evenement/moonspell-iotunn-todomal/",
+            "venue": "La Machine du Moulin Rouge"
+          },
+          "first_seen": "2026-10-05T14:53:22Z",
+          "public_id": "37aa9891092fbe35",
+          "state_identity": "37aa9891092fbe352fe62fa597bbf9a3cbd774e256f99a72085be1121bf8b896"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": "concert",
+            "city": "Paris",
             "co_headliners": [
               "FINNEGAN TUI"
             ],
@@ -42480,7 +42835,7 @@
           "state_identity": "ad7ccaf6b6a026b3a1c89d0d50512b155686b8baf06dc90b8ccbffb0ad257cc8"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -45066,12 +45421,12 @@
             "promoters": [
               "Radical Production"
             ],
-            "raw_title": "Bodega",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://radical-production.trium.fr/fr/t/-/event/70399",
             "venue": "La Maroquinerie"
           },
@@ -47883,7 +48238,7 @@
           "state_identity": "b98f020651af0910698e2db4911b874ac13c2dc6f5e2e146f643d935f9a66a2a"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -49428,9 +49783,144 @@
           "first_seen": "2026-11-03T11:51:44Z",
           "public_id": "df85e43d324b4d48",
           "state_identity": "df85e43d324b4d48e45406388c22fdada48b393ea2d54a66d8358d567b420870"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Boulogne-Billancourt",
+            "co_headliners": null,
+            "date": "2028-03-10",
+            "department": "92",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Variété française",
+            "genre_evidence": [
+              {
+                "raw": "Variété française",
+                "source": "La Seine Musicale"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Chanson Française / Variétés",
+            "genre_source": "La Seine Musicale",
+            "genres_public": null,
+            "headliner": "Michael Gregorio Symphonique",
+            "identity_aliases": null,
+            "image_source": "La Seine Musicale",
+            "image_url": "https://www.laseinemusicale.com/app/uploads/2026/11/michael-gregorio-symphonique-la-seine-musicale.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.laseinemusicale.com/fr/product/7639/grande_seine/michael_gregorio_symphonique",
+            "venue": "La Seine Musicale"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "2ce5c0a0ec5cebee",
+          "state_identity": "2ce5c0a0ec5cebee494c14e9e83a01dc2aec25cfc242a826f85ae38667c6b4c4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Boulogne-Billancourt",
+            "co_headliners": null,
+            "date": "2028-03-11",
+            "department": "92",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Variété française",
+            "genre_evidence": [
+              {
+                "raw": "Variété française",
+                "source": "La Seine Musicale"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Chanson Française / Variétés",
+            "genre_source": "La Seine Musicale",
+            "genres_public": null,
+            "headliner": "Michael Gregorio Symphonique",
+            "identity_aliases": null,
+            "image_source": "La Seine Musicale",
+            "image_url": "https://www.laseinemusicale.com/app/uploads/2026/11/michael-gregorio-symphonique-la-seine-musicale.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.laseinemusicale.com/fr/product/7642/grande_seine/michael_gregorio_symphonique",
+            "venue": "La Seine Musicale"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "b524cd63104e1a30",
+          "state_identity": "b524cd63104e1a307751c57cda22697ecd158c90e1387735a68aa89ceaf280e1"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Boulogne-Billancourt",
+            "co_headliners": null,
+            "date": "2028-03-12",
+            "department": "92",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Variété française",
+            "genre_evidence": [
+              {
+                "raw": "Variété française",
+                "source": "La Seine Musicale"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Chanson Française / Variétés",
+            "genre_source": "La Seine Musicale",
+            "genres_public": null,
+            "headliner": "Michael Gregorio Symphonique",
+            "identity_aliases": null,
+            "image_source": "La Seine Musicale",
+            "image_url": "https://www.laseinemusicale.com/app/uploads/2026/11/michael-gregorio-symphonique-la-seine-musicale.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "18:00",
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://billetterie.laseinemusicale.com/fr/product/7645/grande_seine/michael_gregorio_symphonique",
+            "venue": "La Seine Musicale"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "3fec6f8bc36ca795",
+          "state_identity": "3fec6f8bc36ca79579bba8ce7749b68512f31f5171c6515fac389257d3e9ed0a"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -50160,7 +50650,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -50639,6 +51129,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-06-05",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "KANSAS",
+            "identity_aliases": [
+              "KANSAS"
+            ],
+            "image_source": "Le Grand Rex",
+            "image_url": "https://www.legrandrex.com/images/evenements/7d49a438e2e8e1cf9628c36e4499049b.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.legrandrex.com/evenement/1847",
+            "venue": "Le Grand Rex"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "2af52e9a47644abd",
+          "state_identity": "2af52e9a47644abda3281af40025db12220680e6c8df350f67ec79500018f43b"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-06-10",
             "department": "75",
             "event_title": null,
@@ -50965,7 +51504,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -51852,7 +52391,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -54415,7 +54954,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -56187,12 +56726,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": "Tiny Habits",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.letrabendo.net/programmation/tiny-habits/",
             "venue": "Le Trabendo"
           },
@@ -56722,6 +57261,51 @@
           "first_seen": "2026-10-21T17:20:36Z",
           "public_id": "e5ff2ec9ed0ac57d",
           "state_identity": "e5ff2ec9ed0ac57df48d07965f9b57e25efe7b65bf934d0ed11c190adfaf0d07"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-04-15",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "electro",
+            "genre_evidence": [
+              {
+                "raw": "electro",
+                "source": "Le Trabendo"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Electronic",
+            "genre_source": "Le Trabendo",
+            "genres_public": null,
+            "headliner": "Breathe.",
+            "identity_aliases": null,
+            "image_source": "Le Trabendo",
+            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/11/Image-site-Trabendo-14-1500x844.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.letrabendo.net/programmation/breathe/",
+            "venue": "Le Trabendo"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "69d4ab4d316cb29e",
+          "state_identity": "69d4ab4d316cb29ee6349659124d334d8ecc11972bf35abb4a60842a19b3b676"
         },
         {
           "event": {
@@ -57300,7 +57884,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -58820,7 +59404,7 @@
           "state_identity": "536257b880b5a2de07e498ae322df3ea539ddeb55a1e4fd9807661e32df4d9a9"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -63004,6 +63588,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-12-18",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "Joan Dausà",
+            "identity_aliases": null,
+            "image_source": "Le Zénith Paris – La Villette",
+            "image_url": "https://le-zenith.com/media/cache/show_cover/media/uploads/show-banner/6b05662e0fe9d953882831.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://le-zenith.com/shows/Joan%20Daus%C3%A0-22630",
+            "venue": "Le Zénith Paris – La Villette"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "46298a667aa4e4d0",
+          "state_identity": "46298a667aa4e4d0cac2f3e64084293c2c93af9a2ed343dfdcaba7e9521367aa"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2028-01-14",
             "department": "75",
             "event_title": null,
@@ -63118,7 +63742,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -64016,7 +64640,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -67057,6 +67681,59 @@
           "first_seen": "2026-08-20T11:02:59Z",
           "public_id": "28e13ac4cdf3d455",
           "state_identity": "28e13ac4cdf3d4551f3b529f206e98ea40f473fb260ce31e5638cc31ea86284a"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-11",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Electronic",
+            "genre_evidence": [
+              {
+                "raw": "Electronic",
+                "source": "Live Nation"
+              },
+              {
+                "raw": "Electro",
+                "source": "L’Olympia Bruno Coquatrix"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Electronic",
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Trym",
+            "identity_aliases": [
+              "Trym"
+            ],
+            "image_source": "L’Olympia Bruno Coquatrix",
+            "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/11/trym-concert-olympia-parisnom-artiste-concert-olympia-paris-352x440.jpg.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.olympiahall.com/agenda/trym/",
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-11-24T02:16:18Z",
+          "public_id": "0dff90be04c4d421",
+          "state_identity": "0dff90be04c4d421c2b83f520e3bc8b6d173dee542bb2eb8b5431b0c29c294a4"
         },
         {
           "event": {
@@ -71664,6 +72341,55 @@
             "announced_at": null,
             "authoritative_billing": false,
             "category": null,
+            "city": "Paris",
+            "co_headliners": [
+              "Triangle des bermudes"
+            ],
+            "date": "2027-07-09",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Hip Hop / Rap, Other",
+            "genre_evidence": [
+              {
+                "raw": "Hip Hop / Rap, Other",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Live Nation",
+            "genres_public": null,
+            "headliner": "Rema",
+            "identity_aliases": null,
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/z/e/k/dd72d433-9aff-41dd-914b-b3619de57db5.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.livenation.fr/event/off-track-présente-rema-triangle-des-bermudes-paris-tickets-edp1715982",
+            "venue": "OFF TRACK - Hippodrome ParisLongchamp"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "8a0207dbef53baa7",
+          "state_identity": "8a0207dbef53baa7083c88102fe7df149e2162be048842b79871f647c771c0df"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
             "city": "Nanterre",
             "co_headliners": null,
             "date": "2027-07-09",
@@ -71900,7 +72626,7 @@
             "start_time": null,
             "tags": null,
             "ticket_status": null,
-            "ticket_url": "https://www.livenation.fr/event/off-track-présente-the-strokes-paris-tickets-edp1715083",
+            "ticket_url": "https://www.ticketmaster.fr/fr/liste/the-strokes-billet/idlist/6741/idtier/51639872",
             "venue": "OFF TRACK - Hippodrome ParisLongchamp"
           },
           "first_seen": "2026-11-23T01:47:38Z",
@@ -73426,7 +74152,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -73979,7 +74705,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -75091,25 +75817,33 @@
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
-            "genre": "Electro",
+            "genre": "Electronic",
             "genre_evidence": [
+              {
+                "raw": "Electronic",
+                "source": "Live Nation"
+              },
               {
                 "raw": "Electro",
                 "source": "L’Olympia Bruno Coquatrix"
               }
             ],
-            "genre_method": "source_mapping",
+            "genre_method": "source_explicit",
             "genre_public": "Electronic",
-            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genre_source": "Live Nation",
             "genres_public": null,
             "headliner": "Trym",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Trym"
+            ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/11/trym-concert-olympia-parisnom-artiste-concert-olympia-paris-352x440.jpg.webp",
             "openers": null,
             "performance_marker": null,
             "performers": null,
-            "promoters": null,
+            "promoters": [
+              "Live Nation"
+            ],
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
@@ -75625,7 +76359,7 @@
             "co_headliners": null,
             "date": "2027-03-08",
             "department": "75",
-            "event_title": "Lizzy McAlpine : The Over Country Tour",
+            "event_title": null,
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -75645,8 +76379,7 @@
             ],
             "headliner": "Lizzy McAlpine",
             "identity_aliases": [
-              "Lizzy McAlpine",
-              "Lizzy McAlpine : The Over Country Tour"
+              "Lizzy McAlpine"
             ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/09/lizzy-mcalpine-concert-olympia-paris-352x440.png.webp",
@@ -75658,12 +76391,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": "Lizzy McAlpine : The Over Country Tour",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "20:00",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://www.olympiahall.com/agenda/lizzy-mcalpine/",
             "venue": "L'Olympia Bruno Coquatrix"
           },
@@ -76624,6 +77357,51 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-04-22",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Electro",
+            "genre_evidence": [
+              {
+                "raw": "Electro",
+                "source": "L’Olympia Bruno Coquatrix"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Electronic",
+            "genre_source": "L’Olympia Bruno Coquatrix",
+            "genres_public": null,
+            "headliner": "The Avener",
+            "identity_aliases": null,
+            "image_source": "L’Olympia Bruno Coquatrix",
+            "image_url": "https://www.olympiahall.com/wp-content/uploads/2024/09/the-avener-concert-olympia-paris-352x440.jpg.webp",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.olympiahall.com/agenda/the-avener/",
+            "venue": "L'Olympia Bruno Coquatrix"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "1e8f85251c6c0b8f",
+          "state_identity": "1e8f85251c6c0b8f2d1a688e9ced75f7ce52f880703f755cc1d45e9e6ace263f"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-04-23",
             "department": "75",
             "event_title": null,
@@ -76645,7 +77423,9 @@
             "identity_aliases": null,
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/04/novelists-affiche-concert-olympia-paris-352x440.jpg.webp",
-            "openers": null,
+            "openers": [
+              "Sunborn et Karmanjakah"
+            ],
             "performance_marker": null,
             "performers": null,
             "promoters": null,
@@ -78111,7 +78891,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -81025,7 +81805,7 @@
           "state_identity": "dce024f996b368980f6514da374e1132ab2c621777e45f3b8201bf96471b10bb"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -81686,7 +82466,7 @@
           "state_identity": "b6291222780cff48081e6aefb17268c0cafc16f614c378b26bed7ffb276db8f5"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -81835,7 +82615,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -83188,7 +83968,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -83428,13 +84208,15 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "ARABROT + Chéri Chéri",
+            "headliner": "ÅRABROT",
             "identity_aliases": [
-              "ÅRABROT"
+              "ARABROT + Chéri Chéri"
             ],
             "image_source": "Petit Bain",
-            "image_url": "https://petitbain.org/wp-content/uploads/2026/10/arabrot-press-2-photo-by-pal-laukli-800x800.jpg",
-            "openers": null,
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/10/arabrot-cc-1-500x500.jpeg",
+            "openers": [
+              "CHÉRI CHÉRI"
+            ],
             "performance_marker": null,
             "performers": null,
             "promoters": null,
@@ -84328,6 +85110,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-02-02",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "THE BLACK DAHLIA MURDER + FUMING MOUTH + CELESTIAL SANCTUARY",
+            "identity_aliases": [
+              "THE BLACK DAHLIA MURDER + FUMING MOUTH + CELESTIAL SANCTUARY"
+            ],
+            "image_source": "Petit Bain",
+            "image_url": "https://petitbain.org/wp-content/uploads/2026/11/theblackdahliamurder-paris-web-800x800.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://petitbain.org/evenement/the-black-dahlia-guest/",
+            "venue": "Petit Bain"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "09c972d64b1f40fb",
+          "state_identity": "09c972d64b1f40fb6ece378ec0446cddb4d9bc5fdc3c9d29a762d0b444d5a9c3"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-02-03",
             "department": "75",
             "event_title": null,
@@ -85118,7 +85949,7 @@
           "state_identity": "f290fe1a007dd12200197ef21d36032f42178358f4a50dff3a47f1647826bff6"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -85768,7 +86599,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -86604,7 +87435,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -87260,12 +88091,12 @@
             "promoters": [
               "Radical Production"
             ],
-            "raw_title": "Bodega",
+            "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": "19:30",
+            "start_time": null,
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://radical-production.trium.fr/fr/t/-/event/70399",
             "venue": "La Maroquinerie"
           },
@@ -87551,12 +88382,12 @@
           "state_identity": "10f5008cd9e90ce8b8d8ea477bc5e6799d1cc88d7cf683b7329f67bd9e110628"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -91209,7 +92040,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -91836,7 +92667,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -92053,7 +92884,7 @@
             "sold_out": false,
             "start_time": "21:00",
             "tags": null,
-            "ticket_status": "tickets",
+            "ticket_status": null,
             "ticket_url": "https://billetterie.sunset-sunside.com/event/825867-antoine-boyer-bireli-lagrene",
             "venue": "Studio Raspail"
           },
@@ -100693,7 +101524,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -103602,24 +104433,22 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Sunday Tribute - The Strokes",
-            "identity_aliases": [
-              "Sunday Tribute – The Strokes"
-            ],
-            "image_source": "DICE",
-            "image_url": "https://dice-media.imgix.net/attachments/2026-11-10/c5cd2aca-7d7b-4409-9304-6988d98692ab.jpg?rect=0%2C580%2C2676%2C2676",
+            "headliner": "Sunday Tribute – The Strokes",
+            "identity_aliases": null,
+            "image_source": null,
+            "image_url": null,
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
               "Supersonic"
             ],
-            "raw_title": "Sunday Tribute - The Strokes",
+            "raw_title": "Sunday Tribute – The Strokes",
             "series_name": null,
-            "sold_out": true,
-            "start_time": "19:00",
+            "sold_out": false,
+            "start_time": null,
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": null,
             "ticket_url": "https://supersonic-club.fr/evenement/sunday-tribute-the-strokes-7th-mar-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
@@ -104497,7 +105326,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -104552,7 +105381,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -105734,7 +106563,7 @@
           "state_identity": "9e22085fae6ff891b4353d92bd8f51588d2d04e89f06c340bfa30d27db5d25be"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -108836,7 +109665,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -108911,15 +109740,19 @@
             "genre_public": "Pop",
             "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "BLOWSOM",
+            "headliner": "Blowsom",
             "identity_aliases": [
-              "BLOWSOM"
+              "Blowsom",
+              "Blowsom + DO not DO"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/add6e785-ed0f-47a9-bd30-ec6a92d0da87.jpg?rect=0%2C0%2C1182%2C1182",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Blowsom",
+              "DO not DO"
+            ],
             "promoters": [
               "Zouave"
             ],
@@ -109683,7 +110516,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -111680,6 +112513,46 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-04-16",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "SKINSHAPE",
+            "identity_aliases": null,
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/skinshape-elysee-montmartre.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/skinshape/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "4098c546b33e61c1",
+          "state_identity": "4098c546b33e61c15cfb825dfafb45527b2c3d45e3912d4e1bf787a928eee8d4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-04-17",
             "department": "75",
             "event_title": null,
@@ -112136,6 +113009,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-11-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Dark / Metal",
+            "genre_evidence": [
+              {
+                "raw": "Dark / Metal",
+                "source": "Garmonbozia"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Garmonbozia",
+            "genres_public": null,
+            "headliner": "PARADISE LOST + VOIVOD + DOOL",
+            "identity_aliases": [
+              "PARADISE LOST"
+            ],
+            "image_source": "Élysée Montmartre",
+            "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/paradise-lost-square.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Garmonbozia"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.elyseemontmartre.com/fr/programmation/paradise-lost/",
+            "venue": "Élysée Montmartre"
+          },
+          "first_seen": "2026-11-24T11:57:49Z",
+          "public_id": "96758d87facf9a2f",
+          "state_identity": "96758d87facf9a2f648aa33d3484e895ab0edb9778c45c957558d75d93b34a70"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-11-30",
             "department": "75",
             "event_title": null,
@@ -112148,7 +113070,7 @@
             "genre_public": "Pop",
             "genre_source": "Apple Music artist metadata",
             "genres_public": null,
-            "headliner": "BLOWSOM",
+            "headliner": "Blowsom",
             "identity_aliases": null,
             "image_source": "Élysée Montmartre",
             "image_url": "https://www.elyseemontmartre.com/wp-content/uploads/sites/2/blowsom-elysee-montmartre.jpg",
@@ -112170,10 +113092,10 @@
           "state_identity": "b17be160cdf51b4b9dd4e4a2222d2a7356891f0f4c960b7279f9780ee487eb97"
         }
       ],
-      "last_successful_at": "2026-11-24T02:16:18Z",
+      "last_successful_at": "2026-11-24T11:57:49Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-24T02:16:18Z",
+  "updated_at": "2026-11-24T11:57:49Z",
   "version": 1
 }
