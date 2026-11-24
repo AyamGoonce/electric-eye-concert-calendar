@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Electric Eye Index | Artists, Concerts, Articles, Venues & Genres</title>
+  <meta name="description" content="Search and browse Electric Eye artists, concerts, articles, venues and genres.">
+  <link rel="canonical" href="https://archive.electriceyerock.com/">
+  <link rel="stylesheet" href="/proof/archive-index.css">
+</head>
+<body>
+  <main class="ee-archive">
+    <nav class="ee-archive-nav" aria-label="Archive navigation">
+      <button class="ee-back-link" type="button" onclick="if (history.length > 1) { history.back(); } else { location.href='https://www.electriceyerock.com/p/welcome-to-electric-eye.html'; }">
+        ← Back
+      </button>
+    </nav>
+    <header class="ee-archive-hero">
+      <a class="ee-archive-kicker ee-home-link" href="https://www.electriceyerock.com/p/welcome-to-electric-eye.html">Electric Eye</a>
+      <h1>Index</h1>
+      <p class="ee-archive-intro">
+        Search Electric Eye coverage, concerts, venues and genres.
+      </p>
+    </header>
+
+    <section class="ee-global-search" aria-labelledby="ee-global-search-label">
+      <form id="ee-global-search-form" role="search">
+        <label id="ee-global-search-label" for="ee-global-search-input">
+          Search Electric Eye Archive
+        </label>
+        <div class="ee-global-search-field">
+          <input
+            id="ee-global-search-input"
+            type="search"
+            placeholder="Search artists, concerts, articles, venues and genres…"
+            aria-controls="ee-global-search-results"
+            aria-expanded="false"
+            autocomplete="off"
+          >
+          <button
+            id="ee-global-search-clear"
+            type="button"
+            aria-label="Clear archive search"
+            hidden
+          >
+            Clear
+          </button>
+        </div>
+      </form>
+      <p id="ee-global-search-status" class="ee-global-search-status" aria-live="polite"></p>
+      <div id="ee-global-search-results" class="ee-global-search-results" hidden></div>
+    </section>
+
+    <div class="ee-archive-sections">
+      <section class="ee-index-section" id="ee-index-artists">
+        <button
+          class="ee-index-heading"
+          type="button"
+          aria-expanded="false"
+          aria-controls="ee-index-artists-body"
+        >
+          <span class="ee-index-heading-title">
+            <span class="ee-index-chevron" aria-hidden="true">›</span>
+            <span>Artists</span>
+          </span>
+          <span class="ee-index-count">Loading…</span>
+        </button>
+        <div class="ee-index-body" id="ee-index-artists-body" hidden>
+          <input
+            class="ee-index-search"
+            type="search"
+            placeholder="Search artists…"
+            aria-label="Search artists"
+            autocomplete="off"
+          >
+          <nav class="ee-index-alphabet" aria-label="Artist alphabet"></nav>
+          <div class="ee-index-results">
+            <p class="ee-index-loading">Loading artists…</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ee-index-section" id="ee-index-venues">
+        <button
+          class="ee-index-heading"
+          type="button"
+          aria-expanded="false"
+          aria-controls="ee-index-venues-body"
+        >
+          <span class="ee-index-heading-title">
+            <span class="ee-index-chevron" aria-hidden="true">›</span>
+            <span>Venues</span>
+          </span>
+          <span class="ee-index-count">Loading…</span>
+        </button>
+        <div class="ee-index-body" id="ee-index-venues-body" hidden>
+          <input
+            class="ee-index-search"
+            type="search"
+            placeholder="Search venues…"
+            aria-label="Search venues"
+            autocomplete="off"
+          >
+          <nav class="ee-index-alphabet" aria-label="Venue alphabet"></nav>
+          <div class="ee-index-results">
+            <p class="ee-index-loading">Loading venues…</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ee-index-section" id="ee-index-genres">
+        <button
+          class="ee-index-heading"
+          type="button"
+          aria-expanded="false"
+          aria-controls="ee-index-genres-body"
+        >
+          <span class="ee-index-heading-title">
+            <span class="ee-index-chevron" aria-hidden="true">›</span>
+            <span>Genres</span>
+          </span>
+          <span class="ee-index-count">Loading…</span>
+        </button>
+        <div class="ee-index-body" id="ee-index-genres-body" hidden>
+          <input
+            class="ee-index-search"
+            type="search"
+            placeholder="Search genres…"
+            aria-label="Search genres"
+            autocomplete="off"
+          >
+          <div class="ee-index-results ee-genre-tree">
+            <p class="ee-index-loading">Loading genres…</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="ee-archive-links" aria-label="Electric Eye">
+      <a href="https://www.electriceyerock.com/">Electric Eye</a>
+      <a href="https://www.electriceyerock.com/p/paris-area-concert-calendar.html">Concert Calendar</a>
+    </nav>
+  </main>
+
+  <script src="/proof/electric-eye-artist-lookup.js"></script>
+  <script src="/proof/electric-eye-content-current.js"></script>
+  <script src="/proof/calendar-current.js"></script>
+  <script src="/proof/venue-current.js"></script>
+  <script src="/proof/genre-current.js"></script>
+  <script src="/proof/archive-index.js"></script>
+</body>
+</html>
