@@ -6069,7 +6069,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -6286,7 +6286,10 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Culture Club",
+              "Shaggy"
+            ],
             "date": "2026-12-04",
             "department": "75",
             "event_title": null,
@@ -6300,19 +6303,25 @@
                 "source": "Accor Arena"
               }
             ],
-            "genre_method": "artist_mapping",
-            "genre_public": "Pop",
-            "genre_source": "Official/current event billing and source genre evidence",
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": "Accor Arena",
             "genres_public": null,
-            "headliner": "BOY GEORGE w/CULTURE CLUB & SHAGGY",
-            "identity_aliases": null,
+            "headliner": "Boy George",
+            "identity_aliases": [
+              "BOY GEORGE w/CULTURE CLUB & SHAGGY"
+            ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/e50dbc53-27ce-44ac-86ec-b1b2e519011f.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Boy George",
+              "Culture Club",
+              "Shaggy"
+            ],
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "BOY GEORGE w/CULTURE CLUB & SHAGGY",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:30",
@@ -10817,7 +10826,7 @@
           "state_identity": "d11318ed922609c1c69c26d4321ff9d9c45b907573e07d73fe0b522e555f120d"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
@@ -11286,7 +11295,7 @@
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -11738,7 +11747,9 @@
             "authoritative_billing": false,
             "category": "Pop Rock",
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Maxwell Farrington & Le SuperHomard"
+            ],
             "date": "2026-12-11",
             "department": "75",
             "event_title": null,
@@ -11756,17 +11767,21 @@
             "genre_public": "Rock / Indie / Punk",
             "genre_source": "Alhambra",
             "genres_public": null,
-            "headliner": "Tahiti 80 + Maxwell Farrington & Le Superhomard",
+            "headliner": "Tahiti 80",
             "identity_aliases": [
-              "Tahiti 80 + Maxwell Farrington & Le Superhomard"
+              "TAHITI 80 + MAXWELL FARRINGTON & LE SUPERHOMARD",
+              "Tahiti 80"
             ],
             "image_source": "Alhambra",
             "image_url": "https://www.alhambra-paris.com/files/125/v_2605061028380.png",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Tahiti 80",
+              "Maxwell Farrington & Le SuperHomard"
+            ],
             "promoters": null,
-            "raw_title": "Tahiti 80 + Maxwell Farrington & Le Superhomard",
+            "raw_title": "TAHITI 80 + MAXWELL FARRINGTON & LE SUPERHOMARD",
             "series_name": null,
             "sold_out": false,
             "start_time": "19:30",
@@ -13645,7 +13660,7 @@
           "state_identity": "223a217a3f952f1dc7319c29e92a1a99082a9a7c7b469d215a9ec2d5ba4a2113"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -14429,6 +14444,55 @@
           "first_seen": "2026-11-18T11:20:57Z",
           "public_id": "173652643e72ec1c",
           "state_identity": "173652643e72ec1cfa1c7cbcac3cdeef59896b64cf42c98c02e5c14af23df177"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "indie-pop",
+            "genre_evidence": [
+              {
+                "raw": "indie-pop",
+                "source": "Le Trabendo"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Le Trabendo",
+            "genres_public": null,
+            "headliner": "EX:RE",
+            "identity_aliases": [
+              "EX:RE"
+            ],
+            "image_source": "Le Trabendo",
+            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/11/Image-site-Trabendo-15-1500x844.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.letrabendo.net/programmation/exre/",
+            "venue": "Le Trabendo"
+          },
+          "first_seen": "2026-11-24T12:32:01Z",
+          "public_id": "3cfb7cf7f73ca4d1",
+          "state_identity": "3cfb7cf7f73ca4d19ae856900f0c9b4f03fee8dc5fa20eb4f534e5b9f8de20db"
         },
         {
           "event": {
@@ -15738,7 +15802,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16005,7 +16069,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -17367,7 +17431,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -17561,7 +17625,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Montreuil",
-            "co_headliners": null,
+            "co_headliners": [
+              "Corto Malaise"
+            ],
             "date": "2026-12-09",
             "department": "93",
             "event_title": null,
@@ -17570,19 +17636,23 @@
             "festival_name": null,
             "genre": null,
             "genre_evidence": [],
-            "genre_method": null,
-            "genre_public": null,
-            "genre_source": null,
+            "genre_method": "bill_consensus",
+            "genre_public": "Electronic",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
-            "headliner": "SCHLAASSS + CORTO MALAISE",
+            "headliner": "Schlaasss",
             "identity_aliases": [
-              "SCHLAASSS + CORTO MALAISE"
+              "SCHLAASSS + CORTO MALAISE",
+              "Schlaasss"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-07-06/50e261f5-526d-43f8-a1de-7785ab81ace3.jpg?rect=0%2C0%2C1000%2C1000",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Schlaasss",
+              "Corto Malaise"
+            ],
             "promoters": [
               "La Marbrerie"
             ],
@@ -18871,7 +18941,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -20167,7 +20237,7 @@
           "state_identity": "49abe79683b4836a35e6b3fa1c38a7ffeb9c34021b77a636fb776b2ace65f65e"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -21918,7 +21988,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -22924,7 +22994,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -24543,7 +24613,7 @@
           "state_identity": "ea633a4aecc3aefa07cdb5d4e90e2263fd72e485eea5a7a81a19a80af402f318"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -25620,7 +25690,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -26399,7 +26469,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -26954,7 +27024,7 @@
           "state_identity": "8c9aad0e475087911f0973fea2061308222b78b22ae5baa867c01754fba977b7"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -28958,7 +29028,7 @@
           "state_identity": "96758d87facf9a2f648aa33d3484e895ab0edb9778c45c957558d75d93b34a70"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -29317,7 +29387,7 @@
           "state_identity": "60fdc152d6b8314d939c84bb42f4cf0b5e0b6a62721fac5a9c4b7714acfb4f6f"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -32788,7 +32858,7 @@
           "state_identity": "f51292ed2533b166216b6e4b343eb6d31928888ff6e7891ea44fb85cc7589eb7"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -33470,7 +33540,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -36193,7 +36263,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -40627,7 +40697,7 @@
           "state_identity": "f51292ed2533b166216b6e4b343eb6d31928888ff6e7891ea44fb85cc7589eb7"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -41894,7 +41964,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -42835,7 +42905,7 @@
           "state_identity": "ad7ccaf6b6a026b3a1c89d0d50512b155686b8baf06dc90b8ccbffb0ad257cc8"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -48238,7 +48308,7 @@
           "state_identity": "b98f020651af0910698e2db4911b874ac13c2dc6f5e2e146f643d935f9a66a2a"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -49920,7 +49990,7 @@
           "state_identity": "3fec6f8bc36ca79579bba8ce7749b68512f31f5171c6515fac389257d3e9ed0a"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -50650,7 +50720,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -51238,19 +51308,22 @@
               "Pop",
               "Rock / Indie / Punk"
             ],
-            "headliner": "STEEVE HACKETT",
+            "headliner": "Steve Hackett",
             "identity_aliases": [
+              "STEEVE HACKETT",
               "Steve Hackett"
             ],
-            "image_source": "Le Grand Rex",
-            "image_url": "https://www.legrandrex.com/images/evenements/b25752b8efdc09ca2532cec0909f1930.jpg",
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHS9ed7s19dizBQUQp5QqYemI4DCx5xsLkWMq0QW8f3wxOGmTdX9CVL1hGoVuv81ux3LBGHgq6xnxC6fqzCT-ldiKXI_oBRySCds6PsM7rFRjJ2Wh_-y6UBRK27pAEJGdaH0iFgs-7QDZKYCnzruTH4WkP-h92CaUHQNPjCfagMWAe3ndoKu7atRghfJY/s72-w640-h426-c-rw/Steve%20Hackett20260513Sallle%20PleyelParis%2008_84.JPG",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Steve Hackett"
+            ],
             "promoters": [
               "Live Nation"
             ],
-            "raw_title": null,
+            "raw_title": "STEEVE HACKETT",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -51504,7 +51577,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -51753,10 +51826,12 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Chico Blanco"
+            ],
             "date": "2026-12-05",
             "department": "75",
-            "event_title": null,
+            "event_title": "NYOKOBOP Festival",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -51774,15 +51849,20 @@
               "Electronic",
               "Pop"
             ],
-            "headliner": "Jimena Amarillo + Chico Blanco | NYOKOBOP Festival",
-            "identity_aliases": null,
+            "headliner": "Jimena Amarillo",
+            "identity_aliases": [
+              "Jimena Amarillo + Chico Blanco | NYOKOBOP Festival"
+            ],
             "image_source": "Le Hasard Ludique",
             "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/16195/header-site-hl.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Jimena Amarillo",
+              "Chico Blanco"
+            ],
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Jimena Amarillo + Chico Blanco | NYOKOBOP Festival",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -51804,7 +51884,7 @@
             "co_headliners": null,
             "date": "2026-12-10",
             "department": "75",
-            "event_title": null,
+            "event_title": "NYOKOBOP Festival",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -51819,15 +51899,17 @@
             "genre_public": null,
             "genre_source": "Le Hasard Ludique",
             "genres_public": null,
-            "headliner": "Ragapop + Aili & Orson + Arsenal Mikebe | NYOKOBOP Festival",
-            "identity_aliases": null,
+            "headliner": "Ragapop + Aili & Orson + Arsenal Mikebe",
+            "identity_aliases": [
+              "Ragapop + Aili & Orson + Arsenal Mikebe | NYOKOBOP Festival"
+            ],
             "image_source": "Le Hasard Ludique",
             "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/16196/header_site_hl.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Ragapop + Aili & Orson + Arsenal Mikebe | NYOKOBOP Festival",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -52391,7 +52473,7 @@
           "state_identity": "0909f0a4a830740ed852f40b890e58a2180cdc4eafbdc798ffebe86650495c02"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -54954,7 +55036,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -55444,10 +55526,12 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Cruel Santino"
+            ],
             "date": "2026-12-11",
             "department": "75",
-            "event_title": null,
+            "event_title": "NYOKOBOP Festival",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -55462,15 +55546,20 @@
             "genre_public": "Hip-hop / Rap",
             "genre_source": "Le Trabendo",
             "genres_public": null,
-            "headliner": "Internet Girl + Cruel Santino | NYOKOBOP Festival",
-            "identity_aliases": null,
+            "headliner": "Internet Girl",
+            "identity_aliases": [
+              "Internet Girl + Cruel Santino | NYOKOBOP Festival"
+            ],
             "image_source": "Le Trabendo",
             "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/09/NYOKOBOP_FESTIVAL_2026_FOCUS_16-9-shotgun-1500x844.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Internet Girl",
+              "Cruel Santino"
+            ],
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Internet Girl + Cruel Santino | NYOKOBOP Festival",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -56936,6 +57025,55 @@
             "category": null,
             "city": "Paris",
             "co_headliners": null,
+            "date": "2027-03-17",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "indie-pop",
+            "genre_evidence": [
+              {
+                "raw": "indie-pop",
+                "source": "Le Trabendo"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Pop",
+            "genre_source": "Le Trabendo",
+            "genres_public": null,
+            "headliner": "EX:RE",
+            "identity_aliases": [
+              "EX:RE"
+            ],
+            "image_source": "Le Trabendo",
+            "image_url": "https://www.letrabendo.net/wp-content/uploads/2026/11/Image-site-Trabendo-15-1500x844.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": null,
+            "ticket_url": "https://www.letrabendo.net/programmation/exre/",
+            "venue": "Le Trabendo"
+          },
+          "first_seen": "2026-11-24T12:32:01Z",
+          "public_id": "3cfb7cf7f73ca4d1",
+          "state_identity": "3cfb7cf7f73ca4d19ae856900f0c9b4f03fee8dc5fa20eb4f534e5b9f8de20db"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
             "date": "2027-03-18",
             "department": "75",
             "event_title": null,
@@ -57884,7 +58022,7 @@
           "state_identity": "d4abd5385a8b6ed50935ac78b36c20d5d0e52b5ad56b7ea6a4b87b5e25eed674"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -59404,7 +59542,7 @@
           "state_identity": "536257b880b5a2de07e498ae322df3ea539ddeb55a1e4fd9807661e32df4d9a9"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -63742,7 +63880,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -64640,7 +64778,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -73028,19 +73166,22 @@
               "Pop",
               "Rock / Indie / Punk"
             ],
-            "headliner": "STEEVE HACKETT",
+            "headliner": "Steve Hackett",
             "identity_aliases": [
+              "STEEVE HACKETT",
               "Steve Hackett"
             ],
-            "image_source": "Le Grand Rex",
-            "image_url": "https://www.legrandrex.com/images/evenements/b25752b8efdc09ca2532cec0909f1930.jpg",
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgHS9ed7s19dizBQUQp5QqYemI4DCx5xsLkWMq0QW8f3wxOGmTdX9CVL1hGoVuv81ux3LBGHgq6xnxC6fqzCT-ldiKXI_oBRySCds6PsM7rFRjJ2Wh_-y6UBRK27pAEJGdaH0iFgs-7QDZKYCnzruTH4WkP-h92CaUHQNPjCfagMWAe3ndoKu7atRghfJY/s72-w640-h426-c-rw/Steve%20Hackett20260513Sallle%20PleyelParis%2008_84.JPG",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Steve Hackett"
+            ],
             "promoters": [
               "Live Nation"
             ],
-            "raw_title": null,
+            "raw_title": "STEEVE HACKETT",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -74152,7 +74293,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -74705,7 +74846,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -78891,7 +79032,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -79355,10 +79496,13 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Safaa Fathy",
+              "Héctor Cavallaro"
+            ],
             "date": "2026-12-06",
             "department": "75",
-            "event_title": null,
+            "event_title": "Sentinelle – Cygnes de la mer d'Égée",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -79368,15 +79512,22 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Sentinelle - Cygnes de la mer d'Egée",
-            "identity_aliases": null,
+            "headliner": "Naïssam Jalal",
+            "identity_aliases": [
+              "Sentinelle - Cygnes de la mer d'Egée",
+              "Naïssam Jalal"
+            ],
             "image_source": "New Morning",
             "image_url": "https://www.newmorning.com/photos/evenements/formations/800/8743.jpg",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Naïssam Jalal",
+              "Safaa Fathy",
+              "Héctor Cavallaro"
+            ],
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Sentinelle - Cygnes de la mer d'Egée",
             "series_name": null,
             "sold_out": false,
             "start_time": null,
@@ -81805,7 +81956,7 @@
           "state_identity": "dce024f996b368980f6514da374e1132ab2c621777e45f3b8201bf96471b10bb"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -82466,7 +82617,7 @@
           "state_identity": "b6291222780cff48081e6aefb17268c0cafc16f614c378b26bed7ffb276db8f5"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -82615,7 +82766,7 @@
           "state_identity": "41d705e1058fe6634529368f715b33b9e11d9f26c4f435ee4fdc0e514936a134"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -83968,7 +84119,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -85949,7 +86100,7 @@
           "state_identity": "f290fe1a007dd12200197ef21d36032f42178358f4a50dff3a47f1647826bff6"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -86599,7 +86750,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -87435,7 +87586,7 @@
           "state_identity": "9139986fb012b22d293628f12ed0d92dc8684bed9679830532e72079a507ae45"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -88382,12 +88533,12 @@
           "state_identity": "10f5008cd9e90ce8b8d8ea477bc5e6799d1cc88d7cf683b7329f67bd9e110628"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -92040,7 +92191,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -92667,7 +92818,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -92916,9 +93067,10 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Bloom - Nouvel album",
+            "headliner": "Bloom",
             "identity_aliases": [
-              "Bloom - Nouvel album \"Mosaïque\""
+              "Bloom - Nouvel album \"Mosaïque\"",
+              "Bloom - Nouvel album"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/9/16/6aaa5b867c2f9-pochette-exterieure-bd.jpeg_thumbs/340-340.jpeg",
@@ -94189,9 +94341,10 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Ludovic Ernault & Simon Martineau - Nouvel album",
+            "headliner": "Ludovic Ernault & Simon Martineau",
             "identity_aliases": [
-              "Ludovic Ernault & Simon Martineau - Nouvel album \"Ida Lupino\""
+              "Ludovic Ernault & Simon Martineau - Nouvel album \"Ida Lupino\"",
+              "Ludovic Ernault & Simon Martineau - Nouvel album"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/10/22/6ada3d4d71a5e-ludovic-ernault.png_thumbs/340-340.png",
@@ -95231,15 +95384,19 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Stephen McCraven Quintet - Nouvel album",
+            "headliner": "Stephen McCraven Quintet",
             "identity_aliases": [
-              "Stephen McCraven Quintet - Nouvel album \"Heritage\""
+              "Stephen McCraven Quintet - Nouvel album \"Heritage\"",
+              "Stephen McCraven Quintet - Nouvel album",
+              "Stephen McCraven Quintet"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/10/22/6ad9fea4bf3e2-3.png_thumbs/340-340.png",
             "openers": null,
             "performance_marker": null,
-            "performers": null,
+            "performers": [
+              "Stephen McCraven Quintet"
+            ],
             "promoters": null,
             "raw_title": "Stephen McCraven Quintet - Nouvel album \"Heritage\"",
             "series_name": null,
@@ -95681,9 +95838,10 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Musina - Nouvel album",
+            "headliner": "Musina",
             "identity_aliases": [
-              "Musina - Nouvel album \"Now, not yet\""
+              "Musina - Nouvel album \"Now, not yet\"",
+              "Musina - Nouvel album"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/10/30/6ae4cc5c6598c-format-carre-6.png_thumbs/340-340.png",
@@ -95865,9 +96023,10 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Claudio Pallaro - Nouvel album",
+            "headliner": "Claudio Pallaro",
             "identity_aliases": [
-              "Claudio Pallaro - Nouvel album \"Peaceful\""
+              "Claudio Pallaro - Nouvel album \"Peaceful\"",
+              "Claudio Pallaro - Nouvel album"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/9/17/6aabd95cc214c-2026-02-27-363029-dsc2069-2.jpeg_thumbs/340-340.jpeg",
@@ -95912,9 +96071,10 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Contrefaçons - Nouvel album",
+            "headliner": "Contrefaçons",
             "identity_aliases": [
-              "Contrefaçons - Nouvel album \"Episode cycliste\""
+              "Contrefaçons - Nouvel album \"Episode cycliste\"",
+              "Contrefaçons - Nouvel album"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/9/19/6aaeac2310da4-contrefaci-ons-crei-dit-juliette-martin.jpeg_thumbs/340-340.jpeg",
@@ -98994,9 +99154,10 @@
             "genre_public": "Jazz / Blues",
             "genre_source": "Sunset/Sunside",
             "genres_public": null,
-            "headliner": "Marc Perrenoud & Christoph Irniger - Nouvel album",
+            "headliner": "Marc Perrenoud & Christoph Irniger",
             "identity_aliases": [
-              "Marc Perrenoud & Christoph Irniger - Nouvel album \"New lines\""
+              "Marc Perrenoud & Christoph Irniger - Nouvel album \"New lines\"",
+              "Marc Perrenoud & Christoph Irniger - Nouvel album"
             ],
             "image_source": "Sunset/Sunside",
             "image_url": "https://img.mapado.net/2026/11/18/6afdb991ea25b-capture-d-e-cran-2026-11-18-a-15-43-12.png_thumbs/340-340.png",
@@ -101524,7 +101685,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -105326,7 +105487,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -105381,7 +105542,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -106563,7 +106724,7 @@
           "state_identity": "9e22085fae6ff891b4353d92bd8f51588d2d04e89f06c340bfa30d27db5d25be"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -109665,7 +109826,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -110516,7 +110677,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -113092,10 +113253,10 @@
           "state_identity": "b17be160cdf51b4b9dd4e4a2222d2a7356891f0f4c960b7279f9780ee487eb97"
         }
       ],
-      "last_successful_at": "2026-11-24T11:57:49Z",
+      "last_successful_at": "2026-11-24T12:32:01Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-24T11:57:49Z",
+  "updated_at": "2026-11-24T12:32:01Z",
   "version": 1
 }
