@@ -212,7 +212,12 @@ jobs:
           git push origin HEAD:gh-pages
           # GITHUB_TOKEN pushes do NOT automatically initiate GitHub Pages builds.
           # Explicitly request a Pages build so candidate verification observes a deployment.
-          GH_TOKEN="${{ github.token }}" gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
+          curl --silent --show-error --fail-with-body --retry 3 --retry-delay 3 \
+            --retry-max-time 90 --connect-timeout 20 \
+            --request POST --output /dev/null \
+            --header "Authorization: Bearer ${{ github.token }}" \
+            --header "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
 
       - name: Verify candidate and stage live promotion
         run: >-
@@ -229,7 +234,12 @@ jobs:
           git add -A proof artist genre concert index.html
           git commit -m "Promote verified calendar (${{ steps.build.outputs.event_count }} events)"
           git push origin HEAD:gh-pages
-          GH_TOKEN="${{ github.token }}" gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
+          curl --silent --show-error --fail-with-body --retry 3 --retry-delay 3 \
+            --retry-max-time 90 --connect-timeout 20 \
+            --request POST --output /dev/null \
+            --header "Authorization: Bearer ${{ github.token }}" \
+            --header "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Verify final live publication
@@ -247,7 +257,12 @@ jobs:
           git restore --source="${{ steps.baseline.outputs.commit }}" --staged --worktree -- .
           git commit -m "Rollback failed calendar publication"
           git push origin HEAD:gh-pages
-          GH_TOKEN="${{ github.token }}" gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
+          curl --silent --show-error --fail-with-body --retry 3 --retry-delay 3 \
+            --retry-max-time 90 --connect-timeout 20 \
+            --request POST --output /dev/null \
+            --header "Authorization: Bearer ${{ github.token }}" \
+            --header "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"
 
       - name: Verify restored last-known-good release
         if: steps.final_verify.outcome == 'failure'
