@@ -18,6 +18,7 @@ on:
   # Reliability release 2026-11-11: audited source/billing normalization, DICE inventory guards.
   # 2026-11-24: publish verified artist billing and title corrections (PR #39).
   # 2026-11-24: publish verified Paradise Lost and PiL identity repairs (PR #40).
+  # 2026-11-25: guarded recovery validation after Pages HTTP response hardening (#41).
   # Run publication once when this workflow definition is introduced/changed.
   # Normal code pushes continue to use the separate regression workflow;
   # scheduled runs and manual dispatch remain available.
