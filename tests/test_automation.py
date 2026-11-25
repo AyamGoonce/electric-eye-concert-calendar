@@ -903,10 +903,15 @@ class PagesPublicationWorkflowTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn("  pages: write", workflow)
         self.assertIn("Check Pages branch publishing configuration", workflow)
+        # Pages POST requests must run for candidate, promotion and rollback.
+        # Check the endpoint and HTTP failure handling, not JSON-CLI syntax:
+        # GitHub Pages can accept the build while returning an empty body.
         self.assertEqual(
             3,
-            workflow.count('gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"'),
+            workflow.count('"https://api.github.com/repos/${GITHUB_REPOSITORY}/pages/builds"'),
         )
+        self.assertEqual(3, workflow.count("--fail-with-body --retry 3"))
+        self.assertEqual(3, workflow.count("--request POST --output /dev/null"))
         self.assertLess(
             workflow.index("Stage immutable candidate publication"),
             workflow.index("Verify candidate and stage live promotion"),
