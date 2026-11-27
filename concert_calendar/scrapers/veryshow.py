@@ -434,6 +434,11 @@ def load_events():
         data.get("currentPage") or 1
     )
 
+    # Livewire can return only the records for the *current* page.
+    # Preserve the first snapshot and every subsequent page before
+    # de-duplicating stable concert IDs.
+    all_posts = list(extract_posts(snapshot))
+
     print(
         f"Downloading VeryShow page "
         f"{current_page}/{total_pages}..."
@@ -461,13 +466,14 @@ def load_events():
             )
 
         current_page = new_page
+        all_posts.extend(extract_posts(snapshot))
 
         print(
             f"Downloading VeryShow page "
             f"{current_page}/{total_pages}..."
         )
 
-    posts = extract_posts(snapshot)
+    posts = all_posts
 
     events = []
     seen_ids = set()
