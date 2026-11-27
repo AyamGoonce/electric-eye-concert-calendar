@@ -534,6 +534,32 @@ def resolve_artist_billings(
             or billings.get(identity)
             or billings.get(_key(event.event_title))
         )
+        if not scoped_review:
+            # The source may already expose a clean headliner and individual
+            # support credits, losing the original flat bill from its title.
+            # An exact dated venue review can reassign roles ONLY when the
+            # original source separately names matching supporting artists.
+            source_roles = {
+                _key(name) for name in [
+                    *(event.openers or []),
+                    *(event.co_headliners or []),
+                    *(event.performers or []),
+                ] if _key(name) and _key(name) != identity
+            }
+            if source_roles:
+                for candidate in billings.values():
+                    reviewed_roster = _stable_unique(candidate.get("artists") or [])
+                    if (
+                        candidate.get("eventDate") == event.date[:10]
+                        and _key(candidate.get("venue")) == _key(event.venue)
+                        and len(reviewed_roster) >= 2
+                        and identity == _key(reviewed_roster[0])
+                        and source_roles <= {
+                            _key(name) for name in reviewed_roster[1:]
+                        }
+                    ):
+                        scoped_review = candidate
+                        break
         if scoped_review and scoped_review.get("eventDate"):
             if (
                 event.date[:10] == scoped_review["eventDate"]
