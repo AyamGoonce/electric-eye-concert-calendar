@@ -344,6 +344,55 @@ def filter_eligible_retained_events(retained_events):
     return eligible_events
 
 
+def suppress_reconciled_retained_overlaps(
+    fresh_events, retained_events, source_health, *,
+    retained_snapshots=None,
+):
+    """Keep live evidence authoritative when historic billing makes a replay duplicate.
+
+    The first retention check runs before historical billing restoration.
+    That restoration can establish the same artist identity across a source
+    headline and a retained listing, so recheck exact physical performances
+    before final deduplication. Never merge stale metadata into a live record.
+    """
+    from copy import deepcopy
+    from collections import defaultdict
+
+    by_date_venue = defaultdict(list)
+    for fresh in fresh_events:
+        by_date_venue[(fresh.date[:10], normalize_venue_key(fresh.venue))].append(fresh)
+    health = {item["source_name"]: item for item in source_health}
+    result = []
+    suppressed = []
+    for retained in retained_events:
+        source = (retained.source_names or [None])[0]
+        candidates = by_date_venue.get(
+            (retained.date[:10], normalize_venue_key(retained.venue)), []
+        )
+        matching = [
+            fresh for fresh in candidates
+            if len(deduplicate_events([deepcopy(fresh), deepcopy(retained)])) == 1
+        ]
+        if not matching:
+            result.append(retained)
+            continue
+        # Equivalent independently sourced live evidence wins. Current rows
+        # from a partial source also supersede their own stale snapshots.
+        suppressed.append(retained)
+        if source in health:
+            health[source]["fallback_suppressed_count"] += 1
+            health[source]["fallback_event_count"] = max(
+                0, health[source]["fallback_event_count"] - 1
+            )
+        print(
+            f"SOURCE RETENTION | suppressed post-reconciliation overlap | "
+            f"source={source} date={retained.date[:10]} "
+            f"artist={retained.headliner} venue={retained.venue}",
+            flush=True,
+        )
+    return result, suppressed
+
+
 def load_events_with_report(
     *,
     scraper_attempts: int = 3,
@@ -614,7 +663,8 @@ def load_events_with_report(
                 f"ratio={ratio_text}",
                 flush=True,
             )
-    normalized_events.extend(filter_eligible_retained_events(retained_events))
+    eligible_retained = filter_eligible_retained_events(retained_events)
+    normalized_events.extend(eligible_retained)
 
     enrich_official_venue_images(normalized_events)
 
@@ -638,6 +688,34 @@ def load_events_with_report(
                 "kind": kind,
                 **item,
             })
+
+    # The historical billing pass can expose identity equivalence that did
+    # not exist during initial source-state hydration. Suppress those stale
+    # copies before deduplication, while retaining source-state snapshots.
+    retained_ids = {id(row) for row in eligible_retained}
+    fresh_rows = [row for row in normalized_events if id(row) not in retained_ids]
+    reconciled_retained, suppressed_rows = suppress_reconciled_retained_overlaps(
+        fresh_rows, eligible_retained, source_health,
+        retained_snapshots=retained_snapshots,
+    )
+    if suppressed_rows:
+        retained_ids_to_remove = {id(row) for row in suppressed_rows}
+        normalized_events = [
+            row for row in normalized_events
+            if id(row) not in retained_ids_to_remove
+        ]
+        # The record remains a dormant last-known-good snapshot; only its
+        # public copy is suppressed. This maintains bounded fallback coverage.
+        suppressed_keys = {
+            (row.source_names[0], row.date[:10], normalize_venue_key(row.venue))
+            for row in suppressed_rows if row.source_names
+        }
+        retention_details = [
+            detail for detail in retention_details
+            if (
+                detail["source"], detail["date"], normalize_venue_key(detail["venue"])
+            ) not in suppressed_keys
+        ]
 
     deduplication_diagnostics = {}
     deduplicated_events = deduplicate_events(
