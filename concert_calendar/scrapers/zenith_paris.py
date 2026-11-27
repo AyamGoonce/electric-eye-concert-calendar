@@ -93,6 +93,29 @@ def parse_performance_dates(soup):
     return dates
 
 
+def explicit_nonconcert_category(soup):
+    """Exclude source-labelled non-musical performances, not title keywords.
+
+    Read only the event heading/category before the practical-information
+    section; commentary and related-event cards must not trigger exclusion.
+    """
+    heading = soup.select_one("h1")
+    if heading is None:
+        return False
+    text = soup.get_text(" ", strip=True)
+    start = text.find(heading.get_text(" ", strip=True))
+    if start < 0:
+        return False
+    following = text[start + len(heading.get_text(" ", strip=True)):]
+    section = re.split(r"\\binfos pratiques\\b", following, maxsplit=1, flags=re.I)[0]
+    # Official Zénith categories identify comedy and sport explicitly.
+    # Keep mixed family/orchestral productions for separate music review.
+    return bool(re.search(
+        r"\\b(?:Humour|Sport|Sportif|Sports)\\b",
+        section[:240], flags=re.I,
+    ))
+
+
 def load_primary_events():
     response = requests.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
     response.raise_for_status()
@@ -114,12 +137,16 @@ def load_primary_events():
                 try:
                     detail_response = requests.get(detail_url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
                     detail_response.raise_for_status()
-                    detail_dates[detail_url] = parse_performance_dates(
-                        BeautifulSoup(detail_response.text, "html.parser")
+                    detail_soup = BeautifulSoup(detail_response.text, "html.parser")
+                    detail_dates[detail_url] = (
+                        None if explicit_nonconcert_category(detail_soup)
+                        else parse_performance_dates(detail_soup)
                     )
                 except requests.RequestException as error:
                     print(f"Zénith performance-date detail unavailable: {detail_url}: {error}")
                     detail_dates[detail_url] = []
+            if detail_dates[detail_url] is None:
+                continue
             dates = detail_dates[detail_url] or dates
         for performance_date in dates:
             performance = ConcertEvent(
