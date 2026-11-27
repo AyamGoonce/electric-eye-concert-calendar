@@ -40,6 +40,37 @@ class CurrentVerifiedMultiActRegressions(unittest.TestCase):
                          item.co_headliners)
         self.assertEqual(4, len(item.performers))
 
+    def test_additional_official_three_and_four_act_programmes(self):
+        cases = [
+            ("Nevermore + Rivers Of Nihil + Urne", "2027-05-16",
+             "Élysée Montmartre", ["Nevermore", "Rivers Of Nihil", "Urne"]),
+            ("Cult Of Luna + Bruit + Youth Code", "2027-03-03",
+             "Le Trianon", ["Cult of Luna", "Bruit ≤", "Youth Code"]),
+            ("Draconian + Saturnus + Ann My Guard", "2027-03-06",
+             "La Machine du Moulin Rouge", ["Draconian", "Saturnus", "Ann My Guard"]),
+            ("FROZEN SOUL + Darkest Hour + Denial of Life + Dethroned", "2027-02-09",
+             "Bal Chavaux", ["Frozen Soul", "Darkest Hour", "Denial of Life", "Dethroned"]),
+            ("Theocracy + Sunburst + Signum Regis", "2027-03-09",
+             "Le Chinois", ["Theocracy", "Sunburst", "Signum Regis"]),
+        ]
+        for title, date, venue, expected in cases:
+            with self.subTest(title=title):
+                item = event(title, date, venue)
+                resolve_artist_billings([item])
+                self.assertEqual(expected[0], item.headliner)
+                self.assertEqual(expected[1:], item.co_headliners)
+                self.assertEqual(expected, item.performers)
+
+    def test_verified_opening_act_is_not_promoted_to_co_headliner(self):
+        item = event("Powerwolf / Apocalyptica / Majestica",
+                     "2027-11-05", "Accor Arena")
+        resolve_artist_billings([item])
+        self.assertEqual("Powerwolf", item.headliner)
+        self.assertEqual(["Apocalyptica"], item.co_headliners)
+        self.assertEqual(["Majestica"], item.openers)
+        self.assertEqual(["Powerwolf", "Apocalyptica", "Majestica"],
+                         item.performers)
+
     def test_scoped_bill_does_not_apply_to_other_event_dates(self):
         item = event("Anthrax + Kerry King & Sacred Reich",
                      "2027-03-20", "L'Olympia Bruno Coquatrix")
