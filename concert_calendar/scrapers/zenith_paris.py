@@ -107,11 +107,11 @@ def explicit_nonconcert_category(soup):
     if start < 0:
         return False
     following = text[start + len(heading.get_text(" ", strip=True)):]
-    section = re.split(r"\\binfos pratiques\\b", following, maxsplit=1, flags=re.I)[0]
+    section = re.split(r"\binfos pratiques\b", following, maxsplit=1, flags=re.I)[0]
     # Official Zénith categories identify comedy and sport explicitly.
     # Keep mixed family/orchestral productions for separate music review.
     return bool(re.search(
-        r"\\b(?:Humour|Sport|Sportif|Sports)\\b",
+        r"\b(?:Humour|Sport|Sportif|Sports)\b",
         section[:240], flags=re.I,
     ))
 
