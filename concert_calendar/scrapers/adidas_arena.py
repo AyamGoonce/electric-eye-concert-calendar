@@ -11,6 +11,7 @@ from concert_calendar.models import ConcertEvent
 
 SOURCE_NAME = "Adidas Arena"
 PROGRAMME_URL = "https://www.adidasarena.com/programmation"
+CONCERT_PROGRAMME_URL = PROGRAMME_URL + "?categorie=concert"
 REQUEST_TIMEOUT = 30
 HEADERS = {"User-Agent": "Mozilla/5.0 AppleWebKit/537.36 Safari/537.36"}
 MONTHS = {"janvier": 1, "fevrier": 2, "mars": 3, "avril": 4, "mai": 5, "juin": 6, "juillet": 7, "aout": 8, "septembre": 9, "octobre": 10, "novembre": 11, "decembre": 12}
@@ -50,11 +51,15 @@ def _time(value):
 def parse_events(soup, *, today=None):
     cutoff = today or date.today()
     events = []
-    for card in soup.select(".app-programmation-card.concert"):
+    # Explicit source category is authoritative; the CSS category class is
+    # presentation markup and may be absent on newly published cards.
+    for card in soup.select(".app-programmation-card"):
         type_node = card.select_one(".type")
         title_node = card.select_one("h2")
         date_node = card.select_one(".date")
-        link = card.select_one("a.app-programmation-card__cta[href]")
+        link = card.select_one(
+            "a.app-programmation-card__cta[href], a[href*='/programmation/']"
+        )
         if (_clean(type_node.get_text(" ", strip=True) if type_node else "").casefold() != "concert" or not title_node or not date_node or not link):
             continue
         title = _clean(title_node.get_text(" ", strip=True))
@@ -68,12 +73,36 @@ def parse_events(soup, *, today=None):
 
 def load_events():
     session = requests.Session()
-    print(f"Downloading Adidas Arena programme: {PROGRAMME_URL}")
-    response = session.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
-    response.raise_for_status()
     unique = {}
-    for event in parse_events(BeautifulSoup(response.text, "html.parser")):
-        unique.setdefault((event.date, event.start_time, event.headliner.casefold()), event)
+    failures = []
+    successful_views = 0
+    # The dedicated concert view is an independently cached route on the
+    # venue's official programme. Read both so a newly announced concert is
+    # not lost when the all-events view is temporarily stale.
+    for url in (PROGRAMME_URL, CONCERT_PROGRAMME_URL):
+        print(f"Downloading Adidas Arena programme: {url}")
+        try:
+            response = session.get(
+                url, headers={**HEADERS, "Cache-Control": "no-cache"},
+                timeout=REQUEST_TIMEOUT,
+            )
+            response.raise_for_status()
+        except requests.RequestException as error:
+            failures.append(error)
+            print(f"Adidas Arena programme view unavailable: {url}: {error}")
+            continue
+        successful_views += 1
+        for event in parse_events(BeautifulSoup(response.text, "html.parser")):
+            unique.setdefault(
+                (event.date, event.start_time, event.headliner.casefold()), event
+            )
+    if not successful_views:
+        raise RuntimeError(
+            "Both Adidas Arena official programme views were unavailable"
+        ) from failures[-1]
     result = discard_repeated_generic_images(list(unique.values()))
-    print(f"Created {len(result)} Adidas Arena ConcertEvent records")
+    print(
+        f"Created {len(result)} Adidas Arena ConcertEvent records "
+        f"from {successful_views} official programme view(s)"
+    )
     return result
