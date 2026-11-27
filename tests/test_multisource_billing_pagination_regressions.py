@@ -80,6 +80,22 @@ class StructuredBillingDisplayRegressions(unittest.TestCase):
         self.assertEqual("A Tribute to Rock", item.headliner)
         self.assertIsNone(item.co_headliners)
 
+    def test_corroborated_x_separator_uses_known_independent_identities(self):
+        item = self.event("Artist Alpha x Artist Beta",
+                          [])
+        resolve_artist_billings([item], identity_catalog={
+            "artist alpha": "Artist Alpha",
+            "artist beta": "Artist Beta",
+        })
+        self.assertEqual("Artist Alpha", item.headliner)
+        self.assertEqual(["Artist Beta"], item.co_headliners)
+
+    def test_unknown_x_separator_does_not_guess_artists(self):
+        item = self.event("Unknown One x Unknown Two", [])
+        resolve_artist_billings([item], identity_catalog={})
+        self.assertEqual("Unknown One x Unknown Two", item.headliner)
+        self.assertIsNone(item.co_headliners)
+
     def test_complete_collaboration_name_is_protected(self):
         item = self.event("Mike + The Mechanics", ["Mike", "The Mechanics"])
         resolve_artist_billings([item], identity_catalog={})
