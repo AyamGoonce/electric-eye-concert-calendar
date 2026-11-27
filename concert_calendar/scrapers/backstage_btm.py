@@ -17,6 +17,7 @@ SOURCE_NAME = "Backstage By The Mill"
 PROGRAMME_URL = "https://www.backstage-btm.com/agenda/"
 REQUEST_TIMEOUT = 30
 MAX_PAGES = 12
+MAX_BILLING_DETAILS = 20
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -98,6 +99,37 @@ def parse_card(card, *, today=None):
     )
 
 
+def parse_detail_performers(html, title):
+    """Require each advertised '+' act to appear independently in detail copy.
+
+    Repeated headline text alone is not evidence; separate artist headings
+    and explicit first-part labels are. This avoids splitting project names
+    and misleading contextual plus signs by punctuation alone.
+    """
+    components = [clean_text(part) for part in re.split(r"\\s+\\+\\s+", title)]
+    if len(components) < 2 or len(components) > 6 or any(
+        re.fullmatch(r"(?:special\\s+)?guests?|tba|tbc", part, re.I)
+        for part in components
+    ):
+        return [], []
+    soup = BeautifulSoup(html or "", "html.parser")
+    lines = [clean_text(line) for line in soup.get_text("\\n", strip=True).splitlines()]
+    exact = {folded(line) for line in lines}
+    supports = set()
+    for line in lines:
+        role = re.fullmatch(
+            r"(?:premi[èe]re partie|1(?:ère|ere|re|e) partie|support)\\s*:\\s*(.+)",
+            line, re.I,
+        )
+        if role:
+            supports.add(folded(role.group(1)))
+    if not all(folded(name) in exact or folded(name) in supports for name in components):
+        return [], []
+    return components, [
+        name for name in components[1:] if folded(name) in supports
+    ]
+
+
 def next_page_url(soup, current_url):
     link = soup.select_one("link[rel='next'][href], a.next[href], a[rel='next'][href]")
     return urljoin(current_url, clean_text(link.get("href"))) if link else None
@@ -108,6 +140,7 @@ def load_events(today=None):
     session = requests.Session()
     events = {}
     visited = set()
+    detail_cache = {}
     page_url = PROGRAMME_URL
 
     for _ in range(MAX_PAGES):
@@ -124,6 +157,30 @@ def load_events(today=None):
         for card in cards:
             event = parse_card(card, today=today)
             if event is not None:
+                if (
+                    event.ticket_url
+                    and re.search(r"\\s+\\+\\s+", event.headliner)
+                    and len(detail_cache) < MAX_BILLING_DETAILS
+                ):
+                    if event.ticket_url not in detail_cache:
+                        try:
+                            detail_response = session.get(
+                                event.ticket_url, headers=HEADERS, timeout=REQUEST_TIMEOUT,
+                            )
+                            detail_response.raise_for_status()
+                            detail_cache[event.ticket_url] = parse_detail_performers(
+                                detail_response.text, event.headliner
+                            )
+                        except requests.RequestException as error:
+                            print(
+                                f"Backstage artist detail unavailable: {event.ticket_url}: {error}"
+                            )
+                            detail_cache[event.ticket_url] = ([], [])
+                    performers, openers = detail_cache[event.ticket_url]
+                    if performers:
+                        event.performers = list(performers)
+                        event.openers = list(openers) or None
+                        event.raw_title = event.headliner
                 key = (event.date, folded(event.headliner), folded(event.venue))
                 events.setdefault(key, event)
         page_url = next_page_url(soup, page_url)
