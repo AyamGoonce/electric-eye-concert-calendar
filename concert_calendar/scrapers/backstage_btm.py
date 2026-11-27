@@ -106,19 +106,19 @@ def parse_detail_performers(html, title):
     and explicit first-part labels are. This avoids splitting project names
     and misleading contextual plus signs by punctuation alone.
     """
-    components = [clean_text(part) for part in re.split(r"\\s+\\+\\s+", title)]
+    components = [clean_text(part) for part in re.split(r"\s+\+\s+", title)]
     if len(components) < 2 or len(components) > 6 or any(
-        re.fullmatch(r"(?:special\\s+)?guests?|tba|tbc", part, re.I)
+        re.fullmatch(r"(?:special\s+)?guests?|tba|tbc", part, re.I)
         for part in components
     ):
         return [], []
     soup = BeautifulSoup(html or "", "html.parser")
-    lines = [clean_text(line) for line in soup.get_text("\\n", strip=True).splitlines()]
+    lines = [clean_text(line) for line in soup.get_text("\n", strip=True).splitlines()]
     exact = {folded(line) for line in lines}
     supports = set()
     for line in lines:
         role = re.fullmatch(
-            r"(?:premi[èe]re partie|1(?:ère|ere|re|e) partie|support)\\s*:\\s*(.+)",
+            r"(?:premi[èe]re partie|1(?:ère|ere|re|e) partie|support)\s*:\s*(.+)",
             line, re.I,
         )
         if role:
@@ -159,7 +159,7 @@ def load_events(today=None):
             if event is not None:
                 if (
                     event.ticket_url
-                    and re.search(r"\\s+\\+\\s+", event.headliner)
+                    and re.search(r"\s+\+\s+", event.headliner)
                     and len(detail_cache) < MAX_BILLING_DETAILS
                 ):
                     if event.ticket_url not in detail_cache:
