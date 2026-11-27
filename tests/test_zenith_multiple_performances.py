@@ -28,6 +28,18 @@ class ZenithMultiplePerformanceTests(TestCase):
         self.assertEqual(date(2027, 11, 23), zenith_paris.parse_date("23 nov. 2027"))
         self.assertEqual(date(2027, 4, 23), zenith_paris.parse_date("23 avril 2027"))
 
+    def test_explicit_comedy_category_is_excluded_but_music_is_kept(self):
+        comedy = BeautifulSoup(
+            "<h1>Comedy Act</h1><p>Humour</p><h2>infos pratiques</h2>"
+            "<p>En vente Jeudi 25 mars 2027</p>", "html.parser"
+        )
+        concert = BeautifulSoup(
+            "<h1>Orchestra</h1><p>Musique</p><h2>infos pratiques</h2>"
+            "<p>En vente Jeudi 25 mars 2027</p>", "html.parser"
+        )
+        self.assertTrue(zenith_paris.explicit_nonconcert_category(comedy))
+        self.assertFalse(zenith_paris.explicit_nonconcert_category(concert))
+
     @mock.patch.object(zenith_paris, "date", wraps=date)
     def test_only_explicit_performances_before_recommendations(self, mocked_date):
         mocked_date.today.return_value = date(2026, 11, 27)
