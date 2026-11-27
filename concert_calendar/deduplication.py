@@ -1139,7 +1139,7 @@ def _venue_branded_cross_source_title_relation(
         return False
     for plain, decorated in ((left, right), (right, left)):
         match = re.fullmatch(
-            r"(?P<title>.+?)\\s+[x×]\\s+(?P<venue>.+?)\\s*!?",
+            r"(?P<title>.+?)\s+[x×]\s+(?P<venue>.+?)\s*!?",
             (decorated.headliner or "").strip(),
             flags=re.IGNORECASE,
         )
