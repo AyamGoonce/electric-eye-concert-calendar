@@ -47,7 +47,7 @@ def folded(value):
 
 def parse_date(value):
     match = re.search(r"\b(\d{1,2})\s+([a-z]+)\.?\s+(20\d{2})\b", folded(value))
-    month = MONTHS.get(match.group(2)[:4]) if match else None
+    month = next((number for prefix, number in MONTHS.items() if match.group(2).startswith(prefix)), None) if match else None
     if not match or not month:
         return None
     try:
@@ -68,14 +68,74 @@ def parse_card(card):
     return ConcertEvent(date=event_date.isoformat(), headliner=headliner, venue=SOURCE_NAME, city="Paris", department="75", ticket_url=urljoin(PROGRAMME_URL, clean(link.get("href"))), image_url=image_url, image_source=SOURCE_NAME if image_url else None)
 
 
+def parse_performance_dates(soup):
+    """Read individually advertised performance dates, not a tour description.
+
+    Suggestions and recommendation cards elsewhere on show pages must not
+    become performances for the current artist.
+    """
+    text = soup.get_text(" ", strip=True)
+    start = re.search(r"\binfos pratiques\b", folded(text))
+    if not start:
+        return []
+    scoped = text[start.end():]
+    scoped = re.split(r"\b(?:Consignes|Vous aimeriez aussi)\b", scoped, maxsplit=1, flags=re.IGNORECASE)[0]
+    dates = []
+    for match in re.finditer(
+        r"\b(?:En vente|Complet)\s+"
+        r"(?:lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche)\s+"
+        r"(\d{1,2}\s+[a-zA-ZÀ-ÿ]+\.?\s+20\d{2})\b",
+        scoped, flags=re.IGNORECASE,
+    ):
+        parsed = parse_date(match.group(1))
+        if parsed and parsed >= date.today() and parsed not in dates:
+            dates.append(parsed)
+    return dates
+
+
 def load_primary_events():
     response = requests.get(PROGRAMME_URL, headers=HEADERS, timeout=REQUEST_TIMEOUT)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
     events = {}
+    detail_dates = {}
     for card in soup.select(".swiper-home-current-event .swiper-slide"):
-        if event := parse_card(card):
-            events.setdefault((event.date, event.headliner.casefold(), event.venue.casefold()), event)
+        event = parse_card(card)
+        if not event:
+            continue
+        date_element = card.select_one(".swiper-caption__date")
+        date_label = folded(date_element.get_text(" ", strip=True) if date_element else "")
+        dates = [date.fromisoformat(event.date)]
+        # The homepage displays only the first date of multi-performance shows.
+        # The official show page has a separately labeled list of performances.
+        if "a partir" in date_label:
+            detail_url = event.ticket_url
+            if detail_url not in detail_dates:
+                try:
+                    detail_response = requests.get(detail_url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
+                    detail_response.raise_for_status()
+                    detail_dates[detail_url] = parse_performance_dates(
+                        BeautifulSoup(detail_response.text, "html.parser")
+                    )
+                except requests.RequestException as error:
+                    print(f"Zénith performance-date detail unavailable: {detail_url}: {error}")
+                    detail_dates[detail_url] = []
+            dates = detail_dates[detail_url] or dates
+        for performance_date in dates:
+            performance = ConcertEvent(
+                date=performance_date.isoformat(),
+                headliner=event.headliner,
+                venue=event.venue,
+                city=event.city,
+                department=event.department,
+                ticket_url=event.ticket_url,
+                image_url=event.image_url,
+                image_source=event.image_source,
+            )
+            events.setdefault(
+                (performance.date, performance.headliner.casefold(), performance.venue.casefold()),
+                performance,
+            )
     return discard_repeated_generic_images(list(events.values()))
 
 
