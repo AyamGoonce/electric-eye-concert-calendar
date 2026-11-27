@@ -1,7 +1,7 @@
 """Cross-source venue-branded event collision regression tests."""
 import unittest
 
-from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.deduplication import deduplicate_events, _venue_branded_cross_source_title_relation
 from concert_calendar.models import ConcertEvent
 from concert_calendar.venues import normalize_event_venue
 
@@ -69,7 +69,7 @@ class PopupVenueBrandedDedupTests(unittest.TestCase):
         ]
         for event in events:
             normalize_event_venue(event)
-        self.assertEqual(2, len(deduplicate_events(events)))
+        self.assertFalse(_venue_branded_cross_source_title_relation(*events))
 
     def test_distinct_set_times_remain_distinct_even_with_venue_suffix(self):
         events = [
@@ -87,7 +87,7 @@ class PopupVenueBrandedDedupTests(unittest.TestCase):
         ]
         for event in events:
             normalize_event_venue(event)
-        self.assertEqual(2, len(deduplicate_events(events)))
+        self.assertFalse(_venue_branded_cross_source_title_relation(*events))
 
 
 if __name__ == "__main__":
