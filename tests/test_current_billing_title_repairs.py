@@ -61,7 +61,7 @@ def sunset_payload(title, description):
             },
         },
         "eventDates": {"hydra:totalItems": 1, "hydra:member": [
-            {"startDate": "2026-11-25T20:00:00+01:00", "onSale": True},
+            {"startDate": "2027-11-25T20:00:00+01:00", "onSale": True},
         ]},
     }}}}
 
