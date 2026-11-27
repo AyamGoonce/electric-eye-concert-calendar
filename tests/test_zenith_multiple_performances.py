@@ -12,7 +12,8 @@ DETAIL = """
   <div>En vente</div><div>Jeudi 04 mars 2027</div>
   <div>En vente</div><div>Vendredi 05 mars 2027</div>
   <div>Complet</div><div>Samedi 06 mars 2027</div>
-  <p>En tournée ailleurs le 23 octobre 2027.</p>
+  <div>En vente</div><div>Samedi 23 oct. 2027 - 20:00</div>
+  <p>En tournée ailleurs le 24 octobre 2027.</p>
   <h2>Consignes</h2>
 </section>
 <section><h2>Vous aimeriez aussi</h2>
@@ -32,7 +33,7 @@ class ZenithMultiplePerformanceTests(TestCase):
         mocked_date.today.return_value = date(2026, 11, 27)
         result = zenith_paris.parse_performance_dates(BeautifulSoup(DETAIL, "html.parser"))
         self.assertEqual(
-            [date(2027, 3, 4), date(2027, 3, 5), date(2027, 3, 6)],
+            [date(2027, 3, 4), date(2027, 3, 5), date(2027, 3, 6), date(2027, 10, 23)],
             result,
         )
 
@@ -54,7 +55,7 @@ class ZenithMultiplePerformanceTests(TestCase):
         get.side_effect = [response(homepage), response(DETAIL)]
         events = zenith_paris.load_primary_events()
         self.assertEqual(
-            ["2027-03-04", "2027-03-05", "2027-03-06"],
+            ["2027-03-04", "2027-03-05", "2027-03-06", "2027-10-23"],
             [event.date for event in events],
         )
         self.assertEqual(2, get.call_count)
