@@ -2,6 +2,7 @@
 import unittest
 
 from concert_calendar.artist_billings import resolve_artist_billings
+from concert_calendar.deduplication import deduplicate_events
 from concert_calendar.models import ConcertEvent
 from concert_calendar.production_export import event_to_data
 
@@ -71,6 +72,21 @@ class CurrentVerifiedMultiActRegressions(unittest.TestCase):
         self.assertEqual(["Majestica"], item.openers)
         self.assertEqual(["Powerwolf", "Apocalyptica", "Majestica"],
                          item.performers)
+
+    def test_scoped_roles_apply_when_venue_already_has_clean_headliner(self):
+        item = event("Powerwolf", "2027-11-05", "Accor Arena",
+                     openers=["Apocalyptica", "Majestica"])
+        resolve_artist_billings([item])
+        self.assertEqual("Powerwolf", item.headliner)
+        self.assertEqual(["Apocalyptica"], item.co_headliners)
+        self.assertEqual(["Majestica"], item.openers)
+
+        fresh = event("Powerwolf", "2027-11-05", "Accor Arena",
+                      openers=["Apocalyptica", "Majestica"])
+        result = deduplicate_events([fresh])
+        self.assertEqual(1, len(result))
+        self.assertEqual(["Apocalyptica"], result[0].co_headliners)
+        self.assertEqual(["Majestica"], result[0].openers)
 
     def test_scoped_bill_does_not_apply_to_other_event_dates(self):
         item = event("Anthrax + Kerry King & Sacred Reich",
