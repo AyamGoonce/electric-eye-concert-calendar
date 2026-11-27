@@ -22,6 +22,7 @@ on:
   # 2026-11-27: publish verified POPUP venue/branded duplicate reconciliation (#42).
   # 2026-11-27: validate and publish official Zenith multi-date performance expansion.
   # 2026-11-27: verify VeryShow full-page coverage and structured artist billing safeguards.
+  # 2026-11-27: run final regression suite including corroborated connector tests.
   # Run publication once when this workflow definition is introduced/changed.
   # Normal code pushes continue to use the separate regression workflow;
   # scheduled runs and manual dispatch remain available.
