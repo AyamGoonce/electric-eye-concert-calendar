@@ -87,6 +87,11 @@ def load_events():
                 timeout=REQUEST_TIMEOUT,
             )
             response.raise_for_status()
+            # The official site serves UTF-8 HTML without a reliable charset
+            # declaration. requests may otherwise decode it as Latin-1,
+            # corrupting accented French month names (DÉCEMBRE -> DÃ‰CEMBRE)
+            # and silently dropping valid future concerts.
+            response.encoding = "utf-8"
         except requests.RequestException as error:
             failures.append(error)
             print(f"Adidas Arena programme view unavailable: {url}: {error}")
