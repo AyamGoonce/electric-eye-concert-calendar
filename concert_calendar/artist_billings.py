@@ -529,7 +529,11 @@ def resolve_artist_billings(
         # Explicitly verified programme bills may correct a ticketing source
         # whose artist array contains a series name or is incomplete.
         # Scope these exceptions by the physical event, never title alone.
-        scoped_review = billings.get(_key(event.raw_title)) or billings.get(identity)
+        scoped_review = (
+            billings.get(_key(event.raw_title))
+            or billings.get(identity)
+            or billings.get(_key(event.event_title))
+        )
         if scoped_review and scoped_review.get("eventDate"):
             if (
                 event.date[:10] == scoped_review["eventDate"]
