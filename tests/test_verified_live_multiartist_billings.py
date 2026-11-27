@@ -63,7 +63,8 @@ class CurrentVerifiedMultiActRegressions(unittest.TestCase):
 
     def test_verified_opening_act_is_not_promoted_to_co_headliner(self):
         item = event("Powerwolf / Apocalyptica / Majestica",
-                     "2027-11-05", "Accor Arena")
+                     "2027-11-05", "Accor Arena",
+                     openers=["Apocalyptica", "Majestica"])
         resolve_artist_billings([item])
         self.assertEqual("Powerwolf", item.headliner)
         self.assertEqual(["Apocalyptica"], item.co_headliners)
