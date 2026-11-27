@@ -27,17 +27,19 @@ class ZenithMultiplePerformanceTests(TestCase):
         self.assertEqual(date(2027, 11, 23), zenith_paris.parse_date("23 nov. 2027"))
         self.assertEqual(date(2027, 4, 23), zenith_paris.parse_date("23 avril 2027"))
 
-    @mock.patch.object(zenith_paris.date, "today", return_value=date(2026, 11, 27))
-    def test_only_explicit_performances_before_recommendations(self, _today):
+    @mock.patch.object(zenith_paris, "date", wraps=date)
+    def test_only_explicit_performances_before_recommendations(self, mocked_date):
+        mocked_date.today.return_value = date(2026, 11, 27)
         result = zenith_paris.parse_performance_dates(BeautifulSoup(DETAIL, "html.parser"))
         self.assertEqual(
             [date(2027, 3, 4), date(2027, 3, 5), date(2027, 3, 6)],
             result,
         )
 
-    @mock.patch.object(zenith_paris.date, "today", return_value=date(2026, 11, 27))
+    @mock.patch.object(zenith_paris, "date", wraps=date)
     @mock.patch.object(zenith_paris.requests, "get")
-    def test_homepage_range_expands_using_show_page(self, get, _today):
+    def test_homepage_range_expands_using_show_page(self, get, mocked_date):
+        mocked_date.today.return_value = date(2026, 11, 27)
         homepage = """
         <div class="swiper-home-current-event"><div class="swiper-slide">
           <div class="swiper-caption__name">Test Artist</div>
