@@ -27,6 +27,7 @@ on:
   # 2026-11-27: include structural Backstage detail-roster parser regression.
   # 2026-11-27: verify nine source-backed multi-band lineup corrections.
   # 2026-11-27: verify Adidas Arena upcoming announcement detection fixture.
+  # 2026-11-27: rerun after correcting Backstage pagination test fixture.
   # 2026-11-27: apply source-category eligibility check to multi-date Zénith shows.
   # Run publication once when this workflow definition is introduced/changed.
   # Normal code pushes continue to use the separate regression workflow;
