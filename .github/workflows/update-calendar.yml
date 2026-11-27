@@ -24,6 +24,7 @@ on:
   # 2026-11-27: verify VeryShow full-page coverage and structured artist billing safeguards.
   # 2026-11-27: run final regression suite including corroborated connector tests.
   # 2026-11-27: verify newly reviewed live multi-act programme bills.
+  # 2026-11-27: include structural Backstage detail-roster parser regression.
   # Run publication once when this workflow definition is introduced/changed.
   # Normal code pushes continue to use the separate regression workflow;
   # scheduled runs and manual dispatch remain available.
