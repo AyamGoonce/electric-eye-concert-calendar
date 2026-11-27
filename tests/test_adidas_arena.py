@@ -14,6 +14,27 @@ class AdidasArenaTests(TestCase):
         self.assertEqual(["2026-10-02", "2026-10-03", "2026-10-30", "2026-11-21"], [e.date for e in self.events])
         self.assertNotIn("SPORT", [e.headliner for e in self.events])
 
+    def test_newly_announced_concert_appears_with_french_uppercase_date(self):
+        sample = """
+        <div class="app-programmation-card concert">
+            <h3 class="type">concert</h3>
+            <h3 class="date">3 DÉCEMBRE 2027 à 19h00</h3>
+            <h2>WITHIN TEMPTATION</h2>
+            <a class="app-programmation-card__cta"
+               href="/programmation/within-temptation--1628">Réserver</a>
+        </div>
+        """
+        parsed = parse_events(
+            BeautifulSoup(sample, "html.parser"), today=date(2026, 11, 27)
+        )
+        self.assertEqual(1, len(parsed))
+        self.assertEqual("2027-12-03", parsed[0].date)
+        self.assertEqual("WITHIN TEMPTATION", parsed[0].headliner)
+        self.assertEqual(
+            "https://www.adidasarena.com/programmation/within-temptation--1628",
+            parsed[0].ticket_url,
+        )
+
     def test_metadata(self):
         self.assertEqual("20:30", self.events[0].start_time)
         self.assertEqual("https://www.adidasarena.com/images/music.jpg", self.events[0].image_url)
