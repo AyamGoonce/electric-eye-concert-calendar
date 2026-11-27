@@ -345,8 +345,7 @@ def filter_eligible_retained_events(retained_events):
 
 
 def suppress_reconciled_retained_overlaps(
-    fresh_events, retained_events, source_health, *,
-    retained_snapshots=None,
+    fresh_events, retained_events, source_health,
 ):
     """Keep live evidence authoritative when historic billing makes a replay duplicate.
 
@@ -664,6 +663,10 @@ def load_events_with_report(
                 flush=True,
             )
     eligible_retained = filter_eligible_retained_events(retained_events)
+    retained_original_titles = {
+        id(row): normalize_headliner(row.headliner)
+        for row in eligible_retained
+    }
     normalized_events.extend(eligible_retained)
 
     enrich_official_venue_images(normalized_events)
@@ -696,7 +699,6 @@ def load_events_with_report(
     fresh_rows = [row for row in normalized_events if id(row) not in retained_ids]
     reconciled_retained, suppressed_rows = suppress_reconciled_retained_overlaps(
         fresh_rows, eligible_retained, source_health,
-        retained_snapshots=retained_snapshots,
     )
     if suppressed_rows:
         retained_ids_to_remove = {id(row) for row in suppressed_rows}
@@ -707,13 +709,19 @@ def load_events_with_report(
         # The record remains a dormant last-known-good snapshot; only its
         # public copy is suppressed. This maintains bounded fallback coverage.
         suppressed_keys = {
-            (row.source_names[0], row.date[:10], normalize_venue_key(row.venue))
+            (
+                row.source_names[0], row.date[:10],
+                normalize_venue_key(row.venue),
+                retained_original_titles[id(row)],
+            )
             for row in suppressed_rows if row.source_names
         }
         retention_details = [
             detail for detail in retention_details
             if (
-                detail["source"], detail["date"], normalize_venue_key(detail["venue"])
+                detail["source"], detail["date"],
+                normalize_venue_key(detail["venue"]),
+                normalize_headliner(detail["headliner"]),
             ) not in suppressed_keys
         ]
 
