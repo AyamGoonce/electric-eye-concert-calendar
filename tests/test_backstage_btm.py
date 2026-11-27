@@ -50,12 +50,23 @@ class BackstageByTheMillTests(TestCase):
             response.text = (FIXTURES / filename).read_text()
             response.raise_for_status = Mock()
             responses.append(response)
+        # A multi-act card can trigger an additional detail request.
+        # Route by URL rather than relying on an obsolete two-call ordering.
+        detail_response = Mock()
+        detail_response.text = "<h1>GREENLEAF + GUEST</h1>"
+        detail_response.raise_for_status = Mock()
+        by_url = {
+            backstage_btm.PROGRAMME_URL: responses[0],
+            "https://www.backstage-btm.com/agenda/page/2/": responses[1],
+            "https://www.backstage-btm.com/agenda/greenleaf-2/": detail_response,
+        }
         session = Mock()
-        session.get.side_effect = responses
+        session.get.side_effect = lambda url, **kwargs: by_url[url]
         with patch("concert_calendar.scrapers.backstage_btm.requests.Session", return_value=session):
             events = backstage_btm.load_events(today=date(2026, 9, 1))
         self.assertEqual(3, len(events))
-        self.assertEqual(2, session.get.call_count)
+        self.assertEqual(3, session.get.call_count)
+        self.assertIsNone(next(e for e in events if "GREENLEAF" in e.headliner).performers)
         session.get.assert_any_call(
             backstage_btm.PROGRAMME_URL,
             headers=backstage_btm.HEADERS,
