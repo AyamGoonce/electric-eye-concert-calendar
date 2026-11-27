@@ -25,6 +25,7 @@ on:
   # 2026-11-27: run final regression suite including corroborated connector tests.
   # 2026-11-27: verify newly reviewed live multi-act programme bills.
   # 2026-11-27: include structural Backstage detail-roster parser regression.
+  # 2026-11-27: verify nine source-backed multi-band lineup corrections.
   # Run publication once when this workflow definition is introduced/changed.
   # Normal code pushes continue to use the separate regression workflow;
   # scheduled runs and manual dispatch remain available.
