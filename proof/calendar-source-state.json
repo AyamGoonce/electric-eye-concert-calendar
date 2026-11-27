@@ -11,7 +11,7 @@
             "co_headliners": null,
             "date": "2026-11-27",
             "department": "75",
-            "event_title": null,
+            "event_title": "EsDeeKid : 2026",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -28,7 +28,8 @@
             "genres_public": null,
             "headliner": "EsDeeKid",
             "identity_aliases": [
-              "EsDeeKid"
+              "EsDeeKid",
+              "EsDeeKid : 2026"
             ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/07/esdeekid-concert-olympia-paris-352x440.jpg.webp",
@@ -40,12 +41,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "EsDeeKid : 2026",
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.olympiahall.com/agenda/esdeekid/",
             "venue": "L'Olympia Bruno Coquatrix"
           },
@@ -73,21 +74,23 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "Kingfishr",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "KINGFISHR"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-08-28/4ff55365-61f7-43c1-aa41-608ee52728d6.jpg?rect=1168%2C0%2C4672%2C4672",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "KINGFISHR",
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "19:30",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://bit.ly/Kingfishr-AEG27",
             "venue": "Le Trabendo"
           },
@@ -126,12 +129,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "Paris Paloma",
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/743/paris_paloma",
             "venue": "Bataclan"
           },
@@ -266,10 +269,10 @@
             ],
             "raw_title": "EDIS",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/edis/",
             "venue": "La Cigale"
           },
@@ -489,8 +492,8 @@
             "identity_aliases": [
               "Phoebe Bridgers"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "Adidas Arena",
+            "image_url": "https://adidasarena.directus.app/assets/740228c7-899b-4e6f-813f-d50fd9118f0b?format=webp&quality=90&width=800",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -501,10 +504,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/PhoebeBridgers-AEG26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/phoebe-bridgers--1449",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -6006,7 +6009,7 @@
           "state_identity": "becf5dd8288a6ecf58a23f47257984919b84dce4e6c394aa772a7d929faef567"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "AEG Presents France"
     },
     "Accor Arena": {
@@ -9949,7 +9952,7 @@
             "headliner": "Powerwolf",
             "identity_aliases": [
               "POWERWOLF / APOCALYPTICA / MAJESTICA",
-              "POWERWOLF"
+              "Powerwolf"
             ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/ac8ce849-6756-4b0c-935c-2a6c70bf0340.jpg",
@@ -10918,11 +10921,156 @@
           "state_identity": "0791fd02308344dabbfbacf0b567a566a1deecb5cb159a64b821dbcd240c2f00"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Accor Arena"
     },
     "Adidas Arena": {
       "events": [
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-01",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Metal / Hard Rock",
+            "genre_source": "Wikidata genre statements (P136)",
+            "genres_public": null,
+            "headliner": "PAPA ROACH",
+            "identity_aliases": [
+              "PAPA ROACH"
+            ],
+            "image_source": "Electric Eye concert review",
+            "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgDc0FqQPNHFrcYZojhXMkNdFUR4IdsRVfVdpPguy3pp6xe6PtncVEix5SRxnXR1mwNeL8Sbluo5O_AIGijNiY3qTsQvav7YwtptTEHVEDlwAi2PB0apVCp6MGz1LSGWJZvpdyMghJ0J91SxYVyAcaRjMvjRyVmbzPSmFnExozkqJEs6fAymilKu_y-Xuk/s72-w640-h426-c-rw/Papa%20Roach20260620HellfestClisson_14.JPG",
+            "openers": [
+              "LANDMVRKS",
+              "Sleep Theory"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "VeryShow"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/papa-roach--1372",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "12de2cfed1db3de6",
+          "state_identity": "12de2cfed1db3de6251e7b79b18f0964a947fb0dea44e0e93a486972dc185a7c"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-03",
+            "department": "75",
+            "event_title": "THE KEHLANI WORLD TOUR: EU & UK",
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Hip Hop / Rap, Other, RnB / Soul",
+            "genre_evidence": [
+              {
+                "raw": "Hip Hop / Rap, Other, RnB / Soul",
+                "source": "Live Nation"
+              }
+            ],
+            "genre_method": "artist_mapping",
+            "genre_public": "R&B / Soul / Funk",
+            "genre_source": "Reviewed stable artist classification, 2026-08-23",
+            "genres_public": null,
+            "headliner": "Kehlani",
+            "identity_aliases": [
+              "THE KEHLANI WORLD TOUR: EU & UK"
+            ],
+            "image_source": "Live Nation",
+            "image_url": "https://dynamicmedia.livenationinternational.com/f/j/c/583671bb-9229-4c44-9705-ad9a0068737c.jpg",
+            "openers": [
+              "Odeal",
+              "WASEEL",
+              "Dixson"
+            ],
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Live Nation"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/the-kehlani-world-tour-eu-and-uk--1439",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "00d292ec82b7e8dd",
+          "state_identity": "00d292ec82b7e8ddf4b265be4c0ad9ff62f3630ccac04d50c7e4455271e02281"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2026-12-04",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": "artist_mapping",
+            "genre_public": "Folk / Country",
+            "genre_source": "MusicBrainz artist tags",
+            "genres_public": null,
+            "headliner": "Phoebe Bridgers",
+            "identity_aliases": [
+              "Phoebe Bridgers"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://adidasarena.directus.app/assets/740228c7-899b-4e6f-813f-d50fd9118f0b?format=webp&quality=90&width=800",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "AEG Presents France",
+              "Alias Production"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/phoebe-bridgers--1449",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-08-20T11:02:59Z",
+          "public_id": "bb4f1f502a62e7f1",
+          "state_identity": "bb4f1f502a62e7f158e8f0cbdf868ef294ba63431864c860538424e3dca995ff"
+        },
         {
           "event": {
             "announced_at": null,
@@ -11002,6 +11150,104 @@
           "first_seen": "2026-09-03T12:50:16Z",
           "public_id": "6966bafdfd5c41e6",
           "state_identity": "6966bafdfd5c41e65501b0d4a15f6cd9e52f7ff9e5d207782303eb7434e80eb4"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-21",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Pop",
+            "genre_evidence": [
+              {
+                "raw": "Pop",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "JAMES BLUNT",
+            "identity_aliases": [
+              "JAMES BLUNT"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://adidasarena.directus.app/assets/312590ae-2999-48fc-9a32-187f9fb7600f?format=webp&quality=90&width=800",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/james-blunt--1497",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-09-03T13:49:19Z",
+          "public_id": "ba2196502c316332",
+          "state_identity": "ba2196502c3163329c39b5cb98aeb6e91b853790cd03fb29d23901545ddaa3ad"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-02-26",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "Rock",
+            "genre_evidence": [
+              {
+                "raw": "Rock",
+                "source": "Gérard Drouot Productions"
+              }
+            ],
+            "genre_method": "source_mapping",
+            "genre_public": "Rock / Indie / Punk",
+            "genre_source": "Gérard Drouot Productions",
+            "genres_public": null,
+            "headliner": "THE AUSTRALIAN PINK FLOYD SHOW",
+            "identity_aliases": [
+              "THE AUSTRALIAN PINK FLOYD SHOW"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/2d6d4890-ae75-4f93-be51-90c64f78d7ed.jpg",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": [
+              "Gérard Drouot Productions"
+            ],
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "20:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/the-australian-pink-floyd-show--1450",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-08-23T16:46:51Z",
+          "public_id": "95730c6f6b4f3d49",
+          "state_identity": "95730c6f6b4f3d4955359e85f99f1274b1b9319b18ccd160e12158e30c7930f8"
         },
         {
           "event": {
@@ -11385,9 +11631,49 @@
           "first_seen": "2026-09-25T10:38:40Z",
           "public_id": "e1acc4e2264e173e",
           "state_identity": "e1acc4e2264e173ee0c3eedcaa5467e818a976f50c72d0a8a67d90ee3c2a4fb9"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
+            "category": null,
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-12-03",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": null,
+            "genre_evidence": [],
+            "genre_method": null,
+            "genre_public": null,
+            "genre_source": null,
+            "genres_public": null,
+            "headliner": "WITHIN TEMPTATION",
+            "identity_aliases": null,
+            "image_source": "Adidas Arena",
+            "image_url": "https://adidasarena.directus.app/assets/c7e3de88-dd82-4a94-b6ca-516f9939e8c6?format=webp&quality=90&width=800",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": "19:00",
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/within-temptation--1628",
+            "venue": "Adidas Arena"
+          },
+          "first_seen": "2026-11-27T15:40:39Z",
+          "public_id": "b26877f7482ad5bf",
+          "state_identity": "b26877f7482ad5bf7258eb8bb88cd47ff5a792218c0125c59796095b7efc2a93"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Adidas Arena"
     },
     "Alhambra": {
@@ -12554,6 +12840,51 @@
           "event": {
             "announced_at": null,
             "authoritative_billing": false,
+            "category": "POP",
+            "city": "Paris",
+            "co_headliners": null,
+            "date": "2027-03-20",
+            "department": "75",
+            "event_title": null,
+            "event_type": null,
+            "facebook_event_url": null,
+            "festival_name": null,
+            "genre": "POP",
+            "genre_evidence": [
+              {
+                "raw": "POP",
+                "source": "Alhambra"
+              }
+            ],
+            "genre_method": "source_explicit",
+            "genre_public": "Pop",
+            "genre_source": "Alhambra",
+            "genres_public": null,
+            "headliner": "MARIANNE",
+            "identity_aliases": null,
+            "image_source": "Alhambra",
+            "image_url": "https://www.alhambra-paris.com/files/125/v_2611271050000.png",
+            "openers": null,
+            "performance_marker": null,
+            "performers": null,
+            "promoters": null,
+            "raw_title": null,
+            "series_name": null,
+            "sold_out": false,
+            "start_time": null,
+            "tags": null,
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.alhambra-paris.com/marianne-lo4781.html",
+            "venue": "L'Alhambra"
+          },
+          "first_seen": "2026-11-27T15:40:39Z",
+          "public_id": "5c43f508b7cb92f8",
+          "state_identity": "5c43f508b7cb92f813055bdbc0b562a1e8081ee4c41f24d574f48ebd6124f1be"
+        },
+        {
+          "event": {
+            "announced_at": null,
+            "authoritative_billing": false,
             "category": "Folk",
             "city": "Paris",
             "co_headliners": null,
@@ -13553,7 +13884,7 @@
           "state_identity": "223a217a3f952f1dc7319c29e92a1a99082a9a7c7b469d215a9ec2d5ba4a2113"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Alhambra"
     },
     "Alias Production": {
@@ -13920,8 +14251,8 @@
             "identity_aliases": [
               "Phoebe Bridgers"
             ],
-            "image_source": null,
-            "image_url": null,
+            "image_source": "Adidas Arena",
+            "image_url": "https://adidasarena.directus.app/assets/740228c7-899b-4e6f-813f-d50fd9118f0b?format=webp&quality=90&width=800",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -13932,10 +14263,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://bit.ly/PhoebeBridgers-AEG26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/phoebe-bridgers--1449",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -14317,17 +14648,13 @@
             "genres_public": null,
             "headliner": "Girl In The Year Above",
             "identity_aliases": [
-              "Girl In The Year Above",
-              "Girl In The Year Above + Markéta Vostrá"
+              "Girl In The Year Above"
             ],
             "image_source": "DICE",
             "image_url": "https://dice-media.imgix.net/attachments/2026-11-20/abcb8c6e-a825-4914-9d3f-cb9aeeeec5e6.jpg?rect=0%2C1565%2C3822%2C3822",
             "openers": null,
             "performance_marker": null,
-            "performers": [
-              "Girl In The Year Above",
-              "Markéta Vostrá"
-            ],
+            "performers": null,
             "promoters": [
               "Alias Production"
             ],
@@ -14337,7 +14664,7 @@
             "start_time": "19:00",
             "tags": null,
             "ticket_status": "tickets",
-            "ticket_url": "https://tix.to/girl-in-the-year-aboveSI/adfxu",
+            "ticket_url": "https://dice.fm/event/6b0057597fa86a00010dc215",
             "venue": "Supersonic"
           },
           "first_seen": "2026-11-24T16:17:06Z",
@@ -15927,7 +16254,7 @@
           "state_identity": "e9a0fbb1d5985cbb83c6e7dd1b876ee691de0c665b1a510177b4afc96f7c5e7c"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Alias Production"
     },
     "Azimuth Productions": {
@@ -16194,7 +16521,7 @@
           "state_identity": "17257d5ba04f5b94532dec5063cc23b558cc53e5a1c695ea935732b816a38bc5"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Azimuth Productions"
     },
     "Backstage By The Mill": {
@@ -17679,7 +18006,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Backstage By The Mill"
     },
     "Bal Chavaux": {
@@ -19372,7 +19699,7 @@
           "state_identity": "965f059e630298333563bafd6aca29d1bc9bd92644f34ba1cede935da3d52370"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Bal Chavaux"
     },
     "Base Productions": {
@@ -20731,7 +21058,7 @@
           "state_identity": "707e4563cb44d14fd06c83ac37220cad835b0ecb71f20e0bbaf2c790c0ca471b"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Base Productions"
     },
     "Bataclan": {
@@ -20767,12 +21094,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "Paris Paloma",
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://billetterie.bataclan.fr/fr/manifestation/743/paris_paloma",
             "venue": "Bataclan"
           },
@@ -22617,7 +22944,7 @@
           "state_identity": "ccfed868c351be14f25c5708f8b73366f0093c0ebf968bda68f3ee71184db23a"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Bataclan"
     },
     "Cabaret Sauvage": {
@@ -23581,7 +23908,7 @@
           "state_identity": "d25f998430bdbd55d555d641ae749048a1f06760789441fe6aee28dcd0e7a9cc"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Cabaret Sauvage"
     },
     "Café de la Danse": {
@@ -25200,7 +25527,7 @@
           "state_identity": "ea633a4aecc3aefa07cdb5d4e90e2263fd72e485eea5a7a81a19a80af402f318"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Café de la Danse"
     },
     "Casino de Paris": {
@@ -26277,7 +26604,7 @@
           "state_identity": "908e6b0114a35298248e0acc7a1338bc31e399be3164ebfca5a03bb25c5e182d"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Casino de Paris"
     },
     "Corida": {
@@ -27036,7 +27363,7 @@
           "state_identity": "a152b45f230852730effc306675d42b2f745a3e9e506cdfc6f861f36d1502e8c"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Corida"
     },
     "DICE": {
@@ -27601,7 +27928,7 @@
           "state_identity": "8c9aad0e475087911f0973fea2061308222b78b22ae5baa867c01754fba977b7"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "File7"
     },
     "Garmonbozia": {
@@ -29706,7 +30033,7 @@
           "state_identity": "96758d87facf9a2f648aa33d3484e895ab0edb9778c45c957558d75d93b34a70"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Garmonbozia"
     },
     "Glazart": {
@@ -30077,7 +30404,7 @@
           "state_identity": "60fdc152d6b8314d939c84bb42f4cf0b5e0b6a62721fac5a9c4b7714acfb4f6f"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Glazart"
     },
     "Gérard Drouot Productions": {
@@ -31472,9 +31799,11 @@
             "genre_source": "Gérard Drouot Productions",
             "genres_public": null,
             "headliner": "JAMES BLUNT",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "JAMES BLUNT"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://adidasarena.directus.app/assets/312590ae-2999-48fc-9a32-187f9fb7600f?format=webp&quality=90&width=800",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -31484,10 +31813,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.gdp.fr/fr/catalogue/james-blunt-paris-2027-02-21",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/james-blunt--1497",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-09-03T13:49:19Z",
@@ -31672,9 +32001,11 @@
             "genre_source": "Gérard Drouot Productions",
             "genres_public": null,
             "headliner": "THE AUSTRALIAN PINK FLOYD SHOW",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "THE AUSTRALIAN PINK FLOYD SHOW"
+            ],
+            "image_source": "Adidas Arena",
+            "image_url": "https://www.accorarena.com/uploads/aha/generated/w800,h800,fcrop,q85/2d6d4890-ae75-4f93-be51-90c64f78d7ed.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -31684,10 +32015,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.gdp.fr/fr/catalogue/the-australian-pink-floyd-show-paris-2027-02-26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/the-australian-pink-floyd-show--1450",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-08-23T16:46:51Z",
@@ -33433,7 +33764,7 @@
             "headliner": "Powerwolf",
             "identity_aliases": [
               "POWERWOLF / APOCALYPTICA / MAJESTICA",
-              "POWERWOLF"
+              "Powerwolf"
             ],
             "image_source": "Accor Arena",
             "image_url": "https://www.accorarena.com/uploads/aha/originals/ac8ce849-6756-4b0c-935c-2a6c70bf0340.jpg",
@@ -33569,7 +33900,7 @@
           "state_identity": "f51292ed2533b166216b6e4b343eb6d31928888ff6e7891ea44fb85cc7589eb7"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Gérard Drouot Productions"
     },
     "La Bellevilloise": {
@@ -34291,7 +34622,7 @@
           "state_identity": "08c50870fdf77a3e26b618cefd768f21a79d74ca622bd644706faf82f686bf75"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Bellevilloise"
     },
     "La Boule Noire": {
@@ -36969,7 +37300,7 @@
           "state_identity": "ff6f9cbbf0cb600b5d37ae88028b878df9d4db6c797761b6a943d2c70e13df36"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Boule Noire"
     },
     "La Cigale": {
@@ -37147,10 +37478,10 @@
             ],
             "raw_title": "EDIS",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://lacigale.fr/evenements/edis/",
             "venue": "La Cigale"
           },
@@ -41399,7 +41730,7 @@
           "state_identity": "f51292ed2533b166216b6e4b343eb6d31928888ff6e7891ea44fb85cc7589eb7"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Cigale"
     },
     "La Gaîté Lyrique": {
@@ -42706,7 +43037,7 @@
           "state_identity": "27918942fa4f4630752bd4631ae2a74887c7a67208f6770dd2f47657beefe874"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Gaîté Lyrique"
     },
     "La Machine du Moulin Rouge": {
@@ -43612,7 +43943,7 @@
           "state_identity": "ad7ccaf6b6a026b3a1c89d0d50512b155686b8baf06dc90b8ccbffb0ad257cc8"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Machine du Moulin Rouge"
     },
     "La Maroquinerie": {
@@ -43637,17 +43968,19 @@
             "genre_source": "Bandcamp",
             "genres_public": null,
             "headliner": "CHEST.",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "chest."
+            ],
             "image_source": "La Maroquinerie",
             "image_url": "https://www.lamaroquinerie.fr/files/event_thumbnail_2203.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "chest.",
             "series_name": null,
             "sold_out": true,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
             "ticket_status": "sold_out",
             "ticket_url": "https://www.lamaroquinerie.fr/fr/agenda/view/2203/chest-complet/?of=0",
@@ -49053,7 +49386,7 @@
           "state_identity": "b98f020651af0910698e2db4911b874ac13c2dc6f5e2e146f643d935f9a66a2a"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Maroquinerie"
     },
     "La Seine Musicale": {
@@ -50729,7 +51062,7 @@
           "state_identity": "3fec6f8bc36ca79579bba8ce7749b68512f31f5171c6515fac389257d3e9ed0a"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "La Seine Musicale"
     },
     "Le Dôme de Paris": {
@@ -51459,7 +51792,7 @@
           "state_identity": "77da6923eb57fd888ace46432acd7f24ca638776d99c45fb3e3ac63aba2294bf"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Dôme de Paris"
     },
     "Le Grand Rex": {
@@ -52396,7 +52729,7 @@
           "state_identity": "245f36a78698f2f3b5d8b70b33302765c24288686196cf25b548027f0464af68"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Grand Rex"
     },
     "Le Hasard Ludique": {
@@ -52407,7 +52740,9 @@
             "authoritative_billing": false,
             "category": null,
             "city": "Paris",
-            "co_headliners": null,
+            "co_headliners": [
+              "Fat Concubine"
+            ],
             "date": "2026-11-27",
             "department": "75",
             "event_title": null,
@@ -52421,24 +52756,26 @@
                 "source": "Le Hasard Ludique"
               }
             ],
-            "genre_method": "artist_mapping",
+            "genre_method": "bill_consensus",
             "genre_public": "Rock / Indie / Punk",
-            "genre_source": "Deezer artist catalog metadata",
+            "genre_source": "mapped_bill_artists",
             "genres_public": null,
             "headliner": "Spike Fuck",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "Spike Fuck"
+            ],
             "image_source": "Le Hasard Ludique",
             "image_url": "https://s3.eu-central-1.amazonaws.com/lehasardludique/images/16757/header_site_hl.jpg",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "Spike Fuck + Fat Concubine",
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.lehasardludique.paris/concert/2026-10-16/spike-fuck#reservation",
             "venue": "Le Hasard Ludique"
           },
@@ -53283,7 +53620,7 @@
           "state_identity": "309744a76f0e10b24499bcf4ef42e2a5b5f46c80f7c87c43ae083a9bf140347e"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Hasard Ludique"
     },
     "Le Pop-Up du Label": {
@@ -53365,10 +53702,10 @@
             "promoters": null,
             "raw_title": "mustbejohn + Tensing",
             "series_name": null,
-            "sold_out": true,
+            "sold_out": false,
             "start_time": "20:00",
             "tags": null,
-            "ticket_status": "sold_out",
+            "ticket_status": "tickets",
             "ticket_url": "https://link.dice.fm/Ec20eadb6b1f",
             "venue": "Le Pop-Up du Label"
           },
@@ -55865,7 +56202,7 @@
           "state_identity": "c2396beaffe1863cbb1fb448c4bb3db8155de03327687736bdc1b4e3cd99414c"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Pop-Up du Label"
     },
     "Le Trabendo": {
@@ -58755,7 +59092,7 @@
           "state_identity": "250822907a34fc8dcd456c67e001552244e4aff75488792fa9d2c75bb822c5e7"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Trabendo"
     },
     "Le Trianon": {
@@ -60274,7 +60611,7 @@
           "state_identity": "89bc5ec422ed9584739b367f6c72e059da1758720a208eb74e7388f0547654d1"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Trianon"
     },
     "Le Zénith Paris – La Villette": {
@@ -65182,7 +65519,7 @@
           "state_identity": "8b24a0b3948ec592a4568d2a06afb90b308e8d87b9a527b00dbd2e1ae2698069"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Le Zénith Paris – La Villette"
     },
     "Les Étoiles": {
@@ -65936,7 +66273,7 @@
           "state_identity": "5c17e917d53ff55441590b3c276d81eb562f4b31e31e629e057680730d462cb9"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Les Étoiles"
     },
     "Live Nation": {
@@ -66682,7 +67019,7 @@
             "co_headliners": null,
             "date": "2026-12-03",
             "department": "75",
-            "event_title": null,
+            "event_title": "THE KEHLANI WORLD TOUR: EU & UK",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -66698,7 +67035,9 @@
             "genre_source": "Reviewed stable artist classification, 2026-08-23",
             "genres_public": null,
             "headliner": "Kehlani",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "THE KEHLANI WORLD TOUR: EU & UK"
+            ],
             "image_source": "Live Nation",
             "image_url": "https://dynamicmedia.livenationinternational.com/f/j/c/583671bb-9229-4c44-9705-ad9a0068737c.jpg",
             "openers": [
@@ -66714,10 +67053,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "https://www.ticketmaster.fr/fr/liste/the-kehlani-world-tour-billet/idlist/6178/idtier/4827637",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/the-kehlani-world-tour-eu-and-uk--1439",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -75302,7 +75641,7 @@
           "state_identity": "2052cc9f16b5f76da3282b6d678a2216a71adb92860f7616be3bc843e1369f73"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Live Nation"
     },
     "Los Production": {
@@ -75855,7 +76194,7 @@
           "state_identity": "f1ce63e83699f913c491e2505e1d8205baed446b1096b074195c1393c036d488"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Los Production"
     },
     "L’Olympia Bruno Coquatrix": {
@@ -75869,7 +76208,7 @@
             "co_headliners": null,
             "date": "2026-11-27",
             "department": "75",
-            "event_title": null,
+            "event_title": "EsDeeKid : 2026",
             "event_type": null,
             "facebook_event_url": null,
             "festival_name": null,
@@ -75886,7 +76225,8 @@
             "genres_public": null,
             "headliner": "EsDeeKid",
             "identity_aliases": [
-              "EsDeeKid"
+              "EsDeeKid",
+              "EsDeeKid : 2026"
             ],
             "image_source": "L’Olympia Bruno Coquatrix",
             "image_url": "https://www.olympiahall.com/wp-content/uploads/2026/07/esdeekid-concert-olympia-paris-352x440.jpg.webp",
@@ -75898,12 +76238,12 @@
             "promoters": [
               "AEG Presents France"
             ],
-            "raw_title": null,
+            "raw_title": "EsDeeKid : 2026",
             "series_name": null,
-            "sold_out": false,
-            "start_time": null,
+            "sold_out": true,
+            "start_time": "20:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "sold_out",
             "ticket_url": "https://www.olympiahall.com/agenda/esdeekid/",
             "venue": "L'Olympia Bruno Coquatrix"
           },
@@ -79917,7 +80257,7 @@
           "state_identity": "969e86060bfbf69c27623ad1cfb4d34f5a06fde44def11821fe6e64804044054"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "L’Olympia Bruno Coquatrix"
     },
     "New Morning": {
@@ -82799,7 +83139,7 @@
           "state_identity": "dce024f996b368980f6514da374e1132ab2c621777e45f3b8201bf96471b10bb"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "New Morning"
     },
     "Nouveau Casino": {
@@ -83628,7 +83968,7 @@
           "state_identity": "b6291222780cff48081e6aefb17268c0cafc16f614c378b26bed7ffb276db8f5"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Nouveau Casino"
     },
     "On the RoaD Again / ORDA": {
@@ -83775,7 +84115,7 @@
           "state_identity": "baf16b1e0fb38384a2c95841644bf8b1aa09b90d4e5a7c88cb8321915371d2d1"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "On the RoaD Again / ORDA"
     },
     "Persona Grata": {
@@ -85080,7 +85420,7 @@
           "state_identity": "ed00cbfbaea9e2243c56a3210ff6c2e1f2aff9315c913ff5d1ff53d0c596e79c"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Persona Grata"
     },
     "Petit Bain": {
@@ -85938,20 +86278,22 @@
             "genre_public": null,
             "genre_source": null,
             "genres_public": null,
-            "headliner": "Colleen",
-            "identity_aliases": null,
+            "headliner": "AVANT/POST : COLLEEN",
+            "identity_aliases": [
+              "Colleen"
+            ],
             "image_source": "Petit Bain",
             "image_url": "https://petitbain.org/wp-content/uploads/2026/11/colleen-portrait-800x800.png",
             "openers": null,
             "performance_marker": null,
             "performers": null,
             "promoters": null,
-            "raw_title": null,
+            "raw_title": "AVANT/POST : COLLEEN",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:30",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://petitbain.org/evenement/avant-garde2/",
             "venue": "Petit Bain"
           },
@@ -87059,7 +87401,7 @@
           "state_identity": "3cbf96e7494e795a621cc40800f07b27bd8507d069aa2752b62009ca7fef9654"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Petit Bain"
     },
     "Plénitude Arena": {
@@ -87709,7 +88051,7 @@
           "state_identity": "5519fa10dcaf536ce3f152137b781a0f78ca010070a4f4b772ac15ebdbd6ad60"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Plénitude Arena"
     },
     "Point Éphémère": {
@@ -87850,7 +88192,8 @@
             "headliner": "C.O.F.F.I.N",
             "identity_aliases": [
               "C.O.F.F.I.N + The Tensions",
-              "C.O.F.F.I.N"
+              "C.O.F.F.I.N",
+              "C.O.F.F.I.N + Flippeur"
             ],
             "image_source": "Point Éphémère",
             "image_url": "https://images.prismic.io/pointf/Jr1d6hSuXD_wmfmf_C.O.F.F.I.N_Ban.jpg?auto=format,compress",
@@ -88819,7 +89162,7 @@
           "state_identity": "01b1619e1b0a228693f59fe2d467ae03f85e1b79acf971572c62a4f75910cda7"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Point Éphémère"
     },
     "Radical Production": {
@@ -89720,12 +90063,12 @@
           "state_identity": "10f5008cd9e90ce8b8d8ea477bc5e6799d1cc88d7cf683b7329f67bd9e110628"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Radical Production"
     },
     "Rock en Seine": {
       "events": [],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Rock en Seine"
     },
     "Salle Pleyel": {
@@ -93386,7 +93729,7 @@
           "state_identity": "b5236415e3240570449bb0eabd28c316cd6032bbbbcfcae9c713bf7860f9cdef"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Salle Pleyel"
     },
     "Stade de France": {
@@ -94013,7 +94356,7 @@
           "state_identity": "8127e04abaa7103c63e7063452db8051b9fc8933b4edba32c408bea37498ab00"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Stade de France"
     },
     "Sunset/Sunside": {
@@ -102849,7 +103192,7 @@
           "state_identity": "248a3b367b983a7188b14c2ba8c4cd53ec4b5d3849338294086b5b98f8e7cb17"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Sunset/Sunside"
     },
     "Supersonic": {
@@ -103273,9 +103616,11 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "La Bûche Fest: Them Flying Monkeys + Loveth Besamoh + L'Ecuyer + Painkiller + M.Lucky et Tombola",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "La Bûche Fest: Them Flying Monkeys + Loveth Besamoh + L'Ecuyer + Painkiller + M.Lucky et Tombola"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-13/68768a95-ef08-485d-a101-6e476bed5beb.jpg?rect=5%2C0%2C1303%2C1303",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -103285,9 +103630,9 @@
             "raw_title": "La Bûche Fest: Them Flying Monkeys + Loveth Besamoh + L'Ecuyer + Painkiller + M.Lucky et Tombola",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://supersonic-club.fr/evenement/la-bche-fest-them-flying-monkeys-loveth-besamoh-lecuyer-painkiller-mlucky-et-tombola-4th-dec-supersonic-paris-supersonic-records-paris-tickets/",
             "venue": "Supersonic"
           },
@@ -103320,6 +103665,7 @@
             "genres_public": null,
             "headliner": "Maria Iskariot",
             "identity_aliases": [
+              "La Bûche Fest: Maria Iskariot + KyoYoko + S.C.H.E.M.E + Big Long Sun",
               "Maria Iskariot + KyoYoko + S.C.H.E.M.E + Big Long Sun / La Bûche Fest"
             ],
             "image_source": "DICE",
@@ -103368,9 +103714,11 @@
             "genre_source": null,
             "genres_public": null,
             "headliner": "La Bûche Fest: Sunday Tribute Jingle Bells de Noël",
-            "identity_aliases": null,
-            "image_source": null,
-            "image_url": null,
+            "identity_aliases": [
+              "La Bûche Fest: Sunday Tribute Jingle Bells de Noël"
+            ],
+            "image_source": "DICE",
+            "image_url": "https://dice-media.imgix.net/attachments/2026-11-13/aed8fdf2-32eb-47a7-9bc6-c51cd84e3192.jpg?rect=5%2C0%2C1303%2C1303",
             "openers": null,
             "performance_marker": null,
             "performers": null,
@@ -103380,9 +103728,9 @@
             "raw_title": "La Bûche Fest: Sunday Tribute Jingle Bells de Noël",
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
+            "ticket_status": "tickets",
             "ticket_url": "https://supersonic-club.fr/evenement/la-bche-fest-sunday-tribute-jingle-bells-de-nol-6th-dec-supersonic-paris-tickets/",
             "venue": "Supersonic"
           },
@@ -106685,7 +107033,7 @@
           "state_identity": "a56de48d76d01f6a0d160f3180c4c460ffc1ce1d318077f7f4e83ddef242b8cd"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Supersonic"
     },
     "U-Turn Touring": {
@@ -106740,7 +107088,7 @@
           "state_identity": "18f75479f16e8020c8a62da7d4eee79a00f21d63912fc044a5ec7aff2f0d45db"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "U-Turn Touring"
     },
     "Vedettes": {
@@ -106818,7 +107166,8 @@
             "headliner": "C.O.F.F.I.N",
             "identity_aliases": [
               "C.O.F.F.I.N + The Tensions",
-              "C.O.F.F.I.N"
+              "C.O.F.F.I.N",
+              "C.O.F.F.I.N + Flippeur"
             ],
             "image_source": "Point Éphémère",
             "image_url": "https://images.prismic.io/pointf/Jr1d6hSuXD_wmfmf_C.O.F.F.I.N_Ban.jpg?auto=format,compress",
@@ -107927,7 +108276,7 @@
           "state_identity": "9e22085fae6ff891b4353d92bd8f51588d2d04e89f06c340bfa30d27db5d25be"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Vedettes"
     },
     "VeryShow": {
@@ -108089,7 +108438,9 @@
             "genre_source": "Wikidata genre statements (P136)",
             "genres_public": null,
             "headliner": "PAPA ROACH",
-            "identity_aliases": null,
+            "identity_aliases": [
+              "PAPA ROACH"
+            ],
             "image_source": "Electric Eye concert review",
             "image_url": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgDc0FqQPNHFrcYZojhXMkNdFUR4IdsRVfVdpPguy3pp6xe6PtncVEix5SRxnXR1mwNeL8Sbluo5O_AIGijNiY3qTsQvav7YwtptTEHVEDlwAi2PB0apVCp6MGz1LSGWJZvpdyMghJ0J91SxYVyAcaRjMvjRyVmbzPSmFnExozkqJEs6fAymilKu_y-Xuk/s72-w640-h426-c-rw/Papa%20Roach20260620HellfestClisson_14.JPG",
             "openers": [
@@ -108104,10 +108455,10 @@
             "raw_title": null,
             "series_name": null,
             "sold_out": false,
-            "start_time": null,
+            "start_time": "19:00",
             "tags": null,
-            "ticket_status": null,
-            "ticket_url": "http://bit.ly/PapaRoach_Paris26",
+            "ticket_status": "tickets",
+            "ticket_url": "https://www.adidasarena.com/programmation/papa-roach--1372",
             "venue": "Adidas Arena"
           },
           "first_seen": "2026-08-20T11:02:59Z",
@@ -110984,7 +111335,7 @@
           "state_identity": "76b0d54487c520bb79de67e9aeea897ba241e21c34f2a21d697e3d55156609fb"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "VeryShow"
     },
     "Zouave": {
@@ -111786,7 +112137,7 @@
           "state_identity": "e96c1d0fda86f8b9579182bfbfd454bea279d4a77166c480a7de5ee0cbc18b54"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Zouave"
     },
     "Élysée Montmartre": {
@@ -114320,10 +114671,10 @@
           "state_identity": "b17be160cdf51b4b9dd4e4a2222d2a7356891f0f4c960b7279f9780ee487eb97"
         }
       ],
-      "last_successful_at": "2026-11-27T15:26:47Z",
+      "last_successful_at": "2026-11-27T15:40:39Z",
       "source_name": "Élysée Montmartre"
     }
   },
-  "updated_at": "2026-11-27T15:26:47Z",
+  "updated_at": "2026-11-27T15:40:39Z",
   "version": 1
 }
