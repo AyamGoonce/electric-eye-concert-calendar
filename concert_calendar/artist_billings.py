@@ -563,13 +563,27 @@ def resolve_artist_billings(
                     continue
 
         if len(structured) >= 2:
-            event._billing_resolution = {
-                "original": event.raw_title or original,
-                "artists": structured,
-                "method": "structured_source",
-                "confidence": 100,
-                "evidence": ["source supplied separate performers"],
-            }
+            # Structured performer fields must also affect the public billing.
+            # Only rewrite a flat headline if the *entire* text is accounted
+            # for by the exact, ordered source roster. Other source formats
+            # may use a genuine project or event title as their headline.
+            if (
+                identity != _key(structured[0])
+                and _billing_matches_roster(original, structured)
+            ):
+                _set_resolution(
+                    event, structured, method="structured_source",
+                    confidence=100,
+                    evidence=["source supplied separate performers matching the complete displayed bill"],
+                )
+            else:
+                event._billing_resolution = {
+                    "original": event.raw_title or original,
+                    "artists": structured,
+                    "method": "structured_source",
+                    "confidence": 100,
+                    "evidence": ["source supplied separate performers"],
+                }
             _record(audit, event)
             continue
 
