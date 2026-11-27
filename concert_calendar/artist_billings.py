@@ -568,7 +568,8 @@ def resolve_artist_billings(
             # for by the exact, ordered source roster. Other source formats
             # may use a genuine project or event title as their headline.
             if (
-                identity != _key(structured[0])
+                identity not in identities
+                and identity != _key(structured[0])
                 and _billing_matches_roster(original, structured)
             ):
                 _set_resolution(
