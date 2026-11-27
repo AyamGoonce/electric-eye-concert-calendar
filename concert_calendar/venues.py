@@ -82,6 +82,8 @@ VENUE_ALIASES = {
     "le palais des congres de paris": "Le Palais des Congrès de Paris",
     "palais des congres de paris": "Le Palais des Congrès de Paris",
     "le pop up du label": "Le Pop-Up du Label",
+    "le popup du label": "Le Pop-Up du Label",
+    "popup du label": "Le Pop-Up du Label",
     "pop up du label": "Le Pop-Up du Label",
     "le pop up": "Le Pop-Up du Label",
     "pop up": "Le Pop-Up du Label",

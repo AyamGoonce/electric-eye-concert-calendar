@@ -19,7 +19,7 @@ from concert_calendar.event_titles import (
     artist_title_parts, contextual_title_parts, evidenced_series_prefixes, title_identity,
     separate_performance_marker,
 )
-from concert_calendar.venues import normalize_event_venue, normalize_venue_key, VENUE_ALIASES
+from concert_calendar.venues import normalize_event_venue, normalize_venue_key, resolve_venue_name, VENUE_ALIASES
 
 
 TARGET_VENUE_IMAGE_SOURCES = {
@@ -1116,6 +1116,46 @@ def _tour_normalization_allows_merge(left: ConcertEvent, right: ConcertEvent) ->
     return _tour_base_identity(originals[marked]) == _normalized_billing_component(originals[1 - marked])
 
 
+def _venue_branded_cross_source_title_relation(
+    left: ConcertEvent,
+    right: ConcertEvent,
+) -> bool:
+    """Match a title with an explicitly named *same-venue* partnership suffix.
+
+    'Artist x Venue' is a frequent ticket-platform presentation, but 'x' is
+    also used for real artist collaborations. Only strip it when the entire
+    suffix is a registered alias of the event's already normalized physical
+    venue, and an independent source supplies the exact undecorated title.
+    The comparison does not create a performer identity or infer any billing.
+    """
+    if (
+        left.date != right.date
+        or normalize_venue_key(left.venue) != normalize_venue_key(right.venue)
+        or not _cross_source_evidence(left, right)
+    ):
+        return False
+    canonical_venue = resolve_venue_name(left.venue, left.city)
+    if not canonical_venue:
+        return False
+    for plain, decorated in ((left, right), (right, left)):
+        match = re.fullmatch(
+            r"(?P<title>.+?)\s+[x×]\s+(?P<venue>.+?)\s*!?",
+            (decorated.headliner or "").strip(),
+            flags=re.IGNORECASE,
+        )
+        if not match:
+            continue
+        # An actual artist named 'X' is not a generic event delimiter.
+        suffix_venue = resolve_venue_name(match.group("venue"), decorated.city)
+        if (
+            suffix_venue == canonical_venue
+            and _billing_evidence_key(match.group("title"))
+            == _billing_evidence_key(plain.headliner)
+        ):
+            return True
+    return False
+
+
 def _same_primary_billing(left: ConcertEvent, right: ConcertEvent) -> bool:
     left_festival = _festival_event_billing(left)
     right_festival = _festival_event_billing(right)
@@ -1127,6 +1167,8 @@ def _same_primary_billing(left: ConcertEvent, right: ConcertEvent) -> bool:
         return wrapped[1] == _primary_billing_set(plain)
     left_set, right_set = _primary_billing_set(left), _primary_billing_set(right)
     if left_set and left_set == right_set:
+        return True
+    if _venue_branded_cross_source_title_relation(left, right):
         return True
     # A separately sourced title commonly omits the co-bill printed on the
     # venue card. Compare complete opaque titles at the explicit boundary;
