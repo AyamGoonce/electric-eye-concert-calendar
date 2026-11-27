@@ -207,7 +207,7 @@ def _exact_catalog_bill_candidates(value: str, identities: dict[str, str]) -> li
         return []
 
     separators = list(re.finditer(
-        r"\s+(?:\+|/|•|&|et|[–—-])\s+|\s+w/\s*", title, flags=re.I
+        r"\s+(?:\+|/|•|&|et|x|×|with|avec|[–—-])\s+|\s+w/\s*", title, flags=re.I
     ))
     if not separators or len(separators) > 8:
         return []
@@ -370,7 +370,7 @@ def _billing_matches_roster(billing: str, artists: list[str]) -> bool:
     """Verify that the complete displayed bill matches every roster member."""
     if len(artists) < 2:
         return False
-    separator = r"(?:\s+(?:\+|/|•|&|et|[–—-])\s+|\s+w/\s*)"
+    separator = r"(?:\s+(?:\+|/|•|&|et|x|×|with|avec|[–—-])\s+|\s+w/\s*)"
     pattern = "^" + separator.join(
         re.escape(name).replace(r"\ ", r"\s+") for name in artists
     ) + "$"
@@ -406,7 +406,7 @@ def _same_source_evidence(event: ConcertEvent, billing: str) -> tuple[list[str],
         # A flat bill with recognized separators must account for *every*
         # listed act, even when the provider also sends a separate roster.
         and (
-            not re.search(r"\s+(?:\+|/|•|&|et|[–—-])\s+", billing, re.I)
+            not re.search(r"\s+(?:\+|/|•|&|et|x|×|with|avec|[–—-])\s+", billing, re.I)
             or _billing_matches_roster(billing, supplied_artists)
         )
     ):
