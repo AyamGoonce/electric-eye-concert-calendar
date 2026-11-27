@@ -29,6 +29,7 @@ on:
   # 2026-11-27: verify Adidas Arena upcoming announcement detection fixture.
   # 2026-11-27: guard against post-billing retained-source overlap and rerun production.
   # 2026-11-27: validate venue filtered concert inventory and scoped support role reconciliation.
+  # 2026-11-27: verify forced UTF-8 decoding of accented French concert dates.
   # 2026-11-27: rerun after correcting Backstage pagination test fixture.
   # 2026-11-27: apply source-category eligibility check to multi-date Zénith shows.
   # Run publication once when this workflow definition is introduced/changed.
