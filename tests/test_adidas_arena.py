@@ -1,4 +1,5 @@
 from datetime import date
+import requests
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import Mock, patch
@@ -75,6 +76,45 @@ class AdidasArenaTests(TestCase):
         self.assertEqual(
             [PROGRAMME_URL, CONCERT_PROGRAMME_URL],
             [call.args[0] for call in session.get.call_args_list],
+        )
+
+    def test_real_http_latin1_default_is_overridden_for_french_months(self):
+        page = """
+        <div class="app-programmation-card concert">
+          <h3 class="type">concert</h3>
+          <h3 class="date">3 DÉCEMBRE 2027 à 19h00</h3>
+          <h2>WITHIN TEMPTATION</h2>
+          <a class="app-programmation-card__cta"
+             href="/programmation/within-temptation--1628">Réserver</a>
+        </div>
+        <div class="app-programmation-card concert">
+          <h3 class="type">concert</h3>
+          <h3 class="date">21 FÉVRIER 2027 à 19h00</h3>
+          <h2>JAMES BLUNT</h2>
+          <a class="app-programmation-card__cta"
+             href="/programmation/james-blunt--1497">Réserver</a>
+        </div>
+        """
+        def mislabelled_response():
+            response = requests.Response()
+            response.status_code = 200
+            response._content = page.encode("utf-8")
+            response.encoding = "ISO-8859-1"
+            return response
+
+        session = Mock()
+        session.get.side_effect = [
+            mislabelled_response(), mislabelled_response()
+        ]
+        with patch(
+            "concert_calendar.scrapers.adidas_arena.requests.Session",
+            return_value=session,
+        ):
+            events = load_events()
+        self.assertEqual(
+            [("2027-02-21", "JAMES BLUNT"),
+             ("2027-12-03", "WITHIN TEMPTATION")],
+            sorted((item.date, item.headliner) for item in events),
         )
 
     def test_metadata(self):
