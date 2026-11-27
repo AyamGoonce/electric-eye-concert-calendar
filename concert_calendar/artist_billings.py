@@ -553,8 +553,18 @@ def resolve_artist_billings(
                         raise ValueError("Reviewed support credits must be trailing members of the event roster")
                     event.co_headliners = None
                     if reviewed_openers:
+                        # A venue can classify all supporting artists as
+                        # "openers" even when the reviewed programme identifies
+                        # a special guest/co-headliner. For an exact scoped
+                        # review, its explicit roles override those generic
+                        # source labels for the reviewed roster. Keep unrelated
+                        # source-provided supports outside the reviewed roster.
                         event.openers = _stable_unique([
-                            *(event.openers or []), *reviewed_openers
+                            *(
+                                name for name in (event.openers or [])
+                                if _key(name) not in artist_keys
+                            ),
+                            *reviewed_openers,
                         ]) or None
                     _set_resolution(
                         event, scoped_artists, method="reviewed_event",
