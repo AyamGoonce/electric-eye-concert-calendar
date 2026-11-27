@@ -75,7 +75,7 @@ def parse_performance_dates(soup):
     become performances for the current artist.
     """
     text = soup.get_text(" ", strip=True)
-    start = re.search(r"\binfos pratiques\b", folded(text))
+    start = re.search(r"\binfos pratiques\b", text, re.IGNORECASE)
     if not start:
         return []
     scoped = text[start.end():]
