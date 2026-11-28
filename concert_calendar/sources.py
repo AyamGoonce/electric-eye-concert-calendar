@@ -748,8 +748,21 @@ def load_events_with_report(
     # copies before deduplication, while retaining source-state snapshots.
     retained_ids = {id(row) for row in eligible_retained}
     fresh_rows = [row for row in normalized_events if id(row) not in retained_ids]
+    # Run the *same* canonical billing passes on live records before deciding
+    # whether an old failed-source snapshot is independently covered. A
+    # cross-source live bill may only acquire its canonical artist identity
+    # after a multi-record reconciliation; comparing individual raw fresh
+    # cards to the retained row would miss that relationship and later allow
+    # final deduplication to mix failed and healthy provenance.
+    #
+    # This is a read-only evidence pass over copies. Stale records cannot
+    # contribute billing, time, ticket or genre evidence to fresh records.
+    canonical_fresh = deduplicate_events(
+        [deepcopy(row) for row in fresh_rows],
+        billing_identity_catalog=billing_identity_catalog,
+    )
     reconciled_retained, suppressed_rows = suppress_reconciled_retained_overlaps(
-        fresh_rows, eligible_retained, source_health,
+        [*fresh_rows, *canonical_fresh], eligible_retained, source_health,
     )
     if suppressed_rows:
         retained_ids_to_remove = {id(row) for row in suppressed_rows}
