@@ -216,7 +216,55 @@ NON_CONCERT_TYPES = {
     "listening party", "listening session", "workshop", "masterclass",
     "conference", "talk", "lecture", "screening", "exhibition",
     "market", "fair", "quiz", "game", "open house", "meet and greet",
+    # Equivalent programme categories found in French multi-purpose venues.
+    "conference-debat", "debat", "table ronde", "discussion",
+    "rencontre", "projection", "cine-debat", "atelier",
+    "film screening", "panel discussion", "stand-up comedy",
+    "spectacle d'humour", "book signing",
 }
+
+
+# The title can contain an organization, speaker or broadcaster in the
+# headliner slot. Classify the advertised *activity* before attempting to
+# identify an artist; a source's generic Pop/Rock genre is not an override.
+NON_MUSIC_PROGRAMME_START_RE = re.compile(
+    r"^(?:conference(?:-debat)?|table ronde|debat|cine-debat|"
+    r"projection(?:-debat)?|atelier(?: de)?|rencontre avec|"
+    r"discussion avec|stand[ -]up(?: comedy)?|spectacle d'humour)"
+    r"\\b"
+)
+MUSIC_PERFORMANCE_CUE_RE = re.compile(
+    r"\\b(?:concert|en concert|live music|musique live|"
+    r"performance musicale|showcase musical|live set)\\b"
+)
+OFF_AIR_DISCUSSION_CUE_RE = re.compile(
+    r"\\b(?:face a|quelle?|comment|pourquoi|debat|riposte|"
+    r"conference|discussion|politique|ecolo|societe)\\b"
+)
+
+
+def _programme_nonconcert_reason(event):
+    """Recognize activity-led programme titles, including preserved raw titles.
+
+    Require an explicit format, not isolated words such as 'politique',
+    'discussion', or 'party' that could occur in a musician's name or song.
+    Music-billed hybrid programmes remain eligible for subsequent review.
+    """
+    for title in (event.raw_title, event.event_title, event.headliner):
+        value = " ".join(normalize_text_for_matching(title).split())
+        if not value:
+            continue
+        if MUSIC_PERFORMANCE_CUE_RE.search(value):
+            continue
+        if NON_MUSIC_PROGRAMME_START_RE.match(value):
+            return "non_music_programme_format"
+        # 'Hors Antenne' is also used in an existing news-discussion series.
+        # Require the discussion context; the name alone is not a veto.
+        if re.match(r"^hors antenne\\s*:", value) and (
+            "?" in value or OFF_AIR_DISCUSSION_CUE_RE.search(value)
+        ):
+            return "non_music_discussion"
+    return None
 
 
 def _explicit_nonconcert_activity(event):
