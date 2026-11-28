@@ -1,3 +1,4 @@
+from copy import deepcopy
 import re
 import time
 import unicodedata
