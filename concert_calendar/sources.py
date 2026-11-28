@@ -231,7 +231,7 @@ NON_MUSIC_PROGRAMME_START_RE = re.compile(
     r"^(?:conference(?:-debat)?|table ronde|debat|cine-debat|"
     r"projection(?:-debat)?|atelier(?: de)?|rencontre avec|"
     r"discussion avec|stand[ -]up(?: comedy)?|spectacle d'humour)"
-    r"\b"
+    r"\b(?=\s*[:–-]|\s+\S)"
 )
 MUSIC_PERFORMANCE_CUE_RE = re.compile(
     r"\b(?:concert|en concert|live music|musique live|"
