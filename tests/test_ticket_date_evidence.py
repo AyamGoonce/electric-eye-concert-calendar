@@ -6,6 +6,8 @@ from concert_calendar.scrapers.supersonic import (
     parse_event_row, verify_linked_ticket_date,
 )
 from concert_calendar.ticket_date_evidence import confirmed_ticket_date
+from concert_calendar.deduplication import deduplicate_events
+from concert_calendar.models import ConcertEvent
 from bs4 import BeautifulSoup
 
 BILL = "The Sha La Lee’s + The Unbelieverz"
@@ -89,6 +91,31 @@ class SellerEvidenceTests(unittest.TestCase):
                     )
                 )
                 self.assertEqual(get.call_count, 1)
+
+    def test_same_date_structured_venue_and_full_bill_are_one_show(self):
+        venue = ConcertEvent(
+            date="2027-01-30", headliner="Sha-La-Lee’s",
+            co_headliners=["The Unbelieverz"],
+            venue="Supersonic Records", city="Paris", department="75",
+            ticket_url="https://supersonic-club.fr/evenement/sha-la-lees-the-unbelieverz/",
+            source_names=["Supersonic"],
+        )
+        aggregator = ConcertEvent(
+            date="2027-01-30",
+            headliner="The Sha La Lee’s + The Unbelieverz",
+            venue="Supersonic Records", city="Paris", department="75",
+            ticket_url="https://dice.fm/event/6b06a6ad50af5c000134acec",
+            source_names=["DICE"],
+        )
+        results = deduplicate_events([venue, aggregator])
+        self.assertEqual(
+            len(results), 1,
+            [(row.headliner, row.co_headliners, row.source_names) for row in results],
+        )
+        self.assertIn("Unbelieverz", " ".join(
+            [results[0].headliner, *(results[0].co_headliners or []),
+             *(results[0].openers or [])]
+        ))
 
     def test_original_card_date_retained_for_non_records_venue(self):
         html = """
