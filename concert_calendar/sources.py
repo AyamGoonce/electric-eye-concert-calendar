@@ -231,15 +231,15 @@ NON_MUSIC_PROGRAMME_START_RE = re.compile(
     r"^(?:conference(?:-debat)?|table ronde|debat|cine-debat|"
     r"projection(?:-debat)?|atelier(?: de)?|rencontre avec|"
     r"discussion avec|stand[ -]up(?: comedy)?|spectacle d'humour)"
-    r"\\b"
+    r"\b"
 )
 MUSIC_PERFORMANCE_CUE_RE = re.compile(
-    r"\\b(?:concert|en concert|live music|musique live|"
-    r"performance musicale|showcase musical|live set)\\b"
+    r"\b(?:concert|en concert|live music|musique live|"
+    r"performance musicale|showcase musical|live set)\b"
 )
 OFF_AIR_DISCUSSION_CUE_RE = re.compile(
-    r"\\b(?:face a|quelle?|comment|pourquoi|debat|riposte|"
-    r"conference|discussion|politique|ecolo|societe)\\b"
+    r"\b(?:face a|quelle?|comment|pourquoi|debat|riposte|"
+    r"conference|discussion|politique|ecolo|societe)\b"
 )
 
 
@@ -260,7 +260,7 @@ def _programme_nonconcert_reason(event):
             return "non_music_programme_format"
         # 'Hors Antenne' is also used in an existing news-discussion series.
         # Require the discussion context; the name alone is not a veto.
-        if re.match(r"^hors antenne\\s*:", value) and (
+        if re.match(r"^hors antenne\s*:", value) and (
             "?" in value or OFF_AIR_DISCUSSION_CUE_RE.search(value)
         ):
             return "non_music_discussion"
@@ -318,7 +318,10 @@ def classify_event_eligibility(event):
     This deliberately does not treat words such as DJ, party, vinyl, night,
     session, release, or festival as exclusions by themselves.
     """
-    activity_reason = _explicit_nonconcert_activity(event)
+    activity_reason = (
+        _explicit_nonconcert_activity(event)
+        or _programme_nonconcert_reason(event)
+    )
     if activity_reason:
         return False, activity_reason
     if is_placeholder_title(event.headliner):
