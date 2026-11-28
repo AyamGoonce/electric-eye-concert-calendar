@@ -1,6 +1,9 @@
 import re
 import unicodedata
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
+from concurrent.futures import ThreadPoolExecutor
+
+from concert_calendar.ticket_date_evidence import confirmed_ticket_date
 
 import requests
 from bs4 import BeautifulSoup
@@ -224,6 +227,39 @@ def parse_event_row(row, page_url, *, lineup_names=None):
     )
 
 
+def verify_linked_ticket_date(detail_url, bill):
+    """Read the ticket linked by this exact venue listing, not web search.
+
+    Only Billetweb ticket products currently have an independently verified
+    date contract. A failed or ambiguous check leaves the original card data
+    unchanged and is reported; it never invents a replacement date.
+    """
+    try:
+        response = requests.get(detail_url, timeout=10)
+        response.raise_for_status()
+        detail = BeautifulSoup(response.text, "html.parser")
+        ticket_links = []
+        for link in detail.select("a[href]"):
+            href = urljoin(detail_url, link.get("href", ""))
+            host = (urlparse(href).hostname or "").casefold()
+            if host not in {"billetweb.fr", "www.billetweb.fr"}:
+                continue
+            if re.search(r"\b(?:reserver|reservation|billet|ticket|book)\b",
+                         normalize_text_for_matching(link.get_text(" ", strip=True))):
+                ticket_links.append(href)
+        ticket_links = list(dict.fromkeys(ticket_links))
+        if len(ticket_links) != 1:
+            return None
+        ticket_response = requests.get(ticket_links[0], timeout=10)
+        ticket_response.raise_for_status()
+        return confirmed_ticket_date(
+            ticket_response.text, bill, "Supersonic Records"
+        )
+    except requests.RequestException as error:
+        print(f"Supersonic linked-ticket check unavailable: {error}", flush=True)
+        return None
+
+
 def load_events():
     events = []
     visited_pages = set()
@@ -272,7 +308,25 @@ def load_events():
             "li.agenda-item"
         )
 
-        for row in event_rows:
+        # Ticket-date verification is restricted to the paid Records venue.
+        # Perform external checks concurrently with bounded workers so an
+        # unavailable ticket seller cannot stall the complete venue inventory.
+        def verified_row_date(row):
+            if (row.get("data-venue") or "").strip() != "supersonic-records":
+                return None
+            title_element = row.select_one("h3")
+            link = row.select_one("a.agenda-item-link")
+            if not title_element or not link:
+                return None
+            detail_url = urljoin(page_url, (link.get("href") or "").strip())
+            return verify_linked_ticket_date(
+                detail_url, title_element.get_text(" ", strip=True)
+            ) if detail_url else None
+
+        with ThreadPoolExecutor(max_workers=4) as executor:
+            corroborated_dates = list(executor.map(verified_row_date, event_rows))
+
+        for row, corroborated_date in zip(event_rows, corroborated_dates):
             title_element = row.select_one("h3")
             title_link = row.select_one("a.agenda-item-link")
             title = title_element.get_text(" ", strip=True) if title_element else ""
@@ -291,6 +345,15 @@ def load_events():
                 lineup_names=lineup_names,
             )
             if event is not None:
+                if corroborated_date and corroborated_date != event.date[:10]:
+                    print(
+                        "SUPERSONIC TICKET DATE CONFLICT | "
+                        f"bill={event.raw_title!r} | venue_date={event.date[:10]} "
+                        f"| ticket_date={corroborated_date} | "
+                        "action=prefer_exact_linked_seller",
+                        flush=True,
+                    )
+                    event.date = corroborated_date
                 events.append(event)
 
         page_url = None
